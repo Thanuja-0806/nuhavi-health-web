@@ -1,0 +1,442 @@
+---
+// src/pages/en/how-it-works/costs-and-fees.astro
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+
+const pageTitle = "Costs, estimates and our fee — Nuhavi Health";
+const pageDescription = "No surprises: you will know what each part of the bill covers, how firm each number is, and what we charge.";
+
+const costSegments = [
+  {
+    id: "hospital-charges",
+    label: "Hospital charges",
+    color: "#14294B",
+    width: "22%",
+    desc: "Room, nursing, operating theatre, intensive care if needed. Varies with the length of stay and room category."
+  },
+  {
+    id: "professional-fees",
+    label: "Professional fees",
+    color: "#263449",
+    width: "16%",
+    desc: "Surgeon, anaesthetist, and primary physician fees. Included in a package, or listed separately."
+  },
+  {
+    id: "investigations",
+    label: "Investigations",
+    color: "#3E5C76",
+    width: "14%",
+    desc: "Pathology tests, CT, MRI, PET scans, and pre-anaesthesia clearance expected in India."
+  },
+  {
+    id: "medicines-implants",
+    label: "Medicines and implants",
+    color: "#5B6A80",
+    width: "20%",
+    desc: "Chemotherapy and targeted drugs, or joint implants. Often the most variable line; a good estimate names the drug or implant assumed."
+  },
+  {
+    id: "rehab-followup",
+    label: "Rehabilitation and follow-up",
+    color: "#8FA3B8",
+    width: "10%",
+    desc: "Physiotherapy, dressings, follow-up consults, and discharge medication."
+  },
+  {
+    id: "travel-stay",
+    label: "Travel and stay",
+    color: "#BDC9D6",
+    width: "10%",
+    desc: "Flights, accommodation near hospital, airport transfers, and local transit."
+  },
+  {
+    id: "nuhavi-fee",
+    label: "Nuhavi coordination fee",
+    color: "#C49A3C",
+    width: "8%",
+    desc: "Our coordination fee, agreed in writing before you commit. Covers review, logistics, and continuous care."
+  }
+];
+
+const estimateFields = [
+  { num: 1, title: "Hospital and location", text: "Which hospital and city the estimate is from." },
+  { num: 2, title: "Treatment or procedure", text: "Exactly what is being estimated." },
+  { num: 3, title: "Hospital charges", text: "Room category, nursing, theatre, intensive care." },
+  { num: 4, title: "Professional fees", text: "Included in a package, or listed separately." },
+  { num: 5, title: "Investigations", text: "Tests expected in India." },
+  { num: 6, title: "Medicines and implants", text: "Named drug or implant assumed." },
+  { num: 7, title: "Rehabilitation and follow-up", text: "Physiotherapy and review visits." },
+  { num: 8, title: "Nuhavi coordination fee", text: "Our fee, if you go ahead." },
+  { num: 9, title: "Travel and stay", text: "Only if you ask us to arrange it." },
+  { num: 10, title: "Inclusions and exclusions", text: "What is and is not covered." },
+  { num: 11, title: "Currency and validity", text: "For example: US dollars, valid 30 days." },
+  { num: 12, title: "Assumptions", text: "Length of stay, no complications, and anything else the price depends on." }
+];
+---
+
+<BaseLayout title={pageTitle} description={pageDescription}>
+  <main class="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
+    <!-- Breadcrumb navigation -->
+    <nav class="text-xs text-[#5B6A80] mb-6" aria-label="Breadcrumb">
+      <ol class="flex items-center space-x-2">
+        <li><a href="/en/" class="hover:underline focus-visible:ring-2 focus-visible:ring-[#C49A3C] rounded px-1">Home</a></li>
+        <li aria-hidden="true"><span>/</span></li>
+        <li><a href="/en/how-it-works/" class="hover:underline focus-visible:ring-2 focus-visible:ring-[#C49A3C] rounded px-1">How it works</a></li>
+        <li aria-hidden="true"><span>/</span></li>
+        <li class="text-[#14294B] font-medium" aria-current="page">Costs, estimates and our fee</li>
+      </ol>
+    </nav>
+
+    <!-- Section 1 – Hero -->
+    <header class="mb-16">
+      <div class="w-[72px] h-[3px] bg-[#C49A3C] mb-4"></div>
+      <h1 class="text-4xl sm:text-5xl font-extrabold text-[#14294B] tracking-tight mb-4">Costs, estimates and our fee</h1>
+      <p class="text-xl font-light text-[#5B6A80] max-w-2xl leading-relaxed">
+        No surprises: you will know what each part of the bill covers, how firm each number is, and what we charge.
+      </p>
+    </header>
+
+    <!-- Section 2 – What makes up a treatment bill -->
+    <section class="mb-20" aria-labelledby="cost-breakdown-heading">
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-4 gap-2">
+        <div>
+          <h2 id="cost-breakdown-heading" class="text-2xl sm:text-3xl font-extrabold text-[#14294B] mb-2">
+            What makes up a treatment bill
+          </h2>
+          <p class="text-sm text-[#263449]">
+            Hover, tap or select each part to see what it covers and why it varies. We do not publish prices until hospitals confirm them in writing.
+          </p>
+        </div>
+        <p class="text-xs text-[#5B6A80] italic shrink-0">
+          Illustrative shares only — your estimate depends on your treatment and hospital.
+        </p>
+      </div>
+
+      <!-- Interactive horizontal cost bar -->
+      <div
+        role="tablist"
+        aria-label="Treatment bill components"
+        class="w-full h-10 rounded-[8px] overflow-hidden flex border border-gray-200 bg-gray-50 shadow-inner"
+      >
+        {costSegments.map((seg, idx) => (
+          <button
+            type="button"
+            role="tab"
+            id={`tab-${seg.id}`}
+            aria-selected={idx === 0 ? "true" : "false"}
+            aria-controls="cost-detail-box"
+            tabindex="0"
+            class="cost-bar-seg h-full transition-opacity duration-150 relative focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C49A3C] focus-visible:z-10 hover:opacity-90 active:opacity-100"
+            style={`width: ${seg.width}; background-color: ${seg.color};`}
+            data-id={seg.id}
+            data-title={seg.label}
+            data-desc={seg.desc}
+            data-color={seg.color}
+            aria-label={`${seg.label} (${seg.width} illustrative)`}
+            title={`${seg.label} — tap or hover for details`}
+          >
+            <span class="sr-only">{seg.label}</span>
+          </button>
+        ))}
+      </div>
+
+      <!-- Segment Badges / Legend Buttons -->
+      <div class="flex flex-wrap items-center gap-x-3 gap-y-2 mt-4 text-xs text-[#263449]" role="toolbar" aria-label="Quick select segment">
+        {costSegments.map((seg, idx) => (
+          <button
+            type="button"
+            class="cost-legend-btn inline-flex items-center gap-2 px-2.5 py-1.5 rounded-[6px] border border-gray-200/80 bg-white hover:bg-[#F4F7FB] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C49A3C] transition-all text-left"
+            data-target-id={seg.id}
+            aria-label={`Select ${seg.label}`}
+          >
+            <span class="w-3 h-3 rounded-[3px] shrink-0" style={`background-color: ${seg.color};`}></span>
+            <span class="font-medium text-[#14294B]">{seg.label}</span>
+          </button>
+        ))}
+      </div>
+
+      <!-- Dynamic Explanation Detail Box -->
+      <div
+        id="cost-detail-box"
+        role="tabpanel"
+        aria-labelledby="cost-detail-title"
+        class="mt-6 p-6 rounded-[14px] bg-[#F4F7FB] border border-gray-200/90 shadow-sm transition-colors duration-200"
+      >
+        <div class="flex items-center gap-3 mb-2">
+          <span id="cost-detail-indicator" class="w-3.5 h-3.5 rounded-[4px] bg-[#14294B] shrink-0"></span>
+          <h3 id="cost-detail-title" class="text-base sm:text-lg font-bold text-[#14294B]">
+            Hospital charges
+          </h3>
+        </div>
+        <p id="cost-detail-desc" class="text-sm sm:text-base text-[#263449] leading-relaxed">
+          Room, nursing, operating theatre, intensive care if needed. Varies with the length of stay and room category.
+        </p>
+      </div>
+    </section>
+
+    <!-- Section 3 – Preliminary estimate or confirmed quotation? -->
+    <section class="mb-20" aria-labelledby="estimate-vs-quote-heading">
+      <h2 id="estimate-vs-quote-heading" class="text-2xl sm:text-3xl font-extrabold text-[#14294B] mb-6">
+        Preliminary estimate or confirmed quotation?
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="p-6 sm:p-8 rounded-[14px] bg-white border border-gray-200 shadow-sm relative overflow-hidden flex flex-col justify-between">
+          <div class="w-12 h-1 bg-[#5B6A80] mb-4 rounded-full"></div>
+          <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-[#5B6A80] block mb-1">Step 1 — Early stage</span>
+            <h3 class="text-xl font-bold text-[#14294B] mb-3">Preliminary estimate</h3>
+            <p class="text-sm text-[#263449] leading-relaxed">
+              Based on your records before anyone has examined you in person. Useful for initial financial planning and comparison across hospitals, but can change once the clinical team conducts the in-person assessment.
+            </p>
+          </div>
+          <div class="mt-6 pt-4 border-t border-gray-100 flex items-center gap-2 text-xs text-[#5B6A80]">
+            <span class="inline-block w-2 h-2 rounded-full bg-[#5B6A80]"></span>
+            <span>Subject to in-person diagnostic confirmation</span>
+          </div>
+        </div>
+
+        <div class="p-6 sm:p-8 rounded-[14px] bg-white border border-gray-200 shadow-sm relative overflow-hidden flex flex-col justify-between">
+          <div class="w-12 h-1 bg-[#C49A3C] mb-4 rounded-full"></div>
+          <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-[#8A6726] block mb-1">Step 2 — Binding baseline</span>
+            <h3 class="text-xl font-bold text-[#14294B] mb-3">Confirmed quotation</h3>
+            <p class="text-sm text-[#263449] leading-relaxed">
+              Issued formally by the hospital after examination and an agreed treatment plan. This is the firm figure to budget against, subject strictly to the stated assumptions and inclusions.
+            </p>
+          </div>
+          <div class="mt-6 pt-4 border-t border-gray-100 flex items-center gap-2 text-xs text-[#26734D]">
+            <span class="inline-block w-2 h-2 rounded-full bg-[#26734D]"></span>
+            <span class="font-medium text-[#26734D]">Firm budget baseline with signed terms</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 4 – Every estimate we share shows -->
+    <section class="mb-24" aria-labelledby="twelve-fields-heading">
+      <div class="mb-6">
+        <h2 id="twelve-fields-heading" class="text-2xl sm:text-3xl font-extrabold text-[#14294B] mb-2">
+          Every estimate we share shows
+        </h2>
+        <p class="text-sm text-[#5B6A80]">
+          Standardised 12-point transparency disclosure across every partner hospital quotation.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        {estimateFields.map((f) => (
+          <div class="p-5 rounded-[14px] bg-[#F4F7FB] border border-gray-200/80 hover:border-gray-300 transition-colors flex flex-col justify-between">
+            <div>
+              <div class="flex items-center gap-2 mb-2">
+                <span class="w-6 h-6 rounded-full bg-[#14294B] text-white text-xs font-bold flex items-center justify-center shrink-0">
+                  {f.num}
+                </span>
+                <h3 class="text-xs font-bold text-[#14294B] tracking-tight">{f.title}</h3>
+              </div>
+              <p class="text-xs text-[#5B6A80] leading-relaxed pl-8">{f.text}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- Section 5 – How Nuhavi is paid -->
+    <section class="border-t border-gray-200 pt-16" aria-labelledby="how-paid-heading">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+        <!-- Left Column -->
+        <div class="lg:col-span-6 space-y-6">
+          <h2 id="how-paid-heading" class="text-3xl sm:text-4xl font-extrabold text-[#14294B]">
+            How Nuhavi is paid
+          </h2>
+          <p class="text-base text-[#5B6A80] leading-relaxed">
+            You pay us a coordination fee, agreed in writing before you commit. We do not work on hidden hospital kickbacks.
+          </p>
+
+          <!-- Amber Confirmation Notice for Policy -->
+          <div class="p-5 rounded-[14px] bg-[#FFF6E5] border border-[#F5C344] text-[#263449] text-xs leading-relaxed space-y-1.5" role="note">
+            <div class="flex items-center gap-2 text-[#8A6726] font-bold uppercase tracking-wider text-[11px]">
+              <svg class="w-4 h-4 shrink-0 text-[#8A6726]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+              <span>Needs confirmation</span>
+            </div>
+            <p>
+              Policy statement to confirm against signed hospital agreements: &ldquo;Nuhavi Health is paid only by patients. We do not accept referral fees, commissions, marketing payments or any other money or benefit from hospitals, doctors or their agents. Our hospital agreements say so in writing.&rdquo;
+            </p>
+          </div>
+
+          <div>
+            <a
+              href="/en/about/commercial-relationships/"
+              class="inline-flex items-center gap-1.5 text-sm font-semibold text-[#14294B] hover:text-[#C49A3C] underline focus-visible:ring-2 focus-visible:ring-[#C49A3C] rounded py-1"
+            >
+              <span>Our commercial relationships</span>
+              <span aria-hidden="true">&rarr;</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Right Column: Gold-Top-Border Fee Panel -->
+        <div class="lg:col-span-6">
+          <div class="rounded-[14px] bg-white border border-gray-200 border-t-4 border-t-[#C49A3C] p-6 sm:p-8 space-y-6 shadow-sm">
+            <h3 class="text-2xl font-bold text-[#14294B]">Coordination fee</h3>
+
+            <!-- Amber Confirmation Notice for Fee Amounts (FEES.confirmed rule) -->
+            <div class="p-4 rounded-[14px] bg-[#FFF6E5] border border-[#F5C344] text-[#263449] text-xs leading-relaxed space-y-1" role="note">
+              <div class="flex items-center gap-2 text-[#8A6726] font-bold uppercase tracking-wider text-[11px]">
+                <svg class="w-4 h-4 shrink-0 text-[#8A6726]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                <span>Needs confirmation</span>
+              </div>
+              <p>
+                Fee amounts proposed in the business plan (US$450 oncology, US$350 orthopaedics). Founders to confirm before publishing. Actual amounts are withheld until confirmed through <code class="font-mono bg-white/70 px-1 py-0.5 rounded text-[11px]">FEES.confirmed</code>.
+              </p>
+            </div>
+
+            <div>
+              <h4 class="text-sm font-bold text-[#14294B] mb-3">The fee covers</h4>
+              <ul class="space-y-2.5 text-xs text-[#263449]">
+                <li class="flex items-start gap-2.5">
+                  <span class="text-[#26734D] font-bold text-sm shrink-0" aria-hidden="true">&#10003;</span>
+                  <span>Coordinating the review of your records by a suitable hospital</span>
+                </li>
+                <li class="flex items-start gap-2.5">
+                  <span class="text-[#26734D] font-bold text-sm shrink-0" aria-hidden="true">&#10003;</span>
+                  <span>Organising written treatment options and estimates</span>
+                </li>
+                <li class="flex items-start gap-2.5">
+                  <span class="text-[#26734D] font-bold text-sm shrink-0" aria-hidden="true">&#10003;</span>
+                  <span>Help with the hospital invitation letter for your visa application</span>
+                </li>
+                <li class="flex items-start gap-2.5">
+                  <span class="text-[#26734D] font-bold text-sm shrink-0" aria-hidden="true">&#10003;</span>
+                  <span>A coordinator who speaks your language, before, during and after treatment</span>
+                </li>
+                <li class="flex items-start gap-2.5">
+                  <span class="text-[#26734D] font-bold text-sm shrink-0" aria-hidden="true">&#10003;</span>
+                  <span>Follow-up coordination after you return home (period to be confirmed)</span>
+                </li>
+              </ul>
+            </div>
+
+            <p class="text-xs text-[#5B6A80] border-t border-gray-100 pt-4 leading-relaxed">
+              Hospital charges are paid to the hospital. Travel and stay are paid to providers unless you ask us to arrange them, in which case we show our charge first.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Bottom Navigation / Continuation -->
+    <div class="mt-20 pt-8 border-t border-gray-200 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <a
+        href="/en/how-it-works/"
+        class="inline-flex items-center gap-2 text-xs font-bold text-[#14294B] hover:text-[#C49A3C] transition-colors"
+      >
+        <span aria-hidden="true">&larr;</span>
+        <span>Back to How it works (7 steps)</span>
+      </a>
+      <a
+        href="/en/request-opinion/"
+        class="inline-flex items-center justify-center min-h-[48px] px-8 rounded-full bg-[#14294B] text-white text-xs font-bold tracking-wide uppercase hover:bg-[#0D1B33] transition-colors"
+      >
+        Request a medical opinion
+      </a>
+    </div>
+  </main>
+
+  <!-- Interactive script for cost bar segments and keyboard accessibility -->
+  <script>
+    function setupCostBar() {
+      const segButtons = document.querySelectorAll<HTMLButtonElement>('.cost-bar-seg');
+      const legendButtons = document.querySelectorAll<HTMLButtonElement>('.cost-legend-btn');
+      const titleEl = document.getElementById('cost-detail-title');
+      const descEl = document.getElementById('cost-detail-desc');
+      const indicatorEl = document.getElementById('cost-detail-indicator');
+
+      function activateSegment(btn: HTMLButtonElement) {
+        const title = btn.getAttribute('data-title') || '';
+        const desc = btn.getAttribute('data-desc') || '';
+        const color = btn.getAttribute('data-color') || '#14294B';
+        const id = btn.getAttribute('data-id') || '';
+
+        if (titleEl) titleEl.textContent = title;
+        if (descEl) descEl.textContent = desc;
+        if (indicatorEl) indicatorEl.style.backgroundColor = color;
+
+        // Update ARIA selected status
+        segButtons.forEach((b) => {
+          const isCurrent = b === btn;
+          b.setAttribute('aria-selected', isCurrent ? 'true' : 'false');
+          b.style.opacity = isCurrent ? '1' : '0.75';
+        });
+
+        // Update legend buttons visual state
+        legendButtons.forEach((lb) => {
+          const targetId = lb.getAttribute('data-target-id');
+          if (targetId === id) {
+            lb.classList.add('border-[#C49A3C]', 'bg-[#FFF6E5]', 'font-bold');
+            lb.classList.remove('border-gray-200/80', 'bg-white');
+          } else {
+            lb.classList.remove('border-[#C49A3C]', 'bg-[#FFF6E5]', 'font-bold');
+            lb.classList.add('border-gray-200/80', 'bg-white');
+          }
+        });
+      }
+
+      // Initialize default
+      if (segButtons.length > 0) {
+        activateSegment(segButtons[0]);
+      }
+
+      // Segment listeners
+      segButtons.forEach((btn, index) => {
+        // Hover
+        btn.addEventListener('mouseenter', () => activateSegment(btn));
+        // Click / Tap
+        btn.addEventListener('click', () => activateSegment(btn));
+        // Focus
+        btn.addEventListener('focus', () => activateSegment(btn));
+
+        // Keyboard arrow navigation
+        btn.addEventListener('keydown', (e: KeyboardEvent) => {
+          let nextIndex = -1;
+          if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+            nextIndex = (index + 1) % segButtons.length;
+          } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+            nextIndex = (index - 1 + segButtons.length) % segButtons.length;
+          }
+
+          if (nextIndex >= 0) {
+            e.preventDefault();
+            const nextBtn = segButtons[nextIndex];
+            nextBtn.focus();
+            activateSegment(nextBtn);
+          }
+        });
+      });
+
+      // Legend button listeners
+      legendButtons.forEach((lb) => {
+        const targetId = lb.getAttribute('data-target-id');
+        const matchSeg = Array.from(segButtons).find((b) => b.getAttribute('data-id') === targetId);
+
+        if (matchSeg) {
+          lb.addEventListener('click', () => {
+            matchSeg.focus();
+            activateSegment(matchSeg);
+          });
+          lb.addEventListener('mouseenter', () => {
+            activateSegment(matchSeg);
+          });
+        }
+      });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', setupCostBar);
+    } else {
+      setupCostBar();
+    }
+  </script>
+</BaseLayout>
