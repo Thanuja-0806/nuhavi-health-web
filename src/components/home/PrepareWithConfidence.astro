@@ -1,0 +1,240 @@
+---
+/**
+ * PrepareWithConfidence.astro
+ * Homepage section: "Prepare with confidence" (Module 10)
+ * Reference: Page 10 of the Nuhavi Health Look and Feel PDF (30 October 2026).
+ *
+ * Visual corrections:
+ * 1. Numbering removed completely (no 01–06 markers, no prefix numbers).
+ * 2. Simplified pending status: single subtle note beneath header ("Our guides are being prepared. Please check back soon.").
+ * 3. Removed repeated GUIDE PENDING badges from individual cards.
+ * 4. Improved card proportions: reduced vertical padding, equal row heights, clean natural fit.
+ * 5. Maintained desktop side-by-side header row and 3-column x 2-row layout.
+ * 6. Maintained responsive 2-column tablet and 1-column mobile layouts without horizontal overflow.
+ */
+
+const resources: string[] = [
+  'Preparing your medical records',
+  'Questions to ask before choosing a hospital',
+  'Understanding a treatment estimate',
+  'Medical second opinions',
+  'Travelling with a companion',
+  'After you return home'
+];
+---
+
+<section class="prepare-section" aria-labelledby="prepare-heading">
+  <div class="container prepare-container">
+    <!-- Header: Side-by-side on desktop, stacked on mobile -->
+    <header class="prepare-header">
+      <div class="header-top-row">
+        <div class="header-title-group">
+          <span class="prepare-eyebrow">RESOURCES &amp; CHECKLISTS</span>
+          <h2 id="prepare-heading" class="prepare-title">
+            Prepare with confidence
+          </h2>
+        </div>
+        <p class="prepare-supporting-text">
+          Explore the topics we are preparing to help you navigate your treatment journey with confidence.
+        </p>
+      </div>
+
+      <!-- Single subtle informational note -->
+      <p class="prepare-status-note">
+        Our guides are being prepared. Please check back soon.
+      </p>
+    </header>
+
+    <!-- Six Resource Items (3 Columns x 2 Rows on Desktop) -->
+    <div class="resources-grid" role="list" aria-label="Preparation guides and checklists">
+      {resources.map((title) => (
+        <article class="resource-card" role="listitem">
+          <h3 class="resource-title">{title}</h3>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  /* --------------------------------------------------------------------------
+     SECTION BASE & SHELL (Mist #F4F7FB Background)
+     -------------------------------------------------------------------------- */
+  .prepare-section {
+    width: 100%;
+    background-color: var(--color-mist);
+    padding-top: var(--section-spacing);
+    padding-bottom: var(--section-spacing);
+    border-top: 1px solid rgba(20, 41, 75, 0.08);
+  }
+
+  .prepare-container {
+    width: 100%;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: var(--space-3);
+    padding-right: var(--space-3);
+  }
+
+  @media (max-width: 480px) {
+    .prepare-container {
+      padding-left: var(--space-2);
+      padding-right: var(--space-2);
+    }
+  }
+
+  /* --------------------------------------------------------------------------
+     SECTION HEADER (Side-by-side on Desktop)
+     -------------------------------------------------------------------------- */
+  .prepare-header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    margin-bottom: var(--space-8);
+  }
+
+  .header-top-row {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  @media (min-width: 1024px) {
+    .header-top-row {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: var(--space-8);
+    }
+  }
+
+  .header-title-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    max-width: 620px;
+  }
+
+  .prepare-eyebrow {
+    font-size: 0.8125rem;
+    font-weight: var(--font-weight-subheading);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-gold-text);
+  }
+
+  .prepare-title {
+    font-size: clamp(1.75rem, 3.5vw, 2.375rem);
+    font-weight: var(--font-weight-heading);
+    color: var(--color-deep-navy);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+
+  .prepare-supporting-text {
+    font-size: 1.0625rem;
+    font-weight: var(--font-weight-body);
+    line-height: var(--line-height-body);
+    color: var(--color-slate);
+    max-width: 440px;
+  }
+
+  .prepare-status-note {
+    font-size: 0.875rem;
+    font-weight: var(--font-weight-body);
+    color: var(--color-slate);
+    line-height: 1.5;
+    margin-top: 4px;
+  }
+
+  /* --------------------------------------------------------------------------
+     RESOURCES GRID (3 Columns x 2 Rows on Desktop)
+     -------------------------------------------------------------------------- */
+  .resources-grid {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  /* Desktop (>= 1024px): 3 columns x 2 rows */
+  @media (min-width: 1024px) {
+    .resources-grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-4);
+    }
+  }
+
+  /* Tablet (641px - 1023px): 2 columns x 3 rows */
+  @media (min-width: 641px) and (max-width: 1023px) {
+    .resources-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-4);
+    }
+  }
+
+  /* Mobile (<= 640px): 1 column x 6 rows */
+  @media (max-width: 640px) {
+    .resources-grid {
+      grid-template-columns: 1fr;
+      gap: var(--space-3);
+    }
+
+    .prepare-header {
+      margin-bottom: var(--space-5);
+    }
+  }
+
+  /* --------------------------------------------------------------------------
+     RESOURCE CARD (Clean natural proportions, equal row heights)
+     -------------------------------------------------------------------------- */
+  .resource-card {
+    background-color: var(--color-paper);
+    border: 1px solid rgba(20, 41, 75, 0.08);
+    border-radius: var(--radius-card);
+    padding: var(--space-4);
+    box-shadow: 0 2px 8px rgba(20, 41, 75, 0.03);
+    display: flex;
+    align-items: center;
+    min-height: 80px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  }
+
+  .resource-card:hover {
+    border-color: rgba(20, 41, 75, 0.16);
+    box-shadow: 0 4px 12px rgba(20, 41, 75, 0.05);
+  }
+
+  .resource-title {
+    font-size: 1.0625rem;
+    font-weight: var(--font-weight-subheading);
+    color: var(--color-deep-navy);
+    line-height: 1.35;
+  }
+
+  /* --------------------------------------------------------------------------
+     MOBILE REFINEMENTS (<= 640px, 390px, 360px)
+     -------------------------------------------------------------------------- */
+  @media (max-width: 640px) {
+    .resource-card {
+      padding: var(--space-3) var(--space-4);
+      min-height: auto;
+    }
+
+    .resource-title {
+      font-size: 1rem;
+    }
+
+    .prepare-supporting-text {
+      font-size: 1rem;
+    }
+  }
+
+  /* --------------------------------------------------------------------------
+     REDUCED MOTION PREFERENCES
+     -------------------------------------------------------------------------- */
+  @media (prefers-reduced-motion: reduce) {
+    .resource-card {
+      transition: none !important;
+    }
+  }
+</style>

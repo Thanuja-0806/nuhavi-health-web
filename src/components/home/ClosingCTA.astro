@@ -1,0 +1,330 @@
+---
+/**
+ * ClosingCTA.astro
+ * Homepage closing band: "Your treatment journey starts with clarity." (Module 11)
+ * Reference: Page 10 of the Nuhavi Health Look and Feel PDF (30 October 2026).
+ *
+ * Refinements applied:
+ * 1. Removed visible "PENDING RELEASE" badges from both CTA buttons.
+ * 2. CTA labels centered and on one line wherever desktop width permits.
+ * 3. Equal width and height for both CTA buttons, consistent padding and alignment.
+ * 4. Preserved primary gold pill and transparent navy secondary pill with gold border.
+ * 5. Destination safeguards maintained: disabled/pending non-clickable state when route does not exist.
+ * 6. Responsive natural text wrapping on small viewports without clipping or overflow.
+ * 7. Headline, supporting text, background, decorative route SVG, and tokens preserved.
+ */
+import fs from 'node:fs';
+import path from 'node:path';
+
+// Inspect destination routes at build time
+const pagesDir = path.resolve('./src/pages/en');
+const hasRequestOpinionRoute =
+  fs.existsSync(path.join(pagesDir, 'request-opinion.astro')) ||
+  fs.existsSync(path.join(pagesDir, 'request-opinion', 'index.astro'));
+
+const hasContactRoute =
+  fs.existsSync(path.join(pagesDir, 'contact.astro')) ||
+  fs.existsSync(path.join(pagesDir, 'contact', 'index.astro'));
+---
+
+<section class="closing-cta-section" aria-labelledby="closing-cta-heading">
+  <div class="closing-cta-container">
+    <div class="closing-cta-layout">
+      <!-- Left Column: Headline and Supporting Text -->
+      <div class="closing-cta-content">
+        <h2 id="closing-cta-heading" class="closing-cta-title">
+          Your treatment journey starts with clarity.
+        </h2>
+        <p class="closing-cta-text">
+          Tell us what you need. A coordinator will explain the next steps and what we can help you plan — nothing more until you are ready.
+        </p>
+      </div>
+
+      <!-- Right Column: CTA Buttons & Decorative Route Line -->
+      <div class="closing-cta-actions-wrapper">
+        <!-- Restrained Decorative Gold Route Line (aria-hidden) -->
+        <svg
+          class="route-accent-svg"
+          viewBox="0 0 40 140"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="M 20 8 C 10 40, 30 90, 20 132"
+            stroke="var(--color-gold)"
+            stroke-width="1.75"
+            stroke-linecap="round"
+            stroke-dasharray="3 3"
+            opacity="0.4"
+          />
+          <circle cx="20" cy="8" r="3" fill="var(--color-gold)" opacity="0.7" />
+          <circle cx="25" cy="70" r="2.5" fill="var(--color-gold)" opacity="0.7" />
+          <circle cx="20" cy="132" r="3" fill="var(--color-gold)" opacity="0.7" />
+        </svg>
+
+        <!-- Vertical CTA Button Stack -->
+        <div class="cta-buttons-stack">
+          <!-- Primary CTA: Request a medical opinion -->
+          {hasRequestOpinionRoute ? (
+            <a href="/en/request-opinion/" class="btn-closing-primary">
+              <span>Request a medical opinion</span>
+            </a>
+          ) : (
+            <span
+              class="btn-closing-primary is-pending"
+              role="link"
+              aria-disabled="true"
+              tabindex="0"
+              title="Request opinion form coming soon"
+            >
+              <span>Request a medical opinion</span>
+            </span>
+          )}
+
+          <!-- Secondary CTA: Talk to a care coordinator -->
+          {hasContactRoute ? (
+            <a href="/en/contact/" class="btn-closing-secondary">
+              <span>Talk to a care coordinator</span>
+            </a>
+          ) : (
+            <span
+              class="btn-closing-secondary is-pending"
+              role="link"
+              aria-disabled="true"
+              tabindex="0"
+              title="Care coordinator contact coming soon"
+            >
+              <span>Talk to a care coordinator</span>
+            </span>
+          )}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* --------------------------------------------------------------------------
+     SECTION BASE & SHELL (Full-width Deep Navy #0D1B33)
+     -------------------------------------------------------------------------- */
+  .closing-cta-section {
+    width: 100%;
+    background-color: var(--color-deep-navy);
+    padding-top: var(--section-spacing);
+    padding-bottom: var(--section-spacing);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    position: relative;
+    overflow: hidden;
+    box-sizing: border-box;
+  }
+
+  .closing-cta-container {
+    width: 100%;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: var(--space-3);
+    padding-right: var(--space-3);
+    box-sizing: border-box;
+  }
+
+  @media (max-width: 480px) {
+    .closing-cta-container {
+      padding-left: var(--space-2);
+      padding-right: var(--space-2);
+    }
+  }
+
+  /* --------------------------------------------------------------------------
+     TWO-COLUMN DESKTOP LAYOUT (1024px+)
+     -------------------------------------------------------------------------- */
+  .closing-cta-layout {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  @media (min-width: 1024px) {
+    .closing-cta-layout {
+      display: grid;
+      grid-template-columns: 1.25fr 0.75fr;
+      gap: var(--space-8);
+      align-items: center;
+    }
+  }
+
+  /* --------------------------------------------------------------------------
+     LEFT COLUMN: HEADLINE & SUPPORTING TEXT
+     -------------------------------------------------------------------------- */
+  .closing-cta-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    min-width: 0;
+  }
+
+  .closing-cta-title {
+    font-size: clamp(1.875rem, 3.5vw, 2.5rem);
+    font-weight: var(--font-weight-heading);
+    color: var(--color-paper);
+    line-height: var(--line-height-heading);
+    letter-spacing: -0.015em;
+    margin: 0;
+  }
+
+  .closing-cta-text {
+    font-size: 1.125rem;
+    font-weight: var(--font-weight-body);
+    line-height: var(--line-height-body);
+    color: rgba(255, 255, 255, 0.85);
+    max-width: 580px;
+    margin: 0;
+  }
+
+  /* --------------------------------------------------------------------------
+     RIGHT COLUMN: CTA BUTTONS & ROUTE LINE ACCENT
+     -------------------------------------------------------------------------- */
+  .closing-cta-actions-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  @media (min-width: 1024px) {
+    .closing-cta-actions-wrapper {
+      justify-content: flex-end;
+    }
+  }
+
+  /* Restrained Decorative SVG Route Line (aria-hidden) */
+  .route-accent-svg {
+    position: absolute;
+    left: -44px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 36px;
+    height: 120px;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  @media (max-width: 1023px) {
+    .route-accent-svg {
+      display: none;
+    }
+  }
+
+  /* Vertical Stack of CTA Buttons */
+  .cta-buttons-stack {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    width: 100%;
+    max-width: 340px;
+  }
+
+  /* --------------------------------------------------------------------------
+     BUTTON STYLES (Primary Gold Pill & Secondary Transparent Pill)
+     Equal width, equal height, consistent padding and alignment.
+     No shadows, gradients, or non-token colors.
+     -------------------------------------------------------------------------- */
+  .btn-closing-primary,
+  .btn-closing-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+    min-height: 52px;
+    padding: 0 var(--space-4);
+    border-radius: var(--radius-pill);
+    font-family: var(--font-family-base);
+    font-size: 1rem;
+    font-weight: var(--font-weight-subheading);
+    text-decoration: none;
+    cursor: pointer;
+    box-sizing: border-box;
+    white-space: nowrap;
+    border: 2px solid var(--color-gold);
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  }
+
+  .btn-closing-primary {
+    background-color: var(--color-gold);
+    color: var(--color-deep-navy);
+  }
+
+  .btn-closing-primary:hover:not(.is-pending) {
+    background-color: #D4AA4C;
+    border-color: #D4AA4C;
+  }
+
+  .btn-closing-secondary {
+    background-color: transparent;
+    color: var(--color-paper);
+  }
+
+  .btn-closing-secondary:hover:not(.is-pending) {
+    background-color: rgba(196, 154, 60, 0.14);
+    border-color: var(--color-gold);
+  }
+
+  /* Pending State when Destination Route Does Not Exist */
+  .is-pending {
+    cursor: default;
+    user-select: none;
+  }
+
+  .btn-closing-primary.is-pending {
+    background-color: var(--color-gold);
+    border-color: var(--color-gold);
+    opacity: 0.95;
+  }
+
+  .btn-closing-secondary.is-pending {
+    background-color: rgba(255, 255, 255, 0.04);
+    border-color: var(--color-gold);
+    opacity: 0.95;
+  }
+
+  /* --------------------------------------------------------------------------
+     MOBILE REFINEMENTS (<= 640px, 390px, 360px)
+     Allows natural text wrapping only when necessary; prevents clipping/overflow.
+     -------------------------------------------------------------------------- */
+  @media (max-width: 640px) {
+    .closing-cta-title {
+      font-size: 1.625rem;
+    }
+
+    .closing-cta-text {
+      font-size: 0.9375rem;
+    }
+
+    .cta-buttons-stack {
+      max-width: 100%;
+    }
+
+    .btn-closing-primary,
+    .btn-closing-secondary {
+      width: 100%;
+      min-height: 48px;
+      font-size: 0.9375rem;
+      padding: var(--space-1) var(--space-3);
+      white-space: normal;
+      line-height: 1.35;
+    }
+  }
+
+  /* --------------------------------------------------------------------------
+     REDUCED MOTION PREFERENCES
+     -------------------------------------------------------------------------- */
+  @media (prefers-reduced-motion: reduce) {
+    .btn-closing-primary,
+    .btn-closing-secondary {
+      transition: none !important;
+    }
+  }
+</style>

@@ -1,0 +1,217 @@
+---
+/**
+ * PatientStories.astro
+ * Homepage section: "Patient stories" (Module 9)
+ * Reference: Page 9 of the Nuhavi Health Look and Feel PDF (30 October 2026).
+ *
+ * Implements:
+ * 1. Clean Mist (#F4F7FB) background with standard section spacing.
+ * 2. Exact heading: "Patient stories".
+ * 3. Exact supporting text: "Real stories, told with the patient's written permission, will appear here."
+ * 4. Separate consent and authenticity information panel on the right:
+ *    - "We will not publish invented testimonials, outcome claims or photos without consent."
+ *    - "Each story will show what was coordinated and what was not, so that patients can see it at any time."
+ * 5. Deliberate empty state: zero fake patient names, AI/stock photos, star ratings, or placeholder story cards.
+ * 6. Responsive two-column desktop layout and single-column mobile layout with zero overflow at 390px and 360px.
+ * 7. Strict privacy and regulatory safeguards.
+ */
+---
+
+<section class="stories-section" aria-labelledby="stories-heading">
+  <div class="container stories-container">
+    <div class="stories-layout">
+      <!-- Left Column: Heading and Supporting Copy -->
+      <div class="stories-intro-col">
+        <header class="stories-header">
+          <span class="stories-eyebrow">Patient Experiences</span>
+          <h2 id="stories-heading" class="stories-title">
+            Patient stories
+          </h2>
+          <p class="stories-supporting-text">
+            Real stories, told with the patient's written permission, will appear here.
+          </p>
+        </header>
+      </div>
+
+      <!-- Right Column: Consent and Authenticity Information Panel -->
+      <div class="stories-panel-col">
+        <aside class="consent-panel" aria-label="Consent and authenticity policy">
+          <span class="panel-eyebrow">AUTHENTICITY &amp; CONSENT</span>
+          <h3 class="panel-title">Our publication standard</h3>
+
+          <div class="panel-body">
+            <p class="panel-text">
+              We will not publish invented testimonials, outcome claims or photos without consent.
+            </p>
+            <p class="panel-text">
+              Each story will show what was coordinated and what was not, so that patients can see it at any time.
+            </p>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* --------------------------------------------------------------------------
+     SECTION BASE & SHELL (Mist #F4F7FB Background)
+     -------------------------------------------------------------------------- */
+  .stories-section {
+    width: 100%;
+    background-color: var(--color-mist);
+    padding-top: var(--section-spacing);
+    padding-bottom: var(--section-spacing);
+    border-top: 1px solid rgba(20, 41, 75, 0.08);
+  }
+
+  .stories-container {
+    width: 100%;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: var(--space-3);
+    padding-right: var(--space-3);
+  }
+
+  @media (max-width: 480px) {
+    .stories-container {
+      padding-left: var(--space-2);
+      padding-right: var(--space-2);
+    }
+  }
+
+  /* --------------------------------------------------------------------------
+     TWO-COLUMN DESKTOP LAYOUT (1024px+)
+     -------------------------------------------------------------------------- */
+  .stories-layout {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  @media (min-width: 1024px) {
+    .stories-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-8);
+      align-items: center;
+    }
+  }
+
+  /* --------------------------------------------------------------------------
+     LEFT COLUMN: HEADER & SUPPORTING COPY
+     -------------------------------------------------------------------------- */
+  .stories-intro-col {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .stories-header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .stories-eyebrow {
+    font-size: 0.8125rem;
+    font-weight: var(--font-weight-subheading);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-gold-text);
+  }
+
+  .stories-title {
+    font-size: clamp(1.75rem, 3.5vw, 2.375rem);
+    font-weight: var(--font-weight-heading);
+    color: var(--color-deep-navy);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+
+  .stories-supporting-text {
+    font-size: 1.0625rem;
+    font-weight: var(--font-weight-body);
+    line-height: var(--line-height-body);
+    color: var(--color-slate);
+    margin-top: 4px;
+    max-width: 520px;
+  }
+
+  /* --------------------------------------------------------------------------
+     RIGHT COLUMN: CONSENT AND AUTHENTICITY INFORMATION PANEL
+     -------------------------------------------------------------------------- */
+  .stories-panel-col {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .consent-panel {
+    background-color: var(--color-paper);
+    border: 1px solid rgba(20, 41, 75, 0.1);
+    border-left: 3.5px solid var(--color-gold);
+    border-radius: var(--radius-card);
+    padding: var(--space-5) var(--space-6);
+    box-shadow: 0 2px 10px rgba(20, 41, 75, 0.03);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .panel-eyebrow {
+    font-size: 0.75rem;
+    font-weight: var(--font-weight-subheading);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-gold-text);
+  }
+
+  .panel-title {
+    font-size: 1.25rem;
+    font-weight: var(--font-weight-heading);
+    color: var(--color-deep-navy);
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+  }
+
+  .panel-body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .panel-text {
+    font-size: 0.9375rem;
+    font-weight: var(--font-weight-body);
+    line-height: 1.6;
+    color: var(--color-ink);
+  }
+
+  /* --------------------------------------------------------------------------
+     MOBILE REFINEMENTS (<= 640px, 390px, 360px)
+     -------------------------------------------------------------------------- */
+  @media (max-width: 640px) {
+    .stories-layout {
+      gap: var(--space-5);
+    }
+
+    .stories-supporting-text {
+      font-size: 1rem;
+    }
+
+    .consent-panel {
+      padding: var(--space-4);
+      gap: var(--space-2);
+    }
+
+    .panel-title {
+      font-size: 1.125rem;
+    }
+
+    .panel-text {
+      font-size: 0.875rem;
+    }
+  }
+</style>
+

@@ -1,0 +1,292 @@
+---
+/**
+ * Footer.astro
+ * Global footer for Nuhavi Health.
+ * Features the brand wordmark, clear description of the coordination role,
+ * logically grouped navigation links, mandatory legal links, and a dynamic copyright year.
+ * Complies strictly with zero invented claims, addresses, phone numbers, or social media handles.
+ */
+
+const currentYear = new Date().getFullYear();
+
+const coordinationLinks = [
+  { label: 'Treatments', href: '/en/treatments' },
+  { label: 'Hospitals', href: '/en/hospitals' },
+  { label: 'How it works', href: '/en/how-it-works' },
+  { label: 'Countries', href: '/en/countries' },
+];
+
+const companyLinks = [
+  { label: 'About Nuhavi Health', href: '/en/about' },
+  { label: 'Patient Stories', href: '/en/stories' },
+  { label: 'Resources & Guides', href: '/en/resources' },
+  { label: 'Contact Us', href: '/en/contact' },
+];
+
+const legalLinks = [
+  { label: 'Privacy Policy', href: '/en/privacy' },
+  { label: 'Terms and Conditions', href: '/en/terms' },
+  { label: 'Disclaimer', href: '/en/disclaimer' },
+];
+---
+
+<footer class="site-footer">
+  <div class="container footer-container">
+    <!-- Top Footer: Brand, Coordination Role & Grouped Navigation -->
+    <div class="footer-top">
+      <!-- Column 1: Brand Wordmark & Neutral Role Description -->
+      <div class="footer-brand-col">
+        <a href="/en/" class="footer-logo" aria-label="Nuhavi Health - Home">
+          <span class="logo-wordmark">Nuhavi Health</span>
+        </a>
+        <p class="role-description">
+          Nuhavi Health is an independent medical travel coordination service. We assist international patients by coordinating requests, travel logistics, and communication with independent healthcare providers.
+        </p>
+        <p class="disclaimer-callout">
+          <strong>Notice:</strong> Nuhavi Health facilitates coordination and communication between patients and healthcare providers. We are not a hospital, clinic, or medical provider and do not provide medical diagnosis, treatment, or clinical evaluations.
+        </p>
+      </div>
+
+      <!-- Column 2: Travel & Coordination Links -->
+      <div class="footer-nav-col">
+        <h4 class="col-heading">Coordination</h4>
+        <ul class="footer-link-list">
+          {coordinationLinks.map((link) => (
+            <li>
+              <a href={link.href} class="footer-link">
+                {link.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- Column 3: Company & Information Links -->
+      <div class="footer-nav-col">
+        <h4 class="col-heading">Information</h4>
+        <ul class="footer-link-list">
+          {companyLinks.map((link) => (
+            <li>
+              <a href={link.href} class="footer-link">
+                {link.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- Column 4: Patient Inquiries -->
+      <div class="footer-nav-col">
+        <h4 class="col-heading">Inquiries</h4>
+        <p class="inquiries-copy">
+          Submit an inquiry to coordinate medical opinion requests and travel logistics with qualified healthcare providers.
+        </p>
+        <a href="/en/request-opinion/" class="btn-primary footer-cta">
+          Request a medical opinion
+        </a>
+      </div>
+    </div>
+
+    <!-- Bottom Footer: Legal Links & Dynamic Copyright -->
+    <div class="footer-bottom">
+      <p class="copyright-text">
+        &copy; {currentYear} Nuhavi Health. All rights reserved.
+      </p>
+
+      <ul class="legal-list" aria-label="Legal navigation">
+        {legalLinks.map((link) => (
+          <li>
+            <a href={link.href} class="legal-link">
+              {link.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<style>
+  /* --------------------------------------------------------------------------
+     FOOTER BASE & CONTAINER
+     -------------------------------------------------------------------------- */
+  .site-footer {
+    background-color: var(--color-deep-navy);
+    color: var(--color-mist);
+    padding-top: var(--space-10);
+    padding-bottom: var(--space-6);
+    border-top: 1px solid rgba(244, 247, 251, 0.08);
+    margin-top: auto; /* Keeps footer pinned to bottom on short pages */
+  }
+
+  .footer-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+  }
+
+  /* --------------------------------------------------------------------------
+     TOP FOOTER (4-Column Grid)
+     -------------------------------------------------------------------------- */
+  .footer-top {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+  }
+
+  @media (min-width: 640px) {
+    .footer-top {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .footer-top {
+      grid-template-columns: 2fr 1fr 1fr 1.5fr;
+      gap: var(--space-6);
+    }
+  }
+
+  /* Brand Column */
+  .footer-brand-col {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .footer-logo {
+    text-decoration: none;
+    color: var(--color-paper);
+    display: inline-block;
+  }
+
+  .logo-wordmark {
+    font-size: 1.375rem;
+    font-weight: var(--font-weight-heading);
+    letter-spacing: -0.02em;
+    color: var(--color-paper);
+  }
+
+  .role-description {
+    font-size: 0.9375rem;
+    line-height: var(--line-height-body);
+    color: rgba(244, 247, 251, 0.85);
+    max-width: 380px;
+  }
+
+  .disclaimer-callout {
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    color: rgba(244, 247, 251, 0.65);
+    border-left: 2px solid var(--color-gold);
+    padding-left: var(--space-2);
+    margin-top: var(--space-1);
+    max-width: 380px;
+  }
+
+  .disclaimer-callout strong {
+    color: var(--color-gold);
+  }
+
+  /* Navigation Columns */
+  .footer-nav-col {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .col-heading {
+    font-size: 0.875rem;
+    font-weight: var(--font-weight-subheading);
+    color: var(--color-gold);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: var(--space-1);
+  }
+
+  .footer-link-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .footer-link {
+    color: rgba(244, 247, 251, 0.85);
+    text-decoration: none;
+    font-size: 0.9375rem;
+    transition: color 0.15s ease;
+  }
+
+  .footer-link:hover {
+    color: var(--color-paper);
+    text-decoration: underline;
+  }
+
+  .inquiries-copy {
+    font-size: 0.875rem;
+    line-height: var(--line-height-body);
+    color: rgba(244, 247, 251, 0.75);
+    margin-bottom: var(--space-1);
+  }
+
+  .footer-cta {
+    align-self: flex-start;
+    background-color: var(--color-gold);
+    border-color: var(--color-gold);
+    color: var(--color-deep-navy);
+    font-size: 0.875rem;
+    padding: 0 var(--space-3);
+  }
+
+  .footer-cta:hover {
+    background-color: var(--color-paper);
+    border-color: var(--color-paper);
+    color: var(--color-deep-navy);
+  }
+
+  /* --------------------------------------------------------------------------
+     BOTTOM FOOTER (Copyright & Legal)
+     -------------------------------------------------------------------------- */
+  .footer-bottom {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-3);
+    padding-top: var(--space-4);
+    border-top: 1px solid rgba(244, 247, 251, 0.1);
+  }
+
+  @media (min-width: 768px) {
+    .footer-bottom {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+    }
+  }
+
+  .copyright-text {
+    font-size: 0.875rem;
+    color: rgba(244, 247, 251, 0.65);
+  }
+
+  .legal-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    list-style: none;
+  }
+
+  .legal-link {
+    font-size: 0.8125rem;
+    color: rgba(244, 247, 251, 0.7);
+    text-decoration: none;
+    transition: color 0.15s ease;
+  }
+
+  .legal-link:hover {
+    color: var(--color-gold);
+    text-decoration: underline;
+  }
+</style>
+

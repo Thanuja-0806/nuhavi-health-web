@@ -1,0 +1,80 @@
+---
+/**
+ * BaseLayout.astro
+ * Master layout wrapper for all Nuhavi Health web pages.
+ * Provides consistent HTML structure, responsive meta tags,
+ * SEO metadata, imports the global design tokens, and incorporates
+ * the shared global Header and Footer.
+ */
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = "Nuhavi Health | Medical Tourism Coordination",
+  description = "Nuhavi Health coordinates trusted, seamless medical travel and healthcare journeys for international patients."
+} = Astro.props;
+
+// Import our design system tokens and baseline styles
+import '../styles/global.css';
+
+// Import shared Header and Footer components
+import Header from '../components/common/Header.astro';
+import Footer from '../components/common/Footer.astro';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- SEO Meta Tags -->
+    <title>{title}</title>
+    <meta name="description" content={description} />
+  </head>
+  <body>
+    <!-- Accessible Skip to Content Link -->
+    <a href="#main-content" class="skip-to-content">
+      Skip to main content
+    </a>
+
+    <!-- Global Header -->
+    <Header />
+
+    <!-- Main page content container -->
+    <main id="main-content">
+      <slot />
+    </main>
+
+    <!-- Global Footer -->
+    <Footer />
+  </body>
+</html>
+
+<style>
+  /* Accessible Skip to Content link */
+  .skip-to-content {
+    position: absolute;
+    top: -100px;
+    left: var(--space-3);
+    background-color: var(--color-gold);
+    color: var(--color-deep-navy);
+    padding: var(--space-1) var(--space-3);
+    border-radius: var(--radius-pill);
+    font-size: 0.875rem;
+    font-weight: var(--font-weight-subheading);
+    z-index: 9999;
+    text-decoration: none;
+    transition: top 0.2s ease;
+  }
+
+  .skip-to-content:focus {
+    top: var(--space-2);
+  }
+</style>

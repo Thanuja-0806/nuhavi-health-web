@@ -1,0 +1,644 @@
+---
+/**
+ * PatientJourney.astro
+ * Homepage section: "How Nuhavi works" (Module 6)
+ * Reference: Page 8 of the Nuhavi Health Look and Feel PDF (30 October 2026).
+ *
+ * Implements:
+ * 1. Eyebrow: PATIENT JOURNEY
+ * 2. Heading: How Nuhavi works
+ * 3. Exact seven-step patient journey in chronological order (01 to 07).
+ * 4. Two-tone responsibility distinction:
+ *    - GOLD EDGE: Nuhavi coordinates this step (Steps 01, 02, 06, 07).
+ *    - NAVY EDGE: The hospital makes the clinical decision (Steps 03, 04, 05).
+ * 5. Prominent responsibility legend with both color and text indicators.
+ * 6. Accessible cards with explicit responsibility badges (not relying on color alone).
+ * 7. Connected step-marker rail with a continuous vertical timeline.
+ * 8. Responsive 2-column desktop layout with sticky sidebar and single-column mobile layout.
+ * 9. Strict compliance with medical disclaimers: no medical promises, visa guarantees, or outcome claims.
+ */
+
+interface JourneyStep {
+  number: string;
+  title: string;
+  responsibility: 'nuhavi' | 'hospital';
+  responsibilityLabel: string;
+  responsibilityDescription: string;
+  description: string;
+}
+
+const steps: JourneyStep[] = [
+  {
+    number: '01',
+    title: '01 — Send an enquiry',
+    responsibility: 'nuhavi',
+    responsibilityLabel: 'Nuhavi coordinates this step',
+    responsibilityDescription: 'Coordination and communication support',
+    description: 'Submit an initial enquiry describing your condition, questions, and preferred travel window. A dedicated coordinator follows up to understand your situation and guide the process.'
+  },
+  {
+    number: '02',
+    title: '02 — Share medical records securely',
+    responsibility: 'nuhavi',
+    responsibilityLabel: 'Nuhavi coordinates this step',
+    responsibilityDescription: 'Coordination and communication support',
+    description: 'After you agree to share your medical records, you can use the private upload link sent to your email.'
+  },
+  {
+    number: '03',
+    title: '03 — Clinical review by the hospital',
+    responsibility: 'hospital',
+    responsibilityLabel: 'The hospital makes the clinical decision',
+    responsibilityDescription: 'Clinical examination and opinion',
+    description: 'Qualified hospital medical specialists and clinical teams review your diagnostic reports to assess clinical suitability and treatment feasibility.'
+  },
+  {
+    number: '04',
+    title: '04 — Understand treatment options',
+    responsibility: 'hospital',
+    responsibilityLabel: 'The hospital makes the clinical decision',
+    responsibilityDescription: 'Clinical recommendation and decision',
+    description: 'Hospital doctors formulate and provide clinical treatment recommendations. Your coordinator helps review and explain the medical terms in plain language.'
+  },
+  {
+    number: '05',
+    title: '05 — Review written estimates',
+    responsibility: 'hospital',
+    responsibilityLabel: 'The hospital makes the clinical decision',
+    responsibilityDescription: 'Hospital treatment estimate and plan',
+    description: 'Receive an official, itemized treatment estimate issued directly by the hospital based on the clinical review, with a transparent breakdown of procedures and stay.'
+  },
+  {
+    number: '06',
+    title: '06 — Plan appointments and travel',
+    responsibility: 'nuhavi',
+    responsibilityLabel: 'Nuhavi coordinates this step',
+    responsibilityDescription: 'Coordination and communication support',
+    description: 'Your coordinator schedules hospital consultations, facilitates official medical visa invitation letters from the treating hospital, and assists with travel logistics.'
+  },
+  {
+    number: '07',
+    title: '07 — Follow-up after returning home',
+    responsibility: 'nuhavi',
+    responsibilityLabel: 'Nuhavi coordinates this step',
+    responsibilityDescription: 'Coordination and communication support',
+    description: 'After discharge and returning home, your coordinator remains in contact to facilitate discharge summary transfers and communicate any follow-up questions to the hospital.'
+  }
+];
+---
+
+<section class="journey-section" aria-labelledby="journey-heading">
+  <div class="container journey-container">
+    <div class="journey-layout">
+      <!-- Left Column: Section Intro, Responsibility Legend & Legal Notice -->
+      <aside class="journey-sidebar">
+        <div class="sidebar-sticky-wrapper">
+          <header class="journey-header">
+            <span class="section-eyebrow">PATIENT JOURNEY</span>
+            <h2 id="journey-heading" class="section-title">
+              How Nuhavi works
+            </h2>
+            <p class="section-supporting-text">
+              Seven structured steps from your initial enquiry to care in India and safe recovery at home. We coordinate communication and logistics while qualified hospital teams make all clinical decisions.
+            </p>
+          </header>
+
+          <!-- Responsibility Legend (Gold Edge vs Navy Edge) -->
+          <div class="responsibility-legend" role="region" aria-label="Responsibility distinction guide">
+            <h3 class="legend-heading">Responsibility distinction</h3>
+            <p class="legend-intro">
+              Every step clearly indicates who holds operational and medical responsibility:
+            </p>
+
+            <ul class="legend-list">
+              <li class="legend-item legend-item--gold">
+                <span class="legend-bar legend-bar--gold" aria-hidden="true"></span>
+                <div class="legend-content">
+                  <div class="legend-title-wrap">
+                    <span class="legend-dot legend-dot--gold" aria-hidden="true"></span>
+                    <strong class="legend-label">Gold edge:</strong>
+                  </div>
+                  <p class="legend-text">
+                    <strong>Nuhavi coordinates this step.</strong> Initial contact, records transfer, appointment scheduling, travel assistance, and home follow-up.
+                  </p>
+                </div>
+              </li>
+
+              <li class="legend-item legend-item--navy">
+                <span class="legend-bar legend-bar--navy" aria-hidden="true"></span>
+                <div class="legend-content">
+                  <div class="legend-title-wrap">
+                    <span class="legend-dot legend-dot--navy" aria-hidden="true"></span>
+                    <strong class="legend-label">Navy edge:</strong>
+                  </div>
+                  <p class="legend-text">
+                    <strong>The hospital makes the clinical decision.</strong> Medical record examination, clinical treatment options, doctor opinions, and treatment estimates.
+                  </p>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Medical Disclaimer Card -->
+          <div class="disclaimer-note">
+            <p class="disclaimer-text">
+              <strong>Medical responsibility note:</strong> We coordinate care. Hospitals examine, decide, and treat. We do not diagnose, prescribe, or promise outcomes, savings, or visa approval.
+            </p>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Right Column: Seven-Step Timeline -->
+      <div class="journey-timeline-wrapper">
+        <ol class="timeline-list" aria-label="Seven-step patient journey">
+          {steps.map((step) => {
+            const isGold = step.responsibility === 'nuhavi';
+            return (
+              <li class="timeline-item" data-step={step.number} data-responsibility={step.responsibility}>
+                <!-- Step Marker Node -->
+                <div class={`step-marker step-marker--${step.responsibility}`} aria-hidden="true">
+                  <span class="step-marker-number">{step.number}</span>
+                </div>
+
+                <!-- Step Content Card -->
+                <article class={`step-card step-card--${step.responsibility}`}>
+                  <div class="step-card-header">
+                    <div class="step-title-group">
+                      <span class="step-order-indicator" aria-hidden="true">Step {step.number}</span>
+                      <h3 class="step-title">{step.title}</h3>
+                    </div>
+
+                    <!-- Explicit Responsibility Badge -->
+                    <span class={`step-badge step-badge--${step.responsibility}`}>
+                      <span class={`badge-dot badge-dot--${step.responsibility}`} aria-hidden="true"></span>
+                      <span class="badge-text">{step.responsibilityLabel}</span>
+                    </span>
+                  </div>
+
+                  <p class="step-description">{step.description}</p>
+                </article>
+              </li>
+            );
+          })}
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* --------------------------------------------------------------------------
+     SECTION BASE & SHELL
+     -------------------------------------------------------------------------- */
+  .journey-section {
+    width: 100%;
+    background-color: var(--color-mist);
+    padding-top: var(--section-spacing);
+    padding-bottom: var(--section-spacing);
+    border-top: 1px solid rgba(20, 41, 75, 0.08);
+  }
+
+  .journey-container {
+    width: 100%;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: var(--space-3);
+    padding-right: var(--space-3);
+  }
+
+  @media (max-width: 480px) {
+    .journey-container {
+      padding-left: var(--space-2);
+      padding-right: var(--space-2);
+    }
+  }
+
+  /* --------------------------------------------------------------------------
+     RESPONSIVE 2-COLUMN LAYOUT (Desktop >= 1024px)
+     -------------------------------------------------------------------------- */
+  .journey-layout {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  @media (min-width: 1024px) {
+    .journey-layout {
+      display: grid;
+      grid-template-columns: 400px 1fr;
+      gap: var(--space-8);
+      align-items: start;
+    }
+  }
+
+  /* --------------------------------------------------------------------------
+     SIDEBAR / INTRO & RESPONSIBILITY LEGEND
+     -------------------------------------------------------------------------- */
+  .journey-sidebar {
+    width: 100%;
+  }
+
+  @media (min-width: 1024px) {
+    .sidebar-sticky-wrapper {
+      position: sticky;
+      top: calc(var(--space-6) + 40px);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-5);
+    }
+  }
+
+  @media (max-width: 1023px) {
+    .sidebar-sticky-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+    }
+  }
+
+  .journey-header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .section-eyebrow {
+    font-size: 0.8125rem;
+    font-weight: var(--font-weight-subheading);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-gold-text);
+  }
+
+  .section-title {
+    font-size: clamp(1.75rem, 3.5vw, 2.375rem);
+    font-weight: var(--font-weight-heading);
+    color: var(--color-deep-navy);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+
+  .section-supporting-text {
+    font-size: 1.0625rem;
+    font-weight: var(--font-weight-body);
+    line-height: var(--line-height-body);
+    color: var(--color-slate);
+    margin-top: 4px;
+  }
+
+  /* --------------------------------------------------------------------------
+     RESPONSIBILITY LEGEND CARD
+     -------------------------------------------------------------------------- */
+  .responsibility-legend {
+    background-color: var(--color-paper);
+    border: 1px solid rgba(20, 41, 75, 0.1);
+    border-radius: var(--radius-card);
+    padding: var(--space-4);
+    box-shadow: 0 2px 8px rgba(20, 41, 75, 0.03);
+  }
+
+  .legend-heading {
+    font-size: 0.9375rem;
+    font-weight: var(--font-weight-subheading);
+    color: var(--color-deep-navy);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 4px;
+  }
+
+  .legend-intro {
+    font-size: 0.875rem;
+    color: var(--color-slate);
+    line-height: 1.45;
+    margin-bottom: var(--space-3);
+  }
+
+  .legend-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .legend-item {
+    position: relative;
+    display: flex;
+    background-color: var(--color-mist);
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid rgba(20, 41, 75, 0.06);
+  }
+
+  .legend-bar {
+    width: 5px;
+    flex-shrink: 0;
+  }
+
+  .legend-bar--gold {
+    background-color: var(--color-gold);
+  }
+
+  .legend-bar--navy {
+    background-color: var(--color-navy);
+  }
+
+  .legend-content {
+    padding: var(--space-2) var(--space-3);
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .legend-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .legend-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+
+  .legend-dot--gold {
+    background-color: var(--color-gold);
+  }
+
+  .legend-dot--navy {
+    background-color: var(--color-navy);
+  }
+
+  .legend-label {
+    font-size: 0.875rem;
+    font-weight: var(--font-weight-subheading);
+    color: var(--color-deep-navy);
+  }
+
+  .legend-text {
+    font-size: 0.8125rem;
+    line-height: 1.45;
+    color: var(--color-ink);
+  }
+
+  .legend-text strong {
+    color: var(--color-deep-navy);
+  }
+
+  /* --------------------------------------------------------------------------
+     LEGAL & MEDICAL DISCLAIMER NOTE
+     -------------------------------------------------------------------------- */
+  .disclaimer-note {
+    background-color: rgba(20, 41, 75, 0.03);
+    border-left: 3px solid var(--color-slate);
+    border-radius: 0 8px 8px 0;
+    padding: var(--space-2) var(--space-3);
+  }
+
+  .disclaimer-text {
+    font-size: 0.8125rem;
+    line-height: 1.45;
+    color: var(--color-slate);
+  }
+
+  .disclaimer-text strong {
+    color: var(--color-ink);
+  }
+
+  /* --------------------------------------------------------------------------
+     TIMELINE CONTAINER & CONTINUOUS CONNECTING LINE
+     -------------------------------------------------------------------------- */
+  .journey-timeline-wrapper {
+    width: 100%;
+  }
+
+  .timeline-list {
+    list-style: none;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Each timeline item with step marker node and card */
+  .timeline-item {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    padding-bottom: var(--space-4);
+  }
+
+  .timeline-item:last-child {
+    padding-bottom: 0;
+  }
+
+  /* The continuous connecting line between step nodes */
+  .timeline-item:not(:last-child)::before {
+    content: '';
+    position: absolute;
+    top: 40px;
+    left: 19px; /* Centered with 40px circle */
+    width: 2px;
+    height: calc(100% - 40px + var(--space-4));
+    background-color: rgba(20, 41, 75, 0.16);
+    z-index: 1;
+  }
+
+  /* --------------------------------------------------------------------------
+     STEP MARKER NODE (01 - 07)
+     -------------------------------------------------------------------------- */
+  .step-marker {
+    position: relative;
+    z-index: 2;
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-family-base);
+    font-size: 0.875rem;
+    font-weight: var(--font-weight-subheading);
+    box-shadow: 0 2px 6px rgba(20, 41, 75, 0.06);
+    margin-top: 2px;
+  }
+
+  .step-marker--nuhavi {
+    background-color: var(--color-paper);
+    border: 2.5px solid var(--color-gold);
+    color: var(--color-deep-navy);
+  }
+
+  .step-marker--hospital {
+    background-color: var(--color-navy);
+    border: 2.5px solid var(--color-navy);
+    color: var(--color-paper);
+  }
+
+  /* --------------------------------------------------------------------------
+     STEP CARD (Content with Gold / Navy Left Edge)
+     -------------------------------------------------------------------------- */
+  .step-card {
+    flex: 1;
+    min-width: 0;
+    background-color: var(--color-paper);
+    border: 1px solid rgba(20, 41, 75, 0.08);
+    border-radius: var(--radius-card);
+    padding: var(--space-4);
+    box-shadow: 0 2px 8px rgba(20, 41, 75, 0.03);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .step-card:hover {
+    box-shadow: 0 4px 14px rgba(20, 41, 75, 0.06);
+  }
+
+  /* Edge Styling (Gold Edge vs Navy Edge) */
+  .step-card--nuhavi {
+    border-left: 5px solid var(--color-gold);
+  }
+
+  .step-card--hospital {
+    border-left: 5px solid var(--color-navy);
+  }
+
+  /* Card Header */
+  .step-card-header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    margin-bottom: var(--space-2);
+  }
+
+  @media (min-width: 640px) {
+    .step-card-header {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: var(--space-3);
+    }
+  }
+
+  .step-title-group {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .step-order-indicator {
+    font-size: 0.6875rem;
+    font-weight: var(--font-weight-subheading);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-slate);
+  }
+
+  .step-title {
+    font-size: 1.125rem;
+    font-weight: var(--font-weight-subheading);
+    color: var(--color-deep-navy);
+    line-height: 1.3;
+  }
+
+  /* --------------------------------------------------------------------------
+     RESPONSIBILITY BADGE (Accessible visual tag on card)
+     -------------------------------------------------------------------------- */
+  .step-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    align-self: flex-start;
+    padding: 4px 10px;
+    border-radius: var(--radius-pill);
+    font-size: 0.75rem;
+    font-weight: var(--font-weight-subheading);
+    white-space: nowrap;
+    letter-spacing: 0.01em;
+  }
+
+  .step-badge--nuhavi {
+    background-color: #FDF8ED;
+    color: var(--color-gold-text);
+    border: 1px solid rgba(196, 154, 60, 0.35);
+  }
+
+  .step-badge--hospital {
+    background-color: rgba(20, 41, 75, 0.07);
+    color: var(--color-navy);
+    border: 1px solid rgba(20, 41, 75, 0.2);
+  }
+
+  .badge-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+  }
+
+  .badge-dot--nuhavi {
+    background-color: var(--color-gold);
+  }
+
+  .badge-dot--hospital {
+    background-color: var(--color-navy);
+  }
+
+  /* Card Body */
+  .step-description {
+    font-size: 0.9375rem;
+    font-weight: var(--font-weight-body);
+    line-height: var(--line-height-body);
+    color: var(--color-ink);
+  }
+
+  /* --------------------------------------------------------------------------
+     MOBILE VIEWPORT REFINEMENTS (<= 640px, 390px, 360px)
+     -------------------------------------------------------------------------- */
+  @media (max-width: 640px) {
+    .timeline-item {
+      gap: var(--space-2);
+      padding-bottom: var(--space-3);
+    }
+
+    .step-marker {
+      width: 36px;
+      height: 36px;
+      font-size: 0.8125rem;
+    }
+
+    .timeline-item:not(:last-child)::before {
+      top: 36px;
+      left: 17px; /* Center of 36px circle */
+      height: calc(100% - 36px + var(--space-3));
+    }
+
+    .step-card {
+      padding: var(--space-3);
+    }
+
+    .step-title {
+      font-size: 1rem;
+    }
+
+    .step-description {
+      font-size: 0.875rem;
+    }
+
+    .step-badge {
+      font-size: 0.6875rem;
+      padding: 3px 8px;
+      white-space: normal;
+      max-width: 100%;
+    }
+  }
+
+  /* --------------------------------------------------------------------------
+     REDUCED MOTION PREFERENCES
+     -------------------------------------------------------------------------- */
+  @media (prefers-reduced-motion: reduce) {
+    .step-card {
+      transition: none !important;
+    }
+  }
+</style>

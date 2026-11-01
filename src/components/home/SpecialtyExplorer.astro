@@ -1,0 +1,622 @@
+---
+/**
+ * SpecialtyExplorer.astro
+ * Shared specialty explorer component for Homepage (Page 7) and Treatments landing page (Page 11).
+ * Reference: Nuhavi Health Website Look and Feel PDF (30 October 2026).
+ *
+ * Implements:
+ * 1. 4-column responsive grid on desktop:
+ *    - 2 Accepting enquiries cards span 2 columns each (Row 1).
+ *    - 8 On-request cards span 1 column each (Rows 2 & 3).
+ * 2. Cancer care (oncology) featured card links to /en/treatments/oncology/.
+ *    Other cards remain non-clickable overview cards without broken links.
+ * 3. Status badge at the top of each card.
+ * 4. Title and concise clinical description for all 10 specialties as specified in the PDF.
+ * 5. Footnote below the grid explaining the "On request" standard.
+ * 6. 72x3 px gold rule on page variant matching the design system standard.
+ * 7. Interactive filter buttons (All 10, Accepting enquiries 2, On request 8).
+ * 8. White paper page surface for treatments landing page; mist surface for homepage.
+ */
+
+interface Props {
+  eyebrow?: string;
+  heading?: string;
+  headingLevel?: 'h1' | 'h2';
+  supportingText?: string;
+  variant?: 'home' | 'page';
+}
+
+const {
+  eyebrow = "Medical Specialties",
+  heading = "Explore treatments",
+  headingLevel = "h2",
+  supportingText = "We focus first on cancer care and joint replacement, where we can coordinate properly. Other specialties are arranged case by case.",
+  variant = "home"
+} = Astro.props;
+
+const HeadingTag = headingLevel;
+const CardTitleTag = headingLevel === 'h1' ? 'h2' : 'h3';
+
+interface Specialty {
+  id: string;
+  title: string;
+  secondaryLabel?: string;
+  description: string;
+  status: 'accepting' | 'on-request';
+  statusLabel: string;
+}
+
+const specialties: Specialty[] = [
+  {
+    id: 'cancer-care',
+    title: 'Cancer care (oncology)',
+    secondaryLabel: 'Oncology',
+    description: 'Diagnosis review, surgery, chemotherapy, radiotherapy and newer therapies.',
+    status: 'accepting',
+    statusLabel: 'Accepting enquiries'
+  },
+  {
+    id: 'orthopaedics',
+    title: 'Orthopaedics and joint replacement',
+    description: 'Knee and hip replacement, revision surgery, selected spine and sports surgery.',
+    status: 'accepting',
+    statusLabel: 'Accepting enquiries'
+  },
+  {
+    id: 'neurology',
+    title: 'Neurology and neurosurgery',
+    description: 'Brain and spine tumours, epilepsy, movement disorders, neurorehabilitation.',
+    status: 'on-request',
+    statusLabel: 'On request'
+  },
+  {
+    id: 'ivf',
+    title: 'IVF and fertility',
+    description: 'Fertility evaluation, IVF and ICSI, fertility preservation.',
+    status: 'on-request',
+    statusLabel: 'On request'
+  },
+  {
+    id: 'general-surgery',
+    title: 'General and laparoscopic surgery',
+    description: 'Hernia, gallbladder, gastrointestinal and colorectal surgery.',
+    status: 'on-request',
+    statusLabel: 'On request'
+  },
+  {
+    id: 'heart-care',
+    title: 'Heart care',
+    description: 'Cardiology and cardiac surgery.',
+    status: 'on-request',
+    statusLabel: 'On request'
+  },
+  {
+    id: 'gastroenterology',
+    title: 'Gastroenterology',
+    description: 'Digestive and liver conditions.',
+    status: 'on-request',
+    statusLabel: 'On request'
+  },
+  {
+    id: 'urology',
+    title: 'Urology and kidney care',
+    description: 'Urology, nephrology and kidney stones.',
+    status: 'on-request',
+    statusLabel: 'On request'
+  },
+  {
+    id: 'womens-health',
+    title: "Women's health",
+    description: 'Gynaecology and related care.',
+    status: 'on-request',
+    statusLabel: 'On request'
+  },
+  {
+    id: 'childrens-care',
+    title: "Children's care",
+    description: 'Planned care for children, with a parent or guardian.',
+    status: 'on-request',
+    statusLabel: 'On request'
+  }
+];
+---
+
+<section
+  class={`specialty-section ${variant === 'page' ? 'specialty-page-variant' : ''}`}
+  aria-labelledby="specialty-heading"
+>
+  <div class="container specialty-container">
+    <!-- Section Header -->
+    <header class="specialty-header">
+      {variant === 'page' && <div class="gold-rule" aria-hidden="true" />}
+      <div class="specialty-header-content">
+        {eyebrow && <span class="section-eyebrow">{eyebrow}</span>}
+        <HeadingTag id="specialty-heading" class="section-title">
+          {heading}
+        </HeadingTag>
+        <p class="section-supporting-text">
+          {supportingText}
+        </p>
+      </div>
+
+      <!-- Functional Filter Buttons Group -->
+      <div
+        class="filter-group"
+        role="group"
+        aria-label="Filter treatments by availability status"
+      >
+        <button
+          type="button"
+          class="filter-btn active"
+          data-filter="all"
+          aria-pressed="true"
+        >
+          All <span class="filter-count">(10)</span>
+        </button>
+        <button
+          type="button"
+          class="filter-btn"
+          data-filter="accepting"
+          aria-pressed="false"
+        >
+          Accepting enquiries <span class="filter-count">(2)</span>
+        </button>
+        <button
+          type="button"
+          class="filter-btn"
+          data-filter="on-request"
+          aria-pressed="false"
+        >
+          On request <span class="filter-count">(8)</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Treatment Cards Responsive Grid -->
+    <div class="specialty-grid" id="specialty-grid" aria-live="polite">
+      {specialties.map((item) => {
+        const isCancerCare = item.id === 'cancer-care';
+        const CardTag = isCancerCare ? 'a' : 'article';
+        const cardProps = isCancerCare
+          ? {
+              href: '/en/treatments/oncology/',
+              class: `treatment-card ${item.status === 'accepting' ? 'card-accepting' : 'card-on-request'} card-clickable`,
+              'data-status': item.status
+            }
+          : {
+              class: `treatment-card ${item.status === 'accepting' ? 'card-accepting' : 'card-on-request'}`,
+              'data-status': item.status
+            };
+
+        return (
+          <CardTag {...cardProps}>
+            <div class="card-header-badge">
+              <span class={`status-badge ${item.status === 'accepting' ? 'badge-accepting' : 'badge-on-request'}`}>
+                {item.statusLabel}
+              </span>
+              {item.secondaryLabel && (
+                <span class="sr-only">{item.secondaryLabel}</span>
+              )}
+            </div>
+            <div class="card-body">
+              <CardTitleTag class="card-title">{item.title}</CardTitleTag>
+              <p class="card-description">{item.description}</p>
+            </div>
+          </CardTag>
+        );
+      })}
+    </div>
+
+    <!-- Footnote below grid matching PDF reference -->
+    <p class="specialty-footnote">
+      &ldquo;On request&rdquo; means we will look for a suitable, verified hospital for your case. It does not mean the service is already arranged.
+    </p>
+  </div>
+</section>
+
+<style>
+  /* --------------------------------------------------------------------------
+     SECTION CONTAINER & BASE
+     Desktop content width set to 1200px max-width, centered on page.
+     -------------------------------------------------------------------------- */
+  .specialty-section {
+    width: 100%;
+    background-color: var(--color-mist);
+    padding-top: var(--section-spacing);
+    padding-bottom: var(--section-spacing);
+    border-top: 1px solid rgba(20, 41, 75, 0.08);
+    box-sizing: border-box;
+  }
+
+  .specialty-section.specialty-page-variant {
+    background-color: var(--color-paper);
+    border-top: none;
+  }
+
+  .specialty-container {
+    width: 100%;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  @media (max-width: 480px) {
+    .specialty-container {
+      padding-left: var(--space-2);
+      padding-right: var(--space-2);
+    }
+  }
+
+  /* --------------------------------------------------------------------------
+     72 × 3 PX GOLD RULE (Page variant standard from Design System)
+     -------------------------------------------------------------------------- */
+  .gold-rule {
+    width: 72px;
+    height: 3px;
+    background-color: var(--color-gold);
+    margin-bottom: var(--space-2);
+  }
+
+  /* --------------------------------------------------------------------------
+     SECTION HEADER & SUPPORTING COPY
+     -------------------------------------------------------------------------- */
+  .specialty-header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    margin-bottom: var(--space-6);
+  }
+
+  /* Homepage variant: row layout on desktop */
+  @media (min-width: 900px) {
+    .specialty-section:not(.specialty-page-variant) .specialty-header {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: var(--space-6);
+    }
+  }
+
+  /* Treatments landing page variant: stacked layout with filters below title */
+  .specialty-section.specialty-page-variant .specialty-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-4);
+  }
+
+  .specialty-header-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    max-width: 640px;
+  }
+
+  .section-eyebrow {
+    font-size: 0.8125rem;
+    font-weight: var(--font-weight-subheading);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-gold-text);
+  }
+
+  .section-title {
+    font-size: clamp(1.875rem, 3.5vw, 2.75rem);
+    font-weight: var(--font-weight-heading);
+    color: var(--color-deep-navy);
+    line-height: var(--line-height-heading);
+    letter-spacing: -0.015em;
+    margin: 0;
+  }
+
+  .section-supporting-text {
+    font-size: 1.0625rem;
+    font-weight: var(--font-weight-body);
+    line-height: var(--line-height-body);
+    color: var(--color-slate);
+    margin-top: 6px;
+    margin-bottom: 0;
+  }
+
+  /* --------------------------------------------------------------------------
+     FILTER BUTTONS GROUP (Accessible, Touch-friendly Pills)
+     -------------------------------------------------------------------------- */
+  .filter-group {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-1);
+    background-color: rgba(20, 41, 75, 0.05);
+    padding: 6px;
+    border-radius: var(--radius-pill);
+    border: 1px solid rgba(20, 41, 75, 0.08);
+  }
+
+  .filter-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 42px;
+    padding: 0 var(--space-2);
+    border-radius: var(--radius-pill);
+    font-family: var(--font-family-base);
+    font-size: 0.875rem;
+    font-weight: var(--font-weight-subheading);
+    background-color: transparent;
+    color: var(--color-ink);
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+    white-space: nowrap;
+  }
+
+  @media (min-width: 480px) {
+    .filter-btn {
+      padding: 0 var(--space-3);
+      font-size: 0.9375rem;
+    }
+  }
+
+  .filter-btn:hover:not(.active) {
+    background-color: rgba(255, 255, 255, 0.85);
+    color: var(--color-deep-navy);
+  }
+
+  /* Active Filter Button State */
+  .filter-btn.active {
+    background-color: var(--color-deep-navy);
+    color: var(--color-paper);
+    border-color: var(--color-deep-navy);
+  }
+
+  .filter-btn.active .filter-count {
+    color: var(--color-gold);
+  }
+
+  .filter-count {
+    font-size: 0.8125rem;
+    color: var(--color-slate);
+    font-weight: var(--font-weight-body);
+  }
+
+  /* Keyboard Focus Indicator */
+  .filter-btn:focus-visible {
+    outline: var(--focus-ring);
+    outline-offset: var(--focus-offset);
+  }
+
+  /* --------------------------------------------------------------------------
+     TREATMENT CARDS RESPONSIVE GRID
+     Desktop: 4 columns
+     - Row 1: 2 accepting cards span 2 columns each (50% width each)
+     - Rows 2 & 3: 8 on-request cards span 1 column each (4 cards per row)
+     Tablet: 2 columns
+     Mobile: 1 column
+     -------------------------------------------------------------------------- */
+  .specialty-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+    width: 100%;
+  }
+
+  @media (min-width: 640px) {
+    .specialty-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-3);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .specialty-grid {
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--space-4);
+    }
+
+    .card-accepting {
+      grid-column: span 2;
+    }
+
+    .card-on-request {
+      grid-column: span 1;
+    }
+  }
+
+  /* --------------------------------------------------------------------------
+     TREATMENT CARD BASE
+     -------------------------------------------------------------------------- */
+  .treatment-card {
+    border-radius: var(--radius-card);
+    padding: var(--space-4);
+    min-height: 175px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: var(--space-3);
+    box-sizing: border-box;
+    transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .treatment-card.card-clickable {
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+  }
+
+  .treatment-card.card-clickable:hover {
+    border-color: var(--color-gold);
+    transform: translateY(-2px);
+  }
+
+  .treatment-card.card-clickable:focus-visible {
+    outline: var(--focus-ring);
+    outline-offset: var(--focus-offset);
+  }
+
+  .treatment-card[hidden] {
+    display: none !important;
+  }
+
+  .card-header-badge {
+    display: flex;
+    align-items: center;
+  }
+
+  .card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .card-title {
+    font-family: var(--font-family-base);
+    font-weight: var(--font-weight-subheading);
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    margin: 0;
+  }
+
+  .card-description {
+    font-family: var(--font-family-base);
+    font-weight: var(--font-weight-body);
+    margin: 0;
+  }
+
+  /* --------------------------------------------------------------------------
+     1. ACCEPTING ENQUIRIES CARDS (Deep Navy #0D1B33)
+     -------------------------------------------------------------------------- */
+  .card-accepting {
+    background-color: var(--color-deep-navy);
+    border: 1px solid rgba(196, 154, 60, 0.35);
+  }
+
+  .card-accepting .card-title {
+    font-size: 1.3125rem;
+    color: var(--color-paper);
+  }
+
+  .card-accepting .card-description {
+    color: rgba(244, 247, 251, 0.78);
+    font-size: 0.875rem;
+    line-height: 1.5;
+  }
+
+  .badge-accepting {
+    background-color: rgba(196, 154, 60, 0.15);
+    color: var(--color-gold);
+    border: 1px solid rgba(196, 154, 60, 0.45);
+    padding: 4px 12px;
+    border-radius: var(--radius-pill);
+    font-size: 0.8125rem;
+    font-weight: var(--font-weight-subheading);
+    letter-spacing: 0.02em;
+  }
+
+  /* --------------------------------------------------------------------------
+     2. ON-REQUEST CARDS (White #FFFFFF)
+     -------------------------------------------------------------------------- */
+  .card-on-request {
+    background-color: var(--color-paper);
+    border: 1px solid rgba(20, 41, 75, 0.12);
+  }
+
+  .card-on-request .card-title {
+    font-size: 1.0625rem;
+    color: var(--color-deep-navy);
+  }
+
+  .card-on-request .card-description {
+    color: var(--color-slate);
+    font-size: 0.8125rem;
+    line-height: 1.45;
+  }
+
+  .badge-on-request {
+    background-color: var(--color-mist);
+    color: var(--color-slate);
+    border: 1px solid rgba(91, 106, 128, 0.22);
+    padding: 3px 10px;
+    border-radius: var(--radius-pill);
+    font-size: 0.75rem;
+    font-weight: var(--font-weight-subheading);
+    letter-spacing: 0.02em;
+  }
+
+  /* --------------------------------------------------------------------------
+     FOOTNOTE BELOW GRID
+     -------------------------------------------------------------------------- */
+  .specialty-footnote {
+    margin-top: var(--space-4);
+    font-size: 0.8125rem;
+    font-weight: var(--font-weight-body);
+    line-height: var(--line-height-body);
+    color: var(--color-slate);
+    max-width: 680px;
+  }
+
+  /* Screen-reader only class */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  /* Respect prefers-reduced-motion */
+  @media (prefers-reduced-motion: reduce) {
+    .treatment-card,
+    .filter-btn {
+      transition: none !important;
+    }
+  }
+</style>
+
+<script>
+  /**
+   * Accessible Filter Controller for Specialty Explorer
+   * 1. Scoped to each specialty section instance.
+   * 2. Listens for clicks on filter buttons.
+   * 3. Toggles active state and aria-pressed attributes.
+   * 4. Immediately shows/hides matching cards using [hidden] without page reload.
+   */
+  function setupSpecialtyFilter() {
+    const sections = document.querySelectorAll<HTMLElement>('.specialty-section');
+    sections.forEach((section) => {
+      if (section.dataset.filterInitialized === 'true') return;
+      section.dataset.filterInitialized = 'true';
+
+      const buttons = section.querySelectorAll<HTMLButtonElement>('.filter-btn');
+      const cards = section.querySelectorAll<HTMLElement>('.treatment-card');
+
+      if (!buttons.length || !cards.length) return;
+
+      buttons.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const selectedFilter = btn.dataset.filter;
+
+          // Update button states and aria-pressed
+          buttons.forEach((b) => {
+            const isSelected = b === btn;
+            b.classList.toggle('active', isSelected);
+            b.setAttribute('aria-pressed', isSelected ? 'true' : 'false');
+          });
+
+          // Filter cards immediately
+          cards.forEach((card) => {
+            const cardStatus = card.dataset.status;
+            const isVisible = selectedFilter === 'all' || cardStatus === selectedFilter;
+            card.hidden = !isVisible;
+          });
+        });
+      });
+    });
+  }
+
+  // Run on initial load and handle client navigation if enabled
+  document.addEventListener('DOMContentLoaded', setupSpecialtyFilter);
+  setupSpecialtyFilter();
+</script>

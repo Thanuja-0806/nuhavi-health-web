@@ -1,0 +1,971 @@
+---
+/**
+ * src/pages/en/treatments/oncology/breast-cancer/index.astro
+ * Condition template: Breast cancer
+ * Reference: Pages 14 & 15 of Nuhavi Health Look and Feel PDF (30 October 2026).
+ *
+ * Implements:
+ * 1. Breadcrumbs: Home / Treatments / Cancer care (oncology) / Breast cancer
+ * 2. 72x3 px signature gold rule above H1
+ * 3. H1: Breast cancer with exact clinical intro
+ * 4. Desktop two-column layout:
+ *    - Left: Sticky "On this page" sidebar with 10 nav links and "Request a medical opinion" CTA.
+ *      (Hidden on mobile viewports per PDF specification).
+ *    - Right: 10 sections in exact order with subtle horizontal dividers.
+ * 5. Amber clinical review notices on Overview and FAQ pending answer.
+ * 6. Sections:
+ *    - 1. Overview
+ *    - 2. Assessment usually includes (gold checkmarks)
+ *    - 3. Records to send (gold checkmarks + supporting upload note)
+ *    - 4. Common options (bullet points)
+ *    - 5. Facilities the hospital needs (capability tags)
+ *    - 6. Time in India
+ *    - 7. Recovery and follow-up
+ *    - 8. Cost (with link to costs and fees guide)
+ *    - 9. Questions to ask your treating team (numbered list)
+ *    - 10. Frequently asked questions (accessible accordion + FAQPage Schema.org structured data)
+ *    - Related guides (3 links with safe pending destination checks)
+ * 7. Fully responsive, WCAG 2.2 AA compliant, keyboard accessible, zero overflow.
+ */
+import fs from 'node:fs';
+import path from 'node:path';
+import BaseLayout from '../../../../../layouts/BaseLayout.astro';
+
+// Destination route safety checks
+const pagesDir = path.resolve('./src/pages/en');
+const hasRequestOpinionRoute =
+  fs.existsSync(path.join(pagesDir, 'request-opinion.astro')) ||
+  fs.existsSync(path.join(pagesDir, 'request-opinion', 'index.astro'));
+
+const hasCostsRoute =
+  fs.existsSync(path.join(pagesDir, 'how-it-works', 'costs-and-fees.astro')) ||
+  fs.existsSync(path.join(pagesDir, 'how-it-works', 'costs-and-fees', 'index.astro'));
+
+const hasRecordsGuideRoute =
+  fs.existsSync(path.join(pagesDir, 'resources', 'preparing-medical-records.astro')) ||
+  fs.existsSync(path.join(pagesDir, 'resources', 'preparing-medical-records', 'index.astro'));
+
+const hasHospitalGuideRoute =
+  fs.existsSync(path.join(pagesDir, 'resources', 'questions-to-ask-hospital.astro')) ||
+  fs.existsSync(path.join(pagesDir, 'resources', 'questions-to-ask-hospital', 'index.astro'));
+
+const hasEstimateGuideRoute =
+  fs.existsSync(path.join(pagesDir, 'resources', 'understanding-treatment-estimate.astro')) ||
+  fs.existsSync(path.join(pagesDir, 'resources', 'understanding-treatment-estimate', 'index.astro'));
+
+// FAQ Structured Data Schema
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Can I have part of my treatment at home?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Guidance on home-based treatment portions is subject to individual clinical review by the treating hospital oncology team."
+      }
+    }
+  ]
+};
+---
+
+<BaseLayout
+  title="Breast Cancer | Treatments | Nuhavi Health"
+  description="Understand breast cancer treatment options in India, diagnostic assessment, required medical records, facilities needed and questions to ask the treating team."
+>
+  <!-- FAQ Schema -->
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+
+  <!-- --------------------------------------------------------------------------
+       1. PAGE HEADER & BREADCRUMBS (PDF Page 14)
+       -------------------------------------------------------------------------- -->
+  <header class="condition-hero">
+    <div class="container condition-container">
+      <!-- Breadcrumb navigation -->
+      <nav class="breadcrumb-nav" aria-label="Breadcrumb">
+        <ol class="breadcrumb-list">
+          <li class="breadcrumb-item">
+            <a href="/en/" class="breadcrumb-link">Home</a>
+            <span class="breadcrumb-separator" aria-hidden="true">/</span>
+          </li>
+          <li class="breadcrumb-item">
+            <a href="/en/treatments/" class="breadcrumb-link">Treatments</a>
+            <span class="breadcrumb-separator" aria-hidden="true">/</span>
+          </li>
+          <li class="breadcrumb-item">
+            <a href="/en/treatments/oncology/" class="breadcrumb-link">Cancer care (oncology)</a>
+            <span class="breadcrumb-separator" aria-hidden="true">/</span>
+          </li>
+          <li class="breadcrumb-item" aria-current="page">
+            <span class="breadcrumb-current">Breast cancer</span>
+          </li>
+        </ol>
+      </nav>
+
+      <!-- Signature 72 × 3 px Gold Rule -->
+      <div class="gold-rule" aria-hidden="true"></div>
+
+      <!-- H1 Condition Title -->
+      <h1 class="condition-main-title">Breast cancer</h1>
+
+      <!-- Introductory Deck -->
+      <p class="condition-main-deck">
+        Treatment usually combines surgery, systemic therapy (chemotherapy, hormone therapy or targeted therapy) and often radiotherapy. The order depends on the tumour's receptor status (ER, PR, HER2) and stage.
+      </p>
+    </div>
+  </header>
+
+  <!-- --------------------------------------------------------------------------
+       2. MAIN LAYOUT: STICKY SIDEBAR + 10 SECTIONS (PDF Pages 14 & 15)
+       -------------------------------------------------------------------------- -->
+  <div class="condition-body-wrapper">
+    <div class="container condition-container condition-layout">
+      <!-- LEFT SIDEBAR: Sticky "On this page" (Hidden on mobile) -->
+      <aside class="condition-sidebar" aria-label="Table of contents">
+        <div class="sidebar-sticky-inner">
+          <h2 class="sidebar-heading">On this page</h2>
+          <nav class="sidebar-nav">
+            <ul class="sidebar-nav-list">
+              <li><a href="#overview" class="sidebar-link active">Overview</a></li>
+              <li><a href="#assessment" class="sidebar-link">Assessment</a></li>
+              <li><a href="#records-to-send" class="sidebar-link">Records to send</a></li>
+              <li><a href="#common-options" class="sidebar-link">Common options</a></li>
+              <li><a href="#facilities-needed" class="sidebar-link">Facilities needed</a></li>
+              <li><a href="#time-in-india" class="sidebar-link">Time in India</a></li>
+              <li><a href="#recovery-and-follow-up" class="sidebar-link">Recovery and follow-up</a></li>
+              <li><a href="#cost" class="sidebar-link">Cost</a></li>
+              <li><a href="#questions-to-ask" class="sidebar-link">Questions to ask</a></li>
+              <li><a href="#faqs" class="sidebar-link">FAQs</a></li>
+            </ul>
+          </nav>
+
+          <div class="sidebar-cta-wrap">
+            {hasRequestOpinionRoute ? (
+              <a href="/en/request-opinion/" class="btn-sidebar-opinion">
+                Request a medical opinion
+              </a>
+            ) : (
+              <span
+                class="btn-sidebar-opinion is-pending"
+                role="link"
+                aria-disabled="true"
+                tabindex="0"
+                title="Request opinion form coming soon"
+              >
+                Request a medical opinion
+              </span>
+            )}
+          </div>
+        </div>
+      </aside>
+
+      <!-- RIGHT CONTENT: 10 Fixed Sections -->
+      <main class="condition-content" id="condition-main-content">
+        <!-- ------------------------------------------------------------------
+             SECTION 1: Overview
+             ------------------------------------------------------------------ -->
+        <section id="overview" class="content-section" aria-labelledby="heading-overview">
+          <!-- Amber Clinical Review Notice -->
+          <div class="clinical-review-notice" role="note">
+            <p class="notice-text">
+              <strong class="notice-prefix">Needs confirmation:</strong> Clinical review pending &mdash; this text is a plain-language draft for review, not medical advice.
+            </p>
+          </div>
+
+          <h2 id="heading-overview" class="section-heading">Overview</h2>
+          <p class="section-paragraph">
+            Treatment usually combines surgery, systemic therapy (chemotherapy, hormone therapy or targeted therapy) and often radiotherapy. The order depends on the tumour's receptor status (ER, PR, HER2) and stage.
+          </p>
+          <p class="section-paragraph">
+            Not every option suits every patient. The treating team decides what is appropriate for you after reviewing your records and, usually, examining you.
+          </p>
+        </section>
+
+        <!-- ------------------------------------------------------------------
+             SECTION 2: Assessment usually includes
+             ------------------------------------------------------------------ -->
+        <section id="assessment" class="content-section" aria-labelledby="heading-assessment">
+          <h2 id="heading-assessment" class="section-heading">Assessment usually includes</h2>
+          <ul class="gold-checklist" role="list">
+            <li class="checklist-item">
+              <svg class="check-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M3 8.5L6.5 12L13 4" stroke="var(--color-gold)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              <span>Pathology review of the biopsy, including receptor status</span>
+            </li>
+            <li class="checklist-item">
+              <svg class="check-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M3 8.5L6.5 12L13 4" stroke="var(--color-gold)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              <span>Staging scans</span>
+            </li>
+            <li class="checklist-item">
+              <svg class="check-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M3 8.5L6.5 12L13 4" stroke="var(--color-gold)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              <span>Assessment for breast-conserving surgery or mastectomy</span>
+            </li>
+          </ul>
+        </section>
+
+        <!-- ------------------------------------------------------------------
+             SECTION 3: Records to send
+             ------------------------------------------------------------------ -->
+        <section id="records-to-send" class="content-section" aria-labelledby="heading-records">
+          <h2 id="heading-records" class="section-heading">Records to send</h2>
+          <ul class="gold-checklist" role="list">
+            <li class="checklist-item">
+              <svg class="check-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M3 8.5L6.5 12L13 4" stroke="var(--color-gold)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              <span>Biopsy and histopathology report, including immunohistochemistry (IHC) if done</span>
+            </li>
+            <li class="checklist-item">
+              <svg class="check-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M3 8.5L6.5 12L13 4" stroke="var(--color-gold)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              <span>Recent imaging reports (CT, MRI or PET-CT) and, where possible, the images on a disc or download link</span>
+            </li>
+            <li class="checklist-item">
+              <svg class="check-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M3 8.5L6.5 12L13 4" stroke="var(--color-gold)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              <span>Blood test results from the last four weeks</span>
+            </li>
+            <li class="checklist-item">
+              <svg class="check-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M3 8.5L6.5 12L13 4" stroke="var(--color-gold)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              <span>Summary of any treatment already given: surgery notes, chemotherapy or radiotherapy details with dates</span>
+            </li>
+            <li class="checklist-item">
+              <svg class="check-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M3 8.5L6.5 12L13 4" stroke="var(--color-gold)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              <span>Current medicines and allergies</span>
+            </li>
+          </ul>
+
+          <p class="records-upload-note">
+            Send records only through the private upload link we email you &mdash; never through the enquiry form or chat.
+          </p>
+        </section>
+
+        <!-- ------------------------------------------------------------------
+             SECTION 4: Common options
+             ------------------------------------------------------------------ -->
+        <section id="common-options" class="content-section" aria-labelledby="heading-options">
+          <h2 id="heading-options" class="section-heading">Common options</h2>
+          <ul class="bullet-list">
+            <li>Breast-conserving surgery or mastectomy, with or without reconstruction</li>
+            <li>Chemotherapy before or after surgery</li>
+            <li>Hormone therapy or HER2-targeted therapy where indicated</li>
+            <li>Radiotherapy</li>
+          </ul>
+        </section>
+
+        <!-- ------------------------------------------------------------------
+             SECTION 5: Facilities the hospital needs
+             ------------------------------------------------------------------ -->
+        <section id="facilities-needed" class="content-section" aria-labelledby="heading-facilities">
+          <h2 id="heading-facilities" class="section-heading">Facilities the hospital needs</h2>
+          <div class="facility-tags-group">
+            <span class="facility-tag">Breast surgical oncology</span>
+            <span class="facility-tag">Radiotherapy unit</span>
+            <span class="facility-tag">Day-care chemotherapy</span>
+            <span class="facility-tag">Pathology with receptor testing</span>
+          </div>
+        </section>
+
+        <!-- ------------------------------------------------------------------
+             SECTION 6: Time in India
+             ------------------------------------------------------------------ -->
+        <section id="time-in-india" class="content-section" aria-labelledby="heading-time">
+          <h2 id="heading-time" class="section-heading">Time in India</h2>
+          <p class="section-paragraph">
+            Surgery usually means a short inpatient stay. Courses of chemotherapy or radiotherapy can last weeks to months; your team will say whether part can be given at home.
+          </p>
+        </section>
+
+        <!-- ------------------------------------------------------------------
+             SECTION 7: Recovery and follow-up
+             ------------------------------------------------------------------ -->
+        <section id="recovery-and-follow-up" class="content-section" aria-labelledby="heading-recovery">
+          <h2 id="heading-recovery" class="section-heading">Recovery and follow-up</h2>
+          <p class="section-paragraph">
+            Recovery depends on the surgery and therapies chosen. Your team will explain wound care, arm exercises and side-effect management.
+          </p>
+          <p class="section-paragraph">
+            Before you fly home, make sure you have your discharge summary, a medicines list and a follow-up plan your local doctor can use.
+          </p>
+        </section>
+
+        <!-- ------------------------------------------------------------------
+             SECTION 8: Cost
+             ------------------------------------------------------------------ -->
+        <section id="cost" class="content-section" aria-labelledby="heading-cost">
+          <h2 id="heading-cost" class="section-heading">Cost</h2>
+          <p class="section-paragraph">
+            We show indicative ranges only when a hospital has confirmed them in writing, with the date, currency, inclusions and exclusions. Until then, your estimate comes from the hospital after reviewing your records.
+          </p>
+          <div class="cost-link-wrap">
+            {hasCostsRoute ? (
+              <a href="/en/how-it-works/costs-and-fees/" class="link-costs">
+                What makes up a treatment estimate &rarr;
+              </a>
+            ) : (
+              <span
+                class="link-costs is-pending"
+                role="link"
+                aria-disabled="true"
+                tabindex="0"
+                title="Costs and fees guide coming soon"
+              >
+                What makes up a treatment estimate
+              </span>
+            )}
+          </div>
+        </section>
+
+        <!-- ------------------------------------------------------------------
+             SECTION 9: Questions to ask your treating team
+             ------------------------------------------------------------------ -->
+        <section id="questions-to-ask" class="content-section" aria-labelledby="heading-questions">
+          <h2 id="heading-questions" class="section-heading">Questions to ask your treating team</h2>
+          <ol class="numbered-questions-list">
+            <li>What is the stage of my cancer, and how was it worked out?</li>
+            <li>Will a team of specialists (a tumour board) review my case?</li>
+            <li>What are the aims of each option: cure, control or comfort?</li>
+            <li>Which tests need repeating in India, and why?</li>
+            <li>How long will I need to stay, and what follow-up can happen at home?</li>
+          </ol>
+        </section>
+
+        <!-- ------------------------------------------------------------------
+             SECTION 10: Frequently asked questions & Related guides
+             ------------------------------------------------------------------ -->
+        <section id="faqs" class="content-section section-faqs" aria-labelledby="heading-faqs">
+          <h2 id="heading-faqs" class="section-heading">Frequently asked questions</h2>
+
+          <!-- Accessible Accordion Question with Pending Answer State -->
+          <div class="faq-accordion-group">
+            <details class="faq-item">
+              <summary class="faq-summary">
+                <span class="faq-question-text">Can I have part of my treatment at home?</span>
+                <span class="faq-toggle-icon" aria-hidden="true">+</span>
+              </summary>
+              <div class="faq-panel">
+                <div class="clinical-review-notice" role="note">
+                  <p class="notice-text">
+                    <strong class="notice-prefix">Needs confirmation:</strong> Clinical answer pending &mdash; a qualified clinician must review and provide specific guidance on home-based treatment portions before publication.
+                  </p>
+                </div>
+              </div>
+            </details>
+          </div>
+
+          <!-- Related guides -->
+          <div class="related-guides-wrap">
+            <h3 class="related-guides-title">Related guides</h3>
+            <ul class="related-guides-list">
+              <li>
+                {hasRecordsGuideRoute ? (
+                  <a href="/en/resources/preparing-medical-records/" class="guide-link">
+                    Preparing your medical records
+                  </a>
+                ) : (
+                  <span
+                    class="guide-link is-pending"
+                    role="link"
+                    aria-disabled="true"
+                    tabindex="0"
+                    title="Guide pending release"
+                  >
+                    Preparing your medical records
+                  </span>
+                )}
+              </li>
+              <li>
+                {hasHospitalGuideRoute ? (
+                  <a href="/en/resources/questions-to-ask-hospital/" class="guide-link">
+                    Questions to ask before choosing a hospital
+                  </a>
+                ) : (
+                  <span
+                    class="guide-link is-pending"
+                    role="link"
+                    aria-disabled="true"
+                    tabindex="0"
+                    title="Guide pending release"
+                  >
+                    Questions to ask before choosing a hospital
+                  </span>
+                )}
+              </li>
+              <li>
+                {hasEstimateGuideRoute ? (
+                  <a href="/en/resources/understanding-treatment-estimate/" class="guide-link">
+                    Understanding a treatment estimate
+                  </a>
+                ) : (
+                  <span
+                    class="guide-link is-pending"
+                    role="link"
+                    aria-disabled="true"
+                    tabindex="0"
+                    title="Guide pending release"
+                  >
+                    Understanding a treatment estimate
+                  </span>
+                )}
+              </li>
+            </ul>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  /* --------------------------------------------------------------------------
+     GLOBAL CONTAINERS & SPACING
+     -------------------------------------------------------------------------- */
+  .condition-container {
+    width: 100%;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: var(--space-3);
+    padding-right: var(--space-3);
+    box-sizing: border-box;
+  }
+
+  @media (max-width: 480px) {
+    .condition-container {
+      padding-left: var(--space-2);
+      padding-right: var(--space-2);
+    }
+  }
+
+  .gold-rule {
+    width: 72px;
+    height: 3px;
+    background-color: var(--color-gold);
+    margin-bottom: var(--space-3);
+  }
+
+  /* --------------------------------------------------------------------------
+     1. HERO HEADER (PDF Page 14)
+     -------------------------------------------------------------------------- */
+  .condition-hero {
+    width: 100%;
+    background-color: var(--color-paper);
+    padding-top: var(--space-6);
+    padding-bottom: var(--space-6);
+    border-bottom: 1px solid rgba(20, 41, 75, 0.08);
+    box-sizing: border-box;
+  }
+
+  .breadcrumb-nav {
+    margin-bottom: var(--space-4);
+  }
+
+  .breadcrumb-list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 0.875rem;
+    color: var(--color-slate);
+  }
+
+  .breadcrumb-item {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .breadcrumb-link {
+    color: var(--color-slate);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    transition: color 0.15s ease;
+  }
+
+  .breadcrumb-link:hover {
+    color: var(--color-deep-navy);
+  }
+
+  .breadcrumb-separator {
+    margin: 0 8px;
+    color: rgba(91, 106, 128, 0.4);
+  }
+
+  .breadcrumb-current {
+    color: var(--color-ink);
+    font-weight: var(--font-weight-subheading);
+    text-decoration: none;
+  }
+
+  .condition-main-title {
+    font-size: clamp(2rem, 4.5vw, 3rem);
+    font-weight: var(--font-weight-heading);
+    color: var(--color-deep-navy);
+    line-height: var(--line-height-heading);
+    letter-spacing: -0.02em;
+    margin: 0 0 var(--space-3) 0;
+  }
+
+  .condition-main-deck {
+    font-size: 1.125rem;
+    font-weight: var(--font-weight-body);
+    line-height: var(--line-height-body);
+    color: var(--color-slate);
+    max-width: 720px;
+    margin: 0;
+  }
+
+  /* --------------------------------------------------------------------------
+     2. TWO-COLUMN LAYOUT (PDF Page 14)
+     -------------------------------------------------------------------------- */
+  .condition-body-wrapper {
+    width: 100%;
+    background-color: var(--color-paper);
+    padding-top: var(--space-8);
+    padding-bottom: var(--section-spacing);
+    box-sizing: border-box;
+  }
+
+  .condition-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+  }
+
+  @media (min-width: 900px) {
+    .condition-layout {
+      grid-template-columns: 240px 1fr;
+      gap: var(--space-10);
+      align-items: start;
+    }
+  }
+
+  /* --------------------------------------------------------------------------
+     LEFT SIDEBAR: Sticky "On this page"
+     -------------------------------------------------------------------------- */
+  .condition-sidebar {
+    display: block;
+  }
+
+  @media (max-width: 899px) {
+    .condition-sidebar {
+      display: none !important;
+    }
+  }
+
+  .sidebar-sticky-inner {
+    position: sticky;
+    top: 96px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .sidebar-heading {
+    font-size: 0.875rem;
+    font-weight: var(--font-weight-subheading);
+    color: var(--color-slate);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0;
+  }
+
+  .sidebar-nav-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .sidebar-link {
+    font-size: 0.875rem;
+    font-weight: var(--font-weight-body);
+    color: var(--color-slate);
+    text-decoration: none;
+    padding: 3px 0;
+    display: block;
+    transition: color 0.15s ease, font-weight 0.15s ease;
+  }
+
+  .sidebar-link:hover {
+    color: var(--color-deep-navy);
+  }
+
+  .sidebar-link.active {
+    color: var(--color-deep-navy);
+    font-weight: var(--font-weight-subheading);
+  }
+
+  .sidebar-link:focus-visible {
+    outline: var(--focus-ring);
+    outline-offset: 2px;
+  }
+
+  .sidebar-cta-wrap {
+    margin-top: var(--space-4);
+  }
+
+  .btn-sidebar-opinion {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 48px;
+    padding: 0 var(--space-3);
+    background-color: var(--color-deep-navy);
+    color: var(--color-paper);
+    border: 2px solid var(--color-deep-navy);
+    border-radius: var(--radius-pill);
+    font-family: var(--font-family-base);
+    font-size: 0.875rem;
+    font-weight: var(--font-weight-subheading);
+    text-decoration: none;
+    text-align: center;
+    cursor: pointer;
+    box-sizing: border-box;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+  }
+
+  .btn-sidebar-opinion:hover:not(.is-pending) {
+    background-color: var(--color-navy);
+    border-color: var(--color-navy);
+  }
+
+  .btn-sidebar-opinion.is-pending {
+    cursor: default;
+    user-select: none;
+    opacity: 0.95;
+  }
+
+  .btn-sidebar-opinion:focus-visible {
+    outline: var(--focus-ring);
+    outline-offset: var(--focus-offset);
+  }
+
+  /* --------------------------------------------------------------------------
+     RIGHT CONTENT: 10 Sections
+     -------------------------------------------------------------------------- */
+  .condition-content {
+    max-width: 720px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .content-section {
+    padding-bottom: var(--space-6);
+    margin-bottom: var(--space-6);
+    border-bottom: 1px solid rgba(20, 41, 75, 0.08);
+    scroll-margin-top: 100px;
+  }
+
+  .content-section:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 0;
+  }
+
+  .section-heading {
+    font-size: 1.5rem;
+    font-weight: var(--font-weight-heading);
+    color: var(--color-deep-navy);
+    line-height: var(--line-height-heading);
+    letter-spacing: -0.01em;
+    margin: 0 0 var(--space-3) 0;
+  }
+
+  .section-paragraph {
+    font-size: 1rem;
+    font-weight: var(--font-weight-body);
+    line-height: var(--line-height-body);
+    color: var(--color-ink);
+    margin: 0 0 var(--space-3) 0;
+  }
+
+  .section-paragraph:last-child {
+    margin-bottom: 0;
+  }
+
+  /* Amber Clinical Review Notice */
+  .clinical-review-notice {
+    background-color: var(--color-confirmation);
+    border: 1px solid rgba(196, 154, 60, 0.4);
+    border-radius: var(--radius-card);
+    padding: var(--space-3);
+    margin-bottom: var(--space-4);
+    box-sizing: border-box;
+  }
+
+  .notice-text {
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    color: var(--color-ink);
+    margin: 0;
+  }
+
+  .notice-prefix {
+    color: var(--color-gold-text);
+    font-weight: var(--font-weight-subheading);
+  }
+
+  /* Gold Checklist */
+  .gold-checklist {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .checklist-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 0.9375rem;
+    line-height: 1.45;
+    color: var(--color-ink);
+  }
+
+  .check-icon {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+
+  .records-upload-note {
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    color: var(--color-slate);
+    margin: var(--space-3) 0 0 0;
+  }
+
+  /* Bullet List */
+  .bullet-list {
+    margin: 0;
+    padding-left: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    color: var(--color-ink);
+    font-size: 0.9375rem;
+    line-height: 1.5;
+  }
+
+  /* Facility Tags Group */
+  .facility-tags-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .facility-tag {
+    display: inline-flex;
+    align-items: center;
+    background-color: var(--color-mist);
+    color: var(--color-ink);
+    border: 1px solid rgba(20, 41, 75, 0.12);
+    border-radius: var(--radius-pill);
+    padding: 6px 14px;
+    font-size: 0.875rem;
+    font-weight: var(--font-weight-subheading);
+  }
+
+  /* Cost Link */
+  .cost-link-wrap {
+    margin-top: var(--space-2);
+  }
+
+  .link-costs {
+    font-size: 0.9375rem;
+    font-weight: var(--font-weight-subheading);
+    color: var(--color-deep-navy);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    transition: color 0.15s ease;
+  }
+
+  .link-costs:hover:not(.is-pending) {
+    color: var(--color-gold-text);
+  }
+
+  .link-costs.is-pending {
+    color: var(--color-slate);
+    cursor: default;
+  }
+
+  /* Numbered Questions List */
+  .numbered-questions-list {
+    margin: 0;
+    padding-left: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    color: var(--color-ink);
+    font-size: 0.9375rem;
+    line-height: 1.5;
+  }
+
+  /* --------------------------------------------------------------------------
+     SECTION 10: FAQ Accordion & Related Guides
+     -------------------------------------------------------------------------- */
+  .faq-accordion-group {
+    margin-bottom: var(--space-6);
+  }
+
+  .faq-item {
+    border-top: 1px solid rgba(20, 41, 75, 0.12);
+    border-bottom: 1px solid rgba(20, 41, 75, 0.12);
+    padding: var(--space-3) 0;
+  }
+
+  .faq-summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+    gap: var(--space-3);
+  }
+
+  .faq-summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq-question-text {
+    font-size: 1rem;
+    font-weight: var(--font-weight-subheading);
+    color: var(--color-deep-navy);
+  }
+
+  .faq-toggle-icon {
+    font-size: 1.25rem;
+    color: var(--color-slate);
+    line-height: 1;
+    font-weight: 300;
+  }
+
+  .faq-item[open] .faq-toggle-icon {
+    transform: rotate(45deg);
+  }
+
+  .faq-summary:focus-visible {
+    outline: var(--focus-ring);
+    outline-offset: 2px;
+  }
+
+  .faq-panel {
+    padding-top: var(--space-3);
+  }
+
+  /* Related Guides */
+  .related-guides-wrap {
+    padding-top: var(--space-2);
+  }
+
+  .related-guides-title {
+    font-size: 1.125rem;
+    font-weight: var(--font-weight-subheading);
+    color: var(--color-deep-navy);
+    margin: 0 0 var(--space-3) 0;
+  }
+
+  .related-guides-list {
+    margin: 0;
+    padding-left: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .guide-link {
+    color: var(--color-slate);
+    font-size: 0.9375rem;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    transition: color 0.15s ease;
+  }
+
+  .guide-link:hover:not(.is-pending) {
+    color: var(--color-deep-navy);
+  }
+
+  .guide-link.is-pending {
+    cursor: default;
+  }
+
+  .guide-link:focus-visible {
+    outline: var(--focus-ring);
+    outline-offset: 2px;
+  }
+
+  /* Reduced Motion */
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      scroll-behavior: auto !important;
+      transition: none !important;
+    }
+  }
+</style>
+
+<script>
+  /**
+   * Accessible Active Section Tracker for Sticky Sidebar
+   * Observes headings in the main column and sets aria-current and .active on the matching sidebar link.
+   */
+  function initSidebarScrollSpy() {
+    const sidebar = document.querySelector('.condition-sidebar');
+    if (!sidebar) return;
+
+    const navLinks = sidebar.querySelectorAll<HTMLAnchorElement>('.sidebar-link');
+    const sections = document.querySelectorAll<HTMLElement>('.content-section');
+
+    if (!navLinks.length || !sections.length) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const id = entry.target.id;
+            navLinks.forEach((link) => {
+              const matches = link.getAttribute('href') === `#${id}`;
+              link.classList.toggle('active', matches);
+              if (matches) {
+                link.setAttribute('aria-current', 'location');
+              } else {
+                link.removeAttribute('aria-current');
+              }
+            });
+          }
+        });
+      },
+      {
+        rootMargin: '-20% 0px -70% 0px'
+      }
+    );
+
+    sections.forEach((section) => {
+      observer.observe(section);
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', initSidebarScrollSpy);
+  initSidebarScrollSpy();
+</script>
+

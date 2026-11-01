@@ -1,0 +1,247 @@
+---
+/**
+ * CoordinatorBenefits.astro
+ * Homepage section: "Why patients and families choose a coordinator" (Module 6 — Part 2)
+ * Reference: Page 8 of the Nuhavi Health Look and Feel PDF (30 October 2026).
+ *
+ * Visual corrections:
+ * 1. Open layout directly on full-width deep navy (#0D1B33) background.
+ * 2. Removed individual card backgrounds, borders, and gold top edges.
+ * 3. Removed additional introductory sentence beneath heading.
+ * 4. Preserved exact section heading: "Why patients and families choose a coordinator".
+ * 5. Exactly 10 benefit items in a clean 5-column, 2-row open grid on desktop.
+ * 6. Retained gold index numbers (01–10) with white titles and muted light descriptions.
+ * 7. Fully responsive: 5 columns desktop, 2 columns tablet, 1 column mobile.
+ */
+
+interface BenefitItem {
+  index: string;
+  title: string;
+  description: string;
+}
+
+const benefits: BenefitItem[] = [
+  {
+    index: '01',
+    title: 'One point of contact',
+    description: 'A single dedicated coordinator stays with you through every step of your care journey.'
+  },
+  {
+    index: '02',
+    title: 'Clear communication',
+    description: 'Explanations in plain language and regular updates, in writing and in person.'
+  },
+  {
+    index: '03',
+    title: 'Help understanding options',
+    description: 'Guidance reviewing hospital recommendations and understanding clinical terms.'
+  },
+  {
+    index: '04',
+    title: 'Written estimates',
+    description: 'Transparent, itemized cost estimates provided directly by treating hospitals.'
+  },
+  {
+    index: '05',
+    title: 'Appointments coordinated',
+    description: 'Consultations and diagnostics scheduled directly with hospital clinical teams.'
+  },
+  {
+    index: '06',
+    title: 'Travel and stay, if you want',
+    description: 'Assistance with hospital visa invitation letters, airport greeting, and local stay.'
+  },
+  {
+    index: '07',
+    title: 'Language support',
+    description: 'Coordinators who speak your language and medical interpreters at consultations.'
+  },
+  {
+    index: '08',
+    title: 'Support for your family',
+    description: 'Practical assistance and day-to-day guidance for accompanying family members.'
+  },
+  {
+    index: '09',
+    title: 'Discharge and follow-up',
+    description: 'Help transferring discharge records and communicating follow-up questions once home.'
+  },
+  {
+    index: '10',
+    title: 'Privacy and consent',
+    description: 'Confidential handling of medical records, shared only with your explicit consent.'
+  }
+];
+---
+
+<section class="benefits-section" aria-labelledby="benefits-heading">
+  <div class="container benefits-container">
+    <!-- Section Header (without extra introductory sentence) -->
+    <header class="benefits-header">
+      <span class="benefits-eyebrow">COORDINATION BENEFITS</span>
+      <h2 id="benefits-heading" class="benefits-title">
+        Why patients and families choose a coordinator
+      </h2>
+    </header>
+
+    <!-- 10 Benefits Open Grid (2 Rows x 5 Columns on Desktop) -->
+    <div class="benefits-grid" role="list" aria-label="10 coordinator benefits">
+      {benefits.map((item) => (
+        <article class="benefit-item" role="listitem">
+          <div class="benefit-header">
+            <span class="benefit-index" aria-hidden="true">{item.index}</span>
+            <h3 class="benefit-title">{item.title}</h3>
+          </div>
+          <p class="benefit-description">{item.description}</p>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  /* --------------------------------------------------------------------------
+     SECTION BASE & SHELL (Full-width Deep Navy)
+     -------------------------------------------------------------------------- */
+  .benefits-section {
+    width: 100%;
+    background-color: var(--color-deep-navy);
+    padding-top: var(--section-spacing);
+    padding-bottom: var(--section-spacing);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .benefits-container {
+    width: 100%;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: var(--space-3);
+    padding-right: var(--space-3);
+  }
+
+  @media (max-width: 480px) {
+    .benefits-container {
+      padding-left: var(--space-2);
+      padding-right: var(--space-2);
+    }
+  }
+
+  /* --------------------------------------------------------------------------
+     SECTION HEADER
+     -------------------------------------------------------------------------- */
+  .benefits-header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    max-width: 820px;
+    margin-bottom: var(--space-8);
+  }
+
+  .benefits-eyebrow {
+    font-size: 0.8125rem;
+    font-weight: var(--font-weight-subheading);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-gold);
+  }
+
+  .benefits-title {
+    font-size: clamp(1.75rem, 3.5vw, 2.375rem);
+    font-weight: var(--font-weight-heading);
+    color: var(--color-paper);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+
+  /* --------------------------------------------------------------------------
+     BENEFITS OPEN GRID (Desktop: 5 Columns x 2 Rows)
+     Directly on deep navy background with no card boxes or borders.
+     -------------------------------------------------------------------------- */
+  .benefits-grid {
+    display: grid;
+    gap: var(--space-6) var(--space-4);
+  }
+
+  /* Desktop (>= 1024px): 5 columns x 2 rows */
+  @media (min-width: 1024px) {
+    .benefits-grid {
+      grid-template-columns: repeat(5, 1fr);
+      gap: var(--space-6) var(--space-4);
+    }
+  }
+
+  /* Tablet (641px - 1023px): 2 columns */
+  @media (min-width: 641px) and (max-width: 1023px) {
+    .benefits-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-5) var(--space-4);
+    }
+  }
+
+  /* Mobile (<= 640px): 1 column */
+  @media (max-width: 640px) {
+    .benefits-grid {
+      grid-template-columns: 1fr;
+      gap: var(--space-4);
+    }
+
+    .benefits-header {
+      margin-bottom: var(--space-6);
+    }
+  }
+
+  /* --------------------------------------------------------------------------
+     BENEFIT ITEM (Clean typography directly on navy, no card boxes)
+     -------------------------------------------------------------------------- */
+  .benefit-item {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    background: transparent;
+    border: none;
+    padding: 0;
+  }
+
+  .benefit-header {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: var(--space-2);
+  }
+
+  .benefit-index {
+    font-size: 0.8125rem;
+    font-weight: var(--font-weight-subheading);
+    letter-spacing: 0.05em;
+    color: var(--color-gold);
+  }
+
+  .benefit-title {
+    font-size: 1.0625rem;
+    font-weight: var(--font-weight-subheading);
+    color: var(--color-paper);
+    line-height: 1.35;
+  }
+
+  .benefit-description {
+    font-size: 0.875rem;
+    font-weight: var(--font-weight-body);
+    line-height: 1.55;
+    color: rgba(255, 255, 255, 0.72);
+  }
+
+  /* --------------------------------------------------------------------------
+     MOBILE VIEWPORT REFINEMENTS (<= 640px, 390px, 360px)
+     -------------------------------------------------------------------------- */
+  @media (max-width: 640px) {
+    .benefit-title {
+      font-size: 1rem;
+    }
+
+    .benefit-description {
+      font-size: 0.84375rem;
+      line-height: 1.5;
+    }
+  }
+</style>

@@ -1,0 +1,689 @@
+---
+/**
+ * CostBreakdown.astro
+ * Homepage section: "What goes into the cost of treatment" (Module 7)
+ * Reference: Page 9 (visual reference) & Page 35 (interactive cost bar) of the Nuhavi Health Look and Feel PDF.
+ *
+ * Implements:
+ * 1. Full-width Mist (#F4F7FB) background.
+ * 2. Exact heading: "What goes into the cost of treatment".
+ * 3. Exact supporting text: "Select each part to see what it covers and why it varies. We do not publish prices until hospitals confirm them in writing."
+ * 4. Exactly seven interactive cost components:
+ *    - Hospital charges
+ *    - Professional fees
+ *    - Investigations
+ *    - Medicines and implants (default selected state)
+ *    - Rehabilitation and follow-up
+ *    - Travel and stay
+ *    - Nuhavi coordination fee (distinguished using gold)
+ * 5. Horizontal segmented bar with balanced illustrative shares (no prices or percentages).
+ * 6. Explicit note: "Illustrative shares only — your estimate depends on your treatment and hospital."
+ * 7. Interactive explanation panel showing the exact copy for "Medicines and implants" and neutral copy for others.
+ * 8. Quotation disclaimer: "Preliminary estimates may change. Confirmed quotations are issued by the treating hospital in writing."
+ * 9. CTA: "How estimates and our fee work", clearly marked as pending release since route does not exist yet.
+ * 10. Accessible vanilla JS interaction (click, hover, touch, keyboard arrows/tab).
+ */
+
+interface CostSegment {
+  id: string;
+  name: string;
+  color: string;
+  description: string;
+  isGold?: boolean;
+}
+
+const segments: CostSegment[] = [
+  {
+    id: 'hospital-charges',
+    name: 'Hospital charges',
+    color: '#14294B', // Navy
+    description: 'Room and nursing charges, operating theatre time, ICU care if required, and general hospital facility charges during your inpatient stay.'
+  },
+  {
+    id: 'professional-fees',
+    name: 'Professional fees',
+    color: '#243F68', // Deep blue
+    description: 'Fees for the primary operating surgeon, assisting surgical team, anesthesiologists, and daily rounds by attending medical specialists.'
+  },
+  {
+    id: 'investigations',
+    name: 'Investigations',
+    color: '#3B5E8C', // Slate blue
+    description: 'Pre-procedure diagnostic assessments, laboratory tests, blood panels, cross-matching, and imaging such as CT, MRI, or PET scans.'
+  },
+  {
+    id: 'medicines-implants',
+    name: 'Medicines and implants',
+    color: '#4B779E', // Steel blue
+    // Exact description from reference specification (Page 35)
+    description: 'Chemotherapy and targeted drugs, or joint implants. Often the most variable line; a good estimate names the drug or implant assumed.'
+  },
+  {
+    id: 'rehab-followup',
+    name: 'Rehabilitation and follow-up',
+    color: '#6582A0', // Muted slate
+    description: 'Physiotherapy sessions, mobility rehabilitation, post-operative wound care, and immediate post-discharge clinical evaluations.'
+  },
+  {
+    id: 'travel-stay',
+    name: 'Travel and stay',
+    color: '#8599AF', // Light slate
+    description: 'Flights, medical visa letters from hospitals, airport transfers, and local hotel or serviced apartment accommodation for patient and family.'
+  },
+  {
+    id: 'coordination-fee',
+    name: 'Nuhavi coordination fee',
+    color: '#C49A3C', // Signature Gold
+    isGold: true,
+    description: 'A separate coordination fee covering communication, medical record transfer, hospital liaison, and ongoing personal coordination. The exact fee structure will be published once finalized by the founders.'
+  }
+];
+
+// Initial selected segment (Medicines and implants matching Page 35 of the PDF)
+const initialSegment = segments[3];
+---
+
+<section class="cost-section" aria-labelledby="cost-heading">
+  <div class="container cost-container">
+    <div class="cost-layout">
+      <!-- Left Column: Heading, Supporting Copy, Disclaimer & CTA -->
+      <div class="cost-intro-col">
+        <header class="cost-header">
+          <span class="cost-eyebrow">Cost Transparency</span>
+          <h2 id="cost-heading" class="cost-title">
+            What goes into the cost of treatment
+          </h2>
+          <p class="cost-supporting-text">
+            Select each part to see what it covers and why it varies. We do not publish prices until hospitals confirm them in writing.
+          </p>
+        </header>
+
+        <!-- Quotation Integrity Callout -->
+        <div class="quotation-callout">
+          <p class="quotation-text">
+            <strong>Note on estimates:</strong> Preliminary estimates may change. Confirmed quotations are issued by the treating hospital in writing.
+          </p>
+        </div>
+
+        <!-- Pending CTA (Marked pending since /en/how-it-works/costs-and-fees/ does not exist yet) -->
+        <div class="cost-cta-wrapper">
+          <span class="btn-pending" role="link" aria-disabled="true" title="Detailed Costs and Fees guide coming soon">
+            <span>How estimates and our fee work</span>
+            <span class="badge-pending" aria-hidden="true">Guide pending</span>
+          </span>
+        </div>
+      </div>
+
+      <!-- Right Column: Interactive Cost Bar, Legend & Explanation Panel -->
+      <div class="cost-interactive-col">
+        <!-- Interactive Horizontal Segmented Bar -->
+        <div class="cost-bar-wrapper">
+          <div
+            id="cost-bar"
+            class="cost-bar"
+            role="tablist"
+            aria-label="Treatment cost components"
+          >
+            {segments.map((segment) => {
+              const isSelected = segment.id === initialSegment.id;
+              return (
+                <button
+                  type="button"
+                  id={`tab-${segment.id}`}
+                  class={`cost-segment${isSelected ? ' active' : ''}${segment.isGold ? ' segment-gold' : ''}`}
+                  role="tab"
+                  aria-selected={isSelected ? 'true' : 'false'}
+                  aria-controls="cost-explanation-panel"
+                  data-segment-id={segment.id}
+                  data-name={segment.name}
+                  data-color={segment.color}
+                  data-description={segment.description}
+                  style={`--seg-color: ${segment.color};`}
+                  title={segment.name}
+                >
+                  <span class="sr-only">{segment.name}</span>
+                </button>
+              );
+            })}
+          </div>
+
+          <!-- Explicit Illustrative Shares Notice -->
+          <p class="illustrative-note">
+            Illustrative shares only — your estimate depends on your treatment and hospital.
+          </p>
+        </div>
+
+        <!-- Cost Components Legend -->
+        <div class="cost-legend" role="group" aria-label="Cost component legend">
+          {segments.map((segment) => {
+            const isSelected = segment.id === initialSegment.id;
+            return (
+              <button
+                type="button"
+                id={`legend-${segment.id}`}
+                class={`cost-legend-item legend-item${isSelected ? ' active' : ''}${segment.isGold ? ' legend-gold' : ''}`}
+                data-target={segment.id}
+                aria-pressed={isSelected ? 'true' : 'false'}
+              >
+                <span
+                  class="legend-swatch"
+                  style={`background-color: ${segment.color};`}
+                  aria-hidden="true"
+                ></span>
+                <span class="legend-label">{segment.name}</span>
+              </button>
+            );
+          })}
+        </div>
+
+        <!-- Dynamic Explanation Panel -->
+        <div
+          id="cost-explanation-panel"
+          class="explanation-panel"
+          role="tabpanel"
+          aria-labelledby={`tab-${initialSegment.id}`}
+          aria-live="polite"
+        >
+          <div class="panel-header">
+            <span
+              id="panel-indicator"
+              class="panel-indicator"
+              style={`background-color: ${initialSegment.color};`}
+              aria-hidden="true"
+            ></span>
+            <h3 id="panel-title" class="panel-title">
+              {initialSegment.name}
+            </h3>
+          </div>
+          <p id="panel-description" class="panel-description">
+            {initialSegment.description}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  /**
+   * Accessible client-side interactive cost breakdown logic.
+   * Handles click, hover, touch, and keyboard arrow navigation.
+   */
+  function initCostBreakdown() {
+    const segments = document.querySelectorAll<HTMLButtonElement>('.cost-segment');
+    const legendButtons = document.querySelectorAll<HTMLButtonElement>('.cost-legend-item');
+    const panelTitle = document.getElementById('panel-title');
+    const panelDesc = document.getElementById('panel-description');
+    const panelIndicator = document.getElementById('panel-indicator');
+    const panel = document.getElementById('cost-explanation-panel');
+
+    if (!segments.length || !panelTitle || !panelDesc || !panelIndicator || !panel) return;
+
+    function selectSegment(segmentId: string) {
+      let activeBtn: HTMLButtonElement | null = null;
+
+      // Update segment tabs
+      segments.forEach((btn) => {
+        const isCurrent = btn.getAttribute('data-segment-id') === segmentId;
+        if (isCurrent) {
+          activeBtn = btn;
+          btn.classList.add('active');
+          btn.setAttribute('aria-selected', 'true');
+        } else {
+          btn.classList.remove('active');
+          btn.setAttribute('aria-selected', 'false');
+        }
+      });
+
+      // Update legend items
+      legendButtons.forEach((legBtn) => {
+        const isCurrent = legBtn.getAttribute('data-target') === segmentId;
+        if (isCurrent) {
+          legBtn.classList.add('active');
+          legBtn.setAttribute('aria-pressed', 'true');
+        } else {
+          legBtn.classList.remove('active');
+          legBtn.setAttribute('aria-pressed', 'false');
+        }
+      });
+
+      // Update explanation panel
+      if (activeBtn) {
+        const name = (activeBtn as HTMLButtonElement).getAttribute('data-name') || '';
+        const desc = (activeBtn as HTMLButtonElement).getAttribute('data-description') || '';
+        const color = (activeBtn as HTMLButtonElement).getAttribute('data-color') || '';
+
+        panelTitle.textContent = name;
+        panelDesc.textContent = desc;
+        panelIndicator.style.backgroundColor = color;
+        panel.setAttribute('aria-labelledby', `tab-${segmentId}`);
+      }
+    }
+
+    // Attach events to segment buttons
+    segments.forEach((btn, index) => {
+      const segId = btn.getAttribute('data-segment-id');
+      if (!segId) return;
+
+      btn.addEventListener('click', () => selectSegment(segId));
+      btn.addEventListener('mouseenter', () => selectSegment(segId));
+
+      // Keyboard arrow navigation between tabs
+      btn.addEventListener('keydown', (e) => {
+        let nextIndex: number | null = null;
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+          e.preventDefault();
+          nextIndex = (index + 1) % segments.length;
+        } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+          e.preventDefault();
+          nextIndex = (index - 1 + segments.length) % segments.length;
+        } else if (e.key === 'Home') {
+          e.preventDefault();
+          nextIndex = 0;
+        } else if (e.key === 'End') {
+          e.preventDefault();
+          nextIndex = segments.length - 1;
+        }
+
+        if (nextIndex !== null) {
+          const nextBtn = segments[nextIndex];
+          nextBtn.focus();
+          const nextId = nextBtn.getAttribute('data-segment-id');
+          if (nextId) selectSegment(nextId);
+        }
+      });
+    });
+
+    // Attach click events to legend buttons
+    legendButtons.forEach((legBtn) => {
+      const targetId = legBtn.getAttribute('data-target');
+      if (!targetId) return;
+
+      legBtn.addEventListener('click', () => {
+        selectSegment(targetId);
+        const matchingTab = document.getElementById(`tab-${targetId}`);
+        matchingTab?.focus();
+      });
+
+      legBtn.addEventListener('mouseenter', () => {
+        selectSegment(targetId);
+      });
+    });
+  }
+
+  // Initialize on page load and Astro view transitions
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initCostBreakdown);
+  } else {
+    initCostBreakdown();
+  }
+  document.addEventListener('astro:page-load', initCostBreakdown);
+</script>
+
+<style>
+  /* --------------------------------------------------------------------------
+     SECTION BASE & SHELL (Mist #F4F7FB Background)
+     -------------------------------------------------------------------------- */
+  .cost-section {
+    width: 100%;
+    background-color: var(--color-mist);
+    padding-top: var(--section-spacing);
+    padding-bottom: var(--section-spacing);
+    border-top: 1px solid rgba(20, 41, 75, 0.08);
+  }
+
+  .cost-container {
+    width: 100%;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: var(--space-3);
+    padding-right: var(--space-3);
+  }
+
+  @media (max-width: 480px) {
+    .cost-container {
+      padding-left: var(--space-2);
+      padding-right: var(--space-2);
+    }
+  }
+
+  /* --------------------------------------------------------------------------
+     TWO-COLUMN DESKTOP LAYOUT (1024px+)
+     -------------------------------------------------------------------------- */
+  .cost-layout {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  @media (min-width: 1024px) {
+    .cost-layout {
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      gap: var(--space-8);
+      align-items: start;
+    }
+  }
+
+  /* --------------------------------------------------------------------------
+     LEFT COLUMN: INTRO, HEADER & NOTICES
+     -------------------------------------------------------------------------- */
+  .cost-intro-col {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .cost-header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .cost-eyebrow {
+    font-size: 0.8125rem;
+    font-weight: var(--font-weight-subheading);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-gold-text);
+  }
+
+  .cost-title {
+    font-size: clamp(1.75rem, 3.5vw, 2.375rem);
+    font-weight: var(--font-weight-heading);
+    color: var(--color-deep-navy);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+
+  .cost-supporting-text {
+    font-size: 1.0625rem;
+    font-weight: var(--font-weight-body);
+    line-height: var(--line-height-body);
+    color: var(--color-slate);
+    margin-top: 4px;
+  }
+
+  /* Quotation Callout */
+  .quotation-callout {
+    background-color: var(--color-paper);
+    border-left: 3px solid var(--color-navy);
+    border-radius: 0 8px 8px 0;
+    padding: var(--space-3);
+    border-top: 1px solid rgba(20, 41, 75, 0.08);
+    border-right: 1px solid rgba(20, 41, 75, 0.08);
+    border-bottom: 1px solid rgba(20, 41, 75, 0.08);
+  }
+
+  .quotation-text {
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--color-ink);
+  }
+
+  .quotation-text strong {
+    color: var(--color-deep-navy);
+  }
+
+  /* Pending CTA */
+  .cost-cta-wrapper {
+    margin-top: var(--space-2);
+  }
+
+  .btn-pending {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: var(--button-min-height);
+    padding: 0 var(--space-4);
+    background-color: var(--color-paper);
+    color: var(--color-navy);
+    border: 1.5px solid rgba(20, 41, 75, 0.2);
+    border-radius: var(--radius-pill);
+    font-size: 0.9375rem;
+    font-weight: var(--font-weight-subheading);
+    cursor: default;
+    user-select: none;
+    box-shadow: 0 1px 3px rgba(20, 41, 75, 0.04);
+  }
+
+  .badge-pending {
+    font-size: 0.6875rem;
+    font-weight: var(--font-weight-subheading);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background-color: rgba(20, 41, 75, 0.08);
+    color: var(--color-slate);
+    padding: 2px 8px;
+    border-radius: var(--radius-pill);
+  }
+
+  /* --------------------------------------------------------------------------
+     RIGHT COLUMN: COST BAR, LEGEND & EXPLANATION PANEL
+     -------------------------------------------------------------------------- */
+  .cost-interactive-col {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    min-width: 0;
+  }
+
+  /* --------------------------------------------------------------------------
+     HORIZONTAL SEGMENTED BAR (Illustrative Shares Only)
+     -------------------------------------------------------------------------- */
+  .cost-bar-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .cost-bar {
+    display: flex;
+    width: 100%;
+    height: 44px;
+    background-color: var(--color-paper);
+    border-radius: var(--radius-pill);
+    padding: 3px;
+    border: 1.5px solid rgba(20, 41, 75, 0.15);
+    box-shadow: 0 2px 6px rgba(20, 41, 75, 0.04);
+    gap: 2px;
+  }
+
+  .cost-segment {
+    flex: 1;
+    position: relative;
+    border: none;
+    cursor: pointer;
+    background-color: var(--seg-color);
+    transition: transform 0.15s ease, filter 0.15s ease, outline 0.15s ease;
+    border-radius: 4px;
+    padding: 0;
+  }
+
+  /* First and last segment pill curve */
+  .cost-segment:first-child {
+    border-top-left-radius: var(--radius-pill);
+    border-bottom-left-radius: var(--radius-pill);
+  }
+
+  .cost-segment:last-child {
+    border-top-right-radius: var(--radius-pill);
+    border-bottom-right-radius: var(--radius-pill);
+  }
+
+  /* Segment Hover & Active States */
+  .cost-segment:hover {
+    filter: brightness(1.12);
+  }
+
+  .cost-segment.active {
+    filter: brightness(1.15);
+    outline: 3px solid var(--color-deep-navy);
+    outline-offset: -2px;
+    z-index: 2;
+  }
+
+  .cost-segment.segment-gold.active {
+    outline-color: var(--color-deep-navy);
+  }
+
+  .illustrative-note {
+    font-size: 0.8125rem;
+    font-weight: var(--font-weight-body);
+    color: var(--color-slate);
+    line-height: 1.4;
+    font-style: italic;
+  }
+
+  /* --------------------------------------------------------------------------
+     COST LEGEND (Interactive wrapped pills)
+     -------------------------------------------------------------------------- */
+  .cost-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 4px;
+  }
+
+  .legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    background-color: var(--color-paper);
+    border: 1px solid rgba(20, 41, 75, 0.1);
+    border-radius: var(--radius-pill);
+    font-family: var(--font-family-base);
+    font-size: 0.8125rem;
+    font-weight: var(--font-weight-body);
+    color: var(--color-ink);
+    cursor: pointer;
+    transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  }
+
+  .legend-item:hover {
+    background-color: #EAF0F7;
+    border-color: rgba(20, 41, 75, 0.25);
+  }
+
+  .legend-item.active {
+    background-color: #E2ECF7;
+    border-color: var(--color-navy);
+    color: var(--color-deep-navy);
+    font-weight: var(--font-weight-subheading);
+    box-shadow: 0 1px 3px rgba(20, 41, 75, 0.08);
+  }
+
+  .legend-item.legend-gold.active {
+    background-color: #FFF8E8;
+    border-color: var(--color-gold);
+    color: var(--color-gold-text);
+  }
+
+  .legend-swatch {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .legend-label {
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+
+  /* --------------------------------------------------------------------------
+     DYNAMIC EXPLANATION PANEL
+     -------------------------------------------------------------------------- */
+  .explanation-panel {
+    background-color: var(--color-paper);
+    border: 1px solid rgba(20, 41, 75, 0.1);
+    border-radius: var(--radius-card);
+    padding: var(--space-4) var(--space-5);
+    box-shadow: 0 2px 10px rgba(20, 41, 75, 0.04);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    min-height: 120px;
+  }
+
+  .panel-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .panel-indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .panel-title {
+    font-size: 1.25rem;
+    font-weight: var(--font-weight-heading);
+    color: var(--color-deep-navy);
+    line-height: 1.2;
+  }
+
+  .panel-description {
+    font-size: 0.9375rem;
+    font-weight: var(--font-weight-body);
+    line-height: 1.6;
+    color: var(--color-ink);
+  }
+
+  /* --------------------------------------------------------------------------
+     MOBILE REFINEMENTS (<= 640px, 390px, 360px)
+     -------------------------------------------------------------------------- */
+  @media (max-width: 640px) {
+    .cost-bar {
+      height: 40px;
+    }
+
+    .legend-item {
+      font-size: 0.75rem;
+      padding: 5px 10px;
+    }
+
+    .explanation-panel {
+      padding: var(--space-3) var(--space-4);
+      min-height: auto;
+    }
+
+    .panel-title {
+      font-size: 1.125rem;
+    }
+
+    .panel-description {
+      font-size: 0.875rem;
+    }
+  }
+
+  /* --------------------------------------------------------------------------
+     ACCESSIBILITY (Screen Reader Only & Focus Ring)
+     -------------------------------------------------------------------------- */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  /* --------------------------------------------------------------------------
+     REDUCED MOTION PREFERENCES
+     -------------------------------------------------------------------------- */
+  @media (prefers-reduced-motion: reduce) {
+    .cost-segment,
+    .legend-item {
+      transition: none !important;
+    }
+  }
+</style>

@@ -1,0 +1,54 @@
+---
+/**
+ * src/pages/en/index.astro
+ * English language homepage for Nuhavi Health.
+ * Currently limited to the Hero Section in compliance with Module 3 scope.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import HeroSection from '../../components/home/HeroSection.astro';
+import PeopleNotPackages from '../../components/home/PeopleNotPackages.astro';
+import SpecialtyExplorer from '../../components/home/SpecialtyExplorer.astro';
+import PatientJourney from '../../components/home/PatientJourney.astro';
+import CoordinatorBenefits from '../../components/home/CoordinatorBenefits.astro';
+import CostBreakdown from '../../components/home/CostBreakdown.astro';
+import HospitalSelection from '../../components/home/HospitalSelection.astro';
+import PatientStories from '../../components/home/PatientStories.astro';
+import PrepareWithConfidence from '../../components/home/PrepareWithConfidence.astro';
+import ClosingCTA from '../../components/home/ClosingCTA.astro';
+---
+
+<BaseLayout
+  title="Nuhavi Health | Expert Medical Care in India"
+  description="Understand your treatment options, explore appropriate hospitals, receive coordinated medical reviews and plan your healthcare journey — with support before, during and after treatment."
+>
+  <!-- Hero Section -->
+  <HeroSection />
+
+  <!-- People, Not Packages Section (Module 4) -->
+  <PeopleNotPackages />
+
+  <!-- Specialty Explorer Section (Module 5) -->
+  <SpecialtyExplorer />
+
+  <!-- Seven-Step Patient Journey Section (Module 6) -->
+  <PatientJourney />
+
+  <!-- Coordinator Benefits Section (Module 6 Part 2) -->
+  <CoordinatorBenefits />
+
+  <!-- Homepage Cost Breakdown Section (Module 7) -->
+  <CostBreakdown />
+
+  <!-- Homepage Hospital Selection Standard Section (Module 8) -->
+  <HospitalSelection />
+
+  <!-- Patient Stories Section (Module 9) -->
+  <PatientStories />
+
+  <!-- Prepare with Confidence Section (Module 10) -->
+  <PrepareWithConfidence />
+
+  <!-- Closing CTA Band Section (Module 11) -->
+  <ClosingCTA />
+</BaseLayout>
+

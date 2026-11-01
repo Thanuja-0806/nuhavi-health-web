@@ -1,0 +1,255 @@
+/* ==========================================================================
+   NUHAVI HEALTH — DESIGN SYSTEM FOUNDATION
+   Specification Date: 30 October 2026
+   Context: Medical Tourism Coordination
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   0. SELF-HOSTED FONTS (@font-face)
+   Manrope WOFF2 font files served directly from /fonts/
+   Weights: 300 (Deck), 400 (Body), 700 (Subheading), 800 (Heading)
+   -------------------------------------------------------------------------- */
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url('/fonts/manrope-300.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/manrope-400.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/manrope-700.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url('/fonts/manrope-800.woff2') format('woff2');
+}
+
+/* --------------------------------------------------------------------------
+   1. DESIGN TOKENS (CSS Custom Properties)
+   These variables act as the single source of truth for all styling.
+   -------------------------------------------------------------------------- */
+:root {
+  /* Brand Color Palette */
+  --color-navy: #14294B;
+  --color-deep-navy: #0D1B33;
+  --color-gold: #C49A3C;
+  --color-gold-text: #8A6726;
+  --color-ink: #263449;
+  --color-slate: #5B6A80;
+  --color-mist: #F4F7FB;
+  --color-paper: #FFFFFF;
+  --color-success: #26734D;
+  --color-error: #B42318;
+  --color-confirmation: #FFF6E5;
+
+  /* Typography */
+  --font-family-base: 'Manrope', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  --font-weight-deck: 300;       /* Introductory text / deck */
+  --font-weight-body: 400;       /* Standard body copy */
+  --font-weight-subheading: 700; /* Subheadings, section titles, card headers */
+  --font-weight-heading: 800;    /* Primary page and hero headings */
+  --line-height-body: 1.6;
+  --line-height-heading: 1.2;
+
+  /* Spacing System (Strict 8px grid) */
+  --space-1: 8px;    /* 8px */
+  --space-2: 16px;   /* 16px */
+  --space-3: 24px;   /* 24px */
+  --space-4: 32px;   /* 32px */
+  --space-5: 40px;   /* 40px */
+  --space-6: 48px;   /* 48px */
+  --space-7: 56px;   /* 56px (Mobile section spacing) */
+  --space-8: 64px;   /* 64px */
+  --space-10: 80px;  /* 80px */
+  --space-12: 96px;  /* 96px (Desktop section spacing) */
+
+  /* Section Spacing (Dynamic based on screen size) */
+  --section-spacing: var(--space-12); /* Default to 96px desktop */
+
+  /* Component Dimensions & Shapes */
+  --radius-card: 14px;
+  --radius-pill: 9999px;
+  --button-min-height: 48px;
+
+  /* Focus Indicator for Accessibility */
+  --focus-ring: 3px solid var(--color-gold);
+  --focus-offset: 2px;
+}
+
+/* Responsive Section Spacing for Mobile Viewports */
+@media (max-width: 768px) {
+  :root {
+    --section-spacing: var(--space-7); /* 56px mobile section spacing */
+  }
+}
+
+/* --------------------------------------------------------------------------
+   2. MODERN CSS RESET & DEFAULTS
+   -------------------------------------------------------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-family: var(--font-family-base);
+  font-size: 16px;
+  color: var(--color-ink);
+  background-color: var(--color-mist);
+  -webkit-text-size-adjust: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  min-height: 100vh;
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-body);
+  line-height: var(--line-height-body);
+  color: var(--color-ink);
+  background-color: var(--color-mist);
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+
+/* --------------------------------------------------------------------------
+   3. TYPOGRAPHY RULES
+   -------------------------------------------------------------------------- */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--color-deep-navy);
+  line-height: var(--line-height-heading);
+}
+
+h1 {
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: var(--font-weight-heading);
+}
+
+h2 {
+  font-size: clamp(1.5rem, 4vw, 2.25rem);
+  font-weight: var(--font-weight-heading);
+}
+
+h3 {
+  font-size: 1.5rem;
+  font-weight: var(--font-weight-subheading);
+}
+
+h4, h5, h6 {
+  font-size: 1.125rem;
+  font-weight: var(--font-weight-subheading);
+}
+
+/* Introductory deck text */
+.text-deck {
+  font-size: 1.25rem;
+  font-weight: var(--font-weight-deck);
+  line-height: var(--line-height-body);
+  color: var(--color-slate);
+}
+
+/* Standard body text */
+p {
+  font-size: 1rem;
+  font-weight: var(--font-weight-body);
+  line-height: var(--line-height-body);
+  color: var(--color-ink);
+}
+
+/* --------------------------------------------------------------------------
+   4. ACCESSIBILITY & FOCUS INDICATOR
+   A high-contrast 3px gold ring with 2px offset for keyboard navigation.
+   -------------------------------------------------------------------------- */
+:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-offset);
+}
+
+/* Respect user preference for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   5. REUSABLE UI PRIMITIVES
+   -------------------------------------------------------------------------- */
+/* Pill-shaped primary button with at least 48px height */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--button-min-height);
+  padding: 0 var(--space-4);
+  font-family: var(--font-family-base);
+  font-size: 1rem;
+  font-weight: var(--font-weight-subheading);
+  text-decoration: none;
+  color: var(--color-paper);
+  background-color: var(--color-navy);
+  border: 2px solid var(--color-navy);
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.btn-primary:hover {
+  background-color: var(--color-deep-navy);
+  border-color: var(--color-deep-navy);
+}
+
+.btn-primary:active {
+  background-color: var(--color-ink);
+  border-color: var(--color-ink);
+}
+
+/* Base Card */
+.card {
+  background-color: var(--color-paper);
+  border-radius: var(--radius-card);
+  padding: var(--space-4);
+  border: 1px solid rgba(20, 41, 75, 0.08);
+}
+
+/* Standard Layout Container */
+.container {
+  width: 100%;
+  max-width: 1120px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--space-3);
+  padding-right: var(--space-3);
+}
+
+/* Standard Section Spacing */
+.section {
+  padding-top: var(--section-spacing);
+  padding-bottom: var(--section-spacing);
+}
+

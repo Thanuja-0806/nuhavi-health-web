@@ -1,0 +1,724 @@
+---
+/**
+ * HeroSection.astro
+ * Hero component for the Nuhavi Health English homepage (/en/).
+ *
+ * Implements:
+ * 1. Deep navy (#0D1B33) full-width container with accessible contrast.
+ * 2. Exact reference headline (weight 800) and introductory deck (weight 300).
+ * 3. Pill-shaped "Request a medical opinion" primary CTA and secondary "Explore treatments" link.
+ * 4. Responsibility disclaimer note directly below CTA buttons.
+ * 5. Signature gold route line drawn over ~2 seconds with 3 interactive, accessible stops.
+ * 6. Full keyboard support (WAI-ARIA tabs), active panel updates, and prefers-reduced-motion handling.
+ * 7. Stage 1 & Stage 2 exact panel content; Stage 3 description marked pending confirmation.
+ */
+
+interface RouteStop {
+  id: string;
+  stepNumber: string;
+  shortLabel: string;
+  title: string;
+  description: string;
+  isPendingConfirmation?: boolean;
+}
+
+const stops: RouteStop[] = [
+  {
+    id: 'share-details',
+    stepNumber: '01',
+    shortLabel: 'Share your medical details',
+    title: '1. Share your medical details',
+    description: 'Send a short enquiry. Then, if you agree, upload your reports through a private link we email you. A coordinator who speaks your language follows up.'
+  },
+  {
+    id: 'explore-options',
+    stepNumber: '02',
+    shortLabel: 'Explore your options',
+    title: '2. Explore your options',
+    description: 'A hospital team reviews your records. You receive their opinion and written estimates, explained in plain language.'
+  },
+  {
+    id: 'plan-journey',
+    stepNumber: '03',
+    shortLabel: 'Plan your care journey',
+    title: '3. Plan your care journey',
+    // Pending content confirmation from reference specification (pages 5 and 34)
+    description: 'Stage 3 coordination description pending content confirmation from reference specification.',
+    isPendingConfirmation: true
+  }
+];
+---
+
+<section class="hero-section" aria-labelledby="hero-heading">
+  <div class="container hero-container">
+    <!-- Top Content Group: Headline, Deck, Action Buttons & Responsibility Note -->
+    <div class="hero-intro">
+      <span class="hero-eyebrow">Medical Travel Coordination</span>
+      
+      <h1 id="hero-heading" class="hero-headline">
+        Expert medical care in India. Support at every step.
+      </h1>
+
+      <p class="hero-deck">
+        Understand your treatment options, explore appropriate hospitals, receive coordinated medical reviews and plan your healthcare journey &mdash; with support before, during and after treatment.
+      </p>
+
+      <div class="hero-cta-group">
+        <a href="/en/request-opinion/" class="btn-primary hero-primary-cta">
+          Request a medical opinion
+        </a>
+        <a href="/en/treatments" class="hero-secondary-cta">
+          Explore treatments <span aria-hidden="true">&rarr;</span>
+        </a>
+      </div>
+
+      <!-- Responsibility Note Directly Below CTA Buttons -->
+      <p class="hero-responsibility-note">
+        We coordinate care. Hospitals examine, decide and treat. We do not promise outcomes, savings or visa approval.
+      </p>
+    </div>
+
+    <!-- Signature Gold Route Line & 3 Interactive Stops -->
+    <div class="route-tracker-wrapper">
+      <div class="route-header">
+        <span class="route-eyebrow">Your Coordination Journey</span>
+        <span class="route-caption">Select any stage below to inspect how we coordinate each step</span>
+      </div>
+
+      <div class="route-tracker">
+        <!-- SVG Route Lines (Horizontal for Desktop, Vertical for Mobile) -->
+        <div class="route-svg-track desktop-track" aria-hidden="true">
+          <svg class="route-svg" viewBox="0 0 800 6" preserveAspectRatio="none">
+            <!-- Background Guide Line -->
+            <line x1="0" y1="3" x2="800" y2="3" class="route-line-guide" />
+            <!-- Animated Signature Gold Line -->
+            <path d="M 0,3 L 800,3" class="route-line-draw" />
+          </svg>
+        </div>
+
+        <div class="route-svg-track mobile-track" aria-hidden="true">
+          <svg class="route-svg-v" viewBox="0 0 6 240" preserveAspectRatio="none">
+            <!-- Background Guide Line -->
+            <line x1="3" y1="0" x2="3" y2="240" class="route-line-guide" />
+            <!-- Animated Signature Gold Line -->
+            <path d="M 3,0 L 3,240" class="route-line-draw-v" />
+          </svg>
+        </div>
+
+        <!-- 3 Accessible Stop Buttons (WAI-ARIA Tablist) -->
+        <div
+          class="route-stops-list"
+          role="tablist"
+          aria-label="Coordination journey stages"
+        >
+          {stops.map((stop, index) => (
+            <button
+              type="button"
+              role="tab"
+              id={`stop-tab-${stop.id}`}
+              class={`stop-btn ${index === 0 ? 'active' : ''}`}
+              aria-selected={index === 0 ? 'true' : 'false'}
+              aria-controls={`stop-panel-${stop.id}`}
+              tabindex={index === 0 ? 0 : -1}
+              data-stop-index={index}
+            >
+              <span class="stop-node" aria-hidden="true">
+                <span class="stop-number">{stop.stepNumber}</span>
+              </span>
+              <span class="stop-text">
+                <span class="stop-step-label">Stage {index + 1}</span>
+                <span class="stop-short-label">{stop.shortLabel}</span>
+              </span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <!-- Detail Panels: Dynamically switched via button selection -->
+      <div class="route-panels-container">
+        {stops.map((stop, index) => (
+          <div
+            id={`stop-panel-${stop.id}`}
+            role="tabpanel"
+            class={`stop-panel card ${index === 0 ? 'active' : ''}`}
+            aria-labelledby={`stop-tab-${stop.id}`}
+            hidden={index !== 0}
+            tabindex="0"
+          >
+            <div class="panel-header">
+              <span class="panel-badge">Stage {stop.stepNumber} of 03</span>
+              <h3 class="panel-title">{stop.title}</h3>
+            </div>
+
+            {stop.isPendingConfirmation ? (
+              <div class="pending-content-wrapper">
+                <p class="panel-description pending-text">
+                  <!-- Pending content confirmation from reference specification (pages 5 and 34) -->
+                  <em>[Description pending content confirmation from reference specification]</em>
+                </p>
+              </div>
+            ) : (
+              <p class="panel-description">{stop.description}</p>
+            )}
+
+            <div class="panel-footer">
+              <a href="/en/request-opinion/" class="panel-cta-link">
+                Begin stage {index + 1} inquiry <span aria-hidden="true">&rarr;</span>
+              </a>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* --------------------------------------------------------------------------
+     HERO BASE & FULL-WIDTH CONTAINER
+     -------------------------------------------------------------------------- */
+  .hero-section {
+    width: 100%;
+    background-color: var(--color-deep-navy);
+    color: var(--color-paper);
+    padding-top: var(--space-10);
+    padding-bottom: var(--space-12);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-10);
+  }
+
+  /* --------------------------------------------------------------------------
+     HERO INTRO CONTENT (Headline, Deck, CTAs, Responsibility Note)
+     -------------------------------------------------------------------------- */
+  .hero-intro {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-3);
+    max-width: 860px;
+  }
+
+  .hero-eyebrow {
+    font-size: 0.875rem;
+    font-weight: var(--font-weight-subheading);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-gold);
+    background-color: rgba(196, 154, 60, 0.12);
+    border: 1px solid rgba(196, 154, 60, 0.35);
+    padding: 6px var(--space-2);
+    border-radius: var(--radius-pill);
+    margin-bottom: var(--space-1);
+  }
+
+  .hero-headline {
+    font-size: clamp(2.125rem, 4.5vw, 3.5rem);
+    font-weight: var(--font-weight-heading);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: var(--color-paper);
+  }
+
+  .hero-deck {
+    font-size: clamp(1.125rem, 2vw, 1.25rem);
+    font-weight: var(--font-weight-deck);
+    line-height: var(--line-height-body);
+    color: rgba(244, 247, 251, 0.88);
+    max-width: 780px;
+  }
+
+  .hero-cta-group {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3);
+    margin-top: var(--space-2);
+  }
+
+  /* Primary CTA Pill Button */
+  .hero-primary-cta {
+    background-color: var(--color-gold);
+    border-color: var(--color-gold);
+    color: var(--color-deep-navy);
+    font-weight: var(--font-weight-subheading);
+    font-size: 1rem;
+    padding: 0 var(--space-4);
+    box-shadow: 0 4px 16px rgba(196, 154, 60, 0.2);
+    transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+  }
+
+  .hero-primary-cta:hover {
+    background-color: var(--color-paper);
+    border-color: var(--color-paper);
+    color: var(--color-deep-navy);
+  }
+
+  /* Secondary Link */
+  .hero-secondary-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    color: var(--color-mist);
+    font-size: 0.9375rem;
+    font-weight: var(--font-weight-subheading);
+    text-decoration: none;
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-pill);
+    transition: color 0.15s ease, background-color 0.15s ease;
+  }
+
+  .hero-secondary-cta:hover {
+    color: var(--color-gold);
+    background-color: rgba(244, 247, 251, 0.05);
+  }
+
+  /* Responsibility Note */
+  .hero-responsibility-note {
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: rgba(244, 247, 251, 0.78);
+    margin-top: var(--space-2);
+    max-width: 720px;
+    border-left: 2px solid var(--color-gold);
+    padding-left: var(--space-2);
+  }
+
+  /* --------------------------------------------------------------------------
+     SIGNATURE GOLD ROUTE LINE TRACKER
+     -------------------------------------------------------------------------- */
+  .route-tracker-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    background-color: rgba(20, 41, 75, 0.45);
+    border: 1px solid rgba(196, 154, 60, 0.2);
+    border-radius: var(--radius-card);
+    padding: var(--space-5);
+  }
+
+  .route-header {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    border-bottom: 1px solid rgba(244, 247, 251, 0.08);
+    padding-bottom: var(--space-3);
+  }
+
+  .route-eyebrow {
+    font-size: 0.8125rem;
+    font-weight: var(--font-weight-subheading);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-gold);
+  }
+
+  .route-caption {
+    font-size: 0.875rem;
+    color: rgba(244, 247, 251, 0.7);
+  }
+
+  .route-tracker {
+    position: relative;
+    padding: var(--space-4) 0;
+  }
+
+  /* SVG Route Tracks */
+  .route-svg-track {
+    position: absolute;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Desktop Track: Horizontal line behind circular nodes */
+  .desktop-track {
+    display: none;
+    top: 36px;
+    left: 8%;
+    right: 8%;
+    width: 84%;
+    height: 6px;
+  }
+
+  @media (min-width: 769px) {
+    .desktop-track {
+      display: block;
+    }
+  }
+
+  .route-svg {
+    width: 100%;
+    height: 6px;
+    display: block;
+    overflow: visible;
+  }
+
+  /* Mobile Track: Vertical line along the left edge behind nodes */
+  .mobile-track {
+    display: block;
+    top: 36px;
+    bottom: 36px;
+    left: 21px;
+    width: 6px;
+    height: calc(100% - 72px);
+  }
+
+  @media (min-width: 769px) {
+    .mobile-track {
+      display: none;
+    }
+  }
+
+  .route-svg-v {
+    width: 6px;
+    height: 100%;
+    display: block;
+    overflow: visible;
+  }
+
+  /* Base Guide Line (Dim track) */
+  .route-line-guide {
+    stroke: rgba(244, 247, 251, 0.15);
+    stroke-width: 2px;
+  }
+
+  /* Signature Gold Animated Line (Draws once over ~2s on load) */
+  .route-line-draw {
+    stroke: var(--color-gold);
+    stroke-width: 3px;
+    stroke-linecap: round;
+    stroke-dasharray: 800;
+    stroke-dashoffset: 800;
+    animation: drawHorizontalRoute 2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  }
+
+  .route-line-draw-v {
+    stroke: var(--color-gold);
+    stroke-width: 3px;
+    stroke-linecap: round;
+    stroke-dasharray: 240;
+    stroke-dashoffset: 240;
+    animation: drawVerticalRoute 2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  }
+
+  @keyframes drawHorizontalRoute {
+    from {
+      stroke-dashoffset: 800;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  @keyframes drawVerticalRoute {
+    from {
+      stroke-dashoffset: 240;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  /* Respect prefers-reduced-motion: draw line immediately without animation */
+  @media (prefers-reduced-motion: reduce) {
+    .route-line-draw,
+    .route-line-draw-v {
+      animation: none !important;
+      stroke-dashoffset: 0 !important;
+    }
+  }
+
+  /* --------------------------------------------------------------------------
+     ACCESSIBLE ROUTE STOPS (WAI-ARIA Tablist)
+     -------------------------------------------------------------------------- */
+  .route-stops-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    position: relative;
+    z-index: 2;
+  }
+
+  @media (min-width: 769px) {
+    .route-stops-list {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: var(--space-3);
+    }
+  }
+
+  /* Individual Stop Button */
+  .stop-btn {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    background: transparent;
+    border: none;
+    padding: var(--space-1);
+    border-radius: var(--radius-card);
+    cursor: pointer;
+    text-align: left;
+    color: var(--color-paper);
+    font-family: var(--font-family-base);
+    transition: background-color 0.2s ease;
+  }
+
+  @media (min-width: 769px) {
+    .stop-btn {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      flex: 1;
+      padding: var(--space-2);
+    }
+  }
+
+  .stop-btn:hover .stop-node {
+    border-color: var(--color-paper);
+    transform: scale(1.05);
+  }
+
+  .stop-btn:hover .stop-short-label {
+    color: var(--color-paper);
+  }
+
+  /* Node Pin */
+  .stop-node {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background-color: var(--color-deep-navy);
+    border: 2px solid var(--color-gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 0 0 4px var(--color-deep-navy);
+    transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+  }
+
+  .stop-number {
+    font-size: 0.875rem;
+    font-weight: var(--font-weight-subheading);
+    color: var(--color-gold);
+    letter-spacing: 0.02em;
+    transition: color 0.2s ease;
+  }
+
+  /* Active Stop State */
+  .stop-btn.active .stop-node {
+    background-color: var(--color-gold);
+    border-color: var(--color-paper);
+    box-shadow: 0 0 0 4px var(--color-deep-navy), 0 0 16px rgba(196, 154, 60, 0.6);
+  }
+
+  .stop-btn.active .stop-number {
+    color: var(--color-deep-navy);
+    font-weight: var(--font-weight-heading);
+  }
+
+  .stop-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .stop-step-label {
+    font-size: 0.75rem;
+    font-weight: var(--font-weight-subheading);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-gold);
+  }
+
+  .stop-short-label {
+    font-size: 0.9375rem;
+    font-weight: var(--font-weight-subheading);
+    color: rgba(244, 247, 251, 0.85);
+    transition: color 0.2s ease;
+  }
+
+  .stop-btn.active .stop-short-label {
+    color: var(--color-paper);
+  }
+
+  /* Keyboard Focus Indicator */
+  .stop-btn:focus-visible {
+    outline: var(--focus-ring);
+    outline-offset: var(--focus-offset);
+  }
+
+  /* --------------------------------------------------------------------------
+     DETAIL PANELS CONTAINER (WAI-ARIA Tabpanels)
+     -------------------------------------------------------------------------- */
+  .route-panels-container {
+    margin-top: var(--space-3);
+  }
+
+  .stop-panel {
+    display: none;
+    background-color: rgba(13, 27, 51, 0.75);
+    border: 1px solid rgba(196, 154, 60, 0.3);
+    border-radius: var(--radius-card);
+    padding: var(--space-4);
+    color: var(--color-paper);
+    animation: fadeInPanel 0.25s ease-out;
+  }
+
+  .stop-panel.active {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  @keyframes fadeInPanel {
+    from {
+      opacity: 0;
+      transform: translateY(4px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .stop-panel {
+      animation: none;
+    }
+  }
+
+  .panel-header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    border-bottom: 1px solid rgba(244, 247, 251, 0.08);
+    padding-bottom: var(--space-2);
+  }
+
+  .panel-badge {
+    align-self: flex-start;
+    font-size: 0.75rem;
+    font-weight: var(--font-weight-subheading);
+    color: var(--color-gold);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .panel-title {
+    font-size: clamp(1.125rem, 2.5vw, 1.375rem);
+    font-weight: var(--font-weight-heading);
+    color: var(--color-paper);
+    line-height: 1.3;
+  }
+
+  .panel-description {
+    font-size: 1.0625rem;
+    font-weight: var(--font-weight-body);
+    line-height: var(--line-height-body);
+    color: rgba(244, 247, 251, 0.92);
+  }
+
+  .pending-content-wrapper {
+    padding: var(--space-2) 0;
+  }
+
+  .pending-text {
+    font-style: italic;
+    color: rgba(244, 247, 251, 0.7);
+  }
+
+  /* Panel Footer CTA */
+  .panel-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: var(--space-2);
+  }
+
+  .panel-cta-link {
+    color: var(--color-gold);
+    font-size: 0.9375rem;
+    font-weight: var(--font-weight-subheading);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.15s ease;
+  }
+
+  .panel-cta-link:hover {
+    color: var(--color-paper);
+    text-decoration: underline;
+  }
+</style>
+
+<script>
+  /**
+   * Accessible Tablist Script for the 3-Stop Route Tracker
+   * Handles:
+   * 1. Click stop selection.
+   * 2. Arrow key navigation between stops (ArrowRight/ArrowLeft, ArrowDown/ArrowUp).
+   * 3. Home / End keyboard navigation.
+   * 4. Automatic panel display updates and ARIA state synchronization.
+   */
+  function setupRouteTracker() {
+    const tabs = Array.from(document.querySelectorAll<HTMLButtonElement>('.stop-btn'));
+    const panels = Array.from(document.querySelectorAll<HTMLElement>('.stop-panel'));
+
+    if (tabs.length === 0 || panels.length === 0) return;
+
+    function activateTab(index: number, shouldFocus: boolean = true) {
+      tabs.forEach((tab, i) => {
+        const isSelected = i === index;
+        tab.setAttribute('aria-selected', isSelected ? 'true' : 'false');
+        tab.setAttribute('tabindex', isSelected ? '0' : '-1');
+        tab.classList.toggle('active', isSelected);
+
+        const panel = panels[i];
+        if (panel) {
+          panel.hidden = !isSelected;
+          panel.classList.toggle('active', isSelected);
+        }
+      });
+
+      if (shouldFocus && tabs[index]) {
+        tabs[index].focus();
+      }
+    }
+
+    tabs.forEach((tab, index) => {
+      tab.addEventListener('click', () => {
+        activateTab(index, false);
+      });
+
+      tab.addEventListener('keydown', (e: KeyboardEvent) => {
+        let targetIndex = -1;
+
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+          targetIndex = (index + 1) % tabs.length;
+        } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+          targetIndex = (index - 1 + tabs.length) % tabs.length;
+        } else if (e.key === 'Home') {
+          targetIndex = 0;
+        } else if (e.key === 'End') {
+          targetIndex = tabs.length - 1;
+        }
+
+        if (targetIndex !== -1) {
+          e.preventDefault();
+          activateTab(targetIndex, true);
+        }
+      });
+    });
+  }
+
+  // Run on initial load and handle Astro page transitions
+  document.addEventListener('DOMContentLoaded', setupRouteTracker);
+  setupRouteTracker();
+</script>

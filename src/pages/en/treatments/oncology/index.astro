@@ -1,0 +1,1119 @@
+---
+/**
+ * src/pages/en/treatments/oncology/index.astro
+ * Oncology Specialty Page: Cancer care (oncology)
+ * Reference: Pages 12 & 13 of Nuhavi Health Look and Feel PDF (30 October 2026).
+ *
+ * Implements:
+ * 1. Breadcrumb navigation: Home / Treatments / Cancer care (oncology)
+ * 2. Page introduction with 72x3 px gold rule, H1, supporting copy and green status badge.
+ * 3. Two-column main section (Page 12):
+ *    - Left: "What this covers" with gold checkmarks, CAR-T disclaimer, amber clinical review notice, and CTA.
+ *    - Right: "Conditions and procedures" with 7 horizontal condition rows and descriptions.
+ * 4. "Records to prepare" section (Page 13):
+ *    - Full-width Mist background.
+ *    - Interactive 8-item checklist with live counter ("0 of 8 ready"), accessible progress bar, print action.
+ *    - Pure session-only state (no storage, resets on refresh).
+ * 5. "The usual journey" section (Page 13):
+ *    - White background, two-column layout.
+ *    - 7 accessible accordion rows with numbered circle nodes and chevron indicators.
+ * 6. Responsive behavior: 2-column desktop/tablet, stacked 1-column mobile. Zero overflow.
+ */
+import fs from 'node:fs';
+import path from 'node:path';
+import BaseLayout from '../../../../layouts/BaseLayout.astro';
+
+// Check if /en/request-opinion/ destination exists
+const pagesDir = path.resolve('./src/pages/en');
+const hasRequestOpinionRoute =
+  fs.existsSync(path.join(pagesDir, 'request-opinion.astro')) ||
+  fs.existsSync(path.join(pagesDir, 'request-opinion', 'index.astro'));
+
+// The 7 conditions and procedures
+const conditions = [
+  {
+    title: 'Breast cancer',
+    description: 'Treatment usually combines surgery, systemic therapy (chemotherapy, hormone therapy or targeted therapy) and often radiotherapy.'
+  },
+  {
+    title: 'Lung cancer',
+    description: 'Lung cancers are grouped mainly into non-small cell and small cell types.'
+  },
+  {
+    title: 'Gastrointestinal and colorectal cancers',
+    description: 'Includes cancers of the oesophagus, stomach, liver, pancreas, colon and rectum.'
+  },
+  {
+    title: 'Head and neck cancers',
+    description: 'Cancers of the mouth, throat, voice box and related areas.'
+  },
+  {
+    title: 'Gynaecological cancers',
+    description: 'Cancers of the cervix, uterus and ovaries.'
+  },
+  {
+    title: 'Prostate and other urological cancers',
+    description: 'Includes cancers of the prostate, kidney and bladder.'
+  },
+  {
+    title: 'Blood cancers and bone marrow transplantation',
+    description: 'Leukaemia, lymphoma and myeloma are treated mainly with chemotherapy, targeted drugs and immunotherapy; some patients need a stem-cell (bone marrow) transplant.'
+  }
+];
+
+// The 8 checklist items
+const checklistItems = [
+  'Biopsy or histopathology report',
+  'Immunohistochemistry (IHC) report, if done',
+  'Latest CT, MRI or PET-CT report',
+  'Scan images (disc or download link)',
+  'Blood tests from the last 4 weeks',
+  'Summary of treatment so far, with dates',
+  'Current medicines and allergies',
+  'Passport copy (only when your coordinator asks, for the visa letter)'
+];
+
+// The 7 journey steps
+const journeySteps = [
+  {
+    number: '1',
+    title: 'Send an enquiry',
+    description: 'Submit an initial enquiry describing your condition, questions, and preferred travel window. A dedicated coordinator follows up to understand your situation and guide the process.'
+  },
+  {
+    number: '2',
+    title: 'Share your records securely',
+    description: 'After you agree to share your medical records, you can use the private upload link sent to your email.'
+  },
+  {
+    number: '3',
+    title: 'Clinical review',
+    description: 'Qualified hospital medical specialists and clinical teams review your diagnostic reports to assess clinical suitability and treatment feasibility.'
+  },
+  {
+    number: '4',
+    title: 'Understand your options',
+    description: 'Hospital doctors formulate and provide clinical treatment recommendations. Your coordinator helps review and explain the medical terms in plain language.'
+  },
+  {
+    number: '5',
+    title: 'Review estimates',
+    description: 'Receive an official, itemized treatment estimate issued directly by the hospital based on the clinical review, with a transparent breakdown of procedures and stay.'
+  },
+  {
+    number: '6',
+    title: 'Plan appointments and travel',
+    description: 'Your coordinator schedules hospital consultations, facilitates official medical visa invitation letters from the treating hospital, and assists with travel logistics.'
+  },
+  {
+    number: '7',
+    title: 'Follow-up after you return home',
+    description: 'After discharge and returning home, your coordinator remains in contact to facilitate discharge summary transfers and communicate any follow-up questions to the hospital.'
+  }
+];
+---
+
+<BaseLayout
+  title="Cancer Care (Oncology) | Treatments | Nuhavi Health"
+  description="Cancer treatment depends on the exact type of cancer, its stage and your overall health. Records review and medical travel coordination with trusted hospital oncology teams in India."
+>
+  <!-- --------------------------------------------------------------------------
+       1. PAGE HEADER & INTRO (PDF Page 12)
+       -------------------------------------------------------------------------- -->
+  <header class="oncology-hero">
+    <div class="container oncology-container">
+      <!-- Breadcrumb navigation -->
+      <nav class="breadcrumb-nav" aria-label="Breadcrumb">
+        <ol class="breadcrumb-list">
+          <li class="breadcrumb-item">
+            <a href="/en/" class="breadcrumb-link">Home</a>
+            <span class="breadcrumb-separator" aria-hidden="true">/</span>
+          </li>
+          <li class="breadcrumb-item">
+            <a href="/en/treatments/" class="breadcrumb-link">Treatments</a>
+            <span class="breadcrumb-separator" aria-hidden="true">/</span>
+          </li>
+          <li class="breadcrumb-item" aria-current="page">
+            <span class="breadcrumb-current">Cancer care (oncology)</span>
+          </li>
+        </ol>
+      </nav>
+
+      <!-- Signature 72 × 3 px Gold Rule -->
+      <div class="gold-rule" aria-hidden="true"></div>
+
+      <!-- H1 Page Title -->
+      <h1 class="oncology-title">Cancer care (oncology)</h1>
+
+      <!-- Supporting Deck Text -->
+      <p class="oncology-deck">
+        Cancer treatment depends on the exact type of cancer, its stage and your overall health. Before you travel, your records are reviewed by a hospital oncology team so that you know what is being offered, why, and what it is likely to involve.
+      </p>
+
+      <!-- Green Status Badge directly below introduction -->
+      <div class="oncology-status-wrap">
+        <span class="badge-status-accepting">Accepting enquiries</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- --------------------------------------------------------------------------
+       2. MAIN CONTENT — TWO COLUMNS (PDF Page 12)
+       -------------------------------------------------------------------------- -->
+  <section class="oncology-main-section" aria-label="Specialty overview and conditions">
+    <div class="container oncology-container">
+      <div class="oncology-columns-grid">
+        <!-- Left Column: What this covers -->
+        <div class="column-covers">
+          <h2 class="column-heading">What this covers</h2>
+
+          <!-- Checklist with gold checkmarks -->
+          <ul class="covers-list" role="list">
+            <li class="covers-item">
+              <svg class="check-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M3 8.5L6.5 12L13 4" stroke="var(--color-gold)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              <span>Medical oncology (chemotherapy, hormone therapy)</span>
+            </li>
+            <li class="covers-item">
+              <svg class="check-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M3 8.5L6.5 12L13 4" stroke="var(--color-gold)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              <span>Radiation oncology</span>
+            </li>
+            <li class="covers-item">
+              <svg class="check-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M3 8.5L6.5 12L13 4" stroke="var(--color-gold)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              <span>Surgical oncology</span>
+            </li>
+            <li class="covers-item">
+              <svg class="check-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M3 8.5L6.5 12L13 4" stroke="var(--color-gold)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              <span>Targeted therapy and immunotherapy, where your tumour is suitable</span>
+            </li>
+            <li class="covers-item">
+              <svg class="check-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M3 8.5L6.5 12L13 4" stroke="var(--color-gold)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              <span>Bone marrow and stem-cell transplantation</span>
+            </li>
+          </ul>
+
+          <!-- Disclaimer below checklist -->
+          <p class="covers-disclaimer">
+            Cellular therapies such as CAR-T are listed only when a verified provider offers them for your condition. Not every treatment is suitable for every patient; your treating team decides.
+          </p>
+
+          <!-- Amber Clinical Review Notice -->
+          <div class="clinical-review-notice" role="note">
+            <p class="notice-text">
+              <strong class="notice-prefix">Needs confirmation:</strong> Clinical review pending &mdash; a qualified clinician must review and sign off this page's medical content before launch.
+            </p>
+          </div>
+
+          <!-- Primary Action CTA Button -->
+          <div class="covers-cta-wrap">
+            {hasRequestOpinionRoute ? (
+              <a href="/en/request-opinion/" class="btn-primary-opinion">
+                Request a medical opinion
+              </a>
+            ) : (
+              <span
+                class="btn-primary-opinion is-pending"
+                role="link"
+                aria-disabled="true"
+                tabindex="0"
+                title="Request opinion form coming soon"
+              >
+                Request a medical opinion
+              </span>
+            )}
+          </div>
+        </div>
+
+        <!-- Right Column: Conditions and procedures -->
+        <div class="column-conditions">
+          <h2 class="column-heading">Conditions and procedures</h2>
+
+          <div class="conditions-list" role="feed" aria-label="Conditions and procedures">
+            {conditions.map((item) => (
+              <article class="condition-row">
+                <h3 class="condition-title">
+                  {item.title === 'Breast cancer' ? (
+                    <a href="/en/treatments/oncology/breast-cancer/" class="condition-link">
+                      {item.title}
+                    </a>
+                  ) : (
+                    item.title
+                  )}
+                </h3>
+                <p class="condition-desc">{item.description}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- --------------------------------------------------------------------------
+       3. RECORDS TO PREPARE (PDF Page 13)
+       -------------------------------------------------------------------------- -->
+  <section class="records-section" aria-labelledby="records-heading">
+    <div class="container oncology-container">
+      <div class="records-layout">
+        <!-- Left Side: Section Intro -->
+        <div class="records-intro">
+          <h2 id="records-heading" class="section-title">Records to prepare</h2>
+          <p class="section-supporting-text">
+            Complete records mean a faster, more useful review. Tick items off as you collect them.
+          </p>
+        </div>
+
+        <!-- Right Side: White Bordered Checklist Panel -->
+        <div class="records-panel-wrapper">
+          <div class="checklist-card" id="checklist-card">
+            <!-- Checklist Header with Live Progress Counter -->
+            <div class="checklist-header">
+              <h3 class="checklist-title">Cancer care records checklist</h3>
+              <span
+                class="checklist-progress-text"
+                id="checklist-counter"
+                aria-live="polite"
+              >
+                0 of 8 ready
+              </span>
+            </div>
+
+            <!-- Visual & Accessible Progress Bar -->
+            <div
+              class="progress-track"
+              role="progressbar"
+              id="checklist-progressbar"
+              aria-valuenow="0"
+              aria-valuemin="0"
+              aria-valuemax="8"
+              aria-label="Records checklist progress"
+            >
+              <div class="progress-fill" id="checklist-fill" style="width: 0%;"></div>
+            </div>
+
+            <!-- 8 Interactive Checklist Items -->
+            <ul class="checklist-items" role="list">
+              {checklistItems.map((item, index) => (
+                <li class="checklist-item">
+                  <label class="checklist-label">
+                    <input
+                      type="checkbox"
+                      class="checklist-checkbox"
+                      value={index + 1}
+                      id={`checklist-item-${index + 1}`}
+                    />
+                    <span class="custom-checkbox" aria-hidden="true">
+                      <svg class="check-mark-svg" viewBox="0 0 12 10" fill="none">
+                        <path d="M1.5 5L4.5 8L10.5 1.5" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                      </svg>
+                    </span>
+                    <span class="checklist-label-text">{item}</span>
+                  </label>
+                </li>
+              ))}
+            </ul>
+
+            <!-- Print Action Footer -->
+            <div class="checklist-footer">
+              <button
+                type="button"
+                class="btn-print-checklist"
+                id="print-checklist-btn"
+                aria-label="Print this checklist"
+              >
+                <svg class="print-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                  <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                  <rect x="6" y="14" width="12" height="8"></rect>
+                </svg>
+                <span>Print this checklist</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- --------------------------------------------------------------------------
+       4. THE USUAL JOURNEY (PDF Page 13)
+       -------------------------------------------------------------------------- -->
+  <section class="journey-accordion-section" aria-labelledby="journey-accordion-heading">
+    <div class="container oncology-container">
+      <div class="journey-accordion-layout">
+        <!-- Left Side: Section Intro -->
+        <div class="journey-intro">
+          <h2 id="journey-accordion-heading" class="section-title">The usual journey</h2>
+          <p class="section-supporting-text">
+            The same seven steps for every case. Clinical decisions always stay with the treating hospital.
+          </p>
+        </div>
+
+        <!-- Right Side: Seven Expandable Accordion Rows -->
+        <div class="journey-accordion-wrapper">
+          <div class="accordion-list">
+            {journeySteps.map((step) => (
+              <details class="accordion-item">
+                <summary class="accordion-trigger">
+                  <div class="trigger-left">
+                    <span class="step-circle" aria-hidden="true">{step.number}</span>
+                    <span class="step-title">{step.title}</span>
+                  </div>
+                  <svg class="chevron-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                  </svg>
+                </summary>
+                <div class="accordion-panel">
+                  <p class="accordion-text">{step.description}</p>
+                </div>
+              </details>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* --------------------------------------------------------------------------
+     GLOBAL CONTAINER & BASE WRAPPERS
+     -------------------------------------------------------------------------- */
+  .oncology-container {
+    width: 100%;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: var(--space-3);
+    padding-right: var(--space-3);
+    box-sizing: border-box;
+  }
+
+  @media (max-width: 480px) {
+    .oncology-container {
+      padding-left: var(--space-2);
+      padding-right: var(--space-2);
+    }
+  }
+
+  .gold-rule {
+    width: 72px;
+    height: 3px;
+    background-color: var(--color-gold);
+    margin-bottom: var(--space-3);
+  }
+
+  /* --------------------------------------------------------------------------
+     1. HERO / INTRODUCTION
+     -------------------------------------------------------------------------- */
+  .oncology-hero {
+    width: 100%;
+    background-color: var(--color-paper);
+    padding-top: var(--space-6);
+    padding-bottom: var(--space-6);
+    box-sizing: border-box;
+  }
+
+  .breadcrumb-nav {
+    margin-bottom: var(--space-4);
+  }
+
+  .breadcrumb-list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 0.875rem;
+    color: var(--color-slate);
+  }
+
+  .breadcrumb-item {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .breadcrumb-link {
+    color: var(--color-slate);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    transition: color 0.15s ease;
+  }
+
+  .breadcrumb-link:hover {
+    color: var(--color-deep-navy);
+  }
+
+  .breadcrumb-separator {
+    margin: 0 8px;
+    color: rgba(91, 106, 128, 0.4);
+  }
+
+  .breadcrumb-current {
+    color: var(--color-ink);
+    font-weight: var(--font-weight-subheading);
+    text-decoration: none;
+  }
+
+  .oncology-title {
+    font-size: clamp(2rem, 4.5vw, 3rem);
+    font-weight: var(--font-weight-heading);
+    color: var(--color-deep-navy);
+    line-height: var(--line-height-heading);
+    letter-spacing: -0.02em;
+    margin: 0 0 var(--space-3) 0;
+  }
+
+  .oncology-deck {
+    font-size: 1.125rem;
+    font-weight: var(--font-weight-body);
+    line-height: var(--line-height-body);
+    color: var(--color-slate);
+    max-width: 680px;
+    margin: 0 0 var(--space-4) 0;
+  }
+
+  .oncology-status-wrap {
+    display: flex;
+    align-items: center;
+  }
+
+  .badge-status-accepting {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 14px;
+    background-color: rgba(38, 115, 77, 0.12);
+    color: var(--color-success);
+    border: 1px solid rgba(38, 115, 77, 0.35);
+    border-radius: var(--radius-pill);
+    font-size: 0.8125rem;
+    font-weight: var(--font-weight-subheading);
+    letter-spacing: 0.02em;
+  }
+
+  /* --------------------------------------------------------------------------
+     2. MAIN CONTENT — TWO COLUMNS (PDF Page 12)
+     -------------------------------------------------------------------------- */
+  .oncology-main-section {
+    width: 100%;
+    background-color: var(--color-paper);
+    padding-bottom: var(--section-spacing);
+    box-sizing: border-box;
+  }
+
+  .oncology-columns-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+  }
+
+  @media (min-width: 960px) {
+    .oncology-columns-grid {
+      grid-template-columns: 1fr 1.35fr;
+      gap: var(--space-8);
+      align-items: start;
+    }
+  }
+
+  .column-heading {
+    font-size: 1.5rem;
+    font-weight: var(--font-weight-heading);
+    color: var(--color-deep-navy);
+    line-height: var(--line-height-heading);
+    letter-spacing: -0.01em;
+    margin: 0 0 var(--space-4) 0;
+  }
+
+  /* Left Column: What this covers */
+  .column-covers {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .covers-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .covers-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 0.9375rem;
+    line-height: 1.45;
+    color: var(--color-ink);
+  }
+
+  .check-icon {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+
+  .covers-disclaimer {
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--color-slate);
+    margin: 0;
+  }
+
+  /* Amber Clinical Review Notice */
+  .clinical-review-notice {
+    background-color: var(--color-confirmation);
+    border: 1px solid rgba(196, 154, 60, 0.4);
+    border-radius: var(--radius-card);
+    padding: var(--space-3);
+    box-sizing: border-box;
+  }
+
+  .notice-text {
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    color: var(--color-ink);
+    margin: 0;
+  }
+
+  .notice-prefix {
+    color: var(--color-gold-text);
+    font-weight: var(--font-weight-subheading);
+  }
+
+  /* CTA Button */
+  .covers-cta-wrap {
+    margin-top: var(--space-2);
+  }
+
+  .btn-primary-opinion {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    padding: 0 var(--space-5);
+    background-color: var(--color-deep-navy);
+    color: var(--color-paper);
+    border: 2px solid var(--color-deep-navy);
+    border-radius: var(--radius-pill);
+    font-family: var(--font-family-base);
+    font-size: 0.9375rem;
+    font-weight: var(--font-weight-subheading);
+    text-decoration: none;
+    cursor: pointer;
+    box-sizing: border-box;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+  }
+
+  .btn-primary-opinion:hover:not(.is-pending) {
+    background-color: var(--color-navy);
+    border-color: var(--color-navy);
+  }
+
+  .btn-primary-opinion.is-pending {
+    cursor: default;
+    user-select: none;
+    opacity: 0.92;
+  }
+
+  /* Right Column: Conditions and procedures */
+  .column-conditions {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .conditions-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .condition-row {
+    padding-top: var(--space-3);
+    padding-bottom: var(--space-3);
+    border-bottom: 1px solid rgba(20, 41, 75, 0.08);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .condition-row:first-child {
+    padding-top: 0;
+  }
+
+  .condition-row:last-child {
+    border-bottom: none;
+  }
+
+  .condition-title {
+    font-size: 1.0625rem;
+    font-weight: var(--font-weight-subheading);
+    color: var(--color-deep-navy);
+    line-height: 1.35;
+    margin: 0;
+  }
+
+  .condition-link {
+    color: var(--color-deep-navy);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    transition: color 0.15s ease;
+  }
+
+  .condition-link:hover {
+    color: var(--color-gold-text);
+  }
+
+  .condition-desc {
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--color-slate);
+    margin: 0;
+  }
+
+  /* --------------------------------------------------------------------------
+     3. RECORDS TO PREPARE (PDF Page 13)
+     -------------------------------------------------------------------------- */
+  .records-section {
+    width: 100%;
+    background-color: var(--color-mist);
+    padding-top: var(--section-spacing);
+    padding-bottom: var(--section-spacing);
+    border-top: 1px solid rgba(20, 41, 75, 0.08);
+    box-sizing: border-box;
+  }
+
+  .records-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+  }
+
+  @media (min-width: 900px) {
+    .records-layout {
+      grid-template-columns: 1fr 1.35fr;
+      gap: var(--space-8);
+      align-items: start;
+    }
+  }
+
+  .records-intro {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .section-title {
+    font-size: clamp(1.75rem, 3.5vw, 2.25rem);
+    font-weight: var(--font-weight-heading);
+    color: var(--color-deep-navy);
+    line-height: var(--line-height-heading);
+    letter-spacing: -0.015em;
+    margin: 0;
+  }
+
+  .section-supporting-text {
+    font-size: 1.0625rem;
+    font-weight: var(--font-weight-body);
+    line-height: var(--line-height-body);
+    color: var(--color-slate);
+    margin: 0;
+  }
+
+  /* Checklist Panel Card */
+  .checklist-card {
+    background-color: var(--color-paper);
+    border: 1px solid rgba(20, 41, 75, 0.12);
+    border-radius: var(--radius-card);
+    padding: var(--space-5);
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  @media (max-width: 480px) {
+    .checklist-card {
+      padding: var(--space-4);
+    }
+  }
+
+  .checklist-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: var(--space-2);
+  }
+
+  .checklist-title {
+    font-size: 1.125rem;
+    font-weight: var(--font-weight-subheading);
+    color: var(--color-deep-navy);
+    margin: 0;
+  }
+
+  .checklist-progress-text {
+    font-size: 0.875rem;
+    font-weight: var(--font-weight-body);
+    color: var(--color-slate);
+    white-space: nowrap;
+  }
+
+  /* Progress Bar */
+  .progress-track {
+    width: 100%;
+    height: 6px;
+    background-color: rgba(20, 41, 75, 0.08);
+    border-radius: var(--radius-pill);
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background-color: var(--color-gold);
+    border-radius: var(--radius-pill);
+    transition: width 0.25s ease;
+  }
+
+  /* Checklist items */
+  .checklist-items {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .checklist-item {
+    display: flex;
+  }
+
+  .checklist-label {
+    display: inline-flex;
+    align-items: flex-start;
+    gap: 12px;
+    cursor: pointer;
+    user-select: none;
+    font-size: 0.9375rem;
+    line-height: 1.45;
+    color: var(--color-ink);
+  }
+
+  .checklist-checkbox {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .custom-checkbox {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    border: 1.5px solid rgba(20, 41, 75, 0.25);
+    border-radius: 4px;
+    background-color: var(--color-paper);
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+  }
+
+  .check-mark-svg {
+    width: 11px;
+    height: 9px;
+    display: none;
+  }
+
+  .checklist-checkbox:checked + .custom-checkbox {
+    background-color: var(--color-deep-navy);
+    border-color: var(--color-deep-navy);
+  }
+
+  .checklist-checkbox:checked + .custom-checkbox .check-mark-svg {
+    display: block;
+  }
+
+  .checklist-checkbox:focus-visible + .custom-checkbox {
+    outline: var(--focus-ring);
+    outline-offset: var(--focus-offset);
+  }
+
+  .checklist-label-text {
+    flex: 1;
+  }
+
+  .checklist-checkbox:checked ~ .checklist-label-text {
+    color: var(--color-slate);
+  }
+
+  /* Print Button */
+  .checklist-footer {
+    padding-top: var(--space-2);
+    border-top: 1px solid rgba(20, 41, 75, 0.08);
+  }
+
+  .btn-print-checklist {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: none;
+    border: none;
+    padding: 0;
+    color: var(--color-slate);
+    font-family: var(--font-family-base);
+    font-size: 0.875rem;
+    font-weight: var(--font-weight-body);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    cursor: pointer;
+    transition: color 0.15s ease;
+  }
+
+  .btn-print-checklist:hover {
+    color: var(--color-deep-navy);
+  }
+
+  .btn-print-checklist:focus-visible {
+    outline: var(--focus-ring);
+    outline-offset: var(--focus-offset);
+    border-radius: 2px;
+  }
+
+  /* --------------------------------------------------------------------------
+     4. THE USUAL JOURNEY ACCORDION (PDF Page 13)
+     -------------------------------------------------------------------------- */
+  .journey-accordion-section {
+    width: 100%;
+    background-color: var(--color-paper);
+    padding-top: var(--section-spacing);
+    padding-bottom: var(--section-spacing);
+    border-top: 1px solid rgba(20, 41, 75, 0.08);
+    box-sizing: border-box;
+  }
+
+  .journey-accordion-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+  }
+
+  @media (min-width: 900px) {
+    .journey-accordion-layout {
+      grid-template-columns: 1fr 1.35fr;
+      gap: var(--space-8);
+      align-items: start;
+    }
+  }
+
+  .journey-intro {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .accordion-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .accordion-item {
+    border: 1px solid rgba(20, 41, 75, 0.12);
+    border-radius: var(--radius-card);
+    background-color: var(--color-paper);
+    overflow: hidden;
+    transition: border-color 0.15s ease;
+  }
+
+  .accordion-item[open] {
+    border-color: rgba(196, 154, 60, 0.5);
+  }
+
+  .accordion-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-3) var(--space-4);
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+    gap: var(--space-2);
+  }
+
+  .accordion-trigger::-webkit-details-marker {
+    display: none;
+  }
+
+  .trigger-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .step-circle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: var(--radius-pill);
+    border: 1.5px solid var(--color-gold);
+    color: var(--color-deep-navy);
+    font-size: 0.8125rem;
+    font-weight: var(--font-weight-subheading);
+    flex-shrink: 0;
+  }
+
+  .step-title {
+    font-size: 1rem;
+    font-weight: var(--font-weight-subheading);
+    color: var(--color-deep-navy);
+  }
+
+  .chevron-icon {
+    color: var(--color-slate);
+    transition: transform 0.2s ease;
+    flex-shrink: 0;
+  }
+
+  .accordion-item[open] .chevron-icon {
+    transform: rotate(180deg);
+  }
+
+  .accordion-trigger:focus-visible {
+    outline: var(--focus-ring);
+    outline-offset: -2px;
+  }
+
+  .accordion-panel {
+    padding: 0 var(--space-4) var(--space-4) calc(var(--space-4) + 42px);
+    box-sizing: border-box;
+  }
+
+  .accordion-text {
+    font-size: 0.9375rem;
+    line-height: 1.55;
+    color: var(--color-slate);
+    margin: 0;
+  }
+
+  /* --------------------------------------------------------------------------
+     5. PRINT STYLESHEET
+     -------------------------------------------------------------------------- */
+  @media print {
+    /* Hide unneeded elements */
+    header.site-header,
+    footer.site-footer,
+    .skip-to-content,
+    .breadcrumb-nav,
+    .btn-print-checklist,
+    .covers-cta-wrap,
+    .journey-accordion-section {
+      display: none !important;
+    }
+
+    body {
+      background: #FFFFFF !important;
+      color: #000000 !important;
+    }
+
+    .records-section {
+      background: #FFFFFF !important;
+      border: none !important;
+      padding: 0 !important;
+    }
+
+    .checklist-card {
+      border: 1px solid #000000 !important;
+      box-shadow: none !important;
+      page-break-inside: avoid;
+    }
+
+    .progress-track {
+      display: none !important;
+    }
+
+    .custom-checkbox {
+      border: 1px solid #000000 !important;
+    }
+  }
+
+  /* --------------------------------------------------------------------------
+     6. ACCESSIBILITY & REDUCED MOTION
+     -------------------------------------------------------------------------- */
+  @media (prefers-reduced-motion: reduce) {
+    .progress-fill,
+    .chevron-icon,
+    .btn-primary-opinion {
+      transition: none !important;
+    }
+  }
+</style>
+
+<script>
+  /**
+   * Interactive Checklist Controller
+   * - Pure session-only state: resets on page refresh.
+   * - Updates live counter ('X of 8 ready') and visual progress bar.
+   * - Sets aria-valuenow for screen-reader accessibility.
+   * - Handles 'Print this checklist' action via window.print().
+   */
+  function initRecordsChecklist() {
+    const card = document.getElementById('checklist-card');
+    if (!card || card.dataset.checklistInitialized === 'true') return;
+    card.dataset.checklistInitialized = 'true';
+
+    const checkboxes = card.querySelectorAll<HTMLInputElement>('.checklist-checkbox');
+    const counter = document.getElementById('checklist-counter');
+    const fill = document.getElementById('checklist-fill');
+    const progressbar = document.getElementById('checklist-progressbar');
+    const printBtn = document.getElementById('print-checklist-btn');
+
+    const total = checkboxes.length;
+
+    function updateProgress() {
+      const checkedCount = Array.from(checkboxes).filter((cb) => cb.checked).length;
+      if (counter) {
+        counter.textContent = `${checkedCount} of ${total} ready`;
+      }
+      if (fill) {
+        fill.style.width = `${(checkedCount / total) * 100}%`;
+      }
+      if (progressbar) {
+        progressbar.setAttribute('aria-valuenow', checkedCount.toString());
+      }
+    }
+
+    checkboxes.forEach((cb) => {
+      cb.addEventListener('change', updateProgress);
+    });
+
+    if (printBtn) {
+      printBtn.addEventListener('click', () => {
+        window.print();
+      });
+    }
+
+    updateProgress();
+  }
+
+  document.addEventListener('DOMContentLoaded', initRecordsChecklist);
+  initRecordsChecklist();
+</script>
+
