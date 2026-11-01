@@ -1,0 +1,158 @@
+---
+/**
+ * src/pages/en/stories/index.astro
+ * International Patient Experiences & Stories
+ */
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PatientStories from '../../../components/home/PatientStories.astro';
+---
+
+<BaseLayout
+  title="Patient Experiences & Real Journeys | Nuhavi Health"
+  description="Read candid international patient stories covering oncology treatment reviews, surgical journeys, and recovery experiences in India."
+>
+  <div class="page-container">
+    <header class="page-header">
+      <div class="container">
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <ol>
+            <li><a href="/en/">Home</a></li>
+            <li aria-current="page">Stories</li>
+          </ol>
+        </nav>
+        <span class="eyebrow">PATIENT EXPERIENCES</span>
+        <h1 class="page-title">Real Journeys, Honest Perspectives</h1>
+        <p class="page-deck">
+          Every healthcare journey is deeply personal. We share verifiable experiences of patients who navigated medical decisions, cross-border travel, and hospital care through our coordination.
+        </p>
+      </div>
+    </header>
+
+    <!-- Patient Stories Core Component -->
+    <PatientStories />
+
+    <!-- Editorial Integrity Callout -->
+    <section class="editorial-section">
+      <div class="container">
+        <div class="editorial-box">
+          <h3>Our Policy on Patient Stories</h3>
+          <p>
+            We adhere strictly to patient privacy standards and never manufacture miraculous outcome claims. Medical treatment outcomes vary by individual diagnosis, disease stage, and hospital protocol. Patient consent has been obtained for all shared accounts.
+          </p>
+          <a href="/en/request-opinion/" class="btn-primary">Discuss Your Case with a Coordinator</a>
+        </div>
+      </div>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .page-container {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+  }
+
+  .page-header {
+    background: linear-gradient(180deg, var(--color-mist) 0%, var(--color-paper) 100%);
+    padding: var(--space-8) 0 var(--space-6);
+    border-bottom: 1px solid rgba(20, 41, 75, 0.08);
+  }
+
+  .breadcrumb ol {
+    display: flex;
+    gap: var(--space-1);
+    list-style: none;
+    padding: 0;
+    margin: 0 0 var(--space-3);
+    font-size: 0.875rem;
+    color: var(--color-slate);
+  }
+
+  .breadcrumb li + li::before {
+    content: "/";
+    margin-right: var(--space-1);
+    color: var(--color-slate);
+  }
+
+  .breadcrumb a {
+    color: var(--color-navy);
+    text-decoration: none;
+  }
+
+  .breadcrumb a:hover {
+    text-decoration: underline;
+  }
+
+  .eyebrow {
+    display: inline-block;
+    font-size: 0.8125rem;
+    font-weight: var(--font-weight-subheading);
+    letter-spacing: 0.08em;
+    color: var(--color-gold-text);
+    text-transform: uppercase;
+    margin-bottom: var(--space-2);
+  }
+
+  .page-title {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: var(--font-weight-heading);
+    color: var(--color-navy);
+    line-height: var(--line-height-heading);
+    margin: 0 0 var(--space-3);
+  }
+
+  .page-deck {
+    font-size: 1.125rem;
+    font-weight: var(--font-weight-deck);
+    line-height: var(--line-height-body);
+    color: var(--color-slate);
+    max-width: 720px;
+    margin: 0;
+  }
+
+  .editorial-section {
+    padding: var(--space-8) 0 var(--space-12);
+    background-color: var(--color-mist);
+  }
+
+  .editorial-box {
+    background-color: var(--color-paper);
+    border: 1px solid rgba(20, 41, 75, 0.08);
+    padding: var(--space-8);
+    border-radius: var(--radius-card);
+    text-align: center;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  .editorial-box h3 {
+    color: var(--color-navy);
+    font-size: 1.375rem;
+    margin: 0 0 var(--space-2);
+  }
+
+  .editorial-box p {
+    color: var(--color-slate);
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    margin: 0 0 var(--space-4);
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-gold);
+    color: var(--color-deep-navy);
+    font-weight: var(--font-weight-subheading);
+    padding: 12px 28px;
+    border-radius: var(--radius-pill);
+    text-decoration: none;
+    transition: transform 0.15s ease, filter 0.15s ease;
+  }
+
+  .btn-primary:hover {
+    filter: brightness(1.08);
+    transform: translateY(-1px);
+  }
+</style>

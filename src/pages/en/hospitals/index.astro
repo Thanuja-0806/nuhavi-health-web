@@ -1,0 +1,246 @@
+---
+/**
+ * src/pages/en/hospitals/index.astro
+ * Partner Hospitals Selection & Standards
+ */
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import HospitalSelection from '../../../components/home/HospitalSelection.astro';
+---
+
+<BaseLayout
+  title="Partner Hospitals & Selection Standards | Nuhavi Health"
+  description="Discover how Nuhavi Health selects premier JCI and NABH accredited hospitals and surgical institutions in India for international patients."
+>
+  <div class="page-container">
+    <header class="page-header">
+      <div class="container">
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <ol>
+            <li><a href="/en/">Home</a></li>
+            <li aria-current="page">Hospitals</li>
+          </ol>
+        </nav>
+        <span class="eyebrow">CLINICAL EXCELLENCE STANDARDS</span>
+        <h1 class="page-title">Hospital Selection Standards</h1>
+        <p class="page-deck">
+          We do not work with every hospital. We coordinate with accredited, tier-1 tertiary centers equipped with modern oncology units, dedicated international patient lounges, and high-volume surgical expertise.
+        </p>
+      </div>
+    </header>
+
+    <!-- Standards & Criteria Grid -->
+    <section class="criteria-section">
+      <div class="container">
+        <div class="criteria-grid">
+          <div class="criteria-card">
+            <span class="criteria-badge">ACCREDITATION</span>
+            <h3>JCI & NABH Certified</h3>
+            <p>
+              Partner institutions adhere to stringent global benchmarks for patient safety, infection control, and clinical governance.
+            </p>
+          </div>
+
+          <div class="criteria-card">
+            <span class="criteria-badge">TECHNOLOGY</span>
+            <h3>Advanced Infrastructure</h3>
+            <p>
+              Access to CyberKnife, TrueBeam STx radiation, PET-CT scanners, 3T MRI, and Da Vinci robotic surgical suites.
+            </p>
+          </div>
+
+          <div class="criteria-card">
+            <span class="criteria-badge">MULTIDISCIPLINARY</span>
+            <h3>Tumor Boards & Joint Reviews</h3>
+            <p>
+              Complex oncology and surgical cases are reviewed by collaborative panels of surgical, medical, and radiation specialists.
+            </p>
+          </div>
+
+          <div class="criteria-card">
+            <span class="criteria-badge">TRANSPARENCY</span>
+            <h3>Direct Hospital Billing</h3>
+            <p>
+              All hospital treatment packages and pharmacy fees are billed directly from the hospital treasury with itemized receipts.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Reusable Hospital Selection standard component -->
+    <HospitalSelection />
+
+    <!-- Hospital Consultation CTA -->
+    <section class="hospital-cta">
+      <div class="container">
+        <div class="cta-box">
+          <h2>Find the right hospital for your diagnosis</h2>
+          <p>
+            Tell us about your medical needs and we will match your case with appropriate accredited hospital teams for review.
+          </p>
+          <a href="/en/request-opinion/" class="btn-primary">Request Hospital Matching</a>
+        </div>
+      </div>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .page-container {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+  }
+
+  .page-header {
+    background: linear-gradient(180deg, var(--color-mist) 0%, var(--color-paper) 100%);
+    padding: var(--space-8) 0 var(--space-6);
+    border-bottom: 1px solid rgba(20, 41, 75, 0.08);
+  }
+
+  .breadcrumb ol {
+    display: flex;
+    gap: var(--space-1);
+    list-style: none;
+    padding: 0;
+    margin: 0 0 var(--space-3);
+    font-size: 0.875rem;
+    color: var(--color-slate);
+  }
+
+  .breadcrumb li + li::before {
+    content: "/";
+    margin-right: var(--space-1);
+    color: var(--color-slate);
+  }
+
+  .breadcrumb a {
+    color: var(--color-navy);
+    text-decoration: none;
+  }
+
+  .breadcrumb a:hover {
+    text-decoration: underline;
+  }
+
+  .eyebrow {
+    display: inline-block;
+    font-size: 0.8125rem;
+    font-weight: var(--font-weight-subheading);
+    letter-spacing: 0.08em;
+    color: var(--color-gold-text);
+    text-transform: uppercase;
+    margin-bottom: var(--space-2);
+  }
+
+  .page-title {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: var(--font-weight-heading);
+    color: var(--color-navy);
+    line-height: var(--line-height-heading);
+    margin: 0 0 var(--space-3);
+  }
+
+  .page-deck {
+    font-size: 1.125rem;
+    font-weight: var(--font-weight-deck);
+    line-height: var(--line-height-body);
+    color: var(--color-slate);
+    max-width: 720px;
+    margin: 0;
+  }
+
+  .criteria-section {
+    padding: var(--space-8) 0 var(--space-6);
+  }
+
+  .criteria-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+
+  @media (min-width: 640px) {
+    .criteria-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .criteria-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .criteria-card {
+    background-color: var(--color-mist);
+    padding: var(--space-5);
+    border-radius: var(--radius-card);
+    border: 1px solid rgba(20, 41, 75, 0.08);
+  }
+
+  .criteria-badge {
+    display: inline-block;
+    font-size: 0.6875rem;
+    font-weight: var(--font-weight-subheading);
+    color: var(--color-gold-text);
+    letter-spacing: 0.06em;
+    margin-bottom: var(--space-2);
+  }
+
+  .criteria-card h3 {
+    font-size: 1.125rem;
+    color: var(--color-navy);
+    margin: 0 0 var(--space-2);
+  }
+
+  .criteria-card p {
+    font-size: 0.875rem;
+    color: var(--color-slate);
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  .hospital-cta {
+    padding: var(--space-10) 0;
+    background-color: var(--color-mist);
+  }
+
+  .cta-box {
+    background-color: var(--color-navy);
+    color: var(--color-paper);
+    padding: var(--space-8);
+    border-radius: var(--radius-card);
+    text-align: center;
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  .cta-box h2 {
+    color: var(--color-paper);
+    font-size: 1.75rem;
+    margin: 0 0 var(--space-2);
+  }
+
+  .cta-box p {
+    color: rgba(255, 255, 255, 0.85);
+    margin: 0 0 var(--space-5);
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-gold);
+    color: var(--color-deep-navy);
+    font-weight: var(--font-weight-subheading);
+    padding: 12px 28px;
+    border-radius: var(--radius-pill);
+    text-decoration: none;
+    transition: transform 0.15s ease, filter 0.15s ease;
+  }
+
+  .btn-primary:hover {
+    filter: brightness(1.08);
+    transform: translateY(-1px);
+  }
+</style>

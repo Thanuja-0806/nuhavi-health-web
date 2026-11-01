@@ -1,0 +1,248 @@
+---
+/**
+ * src/pages/en/resources/index.astro
+ * Patient Guides & Medical Resources Hub
+ */
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Patient Guides & Educational Resources | Nuhavi Health"
+  description="Practical medical travel guides on preparing diagnostic records, comparing hospital estimates, and formulating questions for treating physicians."
+>
+  <div class="page-container">
+    <header class="page-header">
+      <div class="container">
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <ol>
+            <li><a href="/en/">Home</a></li>
+            <li aria-current="page">Resources</li>
+          </ol>
+        </nav>
+        <span class="eyebrow">PATIENT GUIDANCE</span>
+        <h1 class="page-title">Resources & Patient Guides</h1>
+        <p class="page-deck">
+          Clear, unbiased guides designed to help patients and families understand clinical terminology, prepare complete records, and make informed choices.
+        </p>
+      </div>
+    </header>
+
+    <section class="guides-section">
+      <div class="container">
+        <div class="guides-grid">
+          <article class="guide-card">
+            <span class="guide-tag">CLINICAL PREPARATION</span>
+            <h2>How to Prepare Your Medical Records for Review</h2>
+            <p>
+              A checklist of essential diagnostic scans, biopsy slides, pathology reports, and discharge notes required by specialist medical boards in India.
+            </p>
+            <a href="/en/resources/preparing-medical-records/" class="guide-read-link">
+              Read guide &rarr;
+            </a>
+          </article>
+
+          <article class="guide-card">
+            <span class="guide-tag">DOCTOR INTERVIEWS</span>
+            <h2>Essential Questions to Ask Your Treating Hospital</h2>
+            <p>
+              Key questions covering surgical experience, complications management, multidisciplinary tumor boards, and post-discharge recovery expectations.
+            </p>
+            <a href="/en/resources/questions-to-ask-hospital/" class="guide-read-link">
+              Read guide &rarr;
+            </a>
+          </article>
+
+          <article class="guide-card">
+            <span class="guide-tag">FINANCIAL CLARITY</span>
+            <h2>Understanding Your Hospital Treatment Estimate</h2>
+            <p>
+              How to dissect package inclusions, understand ICU thresholds, prepare for medication contingencies, and avoid surprise hospital bills.
+            </p>
+            <a href="/en/resources/understanding-treatment-estimate/" class="guide-read-link">
+              Read guide &rarr;
+            </a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="help-cta">
+      <div class="container">
+        <div class="help-box">
+          <h2>Have questions about preparing your records?</h2>
+          <p>Our coordination team is available to assist you in compiling your diagnostic folder.</p>
+          <a href="/en/request-opinion/" class="btn-primary">Request Record Review</a>
+        </div>
+      </div>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .page-container {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+  }
+
+  .page-header {
+    background: linear-gradient(180deg, var(--color-mist) 0%, var(--color-paper) 100%);
+    padding: var(--space-8) 0 var(--space-6);
+    border-bottom: 1px solid rgba(20, 41, 75, 0.08);
+  }
+
+  .breadcrumb ol {
+    display: flex;
+    gap: var(--space-1);
+    list-style: none;
+    padding: 0;
+    margin: 0 0 var(--space-3);
+    font-size: 0.875rem;
+    color: var(--color-slate);
+  }
+
+  .breadcrumb li + li::before {
+    content: "/";
+    margin-right: var(--space-1);
+    color: var(--color-slate);
+  }
+
+  .breadcrumb a {
+    color: var(--color-navy);
+    text-decoration: none;
+  }
+
+  .breadcrumb a:hover {
+    text-decoration: underline;
+  }
+
+  .eyebrow {
+    display: inline-block;
+    font-size: 0.8125rem;
+    font-weight: var(--font-weight-subheading);
+    letter-spacing: 0.08em;
+    color: var(--color-gold-text);
+    text-transform: uppercase;
+    margin-bottom: var(--space-2);
+  }
+
+  .page-title {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: var(--font-weight-heading);
+    color: var(--color-navy);
+    line-height: var(--line-height-heading);
+    margin: 0 0 var(--space-3);
+  }
+
+  .page-deck {
+    font-size: 1.125rem;
+    font-weight: var(--font-weight-deck);
+    line-height: var(--line-height-body);
+    color: var(--color-slate);
+    max-width: 720px;
+    margin: 0;
+  }
+
+  .guides-section {
+    padding: var(--space-8) 0 var(--space-12);
+  }
+
+  .guides-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+  }
+
+  @media (min-width: 768px) {
+    .guides-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .guide-card {
+    background-color: var(--color-mist);
+    padding: var(--space-6);
+    border-radius: var(--radius-card);
+    border: 1px solid rgba(20, 41, 75, 0.08);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .guide-tag {
+    font-size: 0.6875rem;
+    font-weight: var(--font-weight-subheading);
+    letter-spacing: 0.08em;
+    color: var(--color-gold-text);
+    margin-bottom: var(--space-2);
+  }
+
+  .guide-card h2 {
+    color: var(--color-navy);
+    font-size: 1.25rem;
+    line-height: 1.4;
+    margin: 0 0 var(--space-3);
+  }
+
+  .guide-card p {
+    color: var(--color-slate);
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    margin: 0 0 var(--space-4);
+  }
+
+  .guide-read-link {
+    margin-top: auto;
+    color: var(--color-navy);
+    font-weight: var(--font-weight-subheading);
+    font-size: 0.9375rem;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .guide-read-link:hover {
+    color: var(--color-gold-text);
+    text-decoration: underline;
+  }
+
+  .help-cta {
+    background-color: var(--color-deep-navy);
+    color: var(--color-paper);
+    padding: var(--space-10) 0;
+  }
+
+  .help-box {
+    text-align: center;
+    max-width: 680px;
+    margin: 0 auto;
+  }
+
+  .help-box h2 {
+    color: var(--color-paper);
+    font-size: 1.75rem;
+    margin: 0 0 var(--space-2);
+  }
+
+  .help-box p {
+    color: rgba(255, 255, 255, 0.85);
+    margin: 0 0 var(--space-5);
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-gold);
+    color: var(--color-deep-navy);
+    font-weight: var(--font-weight-subheading);
+    padding: 12px 28px;
+    border-radius: var(--radius-pill);
+    text-decoration: none;
+    transition: transform 0.15s ease, filter 0.15s ease;
+  }
+
+  .btn-primary:hover {
+    filter: brightness(1.08);
+    transform: translateY(-1px);
+  }
+</style>

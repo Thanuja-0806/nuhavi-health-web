@@ -1,0 +1,443 @@
+---
+/**
+ * src/pages/en/request-opinion/index.astro
+ * Request a Medical Opinion - Patient Inquiry Page
+ */
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Request a Medical Opinion | Nuhavi Health"
+  description="Submit your medical reports confidentially for specialist review by leading medical teams and accredited hospitals in India."
+>
+  <div class="page-container">
+    <header class="page-header">
+      <div class="container">
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <ol>
+            <li><a href="/en/">Home</a></li>
+            <li aria-current="page">Request a medical opinion</li>
+          </ol>
+        </nav>
+        <span class="eyebrow">CONFIDENTIAL INQUIRY</span>
+        <h1 class="page-title">Request a Medical Opinion</h1>
+        <p class="page-deck">
+          Share your medical reports and questions. We coordinate a detailed review with qualified oncology, orthopaedic, and specialized medical teams in India at no obligation.
+        </p>
+      </div>
+    </header>
+
+    <section class="form-section">
+      <div class="container">
+        <div class="form-grid">
+          <!-- Main Inquiry Form -->
+          <div class="form-wrapper">
+            <form id="opinion-form" class="opinion-form">
+              <div class="form-group">
+                <label for="fullName">Patient Full Name <span class="required">*</span></label>
+                <input type="text" id="fullName" name="fullName" required placeholder="Enter full name as on passport" />
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="email">Email Address <span class="required">*</span></label>
+                  <input type="email" id="email" name="email" required placeholder="name@example.com" />
+                </div>
+                <div class="form-group">
+                  <label for="phone">Phone / WhatsApp <span class="required">*</span></label>
+                  <input type="tel" id="phone" name="phone" required placeholder="+1 234 567 8900" />
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="country">Country of Residence <span class="required">*</span></label>
+                  <input type="text" id="country" name="country" required placeholder="e.g. Kenya, Uzbekistan, UAE, UK" />
+                </div>
+                <div class="form-group">
+                  <label for="specialty">Medical Specialty <span class="required">*</span></label>
+                  <select id="specialty" name="specialty" required>
+                    <option value="" disabled selected>Select specialty...</option>
+                    <option value="cancer-care">Cancer Care (Oncology)</option>
+                    <option value="orthopaedics">Orthopaedics & Joint Replacement</option>
+                    <option value="heart-care">Heart Care (Cardiology)</option>
+                    <option value="neurology">Neurology & Neurosurgery</option>
+                    <option value="other">Other Specialty (On Request)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="conditionSummary">Current Diagnosis & Medical Summary <span class="required">*</span></label>
+                <textarea id="conditionSummary" name="conditionSummary" rows="4" required placeholder="Briefly describe symptoms, current diagnosis, current treatments received, and what advice you are seeking..."></textarea>
+              </div>
+
+              <div class="form-group">
+                <label for="timeline">Preferred Travel Timeline</label>
+                <select id="timeline" name="timeline">
+                  <option value="urgent">Urgent (Within 1-2 weeks)</option>
+                  <option value="month" selected>Within the next month</option>
+                  <option value="flexible">Flexible / Planning ahead</option>
+                  <option value="remote-only">Remote opinion / consultation only</option>
+                </select>
+              </div>
+
+              <div class="file-notice">
+                <h4>Medical Records & Scans</h4>
+                <p>
+                  You can upload recent biopsy reports, discharge summaries, MRI/CT/PET scan reports, or histopathology slides. Our coordinator will provide a secure drive link upon receipt of this form to upload large DICOM image files safely.
+                </p>
+              </div>
+
+              <!-- Consent & Transparency Checkbox -->
+              <div class="form-group checkbox-group">
+                <label class="checkbox-label">
+                  <input type="checkbox" id="consent" name="consent" required />
+                  <span>
+                    I understand that Nuhavi Health is an independent medical travel coordinator, not a hospital or clinic, and facilitates communication with licensed medical specialists in India.
+                  </span>
+                </label>
+              </div>
+
+              <button type="submit" class="btn-submit" id="submit-btn">
+                Submit Request for Review
+              </button>
+
+              <div id="form-success" class="form-success-banner" style="display: none;" role="alert">
+                <h3>Thank you for submitting your request.</h3>
+                <p>A personal medical coordinator from Nuhavi Health will review your details and contact you via email / WhatsApp within 24 to 48 hours.</p>
+              </div>
+            </form>
+          </div>
+
+          <!-- Coordination Sidebar Info -->
+          <aside class="sidebar-info">
+            <div class="info-card">
+              <h3>What happens next?</h3>
+              <ol class="step-list">
+                <li>
+                  <strong>1. Record Collection:</strong> A coordinator reviews your case and assists in compiling clinical reports.
+                </li>
+                <li>
+                  <strong>2. Specialist Review:</strong> Senior doctors evaluate feasibility and recommend potential protocols.
+                </li>
+                <li>
+                  <strong>3. Transparent Estimates:</strong> You receive formal hospital cost estimates and stay durations.
+                </li>
+                <li>
+                  <strong>4. Decision:</strong> You decide with your family and treating physician with zero pressure.
+                </li>
+              </ol>
+            </div>
+
+            <div class="info-card privacy-card">
+              <h3>Confidentiality & Security</h3>
+              <p>
+                All medical reports are handled in strict compliance with healthcare confidentiality protocols. Your records are only shared with the treating clinical teams reviewing your case.
+              </p>
+            </div>
+
+            <div class="info-card contact-card">
+              <h3>Need immediate help?</h3>
+              <p>Speak directly with our coordination desk:</p>
+              <a href="/en/contact/" class="sidebar-link">Visit Contact & Support &rarr;</a>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </div>
+</BaseLayout>
+
+<script>
+  const form = document.getElementById('opinion-form');
+  const successBanner = document.getElementById('form-success');
+  const submitBtn = document.getElementById('submit-btn');
+
+  if (form && successBanner && submitBtn) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      submitBtn.setAttribute('disabled', 'true');
+      submitBtn.textContent = 'Submitting...';
+      setTimeout(() => {
+        form.reset();
+        submitBtn.style.display = 'none';
+        successBanner.style.display = 'block';
+        successBanner.scrollIntoView({ behavior: 'smooth' });
+      }, 700);
+    });
+  }
+</script>
+
+<style>
+  .page-container {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+  }
+
+  .page-header {
+    background: linear-gradient(180deg, var(--color-mist) 0%, var(--color-paper) 100%);
+    padding: var(--space-8) 0 var(--space-6);
+    border-bottom: 1px solid rgba(20, 41, 75, 0.08);
+  }
+
+  .breadcrumb ol {
+    display: flex;
+    gap: var(--space-1);
+    list-style: none;
+    padding: 0;
+    margin: 0 0 var(--space-3);
+    font-size: 0.875rem;
+    color: var(--color-slate);
+  }
+
+  .breadcrumb li + li::before {
+    content: "/";
+    margin-right: var(--space-1);
+    color: var(--color-slate);
+  }
+
+  .breadcrumb a {
+    color: var(--color-navy);
+    text-decoration: none;
+  }
+
+  .breadcrumb a:hover {
+    text-decoration: underline;
+  }
+
+  .eyebrow {
+    display: inline-block;
+    font-size: 0.8125rem;
+    font-weight: var(--font-weight-subheading);
+    letter-spacing: 0.08em;
+    color: var(--color-gold-text);
+    text-transform: uppercase;
+    margin-bottom: var(--space-2);
+  }
+
+  .page-title {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: var(--font-weight-heading);
+    color: var(--color-navy);
+    line-height: var(--line-height-heading);
+    margin: 0 0 var(--space-3);
+  }
+
+  .page-deck {
+    font-size: 1.125rem;
+    font-weight: var(--font-weight-deck);
+    line-height: var(--line-height-body);
+    color: var(--color-slate);
+    max-width: 720px;
+    margin: 0;
+  }
+
+  .form-section {
+    padding: var(--space-8) 0 var(--space-12);
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+  }
+
+  @media (min-width: 992px) {
+    .form-grid {
+      grid-template-columns: 2fr 1fr;
+    }
+  }
+
+  .form-wrapper {
+    background-color: var(--color-mist);
+    padding: var(--space-6);
+    border-radius: var(--radius-card);
+    border: 1px solid rgba(20, 41, 75, 0.08);
+  }
+
+  @media (min-width: 768px) {
+    .form-wrapper {
+      padding: var(--space-8);
+    }
+  }
+
+  .opinion-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+
+  @media (min-width: 600px) {
+    .form-row {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .form-group label {
+    font-size: 0.9375rem;
+    font-weight: var(--font-weight-subheading);
+    color: var(--color-navy);
+  }
+
+  .required {
+    color: var(--color-error);
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    font-family: inherit;
+    font-size: 1rem;
+    padding: 12px 16px;
+    border: 1px solid rgba(20, 41, 75, 0.2);
+    border-radius: 8px;
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    outline: none;
+    border-color: var(--color-gold);
+    box-shadow: 0 0 0 3px rgba(196, 154, 60, 0.2);
+  }
+
+  .file-notice {
+    background-color: rgba(196, 154, 60, 0.1);
+    border-left: 3px solid var(--color-gold);
+    padding: var(--space-3) var(--space-4);
+    border-radius: 0 8px 8px 0;
+  }
+
+  .file-notice h4 {
+    margin: 0 0 var(--space-1);
+    color: var(--color-navy);
+    font-size: 0.9375rem;
+  }
+
+  .file-notice p {
+    margin: 0;
+    font-size: 0.875rem;
+    color: var(--color-slate);
+    line-height: 1.5;
+  }
+
+  .checkbox-group {
+    margin-top: var(--space-2);
+  }
+
+  .checkbox-label {
+    display: flex;
+    gap: var(--space-2);
+    align-items: flex-start;
+    font-size: 0.875rem;
+    color: var(--color-slate);
+    line-height: 1.5;
+    cursor: pointer;
+  }
+
+  .checkbox-label input {
+    margin-top: 3px;
+  }
+
+  .btn-submit {
+    background-color: var(--color-navy);
+    color: var(--color-paper);
+    font-size: 1rem;
+    font-weight: var(--font-weight-subheading);
+    padding: 14px 28px;
+    border-radius: var(--radius-pill);
+    border: none;
+    cursor: pointer;
+    align-self: flex-start;
+    transition: background-color 0.15s ease, transform 0.15s ease;
+  }
+
+  .btn-submit:hover {
+    background-color: var(--color-deep-navy);
+    transform: translateY(-1px);
+  }
+
+  .form-success-banner {
+    background-color: #EBF8F1;
+    border: 1px solid var(--color-success);
+    color: var(--color-success);
+    padding: var(--space-6);
+    border-radius: 8px;
+  }
+
+  .form-success-banner h3 {
+    margin: 0 0 var(--space-2);
+    color: var(--color-success);
+  }
+
+  .form-success-banner p {
+    margin: 0;
+    color: var(--color-ink);
+  }
+
+  .sidebar-info {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .info-card {
+    background-color: var(--color-mist);
+    padding: var(--space-6);
+    border-radius: var(--radius-card);
+    border: 1px solid rgba(20, 41, 75, 0.08);
+  }
+
+  .info-card h3 {
+    color: var(--color-navy);
+    font-size: 1.125rem;
+    margin: 0 0 var(--space-3);
+  }
+
+  .step-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    font-size: 0.875rem;
+    color: var(--color-slate);
+    line-height: 1.5;
+  }
+
+  .privacy-card p,
+  .contact-card p {
+    font-size: 0.875rem;
+    color: var(--color-slate);
+    line-height: 1.5;
+    margin: 0 0 var(--space-3);
+  }
+
+  .sidebar-link {
+    color: var(--color-gold-text);
+    font-weight: var(--font-weight-subheading);
+    text-decoration: none;
+    font-size: 0.9375rem;
+  }
+
+  .sidebar-link:hover {
+    text-decoration: underline;
+  }
+</style>
