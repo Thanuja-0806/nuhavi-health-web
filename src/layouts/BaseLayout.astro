@@ -4,7 +4,7 @@
  * Master layout wrapper for all Nuhavi Health web pages.
  * Provides consistent HTML structure, responsive meta tags,
  * SEO metadata, imports the global design tokens, and incorporates
- * the shared global Header and Footer.
+ * the shared global Header, Footer, and Floating Chat Widget.
  */
 
 interface Props {
@@ -20,9 +20,10 @@ const {
 // Import our design system tokens and baseline styles
 import '../styles/global.css';
 
-// Import shared Header and Footer components
+// Import shared Header, Footer, and Floating Chat components
 import Header from '../components/common/Header.astro';
 import Footer from '../components/common/Footer.astro';
+import ChatWidget from '../components/common/ChatWidget.astro';
 ---
 
 <!doctype html>
@@ -54,6 +55,9 @@ import Footer from '../components/common/Footer.astro';
 
     <!-- Global Footer -->
     <Footer />
+
+    <!-- Floating "Chat with us" Component on every page (PDF Pages 2, 38, 41) -->
+    <ChatWidget />
   </body>
 </html>
 

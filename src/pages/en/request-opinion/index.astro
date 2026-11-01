@@ -1,271 +1,634 @@
 ---
 /**
  * src/pages/en/request-opinion/index.astro
- * Request a Medical Opinion - Patient Inquiry Page
+ * Request a medical opinion (Pages 31 & 36 of Nuhavi Health Look and Feel PDF)
+ * Complete with multi-step flow, error validation states (Page 36),
+ * after sending state with optional reports consent, link requested green banner (Page 37),
+ * and Uzbekistan production behaviour state (Page 37).
  */
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 ---
 
 <BaseLayout
-  title="Request a Medical Opinion | Nuhavi Health"
-  description="Submit your medical reports confidentially for specialist review by leading medical teams and accredited hospitals in India."
+  title="Request a medical opinion | Nuhavi Health"
+  description="Start with a short enquiry. No payment and no commitment. You can send your reports securely straight afterwards."
 >
   <div class="page-container">
-    <header class="page-header">
-      <div class="container">
-        <nav class="breadcrumb" aria-label="Breadcrumb">
-          <ol>
-            <li><a href="/en/">Home</a></li>
-            <li aria-current="page">Request a medical opinion</li>
-          </ol>
-        </nav>
-        <span class="eyebrow">CONFIDENTIAL INQUIRY</span>
-        <h1 class="page-title">Request a Medical Opinion</h1>
+    <div class="container main-content">
+      <!-- Gold 72x3 px rule above page title -->
+      <div class="gold-rule" aria-hidden="true"></div>
+
+      <header class="page-header">
+        <h1 class="page-title">Request a medical opinion</h1>
         <p class="page-deck">
-          Share your medical reports and questions. We coordinate a detailed review with qualified oncology, orthopaedic, and specialized medical teams in India at no obligation.
+          Start with a short enquiry. No payment and no commitment. You can send your reports securely straight afterwards.
         </p>
-      </div>
-    </header>
+      </header>
 
-    <section class="form-section">
-      <div class="container">
-        <div class="form-grid">
-          <!-- Main Inquiry Form -->
-          <div class="form-wrapper">
-            <form id="opinion-form" class="opinion-form">
-              <div class="form-group">
-                <label for="fullName">Patient Full Name <span class="required">*</span></label>
-                <input type="text" id="fullName" name="fullName" required placeholder="Enter full name as on passport" />
-              </div>
+      <div class="enquiry-layout">
+        <!-- Left: Form Container with 3 Steps -->
+        <div class="form-container">
+          <p class="form-timing-note">
+            Takes about two minutes. Please do not paste medical reports here — after you send this, you can upload them through a secure link.
+          </p>
 
-              <div class="form-row">
-                <div class="form-group">
-                  <label for="email">Email Address <span class="required">*</span></label>
-                  <input type="email" id="email" name="email" required placeholder="name@example.com" />
-                </div>
-                <div class="form-group">
-                  <label for="phone">Phone / WhatsApp <span class="required">*</span></label>
-                  <input type="tel" id="phone" name="phone" required placeholder="+1 234 567 8900" />
-                </div>
-              </div>
+          <!-- Step Progress Indicator -->
+          <div class="steps-progress-bar" id="progress-bar-wrap">
+            <div class="step-indicator active" id="ind-1">
+              <span class="step-badge">1</span>
+              <span class="step-label">About you</span>
+            </div>
+            <div class="step-indicator" id="ind-2">
+              <span class="step-badge">2</span>
+              <span class="step-label">Your enquiry</span>
+            </div>
+            <div class="step-indicator" id="ind-3">
+              <span class="step-badge">3</span>
+              <span class="step-label">Contact and consent</span>
+            </div>
+          </div>
 
-              <div class="form-row">
-                <div class="form-group">
-                  <label for="country">Country of Residence <span class="required">*</span></label>
-                  <input type="text" id="country" name="country" required placeholder="e.g. Kenya, Uzbekistan, UAE, UK" />
-                </div>
-                <div class="form-group">
-                  <label for="specialty">Medical Specialty <span class="required">*</span></label>
-                  <select id="specialty" name="specialty" required>
-                    <option value="" disabled selected>Select specialty...</option>
-                    <option value="cancer-care">Cancer Care (Oncology)</option>
-                    <option value="orthopaedics">Orthopaedics & Joint Replacement</option>
-                    <option value="heart-care">Heart Care (Cardiology)</option>
-                    <option value="neurology">Neurology & Neurosurgery</option>
-                    <option value="other">Other Specialty (On Request)</option>
-                  </select>
-                </div>
-              </div>
+          <!-- Step 1: About you (PDF Page 31 & 36) -->
+          <div class="form-step-panel" id="step-1-panel">
+            <!-- Validation Errors Box (PDF Page 36) -->
+            <div class="validation-errors-box" id="step-1-errors" style="display: none;" role="alert">
+              <p class="errors-heading">Please check:</p>
+              <ul class="errors-list">
+                <li id="err-name" style="display: none;">
+                  <a href="#patientName">Enter the patient's full name</a>
+                </li>
+                <li id="err-country" style="display: none;">
+                  <a href="#residenceCountry">Choose the country where the patient lives</a>
+                </li>
+              </ul>
+            </div>
 
-              <div class="form-group">
-                <label for="conditionSummary">Current Diagnosis & Medical Summary <span class="required">*</span></label>
-                <textarea id="conditionSummary" name="conditionSummary" rows="4" required placeholder="Briefly describe symptoms, current diagnosis, current treatments received, and what advice you are seeking..."></textarea>
-              </div>
+            <h2 class="step-heading">About you</h2>
 
-              <div class="form-group">
-                <label for="timeline">Preferred Travel Timeline</label>
-                <select id="timeline" name="timeline">
-                  <option value="urgent">Urgent (Within 1-2 weeks)</option>
-                  <option value="month" selected>Within the next month</option>
-                  <option value="flexible">Flexible / Planning ahead</option>
-                  <option value="remote-only">Remote opinion / consultation only</option>
+            <div class="form-field" id="field-wrap-name">
+              <label for="patientName">Full name of the patient</label>
+              <input type="text" id="patientName" name="patientName" placeholder="" />
+            </div>
+
+            <div class="form-field">
+              <label for="filledBy">Who is filling in this form?</label>
+              <select id="filledBy" name="filledBy">
+                <option value="patient">The patient</option>
+                <option value="family">A family member</option>
+                <option value="attendant">A friend or attendant</option>
+              </select>
+            </div>
+
+            <div class="form-row">
+              <div class="form-field" id="field-wrap-country">
+                <label for="residenceCountry">Country of residence</label>
+                <select id="residenceCountry" name="residenceCountry">
+                  <option value="" disabled selected>Choose a country</option>
+                  <option value="uzbekistan">Uzbekistan</option>
+                  <option value="kenya">Kenya</option>
+                  <option value="tanzania">Tanzania</option>
+                  <option value="nigeria">Nigeria</option>
+                  <option value="uganda">Uganda</option>
+                  <option value="ghana">Ghana</option>
+                  <option value="rwanda">Rwanda</option>
+                  <option value="other">Other country</option>
                 </select>
               </div>
 
-              <div class="file-notice">
-                <h4>Medical Records & Scans</h4>
-                <p>
-                  You can upload recent biopsy reports, discharge summaries, MRI/CT/PET scan reports, or histopathology slides. Our coordinator will provide a secure drive link upon receipt of this form to upload large DICOM image files safely.
-                </p>
+              <div class="form-field">
+                <label for="prefLanguage">Preferred language</label>
+                <select id="prefLanguage" name="prefLanguage">
+                  <option value="en">English</option>
+                  <option value="ru">Русский (Russian)</option>
+                  <option value="uz">O'zbek (Uzbek)</option>
+                  <option value="ar">العربية (Arabic)</option>
+                  <option value="sw">Kiswahili (Swahili)</option>
+                </select>
+                <span class="field-subnote">We will tell you if we cannot yet support your language.</span>
               </div>
+            </div>
 
-              <!-- Consent & Transparency Checkbox -->
-              <div class="form-group checkbox-group">
-                <label class="checkbox-label">
-                  <input type="checkbox" id="consent" name="consent" required />
-                  <span>
-                    I understand that Nuhavi Health is an independent medical travel coordinator, not a hospital or clinic, and facilitates communication with licensed medical specialists in India.
-                  </span>
-                </label>
-              </div>
-
-              <button type="submit" class="btn-submit" id="submit-btn">
-                Submit Request for Review
-              </button>
-
-              <div id="form-success" class="form-success-banner" style="display: none;" role="alert">
-                <h3>Thank you for submitting your request.</h3>
-                <p>A personal medical coordinator from Nuhavi Health will review your details and contact you via email / WhatsApp within 24 to 48 hours.</p>
-              </div>
-            </form>
+            <div class="form-actions">
+              <button type="button" class="btn-pill btn-continue" id="btn-to-step-2">Continue</button>
+            </div>
           </div>
 
-          <!-- Coordination Sidebar Info -->
-          <aside class="sidebar-info">
-            <div class="info-card">
-              <h3>What happens next?</h3>
-              <ol class="step-list">
-                <li>
-                  <strong>1. Record Collection:</strong> A coordinator reviews your case and assists in compiling clinical reports.
-                </li>
-                <li>
-                  <strong>2. Specialist Review:</strong> Senior doctors evaluate feasibility and recommend potential protocols.
-                </li>
-                <li>
-                  <strong>3. Transparent Estimates:</strong> You receive formal hospital cost estimates and stay durations.
-                </li>
-                <li>
-                  <strong>4. Decision:</strong> You decide with your family and treating physician with zero pressure.
-                </li>
-              </ol>
+          <!-- Step 2: Your enquiry -->
+          <div class="form-step-panel" id="step-2-panel" style="display: none;">
+            <h2 class="step-heading">Your enquiry</h2>
+
+            <div class="form-field">
+              <label for="specialty">Medical specialty or treatment needed</label>
+              <select id="specialty" name="specialty">
+                <option value="cancer-care">Cancer care (oncology)</option>
+                <option value="orthopaedics">Orthopaedics and joint replacement</option>
+                <option value="other">Other specialty (on request)</option>
+              </select>
             </div>
 
-            <div class="info-card privacy-card">
-              <h3>Confidentiality & Security</h3>
-              <p>
-                All medical reports are handled in strict compliance with healthcare confidentiality protocols. Your records are only shared with the treating clinical teams reviewing your case.
-              </p>
+            <div class="form-field">
+              <label for="enquiryNotes">Describe your symptoms, diagnosis or what advice you need</label>
+              <textarea id="enquiryNotes" name="enquiryNotes" rows="4" placeholder="Give a brief summary. Do not paste full records here."></textarea>
             </div>
 
-            <div class="info-card contact-card">
-              <h3>Need immediate help?</h3>
-              <p>Speak directly with our coordination desk:</p>
-              <a href="/en/contact/" class="sidebar-link">Visit Contact & Support &rarr;</a>
+            <div class="form-actions dual-actions">
+              <button type="button" class="btn-pill btn-back" id="btn-back-to-1">Back</button>
+              <button type="button" class="btn-pill btn-continue" id="btn-to-step-3">Continue</button>
             </div>
-          </aside>
+          </div>
+
+          <!-- Step 3: Contact and consent (PDF Page 36) -->
+          <div class="form-step-panel" id="step-3-panel" style="display: none;">
+            <!-- Step 3 Errors Box -->
+            <div class="validation-errors-box" id="step-3-errors" style="display: none;" role="alert">
+              <p class="errors-heading">Please check:</p>
+              <ul class="errors-list">
+                <li id="err-consent">
+                  <a href="#consentEnquiry">Please agree to the privacy notice to submit your enquiry</a>
+                </li>
+              </ul>
+            </div>
+
+            <h2 class="step-heading">Contact and consent</h2>
+
+            <div class="form-field">
+              <label for="email">Email</label>
+              <input type="email" id="email" name="email" value="test.patient@example.org" />
+            </div>
+
+            <div class="form-field">
+              <label for="phone">Phone or WhatsApp number, with country code</label>
+              <input type="tel" id="phone" name="phone" value="+254 700 000 000" />
+            </div>
+
+            <div class="form-field">
+              <label>Best way to contact you</label>
+              <div class="radio-row">
+                <label><input type="radio" name="contactMethod" value="whatsapp" checked /> WhatsApp</label>
+                <label><input type="radio" name="contactMethod" value="phone" /> Phone call</label>
+                <label><input type="radio" name="contactMethod" value="email" /> Email</label>
+              </div>
+            </div>
+
+            <div class="form-field">
+              <label for="contactTime">Best time to reach you (your local time)</label>
+              <select id="contactTime" name="contactTime">
+                <option value="any">Any time</option>
+                <option value="morning">Morning</option>
+                <option value="afternoon">Afternoon</option>
+                <option value="evening">Evening</option>
+              </select>
+            </div>
+
+            <div class="consent-block">
+              <label class="checkbox-line" id="label-consent-enquiry">
+                <input type="checkbox" id="consentEnquiry" checked />
+                <span>I have read the <a href="/en/legal/privacy/">privacy notice</a> and agree that Nuhavi Health may use these details to contact me about this enquiry.</span>
+              </label>
+
+              <label class="checkbox-line">
+                <input type="checkbox" id="consentMarketing" />
+                <span>Optional: send me occasional updates and patient guides. This is separate from my enquiry and I can stop at any time.</span>
+              </label>
+            </div>
+
+            <div class="form-actions dual-actions">
+              <button type="button" class="btn-pill btn-back" id="btn-back-to-2">Back</button>
+              <button type="button" class="btn-pill btn-continue" id="btn-send-enquiry">Send enquiry</button>
+            </div>
+          </div>
+
+          <!-- Step 4: After Sending (Interaction states PDF Pages 36 & 37) -->
+          <div class="form-step-panel" id="success-panel" style="display: none;">
+            <h2 class="step-heading">Enquiry received</h2>
+            <p class="ref-code">Your enquiry reference is <strong>DEMO-EL2X45</strong>. Keep it for your records.</p>
+            <p class="follow-note">A care coordinator will contact you using the method you chose.</p>
+
+            <div class="demo-banner">
+              Demonstration mode: this preview is not connected to Nuhavi's systems. Nothing was sent or stored.
+            </div>
+
+            <!-- Standard Upload Offer (All countries except Uzbekistan - PDF Page 36 & 37) -->
+            <div class="reports-offer-box" id="standard-upload-box">
+              <h3>Send your medical reports now <span class="tag-opt">optional</span></h3>
+              <p>Reports sent today let the review start sooner. We email a private upload link to <strong class="user-sent-email">test.patient@example.org</strong>, valid for 48 hours.</p>
+
+              <label class="checkbox-line opt-consent">
+                <input type="checkbox" id="consentHealthData" />
+                <span>
+                  I agree that Nuhavi Health may store my medical reports securely and that its doctors and coordinators may review them to coordinate my care. My reports will be shared with a hospital only after I agree to that hospital. I can withdraw this consent at any time. <a href="/en/legal/privacy/">Privacy notice</a>
+                </span>
+              </label>
+
+              <!-- Link Requested Green Confirmation Banner (PDF Page 37) -->
+              <div class="green-confirmation-banner" id="link-requested-banner" style="display: none;" role="status">
+                Demonstration: a secure link would now be emailed to <strong class="user-sent-email">test.patient@example.org</strong>. <a href="/en/records/" class="preview-link">See the upload page</a>
+              </div>
+
+              <div class="upload-btn-wrap" id="upload-btn-container">
+                <button type="button" class="btn-pill btn-continue is-disabled" id="btn-request-link" disabled>
+                  Email me a secure upload link
+                </button>
+              </div>
+              <p class="upload-later-text">Or wait — your coordinator can send it later.</p>
+            </div>
+
+            <!-- Uzbekistan Patient Upload Notice (PDF Page 37) -->
+            <div class="reports-offer-box uzbek-reports-box" id="uzbek-upload-box" style="display: none;">
+              <h3>Send your medical reports now <span class="tag-opt">optional</span></h3>
+              <p>Reports sent today let the review start sooner. We email a private upload link to <strong class="user-sent-email">test.patient@example.org</strong>, valid for 48 hours.</p>
+
+              <div class="amber-closed-warning">
+                Secure upload for your country is opening soon. Your coordinator will tell you how to share your reports safely. Please do not send them by chat or email.
+              </div>
+
+              <div class="amber-closed-warning amber-sub-warning">
+                Patients living in Uzbekistan: please never upload genetic test results (for example BRCA or NGS reports). Uzbek law requires genetic data to stay in Uzbekistan.
+              </div>
+            </div>
+          </div>
         </div>
+
+        <!-- Right: What Happens Next & Emergency Box -->
+        <aside class="info-sidebar">
+          <div class="info-card next-card">
+            <h3>What happens next</h3>
+            <ol class="next-list">
+              <li>You receive an enquiry reference straight away.</li>
+              <li>If you wish, agree to secure storage and we email you a private link to upload your reports — optional, and you can do it later.</li>
+              <li>A coordinator contacts you by your chosen method.</li>
+              <li>With your agreement, a hospital team reviews your records and you receive their opinion and estimate.</li>
+            </ol>
+          </div>
+
+          <div class="emergency-box" role="alert">
+            <div class="emergency-header">
+              <span class="alert-icon" aria-hidden="true">⚠</span>
+              <strong>Is this an emergency?</strong>
+            </div>
+            <p>
+              Chest pain, sudden weakness or numbness, difficulty speaking, severe bleeding, a seizure or difficulty breathing need care now. Go to the nearest emergency department or call your local emergency number. Do not wait for an enquiry reply.
+            </p>
+          </div>
+        </aside>
       </div>
-    </section>
+    </div>
   </div>
 </BaseLayout>
 
 <script>
-  const form = document.getElementById('opinion-form');
-  const successBanner = document.getElementById('form-success');
-  const submitBtn = document.getElementById('submit-btn');
+  function setupRequestOpinion() {
+    const ind1 = document.getElementById('ind-1');
+    const ind2 = document.getElementById('ind-2');
+    const ind3 = document.getElementById('ind-3');
 
-  if (form && successBanner && submitBtn) {
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      submitBtn.setAttribute('disabled', 'true');
-      submitBtn.textContent = 'Submitting...';
-      setTimeout(() => {
-        form.reset();
-        submitBtn.style.display = 'none';
-        successBanner.style.display = 'block';
-        successBanner.scrollIntoView({ behavior: 'smooth' });
-      }, 700);
+    const p1 = document.getElementById('step-1-panel');
+    const p2 = document.getElementById('step-2-panel');
+    const p3 = document.getElementById('step-3-panel');
+    const pSuccess = document.getElementById('success-panel');
+
+    const btnTo2 = document.getElementById('btn-to-step-2');
+    const btnBackTo1 = document.getElementById('btn-back-to-1');
+    const btnTo3 = document.getElementById('btn-to-step-3');
+    const btnBackTo2 = document.getElementById('btn-back-to-2');
+    const btnSend = document.getElementById('btn-send-enquiry');
+
+    // Inputs for validation
+    const nameInput = document.getElementById('patientName') as HTMLInputElement | null;
+    const countrySelect = document.getElementById('residenceCountry') as HTMLSelectElement | null;
+    const s1Errors = document.getElementById('step-1-errors');
+    const errName = document.getElementById('err-name');
+    const errCountry = document.getElementById('err-country');
+
+    // Step 1 Validation & Proceed
+    if (btnTo2) {
+      btnTo2.addEventListener('click', () => {
+        let hasErrors = false;
+        const nameVal = nameInput ? nameInput.value.trim() : '';
+        const countryVal = countrySelect ? countrySelect.value : '';
+
+        if (!nameVal) {
+          hasErrors = true;
+          if (errName) errName.style.display = 'list-item';
+          if (nameInput) nameInput.classList.add('field-invalid');
+        } else {
+          if (errName) errName.style.display = 'none';
+          if (nameInput) nameInput.classList.remove('field-invalid');
+        }
+
+        if (!countryVal) {
+          hasErrors = true;
+          if (errCountry) errCountry.style.display = 'list-item';
+          if (countrySelect) countrySelect.classList.add('field-invalid');
+        } else {
+          if (errCountry) errCountry.style.display = 'none';
+          if (countrySelect) countrySelect.classList.remove('field-invalid');
+        }
+
+        if (hasErrors) {
+          if (s1Errors) {
+            s1Errors.style.display = 'block';
+            s1Errors.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          }
+          return;
+        }
+
+        if (s1Errors) s1Errors.style.display = 'none';
+        if (p1) p1.style.display = 'none';
+        if (p2) p2.style.display = 'block';
+        if (ind1) ind1.classList.remove('active');
+        if (ind2) ind2.classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    }
+
+    // Clear errors on input
+    nameInput?.addEventListener('input', () => {
+      if (nameInput.value.trim() && errName) {
+        errName.style.display = 'none';
+        nameInput.classList.remove('field-invalid');
+      }
     });
+
+    countrySelect?.addEventListener('change', () => {
+      if (countrySelect.value && errCountry) {
+        errCountry.style.display = 'none';
+        countrySelect.classList.remove('field-invalid');
+      }
+    });
+
+    if (btnBackTo1) {
+      btnBackTo1.addEventListener('click', () => {
+        if (p2) p2.style.display = 'none';
+        if (p1) p1.style.display = 'block';
+        if (ind2) ind2.classList.remove('active');
+        if (ind1) ind1.classList.add('active');
+      });
+    }
+
+    if (btnTo3) {
+      btnTo3.addEventListener('click', () => {
+        if (p2) p2.style.display = 'none';
+        if (p3) p3.style.display = 'block';
+        if (ind2) ind2.classList.remove('active');
+        if (ind3) ind3.classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    }
+
+    if (btnBackTo2) {
+      btnBackTo2.addEventListener('click', () => {
+        if (p3) p3.style.display = 'none';
+        if (p2) p2.style.display = 'block';
+        if (ind3) ind3.classList.remove('active');
+        if (ind2) ind2.classList.add('active');
+      });
+    }
+
+    // Step 3 Submission
+    if (btnSend) {
+      btnSend.addEventListener('click', () => {
+        const consentEnquiry = document.getElementById('consentEnquiry') as HTMLInputElement | null;
+        const s3Errors = document.getElementById('step-3-errors');
+        if (consentEnquiry && !consentEnquiry.checked) {
+          if (s3Errors) s3Errors.style.display = 'block';
+          return;
+        }
+
+        const emailInput = document.getElementById('email') as HTMLInputElement | null;
+        const emailVal = emailInput && emailInput.value ? emailInput.value : 'test.patient@example.org';
+        const sentEmailSpans = document.querySelectorAll('.user-sent-email');
+        sentEmailSpans.forEach((el) => { el.textContent = emailVal; });
+
+        // Check if selected country was Uzbekistan (PDF Page 37)
+        const isUzbek = countrySelect && countrySelect.value === 'uzbekistan';
+        const standardBox = document.getElementById('standard-upload-box');
+        const uzbekBox = document.getElementById('uzbek-upload-box');
+
+        if (isUzbek) {
+          if (standardBox) standardBox.style.display = 'none';
+          if (uzbekBox) uzbekBox.style.display = 'block';
+        } else {
+          if (standardBox) standardBox.style.display = 'block';
+          if (uzbekBox) uzbekBox.style.display = 'none';
+        }
+
+        if (p3) p3.style.display = 'none';
+        if (pSuccess) pSuccess.style.display = 'block';
+        pSuccess?.scrollIntoView({ behavior: 'smooth' });
+      });
+    }
+
+    // Step 4: Health Data Consent & Request Link (PDF Pages 36 & 37)
+    const consentHealth = document.getElementById('consentHealthData') as HTMLInputElement | null;
+    const btnRequestLink = document.getElementById('btn-request-link') as HTMLButtonElement | null;
+    const linkRequestedBanner = document.getElementById('link-requested-banner');
+    const uploadBtnWrap = document.getElementById('upload-btn-container');
+
+    if (consentHealth && btnRequestLink) {
+      consentHealth.addEventListener('change', () => {
+        if (consentHealth.checked) {
+          btnRequestLink.removeAttribute('disabled');
+          btnRequestLink.classList.remove('is-disabled');
+        } else {
+          btnRequestLink.setAttribute('disabled', 'true');
+          btnRequestLink.classList.add('is-disabled');
+        }
+      });
+
+      btnRequestLink.addEventListener('click', () => {
+        if (linkRequestedBanner) {
+          linkRequestedBanner.style.display = 'block';
+        }
+        if (uploadBtnWrap) {
+          uploadBtnWrap.style.display = 'none';
+        }
+      });
+    }
   }
+
+  document.addEventListener('DOMContentLoaded', setupRequestOpinion);
+  setupRequestOpinion();
 </script>
 
 <style>
   .page-container {
     background-color: var(--color-paper);
     color: var(--color-ink);
+    padding: var(--space-8) 0 var(--space-12);
+  }
+
+  .gold-rule {
+    width: 72px;
+    height: 3px;
+    background-color: var(--color-gold);
+    margin-bottom: var(--space-3);
   }
 
   .page-header {
-    background: linear-gradient(180deg, var(--color-mist) 0%, var(--color-paper) 100%);
-    padding: var(--space-8) 0 var(--space-6);
-    border-bottom: 1px solid rgba(20, 41, 75, 0.08);
-  }
-
-  .breadcrumb ol {
-    display: flex;
-    gap: var(--space-1);
-    list-style: none;
-    padding: 0;
-    margin: 0 0 var(--space-3);
-    font-size: 0.875rem;
-    color: var(--color-slate);
-  }
-
-  .breadcrumb li + li::before {
-    content: "/";
-    margin-right: var(--space-1);
-    color: var(--color-slate);
-  }
-
-  .breadcrumb a {
-    color: var(--color-navy);
-    text-decoration: none;
-  }
-
-  .breadcrumb a:hover {
-    text-decoration: underline;
-  }
-
-  .eyebrow {
-    display: inline-block;
-    font-size: 0.8125rem;
-    font-weight: var(--font-weight-subheading);
-    letter-spacing: 0.08em;
-    color: var(--color-gold-text);
-    text-transform: uppercase;
-    margin-bottom: var(--space-2);
+    margin-bottom: var(--space-8);
   }
 
   .page-title {
-    font-size: clamp(2rem, 4vw, 3rem);
-    font-weight: var(--font-weight-heading);
+    font-size: clamp(2.25rem, 4vw, 3.25rem);
+    font-weight: 800;
     color: var(--color-navy);
-    line-height: var(--line-height-heading);
-    margin: 0 0 var(--space-3);
+    line-height: 1.15;
+    margin: 0 0 var(--space-2);
   }
 
   .page-deck {
     font-size: 1.125rem;
-    font-weight: var(--font-weight-deck);
-    line-height: var(--line-height-body);
+    font-weight: 300;
+    line-height: 1.5;
     color: var(--color-slate);
-    max-width: 720px;
+    max-width: 680px;
     margin: 0;
   }
 
-  .form-section {
-    padding: var(--space-8) 0 var(--space-12);
-  }
-
-  .form-grid {
+  .enquiry-layout {
     display: grid;
     grid-template-columns: 1fr;
     gap: var(--space-8);
   }
 
   @media (min-width: 992px) {
-    .form-grid {
-      grid-template-columns: 2fr 1fr;
+    .enquiry-layout {
+      grid-template-columns: 7fr 5fr;
+      gap: var(--space-10);
+      align-items: start;
     }
   }
 
-  .form-wrapper {
-    background-color: var(--color-mist);
-    padding: var(--space-6);
+  .form-container {
+    background-color: var(--color-paper);
+    border: 1px solid rgba(20, 41, 75, 0.12);
     border-radius: var(--radius-card);
-    border: 1px solid rgba(20, 41, 75, 0.08);
+    padding: var(--space-6);
   }
 
-  @media (min-width: 768px) {
-    .form-wrapper {
-      padding: var(--space-8);
-    }
+  .form-timing-note {
+    font-size: 0.8125rem;
+    color: var(--color-slate);
+    margin-bottom: var(--space-5);
+    line-height: 1.45;
   }
 
-  .opinion-form {
+  /* Progress Bar */
+  .steps-progress-bar {
     display: flex;
-    flex-direction: column;
-    gap: var(--space-4);
+    gap: var(--space-2);
+    margin-bottom: var(--space-6);
+    border-bottom: 2px solid var(--color-mist);
+    padding-bottom: var(--space-3);
+  }
+
+  .step-indicator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--color-slate);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    flex: 1;
+  }
+
+  .step-indicator.active {
+    color: var(--color-navy);
+  }
+
+  .step-badge {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background-color: var(--color-mist);
+    color: var(--color-slate);
+    font-size: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .step-indicator.active .step-badge {
+    background-color: var(--color-gold);
+    color: var(--color-deep-navy);
+    font-weight: 800;
+  }
+
+  /* Validation Errors Box (PDF Page 36) */
+  .validation-errors-box {
+    background-color: #FFF2F0;
+    border: 1px solid var(--color-error);
+    border-radius: 8px;
+    padding: var(--space-3) var(--space-4);
+    margin-bottom: var(--space-5);
+  }
+
+  .errors-heading {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--color-error);
+    margin-bottom: 4px;
+  }
+
+  .errors-list {
+    margin: 0;
+    padding-left: 18px;
+    font-size: 0.8125rem;
+    color: var(--color-error);
+  }
+
+  .errors-list a {
+    color: var(--color-error);
+    text-decoration: underline;
+  }
+
+  .field-invalid {
+    border-color: var(--color-error) !important;
+    outline-color: var(--color-error) !important;
+  }
+
+  .step-heading {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--color-navy);
+    margin-bottom: var(--space-4);
+  }
+
+  .form-field {
+    margin-bottom: var(--space-4);
+  }
+
+  .form-field label {
+    display: block;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: var(--color-navy);
+    margin-bottom: var(--space-1);
+  }
+
+  .form-field input[type="text"],
+  .form-field input[type="email"],
+  .form-field input[type="tel"],
+  .form-field select,
+  .form-field textarea {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1px solid rgba(20, 41, 75, 0.2);
+    font-family: var(--font-family-base);
+    font-size: 0.875rem;
+    color: var(--color-ink);
+    background-color: #FFFFFF;
+    box-sizing: border-box;
+    transition: border-color 0.15s ease;
+  }
+
+  .form-field input:focus,
+  .form-field select:focus,
+  .form-field textarea:focus {
+    border-color: var(--color-gold);
+    outline: 2px solid var(--color-gold);
   }
 
   .form-row {
@@ -280,164 +643,273 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
     }
   }
 
-  .form-group {
+  .field-subnote {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--color-slate);
+    margin-top: 4px;
+  }
+
+  .radio-row {
     display: flex;
-    flex-direction: column;
-    gap: var(--space-1);
+    gap: var(--space-4);
+    margin-top: 6px;
   }
 
-  .form-group label {
-    font-size: 0.9375rem;
-    font-weight: var(--font-weight-subheading);
-    color: var(--color-navy);
-  }
-
-  .required {
-    color: var(--color-error);
-  }
-
-  .form-group input,
-  .form-group select,
-  .form-group textarea {
-    font-family: inherit;
-    font-size: 1rem;
-    padding: 12px 16px;
-    border: 1px solid rgba(20, 41, 75, 0.2);
-    border-radius: 8px;
-    background-color: var(--color-paper);
+  .radio-row label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.875rem;
+    font-weight: 400;
     color: var(--color-ink);
-    transition: border-color 0.15s ease, box-shadow 0.15s ease;
-  }
-
-  .form-group input:focus,
-  .form-group select:focus,
-  .form-group textarea:focus {
-    outline: none;
-    border-color: var(--color-gold);
-    box-shadow: 0 0 0 3px rgba(196, 154, 60, 0.2);
-  }
-
-  .file-notice {
-    background-color: rgba(196, 154, 60, 0.1);
-    border-left: 3px solid var(--color-gold);
-    padding: var(--space-3) var(--space-4);
-    border-radius: 0 8px 8px 0;
-  }
-
-  .file-notice h4 {
-    margin: 0 0 var(--space-1);
-    color: var(--color-navy);
-    font-size: 0.9375rem;
-  }
-
-  .file-notice p {
-    margin: 0;
-    font-size: 0.875rem;
-    color: var(--color-slate);
-    line-height: 1.5;
-  }
-
-  .checkbox-group {
-    margin-top: var(--space-2);
-  }
-
-  .checkbox-label {
-    display: flex;
-    gap: var(--space-2);
-    align-items: flex-start;
-    font-size: 0.875rem;
-    color: var(--color-slate);
-    line-height: 1.5;
     cursor: pointer;
   }
 
-  .checkbox-label input {
-    margin-top: 3px;
+  .consent-block {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    margin: var(--space-5) 0;
+    padding-top: var(--space-3);
+    border-top: 1px solid rgba(20, 41, 75, 0.08);
   }
 
-  .btn-submit {
+  .checkbox-line {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 0.8125rem;
+    color: var(--color-ink);
+    line-height: 1.45;
+    cursor: pointer;
+  }
+
+  .checkbox-line input[type="checkbox"] {
+    margin-top: 3px;
+    accent-color: var(--color-navy);
+  }
+
+  .checkbox-line a {
+    color: var(--color-navy);
+    text-decoration: underline;
+  }
+
+  .form-actions {
+    margin-top: var(--space-6);
+  }
+
+  .dual-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-3);
+  }
+
+  .btn-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: var(--button-min-height);
+    padding: 0 var(--space-5);
+    border-radius: var(--radius-pill);
+    font-size: 0.875rem;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    border: none;
+    transition: background-color 0.15s ease;
+  }
+
+  .btn-continue {
     background-color: var(--color-navy);
     color: var(--color-paper);
-    font-size: 1rem;
-    font-weight: var(--font-weight-subheading);
-    padding: 14px 28px;
-    border-radius: var(--radius-pill);
-    border: none;
-    cursor: pointer;
-    align-self: flex-start;
-    transition: background-color 0.15s ease, transform 0.15s ease;
   }
 
-  .btn-submit:hover {
+  .btn-continue:hover:not(:disabled) {
     background-color: var(--color-deep-navy);
-    transform: translateY(-1px);
   }
 
-  .form-success-banner {
-    background-color: #EBF8F1;
-    border: 1px solid var(--color-success);
-    color: var(--color-success);
-    padding: var(--space-6);
+  .btn-continue.is-disabled,
+  .btn-continue:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .btn-back {
+    background-color: var(--color-mist);
+    color: var(--color-navy);
+    border: 1px solid rgba(20, 41, 75, 0.15);
+  }
+
+  .btn-back:hover {
+    background-color: #E2E8F0;
+  }
+
+  /* Step 4: After Sending (PDF Page 36 & 37) */
+  .ref-code {
+    font-size: 1rem;
+    color: var(--color-navy);
+    margin-bottom: var(--space-2);
+  }
+
+  .follow-note {
+    font-size: 0.875rem;
+    color: var(--color-slate);
+    margin-bottom: var(--space-4);
+  }
+
+  .demo-banner {
+    background-color: #FFF6E5;
+    border: 1px solid var(--color-gold);
     border-radius: 8px;
-  }
-
-  .form-success-banner h3 {
-    margin: 0 0 var(--space-2);
-    color: var(--color-success);
-  }
-
-  .form-success-banner p {
-    margin: 0;
+    padding: var(--space-3);
+    font-size: 0.8125rem;
     color: var(--color-ink);
+    margin-bottom: var(--space-6);
   }
 
-  .sidebar-info {
+  .reports-offer-box {
+    background-color: var(--color-mist);
+    border-radius: var(--radius-card);
+    border: 1px solid rgba(20, 41, 75, 0.08);
+    padding: var(--space-5);
+  }
+
+  .reports-offer-box h3 {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--color-navy);
+    margin-bottom: var(--space-2);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .tag-opt {
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--color-slate);
+    background-color: #E2E8F0;
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+
+  .reports-offer-box p {
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--color-ink);
+    margin-bottom: var(--space-4);
+  }
+
+  .opt-consent {
+    margin-bottom: var(--space-4);
+  }
+
+  .upload-btn-wrap {
+    margin-bottom: var(--space-3);
+  }
+
+  .upload-later-text {
+    font-size: 0.8125rem !important;
+    color: var(--color-slate) !important;
+    margin: 0 !important;
+  }
+
+  /* Green Link Requested Banner (PDF Page 37) */
+  .green-confirmation-banner {
+    background-color: #E8F5E9;
+    border: 1px solid var(--color-success);
+    color: #1B5E20;
+    border-radius: 8px;
+    padding: var(--space-3) var(--space-4);
+    font-size: 0.875rem;
+    line-height: 1.45;
+    margin-bottom: var(--space-4);
+  }
+
+  .preview-link {
+    color: var(--color-navy);
+    font-weight: 700;
+    text-decoration: underline;
+    margin-left: 4px;
+  }
+
+  /* Uzbekistan Closed State (PDF Page 37) */
+  .amber-closed-warning {
+    background-color: #FFF6E5;
+    border: 1px solid var(--color-gold);
+    border-radius: 8px;
+    padding: var(--space-3) var(--space-4);
+    font-size: 0.8125rem;
+    color: var(--color-ink);
+    line-height: 1.5;
+    margin-bottom: var(--space-3);
+  }
+
+  .amber-sub-warning {
+    margin-bottom: 0;
+  }
+
+  /* Right Sidebar */
+  .info-sidebar {
     display: flex;
     flex-direction: column;
-    gap: var(--space-4);
+    gap: var(--space-5);
   }
 
   .info-card {
     background-color: var(--color-mist);
-    padding: var(--space-6);
-    border-radius: var(--radius-card);
     border: 1px solid rgba(20, 41, 75, 0.08);
+    border-radius: var(--radius-card);
+    padding: var(--space-5);
   }
 
   .info-card h3 {
-    color: var(--color-navy);
     font-size: 1.125rem;
-    margin: 0 0 var(--space-3);
+    font-weight: 700;
+    color: var(--color-navy);
+    margin-bottom: var(--space-3);
   }
 
-  .step-list {
-    list-style: none;
-    padding: 0;
+  .next-list {
     margin: 0;
+    padding-left: 20px;
     display: flex;
     flex-direction: column;
-    gap: var(--space-3);
+    gap: var(--space-2);
+  }
+
+  .next-list li {
     font-size: 0.875rem;
-    color: var(--color-slate);
     line-height: 1.5;
+    color: var(--color-ink);
   }
 
-  .privacy-card p,
-  .contact-card p {
+  .emergency-box {
+    background-color: #FFF2F0;
+    border: 1px solid var(--color-error);
+    border-radius: var(--radius-card);
+    padding: var(--space-4);
+  }
+
+  .emergency-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--color-error);
     font-size: 0.875rem;
-    color: var(--color-slate);
-    line-height: 1.5;
-    margin: 0 0 var(--space-3);
+    margin-bottom: var(--space-1);
   }
 
-  .sidebar-link {
-    color: var(--color-gold-text);
-    font-weight: var(--font-weight-subheading);
-    text-decoration: none;
-    font-size: 0.9375rem;
+  .alert-icon {
+    font-size: 1.125rem;
   }
 
-  .sidebar-link:hover {
-    text-decoration: underline;
+  .emergency-box p {
+    font-size: 0.8125rem;
+    line-height: 1.45;
+    color: var(--color-ink);
+    margin: 0;
   }
 </style>

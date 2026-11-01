@@ -1,103 +1,114 @@
 ---
 /**
  * src/pages/en/about/index.astro
- * About Nuhavi Health - Organization, Principles & Role
+ * About Nuhavi (Pages 28 & 29 of Nuhavi Health Look and Feel PDF)
  */
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 ---
 
 <BaseLayout
-  title="About Nuhavi Health | Independent Medical Travel Coordination"
-  description="Learn about Nuhavi Health's mission, our independent coordination role, patient advocacy principles, and transparent standards for healthcare in India."
+  title="About Nuhavi | Nuhavi Health"
+  description="Nuhavi Health Pvt. Ltd. is a doctor-led coordination company based in Hyderabad. We help international patients reach the right hospital with clear information — and we stay with them until they are home."
 >
   <div class="page-container">
-    <header class="page-header">
-      <div class="container">
-        <nav class="breadcrumb" aria-label="Breadcrumb">
-          <ol>
-            <li><a href="/en/">Home</a></li>
-            <li aria-current="page">About</li>
-          </ol>
-        </nav>
-        <span class="eyebrow">OUR MISSION & ROLE</span>
-        <h1 class="page-title">About Nuhavi Health</h1>
+    <div class="container main-content">
+      <!-- Gold 72x3 px rule above page title -->
+      <div class="gold-rule" aria-hidden="true"></div>
+
+      <header class="page-header">
+        <h1 class="page-title">About Nuhavi</h1>
         <p class="page-deck">
-          We act as independent medical travel coordinators. We bridge the distance between international patients and accredited hospitals in India, advocating for clinical clarity, fair estimates, and patient-first care.
+          Nuhavi Health Pvt. Ltd. is a doctor-led coordination company based in Hyderabad. We help international patients reach the right hospital with clear information — and we stay with them until they are home.
         </p>
-      </div>
-    </header>
+      </header>
 
-    <!-- Core Philosophy Section -->
-    <section class="about-section">
-      <div class="container">
-        <div class="content-grid">
-          <div class="main-content">
-            <span class="section-tag">WHO WE ARE</span>
-            <h2>People, Not Packages</h2>
-            <p>
-              Nuhavi Health was established on the fundamental belief that complex medical treatment should never be treated as a commercial tour package. When faced with an oncology diagnosis, a deteriorating cardiac condition, or an intricate joint procedure, patients need clinical honesty, not glossy tourism brochures.
-            </p>
-            <p>
-              We coordinate directly with senior specialists, hospital international patient teams, and patient families to ensure every step — from initial opinion review to post-discharge care — is handled with professional diligence.
-            </p>
-
-            <div class="principles-grid">
-              <div class="principle-card">
-                <h3>Clinical Objectivity</h3>
-                <p>We present multiple accredited hospital options and treatment modalities so you and your treating doctor make informed decisions.</p>
-              </div>
-
-              <div class="principle-card">
-                <h3>Direct Hospital Billing</h3>
-                <p>We do not inflate hospital medical estimates. Patients settle treatment costs directly with the hospital's international cashier desk.</p>
-              </div>
-
-              <div class="principle-card">
-                <h3>Dedicated Coordination</h3>
-                <p>From medical visa invitations and airport pickup to bilingual bedside support, a personal coordinator remains assigned to your journey.</p>
-              </div>
-
-              <div class="principle-card">
-                <h3>Post-Return Care Continuity</h3>
-                <p>Coordination does not end at discharge. We help schedule remote tele-consultations and follow-up lab reviews once you return home.</p>
-              </div>
+      <!-- Why We Exist Section (Page 28) -->
+      <section class="why-we-exist-section">
+        <div class="why-grid">
+          <div class="photo-col">
+            <div class="founders-photo-slot">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                <circle cx="12" cy="13" r="4"></circle>
+              </svg>
+              <span class="photo-slot-title">Photo to come</span>
+              <span class="photo-slot-sub">The founders of Nuhavi Health at the Hyderabad office</span>
             </div>
-
-            <!-- Transparency Link -->
-            <div class="commercial-disclosure-card">
-              <h3>Financial & Commercial Transparency</h3>
-              <p>
-                Learn how our services are sustained, how hospital relationships are structured, and our absolute commitment to zero markups.
-              </p>
-              <a href="/en/about/commercial-relationships/" class="disclosure-link">
-                Read Commercial Relationships Disclosure &rarr;
-              </a>
-            </div>
+            <p class="photo-caption">The founders, Hyderabad</p>
           </div>
 
-          <!-- Sidebar Facts & Governance -->
-          <aside class="sidebar-about">
-            <div class="sidebar-card">
-              <h3>Coordination Scope</h3>
-              <ul class="scope-list">
-                <li>
-                  <strong>What we do:</strong> Facilitate records review, secure opinions, coordinate travel logistics, translate documents, support on-ground stay.
-                </li>
-                <li>
-                  <strong>What we do NOT do:</strong> We are not a medical facility and do not practice medicine, prescribe medications, or perform diagnoses.
-                </li>
-              </ul>
-            </div>
-
-            <div class="sidebar-card contact-snippet">
-              <h3>Questions or Inquiries?</h3>
-              <p>Contact our leadership and coordination desk directly.</p>
-              <a href="/en/contact/" class="btn-primary">Contact Us</a>
-            </div>
-          </aside>
+          <div class="text-col">
+            <h2 class="section-title">Why we exist</h2>
+            <p class="why-lead">Clarity before you travel. Care until you're home.</p>
+            <p>
+              Families travelling for treatment face three hard problems at once: understanding a diagnosis, choosing a hospital in another country, and organising a long stay away from home. Good information can be hard to find, and it is not always clear who is paying whom.
+            </p>
+            <p>
+              We set Nuhavi up to do this differently: doctor-led review of what patients send, hospitals chosen on published standards, estimates in writing, and a fee paid by the patient so our advice is not bought by anyone else.
+            </p>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+
+      <!-- What We Hold Ourselves To (Values in 2-col grid with gold top rules) -->
+      <section class="values-section">
+        <h2 class="section-title">What we hold ourselves to</h2>
+
+        <div class="values-grid">
+          <!-- Col 1 -->
+          <div class="value-item">
+            <div class="gold-top-rule" aria-hidden="true"></div>
+            <h3>Clarity</h3>
+            <p>Plain words, written down, in your language where we can.</p>
+          </div>
+
+          <div class="value-item">
+            <div class="gold-top-rule" aria-hidden="true"></div>
+            <h3>Safety</h3>
+            <p>Clinical decisions stay with qualified treating teams; we never push a patient towards a choice.</p>
+          </div>
+
+          <div class="value-item">
+            <div class="gold-top-rule" aria-hidden="true"></div>
+            <h3>Accountability</h3>
+            <p>A named contact for every case and a grievance officer for every complaint.</p>
+          </div>
+
+          <div class="value-item">
+            <div class="gold-top-rule" aria-hidden="true"></div>
+            <h3>Transparency</h3>
+            <p>Our fee and our commercial relationships are published.</p>
+          </div>
+
+          <div class="value-item">
+            <div class="gold-top-rule" aria-hidden="true"></div>
+            <h3>Privacy</h3>
+            <p>We collect only what we need, and share records only with hospitals you agree to.</p>
+          </div>
+
+          <div class="value-item">
+            <div class="gold-top-rule" aria-hidden="true"></div>
+            <h3>Continuity</h3>
+            <p>Support continues after discharge, until you are settled at home.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Governance & Relationships Cards (Page 29) -->
+      <section class="governance-section">
+        <div class="governance-grid">
+          <a href="/en/about/clinical-governance/" class="gov-card">
+            <h3>Clinical governance</h3>
+            <p>Who checks our clinical information, and where our role ends and the hospital's begins.</p>
+          </a>
+
+          <a href="/en/about/commercial-relationships/" class="gov-card">
+            <h3>Commercial relationships</h3>
+            <p>How we are paid, and every relationship that could affect our advice.</p>
+          </a>
+        </div>
+      </section>
+    </div>
   </div>
 </BaseLayout>
 
@@ -105,230 +116,196 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
   .page-container {
     background-color: var(--color-paper);
     color: var(--color-ink);
+    padding: var(--space-8) 0 var(--space-12);
+  }
+
+  .gold-rule {
+    width: 72px;
+    height: 3px;
+    background-color: var(--color-gold);
+    margin-bottom: var(--space-3);
   }
 
   .page-header {
-    background: linear-gradient(180deg, var(--color-mist) 0%, var(--color-paper) 100%);
-    padding: var(--space-8) 0 var(--space-6);
-    border-bottom: 1px solid rgba(20, 41, 75, 0.08);
-  }
-
-  .breadcrumb ol {
-    display: flex;
-    gap: var(--space-1);
-    list-style: none;
-    padding: 0;
-    margin: 0 0 var(--space-3);
-    font-size: 0.875rem;
-    color: var(--color-slate);
-  }
-
-  .breadcrumb li + li::before {
-    content: "/";
-    margin-right: var(--space-1);
-    color: var(--color-slate);
-  }
-
-  .breadcrumb a {
-    color: var(--color-navy);
-    text-decoration: none;
-  }
-
-  .breadcrumb a:hover {
-    text-decoration: underline;
-  }
-
-  .eyebrow {
-    display: inline-block;
-    font-size: 0.8125rem;
-    font-weight: var(--font-weight-subheading);
-    letter-spacing: 0.08em;
-    color: var(--color-gold-text);
-    text-transform: uppercase;
-    margin-bottom: var(--space-2);
+    margin-bottom: var(--space-8);
   }
 
   .page-title {
-    font-size: clamp(2rem, 4vw, 3rem);
-    font-weight: var(--font-weight-heading);
+    font-size: clamp(2.25rem, 4vw, 3.25rem);
+    font-weight: 800;
     color: var(--color-navy);
-    line-height: var(--line-height-heading);
-    margin: 0 0 var(--space-3);
+    line-height: 1.15;
+    margin: 0 0 var(--space-2);
   }
 
   .page-deck {
     font-size: 1.125rem;
-    font-weight: var(--font-weight-deck);
-    line-height: var(--line-height-body);
+    font-weight: 300;
+    line-height: 1.5;
     color: var(--color-slate);
-    max-width: 720px;
+    max-width: 680px;
     margin: 0;
   }
 
-  .about-section {
-    padding: var(--space-8) 0 var(--space-12);
+  /* Why We Exist (Page 28) */
+  .why-we-exist-section {
+    padding-bottom: var(--space-10);
+    border-bottom: 1px solid rgba(20, 41, 75, 0.08);
+    margin-bottom: var(--space-10);
   }
 
-  .content-grid {
+  .why-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: var(--space-8);
+    gap: var(--space-6);
   }
 
-  @media (min-width: 992px) {
-    .content-grid {
-      grid-template-columns: 2fr 1fr;
+  @media (min-width: 800px) {
+    .why-grid {
+      grid-template-columns: 4fr 8fr;
+      gap: var(--space-8);
     }
   }
 
-  .section-tag {
+  .founders-photo-slot {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    background-color: var(--color-deep-navy);
+    border-radius: 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-paper);
+    padding: var(--space-4);
+    text-align: center;
+    gap: 8px;
+    box-sizing: border-box;
+  }
+
+  .photo-slot-title {
+    font-size: 0.9375rem;
+    font-weight: 700;
+  }
+
+  .photo-slot-sub {
     font-size: 0.75rem;
-    font-weight: var(--font-weight-subheading);
-    letter-spacing: 0.08em;
-    color: var(--color-gold-text);
-    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.75);
+    line-height: 1.4;
   }
 
-  .main-content h2 {
+  .photo-caption {
+    font-size: 0.75rem;
+    color: var(--color-slate);
+    margin: var(--space-2) 0 0;
+  }
+
+  .section-title {
+    font-size: 1.75rem;
+    font-weight: 800;
     color: var(--color-navy);
-    font-size: 2rem;
-    margin: var(--space-1) 0 var(--space-3);
+    margin: 0 0 var(--space-3);
   }
 
-  .main-content p {
-    font-size: 1rem;
+  .why-lead {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--color-navy);
+    margin-bottom: var(--space-3);
+  }
+
+  .text-col p {
+    font-size: 0.9375rem;
     line-height: 1.6;
     color: var(--color-ink);
     margin-bottom: var(--space-4);
   }
 
-  .principles-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--space-4);
-    margin: var(--space-6) 0;
+  /* Values Grid */
+  .values-section {
+    padding-bottom: var(--space-10);
+    border-bottom: 1px solid rgba(20, 41, 75, 0.08);
+    margin-bottom: var(--space-10);
   }
 
-  @media (min-width: 600px) {
-    .principles-grid {
+  .values-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-6) var(--space-8);
+    margin-top: var(--space-6);
+  }
+
+  @media (min-width: 768px) {
+    .values-grid {
       grid-template-columns: 1fr 1fr;
     }
   }
 
-  .principle-card {
-    background-color: var(--color-mist);
-    padding: var(--space-5);
-    border-radius: var(--radius-card);
-    border: 1px solid rgba(20, 41, 75, 0.08);
+  .value-item {
+    display: flex;
+    flex-direction: column;
   }
 
-  .principle-card h3 {
-    color: var(--color-navy);
+  .gold-top-rule {
+    width: 100%;
+    height: 2px;
+    background-color: var(--color-gold);
+    margin-bottom: var(--space-2);
+  }
+
+  .value-item h3 {
     font-size: 1.125rem;
-    margin: 0 0 var(--space-2);
+    font-weight: 700;
+    color: var(--color-navy);
+    margin: 0 0 6px;
   }
 
-  .principle-card p {
+  .value-item p {
     font-size: 0.875rem;
+    line-height: 1.55;
     color: var(--color-slate);
-    line-height: 1.5;
     margin: 0;
   }
 
-  .commercial-disclosure-card {
-    background-color: rgba(196, 154, 60, 0.08);
-    border: 1px solid rgba(196, 154, 60, 0.3);
-    border-radius: var(--radius-card);
-    padding: var(--space-6);
-    margin-top: var(--space-6);
-  }
-
-  .commercial-disclosure-card h3 {
-    color: var(--color-navy);
-    font-size: 1.25rem;
-    margin: 0 0 var(--space-2);
-  }
-
-  .commercial-disclosure-card p {
-    color: var(--color-slate);
-    font-size: 0.9375rem;
-    line-height: 1.5;
-    margin-bottom: var(--space-3);
-  }
-
-  .disclosure-link {
-    color: var(--color-navy);
-    font-weight: var(--font-weight-subheading);
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-  }
-
-  .disclosure-link:hover {
-    color: var(--color-gold-text);
-    text-decoration: underline;
-  }
-
-  .sidebar-about {
-    display: flex;
-    flex-direction: column;
+  /* Governance Section (Page 29) */
+  .governance-grid {
+    display: grid;
+    grid-template-columns: 1fr;
     gap: var(--space-4);
   }
 
-  .sidebar-card {
+  @media (min-width: 768px) {
+    .governance-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .gov-card {
     background-color: var(--color-mist);
+    border: 1px solid rgba(20, 41, 75, 0.1);
+    border-radius: 14px;
     padding: var(--space-6);
-    border-radius: var(--radius-card);
-    border: 1px solid rgba(20, 41, 75, 0.08);
-  }
-
-  .sidebar-card h3 {
-    color: var(--color-navy);
-    font-size: 1.125rem;
-    margin: 0 0 var(--space-3);
-  }
-
-  .scope-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
-    font-size: 0.875rem;
-    color: var(--color-slate);
-    line-height: 1.5;
-  }
-
-  .scope-list strong {
-    color: var(--color-navy);
-    display: block;
-    margin-bottom: 2px;
-  }
-
-  .contact-snippet p {
-    font-size: 0.875rem;
-    color: var(--color-slate);
-    margin-bottom: var(--space-4);
-  }
-
-  .btn-primary {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background-color: var(--color-gold);
-    color: var(--color-deep-navy);
-    font-weight: var(--font-weight-subheading);
-    padding: 12px 24px;
-    border-radius: var(--radius-pill);
     text-decoration: none;
-    transition: transform 0.15s ease, filter 0.15s ease;
+    color: inherit;
+    transition: transform 0.15s ease, border-color 0.15s ease;
   }
 
-  .btn-primary:hover {
-    filter: brightness(1.08);
-    transform: translateY(-1px);
+  .gov-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(20, 41, 75, 0.25);
+  }
+
+  .gov-card h3 {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--color-navy);
+    margin: 0 0 6px;
+  }
+
+  .gov-card p {
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--color-slate);
+    margin: 0;
   }
 </style>
-

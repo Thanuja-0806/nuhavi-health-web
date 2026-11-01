@@ -1,58 +1,77 @@
 ---
 /**
  * src/pages/en/about/commercial-relationships.astro
- * Commercial Relationships & Coordination Disclosure
+ * How Nuhavi is paid & Commercial relationships (Page 18 of Nuhavi Health Look and Feel PDF)
  */
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 ---
 
 <BaseLayout
-  title="Commercial Relationships & Revenue Disclosure | Nuhavi Health"
-  description="Clear disclosure on how Nuhavi Health operates, how we earn revenue, and our commitment to uninflated hospital pricing."
+  title="Commercial relationships | Nuhavi Health"
+  description="You pay us a coordination fee, agreed in writing before you commit. We do not accept referral fees or commissions from hospitals."
 >
   <div class="page-container">
-    <header class="page-header">
-      <div class="container">
-        <nav class="breadcrumb" aria-label="Breadcrumb">
-          <ol>
-            <li><a href="/en/">Home</a></li>
-            <li><a href="/en/about/">About</a></li>
-            <li aria-current="page">Commercial Relationships</li>
-          </ol>
-        </nav>
-        <span class="eyebrow">TRANSPARENCY STANDARD</span>
-        <h1 class="page-title">Commercial Relationships Disclosure</h1>
+    <div class="container main-content">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <ol>
+          <li><a href="/en/">Home</a></li>
+          <li><a href="/en/about/">About Nuhavi</a></li>
+          <li aria-current="page">Commercial relationships</li>
+        </ol>
+      </nav>
+
+      <!-- Gold 72x3 px rule above page title -->
+      <div class="gold-rule" aria-hidden="true"></div>
+
+      <header class="page-header">
+        <h1 class="page-title">How Nuhavi is paid</h1>
         <p class="page-deck">
-          Ethical medical travel requires complete commercial honesty. Here is a direct explanation of our business model, hospital agreements, and pricing protections.
+          You pay us a coordination fee, agreed in writing before you commit.
         </p>
-      </div>
-    </header>
+      </header>
 
-    <section class="policy-section">
-      <div class="container">
-        <div class="policy-body">
-          <h2>1. How Nuhavi Health is Funded</h2>
-          <p>
-            Nuhavi Health receives standardized coordination and international patient servicing fees directly from partner hospital networks. This covers our operational expenses: document translation, airport transfers, continuous bilingual assistance, and medical report logistics.
-          </p>
+      <div class="paid-grid">
+        <!-- Left: Policy Statement & Amber Confirmation -->
+        <div class="paid-left">
+          <div class="amber-statement-box">
+            <span class="amber-label">Needs confirmation:</span>
+            <p>
+              Policy statement to confirm against signed hospital agreements: "Nuhavi Health is paid only by patients. We do not accept referral fees, commissions, marketing payments or any other money or benefit from hospitals, doctors or their agents. Our hospital agreements say so in writing."
+            </p>
+          </div>
 
-          <h2>2. Zero Price Markups Guarantee</h2>
-          <p>
-            We strictly enforce a <strong>Zero Markup Policy</strong>. International patients pay the exact official hospital rate tariff. The medical estimate you receive from us originates from the hospital's clinical billing department, and payment is made directly to the hospital treasury upon registration.
-          </p>
+          <div class="links-block">
+            <a href="/en/how-it-works/costs-and-fees/" class="link-costs">Costs, estimates and our fee &rarr;</a>
+          </div>
+        </div>
 
-          <h2>3. Clinical Independence</h2>
-          <p>
-            Our fee arrangements are uniform across accredited partner hospitals, preventing any incentive to direct a patient toward one hospital over another based on commercial compensation. Hospital recommendations are based entirely on clinical suitability, doctor specialization, technology availability, and patient preference.
-          </p>
+        <!-- Right: Coordination Fee Panel with Gold Top Edge -->
+        <div class="paid-right">
+          <div class="fee-card">
+            <div class="gold-card-edge" aria-hidden="true"></div>
+            <h2 class="fee-card-title">Coordination fee</h2>
 
-          <div class="back-action">
-            <a href="/en/how-it-works/costs-and-fees/" class="btn-primary">View Costs & Fees Breakdown</a>
-            <a href="/en/about/" class="btn-secondary">Back to About Us</a>
+            <div class="amber-fee-box">
+              <span class="amber-label">Needs confirmation:</span>
+              <p>Fee amounts proposed in the business plan (US$450 oncology, US$350 orthopaedics). Founders to confirm before publishing.</p>
+            </div>
+
+            <h3 class="covers-heading">The fee covers</h3>
+            <ul class="covers-list">
+              <li>Coordinating the review of your records by a suitable hospital</li>
+              <li>Organising written treatment options and estimates</li>
+              <li>Help with the hospital invitation letter for your visa application</li>
+              <li>A coordinator who speaks your language, before, during and after treatment</li>
+              <li>Follow-up coordination after you return home (period to be confirmed)</li>
+            </ul>
+
+            <p class="fee-footer-note">
+              Hospital charges are paid to the hospital. Travel and stay are paid to providers unless you ask us to arrange them, in which case we show our charge first.
+            </p>
           </div>
         </div>
       </div>
-    </section>
+    </div>
   </div>
 </BaseLayout>
 
@@ -60,12 +79,7 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
   .page-container {
     background-color: var(--color-paper);
     color: var(--color-ink);
-  }
-
-  .page-header {
-    background: linear-gradient(180deg, var(--color-mist) 0%, var(--color-paper) 100%);
-    padding: var(--space-8) 0 var(--space-6);
-    border-bottom: 1px solid rgba(20, 41, 75, 0.08);
+    padding: var(--space-8) 0 var(--space-12);
   }
 
   .breadcrumb ol {
@@ -73,8 +87,8 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
     gap: var(--space-1);
     list-style: none;
     padding: 0;
-    margin: 0 0 var(--space-3);
-    font-size: 0.875rem;
+    margin: 0 0 var(--space-4);
+    font-size: 0.8125rem;
     color: var(--color-slate);
   }
 
@@ -89,90 +103,155 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
     text-decoration: none;
   }
 
-  .breadcrumb a:hover {
-    text-decoration: underline;
+  .gold-rule {
+    width: 72px;
+    height: 3px;
+    background-color: var(--color-gold);
+    margin-bottom: var(--space-3);
   }
 
-  .eyebrow {
-    display: inline-block;
-    font-size: 0.8125rem;
-    font-weight: var(--font-weight-subheading);
-    letter-spacing: 0.08em;
-    color: var(--color-gold-text);
-    text-transform: uppercase;
-    margin-bottom: var(--space-2);
+  .page-header {
+    margin-bottom: var(--space-8);
   }
 
   .page-title {
-    font-size: clamp(1.75rem, 3.5vw, 2.75rem);
-    font-weight: var(--font-weight-heading);
+    font-size: clamp(2.25rem, 4vw, 3.25rem);
+    font-weight: 800;
     color: var(--color-navy);
-    line-height: var(--line-height-heading);
-    margin: 0 0 var(--space-3);
+    line-height: 1.15;
+    margin: 0 0 var(--space-2);
   }
 
   .page-deck {
     font-size: 1.125rem;
-    font-weight: var(--font-weight-deck);
-    line-height: var(--line-height-body);
+    font-weight: 300;
+    line-height: 1.5;
     color: var(--color-slate);
-    max-width: 720px;
+    max-width: 680px;
     margin: 0;
   }
 
-  .policy-section {
-    padding: var(--space-8) 0 var(--space-12);
+  .paid-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
   }
 
-  .policy-body {
-    max-width: 760px;
+  @media (min-width: 850px) {
+    .paid-grid {
+      grid-template-columns: 5fr 7fr;
+      gap: var(--space-8);
+    }
   }
 
-  .policy-body h2 {
+  .amber-statement-box {
+    background-color: #FFF6E5;
+    border: 1px solid #C49A3C;
+    border-radius: 8px;
+    padding: 16px;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: #8A6726;
+  }
+
+  .amber-label {
+    display: block;
+    font-weight: 700;
+    margin-bottom: 4px;
+    color: #8A6726;
+  }
+
+  .amber-statement-box p {
+    margin: 0;
+  }
+
+  .links-block {
+    margin-top: var(--space-6);
+  }
+
+  .link-costs {
     color: var(--color-navy);
-    font-size: 1.375rem;
-    margin: var(--space-6) 0 var(--space-2);
+    font-weight: 700;
+    font-size: 0.9375rem;
+    text-decoration: underline;
   }
 
-  .policy-body h2:first-of-type {
-    margin-top: 0;
+  /* Fee Card with Gold Top Edge */
+  .fee-card {
+    background-color: var(--color-paper);
+    border: 1px solid rgba(20, 41, 75, 0.12);
+    border-radius: 14px;
+    padding: 0 var(--space-6) var(--space-6);
+    position: relative;
+    overflow: hidden;
   }
 
-  .policy-body p {
-    font-size: 1rem;
-    line-height: 1.6;
-    color: var(--color-ink);
+  .gold-card-edge {
+    width: calc(100% + 48px);
+    height: 4px;
+    background-color: var(--color-gold);
+    margin: 0 -24px 20px;
+  }
+
+  .fee-card-title {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--color-navy);
+    margin: 0 0 var(--space-3);
+  }
+
+  .amber-fee-box {
+    background-color: #FFF6E5;
+    border: 1px solid #C49A3C;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 0.8125rem;
+    line-height: 1.45;
+    color: #8A6726;
     margin-bottom: var(--space-4);
   }
 
-  .back-action {
-    display: flex;
-    gap: var(--space-3);
-    margin-top: var(--space-8);
-    flex-wrap: wrap;
+  .amber-fee-box p {
+    margin: 0;
   }
 
-  .btn-primary {
-    display: inline-flex;
-    align-items: center;
-    background-color: var(--color-gold);
-    color: var(--color-deep-navy);
-    font-weight: var(--font-weight-subheading);
-    padding: 12px 24px;
-    border-radius: var(--radius-pill);
-    text-decoration: none;
-  }
-
-  .btn-secondary {
-    display: inline-flex;
-    align-items: center;
-    background: transparent;
-    border: 1.5px solid var(--color-navy);
+  .covers-heading {
+    font-size: 0.9375rem;
+    font-weight: 700;
     color: var(--color-navy);
-    font-weight: var(--font-weight-subheading);
-    padding: 12px 24px;
-    border-radius: var(--radius-pill);
-    text-decoration: none;
+    margin: 0 0 10px;
+  }
+
+  .covers-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 var(--space-4);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .covers-list li {
+    font-size: 0.875rem;
+    line-height: 1.45;
+    color: var(--color-ink);
+    padding-left: 20px;
+    position: relative;
+  }
+
+  .covers-list li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: var(--color-navy);
+    font-weight: 700;
+  }
+
+  .fee-footer-note {
+    font-size: 0.75rem;
+    color: var(--color-slate);
+    line-height: 1.45;
+    margin: 0;
   }
 </style>
-

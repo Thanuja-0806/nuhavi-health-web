@@ -1,48 +1,49 @@
 ---
 /**
  * src/pages/en/stories/index.astro
- * International Patient Experiences & Stories
+ * Patient stories (Page 25 of Nuhavi Health Look and Feel PDF)
  */
 import BaseLayout from '../../../layouts/BaseLayout.astro';
-import PatientStories from '../../../components/home/PatientStories.astro';
 ---
 
 <BaseLayout
-  title="Patient Experiences & Real Journeys | Nuhavi Health"
-  description="Read candid international patient stories covering oncology treatment reviews, surgical journeys, and recovery experiences in India."
+  title="Patient stories | Nuhavi Health"
+  description="Stories from real patients and families will appear here, told in their words and with their permission."
 >
   <div class="page-container">
-    <header class="page-header">
-      <div class="container">
-        <nav class="breadcrumb" aria-label="Breadcrumb">
-          <ol>
-            <li><a href="/en/">Home</a></li>
-            <li aria-current="page">Stories</li>
-          </ol>
-        </nav>
-        <span class="eyebrow">PATIENT EXPERIENCES</span>
-        <h1 class="page-title">Real Journeys, Honest Perspectives</h1>
+    <div class="container main-content">
+      <!-- Gold 72x3 px rule above page title -->
+      <div class="gold-rule" aria-hidden="true"></div>
+
+      <header class="page-header">
+        <h1 class="page-title">Patient stories</h1>
         <p class="page-deck">
-          Every healthcare journey is deeply personal. We share verifiable experiences of patients who navigated medical decisions, cross-border travel, and hospital care through our coordination.
+          Stories from real patients and families will appear here, told in their words and with their permission.
         </p>
-      </div>
-    </header>
+      </header>
 
-    <!-- Patient Stories Core Component -->
-    <PatientStories />
-
-    <!-- Editorial Integrity Callout -->
-    <section class="editorial-section">
-      <div class="container">
-        <div class="editorial-box">
-          <h3>Our Policy on Patient Stories</h3>
-          <p>
-            We adhere strictly to patient privacy standards and never manufacture miraculous outcome claims. Medical treatment outcomes vary by individual diagnosis, disease stage, and hospital protocol. Patient consent has been obtained for all shared accounts.
+      <div class="stories-grid">
+        <!-- Left Box: Empty state by design -->
+        <div class="story-box empty-state">
+          <h2 class="box-title">No stories are published yet.</h2>
+          <p class="box-text">
+            We are a new company. Rather than show invented testimonials, we will wait for real ones.
           </p>
-          <a href="/en/request-opinion/" class="btn-primary">Discuss Your Case with a Coordinator</a>
+        </div>
+
+        <!-- Right Box: Rules for patient stories -->
+        <div class="story-box rules-box">
+          <h2 class="box-title">Our rules for patient stories</h2>
+          <ul class="rules-list">
+            <li>Every story is published only with the patient's written consent (or a parent's or guardian's for a child).</li>
+            <li>The patient approves the final words and photos, and can ask us to remove the story at any time.</li>
+            <li>Stories describe the coordination experience. They do not promise that anyone else will have the same result.</li>
+            <li>We do not name or promote individual doctors in stories.</li>
+            <li>Identifying details are removed unless the patient chooses to include them.</li>
+          </ul>
         </div>
       </div>
-    </section>
+    </div>
   </div>
 </BaseLayout>
 
@@ -50,109 +51,101 @@ import PatientStories from '../../../components/home/PatientStories.astro';
   .page-container {
     background-color: var(--color-paper);
     color: var(--color-ink);
+    padding: var(--space-8) 0 var(--space-12);
+  }
+
+  .gold-rule {
+    width: 72px;
+    height: 3px;
+    background-color: var(--color-gold);
+    margin-bottom: var(--space-3);
   }
 
   .page-header {
-    background: linear-gradient(180deg, var(--color-mist) 0%, var(--color-paper) 100%);
-    padding: var(--space-8) 0 var(--space-6);
-    border-bottom: 1px solid rgba(20, 41, 75, 0.08);
-  }
-
-  .breadcrumb ol {
-    display: flex;
-    gap: var(--space-1);
-    list-style: none;
-    padding: 0;
-    margin: 0 0 var(--space-3);
-    font-size: 0.875rem;
-    color: var(--color-slate);
-  }
-
-  .breadcrumb li + li::before {
-    content: "/";
-    margin-right: var(--space-1);
-    color: var(--color-slate);
-  }
-
-  .breadcrumb a {
-    color: var(--color-navy);
-    text-decoration: none;
-  }
-
-  .breadcrumb a:hover {
-    text-decoration: underline;
-  }
-
-  .eyebrow {
-    display: inline-block;
-    font-size: 0.8125rem;
-    font-weight: var(--font-weight-subheading);
-    letter-spacing: 0.08em;
-    color: var(--color-gold-text);
-    text-transform: uppercase;
-    margin-bottom: var(--space-2);
+    margin-bottom: var(--space-8);
   }
 
   .page-title {
-    font-size: clamp(2rem, 4vw, 3rem);
-    font-weight: var(--font-weight-heading);
+    font-size: clamp(2.25rem, 4vw, 3.25rem);
+    font-weight: 800;
     color: var(--color-navy);
-    line-height: var(--line-height-heading);
-    margin: 0 0 var(--space-3);
+    line-height: 1.15;
+    margin: 0 0 var(--space-2);
   }
 
   .page-deck {
     font-size: 1.125rem;
-    font-weight: var(--font-weight-deck);
-    line-height: var(--line-height-body);
+    font-weight: 300;
+    line-height: 1.5;
     color: var(--color-slate);
-    max-width: 720px;
+    max-width: 680px;
     margin: 0;
   }
 
-  .editorial-section {
-    padding: var(--space-8) 0 var(--space-12);
+  .stories-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+  }
+
+  @media (min-width: 800px) {
+    .stories-grid {
+      grid-template-columns: 5fr 7fr;
+      gap: var(--space-8);
+    }
+  }
+
+  .story-box {
     background-color: var(--color-mist);
+    border: 1px solid rgba(20, 41, 75, 0.12);
+    border-radius: 14px;
+    padding: var(--space-6);
   }
 
-  .editorial-box {
-    background-color: var(--color-paper);
-    border: 1px solid rgba(20, 41, 75, 0.08);
-    padding: var(--space-8);
-    border-radius: var(--radius-card);
-    text-align: center;
-    max-width: 720px;
-    margin: 0 auto;
+  @media (min-width: 768px) {
+    .story-box {
+      padding: var(--space-8);
+    }
   }
 
-  .editorial-box h3 {
-    color: var(--color-navy);
+  .box-title {
     font-size: 1.375rem;
-    margin: 0 0 var(--space-2);
+    font-weight: 700;
+    color: var(--color-navy);
+    margin: 0 0 var(--space-3);
+    line-height: 1.3;
   }
 
-  .editorial-box p {
-    color: var(--color-slate);
+  .box-text {
     font-size: 0.9375rem;
     line-height: 1.6;
-    margin: 0 0 var(--space-4);
+    color: var(--color-slate);
+    margin: 0;
   }
 
-  .btn-primary {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background-color: var(--color-gold);
-    color: var(--color-deep-navy);
-    font-weight: var(--font-weight-subheading);
-    padding: 12px 28px;
-    border-radius: var(--radius-pill);
-    text-decoration: none;
-    transition: transform 0.15s ease, filter 0.15s ease;
+  .rules-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
   }
 
-  .btn-primary:hover {
-    filter: brightness(1.08);
-    transform: translateY(-1px);
+  .rules-list li {
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--color-ink);
+    padding-left: 20px;
+    position: relative;
+  }
+
+  .rules-list li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: var(--color-navy);
+    font-weight: 700;
   }
 </style>

@@ -1,0 +1,161 @@
+---
+/**
+ * src/pages/en/legal/privacy/index.astro
+ * Legal page (privacy notice) (Page 33 of Nuhavi Health Look and Feel PDF)
+ */
+import BaseLayout from '../../../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Privacy notice | Nuhavi Health"
+  description="Privacy notice and personal data handling policy of Nuhavi Health Pvt. Ltd., Hyderabad, India."
+>
+  <div class="page-container">
+    <div class="container main-content">
+      <!-- Gold 72x3 px rule above page title -->
+      <div class="gold-rule" aria-hidden="true"></div>
+
+      <header class="page-header">
+        <h1 class="page-title">Privacy notice</h1>
+      </header>
+
+      <div class="legal-body">
+        <!-- Amber Banner -->
+        <div class="amber-legal-banner">
+          <span class="amber-tag">Needs confirmation:</span>
+          Legal review required. This page is a structure for counsel to complete; it is not final legal text.
+        </div>
+
+        <section class="legal-section">
+          <h2>Who we are</h2>
+          <p>
+            Nuhavi Health Pvt. Ltd., Hyderabad, India, is responsible for the personal data described in this notice.
+          </p>
+        </section>
+
+        <section class="legal-section">
+          <h2>What we collect</h2>
+          <p>
+            Enquiry form: name, country, language, contact details, area of care, a short description and your consents. Later, only if you go ahead: medical records you upload through a private link, and identity or travel documents when needed for a visa letter.
+          </p>
+        </section>
+
+        <section class="legal-section">
+          <h2>Why we use it</h2>
+          <p>
+            To respond to your enquiry and coordinate your care (with your consent); to share records with hospitals you agree to; to meet legal obligations. Marketing only if you separately opt in.
+          </p>
+        </section>
+
+        <section class="legal-section">
+          <h2>Who we share it with</h2>
+          <p>
+            Hospitals you agree to; service providers who process data for us under written contracts (cloud hosting, customer-relationship software, messaging). We do not sell personal data.
+          </p>
+        </section>
+
+        <section class="legal-section">
+          <h2>Transfers between countries</h2>
+          <p>
+            Your data is processed in India. Some countries, including Uzbekistan, restrict transfers of their residents' data; we follow those rules and will explain what applies to you.
+          </p>
+        </section>
+
+        <section class="legal-section">
+          <h2>How long we keep it</h2>
+          <p>
+            Retention periods for enquiries and medical records — to be set with counsel.
+          </p>
+        </section>
+
+        <section class="legal-section">
+          <h2>Your rights</h2>
+          <p>
+            Access, correction, erasure, withdrawal of consent and grievance redress. Contact our grievance officer.
+          </p>
+        </section>
+
+        <section class="legal-section">
+          <h2>Security</h2>
+          <p>
+            Encryption in transit and at rest; access limited to staff who need it, and logged access to records.
+          </p>
+        </section>
+
+        <section class="legal-section">
+          <h2>Changes to this notice</h2>
+          <p>
+            We will show the date of the latest version at the top of this page.
+          </p>
+        </section>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .page-container {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    padding: var(--space-8) 0 var(--space-12);
+  }
+
+  .gold-rule {
+    width: 72px;
+    height: 3px;
+    background-color: var(--color-gold);
+    margin-bottom: var(--space-3);
+  }
+
+  .page-header {
+    margin-bottom: var(--space-6);
+  }
+
+  .page-title {
+    font-size: clamp(2.25rem, 4vw, 3.25rem);
+    font-weight: 800;
+    color: var(--color-navy);
+    line-height: 1.15;
+    margin: 0;
+  }
+
+  .legal-body {
+    max-width: 680px;
+  }
+
+  /* Amber Banner matching PDF Page 33 */
+  .amber-legal-banner {
+    background-color: #FFF6E5;
+    border: 1px solid #C49A3C;
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-size: 0.75rem;
+    line-height: 1.45;
+    color: #8A6726;
+    margin-bottom: var(--space-6);
+  }
+
+  .amber-tag {
+    font-weight: 700;
+    margin-right: 4px;
+  }
+
+  .legal-section {
+    margin-bottom: var(--space-5);
+  }
+
+  .legal-section h2 {
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: var(--color-navy);
+    margin: 0 0 6px;
+  }
+
+  .legal-section p {
+    font-size: 0.8125rem;
+    line-height: 1.6;
+    color: var(--color-slate);
+    margin: 0;
+  }
+</style>
+

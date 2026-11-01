@@ -1,74 +1,281 @@
 ---
 /**
  * src/pages/en/how-it-works/index.astro
- * How Nuhavi Health Works - Overview & Patient Journey
+ * How it works (Page 16 of Nuhavi Health Look and Feel PDF)
  */
 import BaseLayout from '../../../layouts/BaseLayout.astro';
-import PatientJourney from '../../../components/home/PatientJourney.astro';
-import CoordinatorBenefits from '../../../components/home/CoordinatorBenefits.astro';
 ---
 
 <BaseLayout
-  title="How It Works | Nuhavi Health Coordination"
-  description="Learn how Nuhavi Health guides you step-by-step through medical review, hospital selection, travel logistics, and hospital care in India."
+  title="How it works | Nuhavi Health"
+  description="Seven steps, one coordinator. Open each step to see what happens, what we need from you and what you receive."
 >
   <div class="page-container">
-    <!-- Header Hero -->
-    <header class="page-header">
-      <div class="container">
-        <nav class="breadcrumb" aria-label="Breadcrumb">
-          <ol>
-            <li><a href="/en/">Home</a></li>
-            <li aria-current="page">How it works</li>
-          </ol>
-        </nav>
-        <span class="eyebrow">COORDINATION PROCESS</span>
-        <h1 class="page-title">How Nuhavi Health Works</h1>
-        <p class="page-deck">
-          We act as your independent medical travel coordinator — organizing clinical evaluations, clarifying hospital estimates, and supporting you before departure, during hospital admission, and after returning home.
-        </p>
-      </div>
-    </header>
+    <div class="container main-content">
+      <!-- Gold 72x3 px rule above page title -->
+      <div class="gold-rule" aria-hidden="true"></div>
 
-    <!-- Transparent Costs Callout Card -->
-    <section class="cost-callout-section">
-      <div class="container">
-        <div class="cost-banner">
-          <div class="cost-banner-content">
-            <span class="banner-badge">FINANCIAL TRANSPARENCY</span>
-            <h2>Understanding treatment costs and coordination fees</h2>
+      <header class="page-header">
+        <h1 class="page-title">How it works</h1>
+        <p class="page-deck">
+          Seven steps, one coordinator. Open each step to see what happens, what we need from you and what you receive.
+        </p>
+      </header>
+
+      <div class="two-col-layout">
+        <!-- Left Column: Responsibility & Video -->
+        <div class="left-col">
+          <h2 class="section-title">Two kinds of responsibility</h2>
+
+          <div class="responsibility-text">
             <p>
-              We believe in total financial clarity. Review detailed hospital estimates, understand what is included, and see exactly how coordination and hospital billing work.
+              <strong>Nuhavi coordinates:</strong> We organise records, reviews, estimates, appointments, travel and follow-up. We do not give medical advice.
+            </p>
+            <p>
+              <strong>The hospital treats:</strong> The hospital's doctors review your case, recommend treatment, examine and treat you, and are responsible for your clinical care.
+            </p>
+            <p class="unclear-note">
+              If anything is ever unclear about who is responsible for something, ask your coordinator. We will answer in writing.
             </p>
           </div>
-          <div class="cost-banner-action">
-            <a href="/en/how-it-works/costs-and-fees/" class="btn-primary">
-              Read Costs & Fees Guide
-            </a>
+
+          <!-- Video slot placeholder (16:9) -->
+          <div class="video-slot" role="img" aria-label="Video placeholder">
+            <div class="video-overlay">
+              <div class="play-button" aria-hidden="true">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+              </div>
+              <span class="video-heading">Video to come</span>
+              <span class="video-sub">How Nuhavi works, explained by a care coordinator (90 seconds)</span>
+            </div>
+          </div>
+          <p class="video-caption">90 seconds: a coordinator walks you through the seven steps.</p>
+
+          <!-- Buttons: Pills, at least 48px tall, no arrows -->
+          <div class="btn-group">
+            <a href="/en/request-opinion/" class="btn-pill btn-navy">Request a medical opinion</a>
+            <a href="/en/how-it-works/costs-and-fees/" class="btn-pill btn-outline">Costs and our fee</a>
+          </div>
+        </div>
+
+        <!-- Right Column: Seven-Step Journey -->
+        <div class="right-col">
+          <div class="steps-container">
+            <!-- Step 1 (Open by default) -->
+            <details class="step-item" open>
+              <summary class="step-summary">
+                <span class="step-number">1</span>
+                <span class="step-title">Send an enquiry</span>
+                <span class="step-chevron" aria-hidden="true"></span>
+              </summary>
+              <div class="step-body">
+                <p class="step-intro">Tell us briefly what you need, in your language. Do not paste medical reports into the form.</p>
+                <div class="four-box-grid">
+                  <div class="step-box">
+                    <span class="box-role">You</span>
+                    <p>Name, country, contact details and a short description.</p>
+                  </div>
+                  <div class="step-box gold-border">
+                    <span class="box-role">Nuhavi (coordination)</span>
+                    <p>Gives you an enquiry number and assigns a coordinator who speaks your language.</p>
+                  </div>
+                  <div class="step-box navy-border">
+                    <span class="box-role">Treating hospital (clinical)</span>
+                    <p>Not involved yet.</p>
+                  </div>
+                  <div class="step-box green-border">
+                    <span class="box-role">What you receive</span>
+                    <p>An acknowledgement with your enquiry number.</p>
+                  </div>
+                </div>
+              </div>
+            </details>
+
+            <!-- Step 2 -->
+            <details class="step-item">
+              <summary class="step-summary">
+                <span class="step-number">2</span>
+                <span class="step-title">Share your records securely</span>
+                <span class="step-chevron" aria-hidden="true"></span>
+              </summary>
+              <div class="step-body">
+                <p class="step-intro">Straight after your enquiry, agree to secure storage and we email you a private upload link — or do it later, when your coordinator asks.</p>
+                <div class="four-box-grid">
+                  <div class="step-box">
+                    <span class="box-role">You</span>
+                    <p>Biopsy, scan reports, treatment summary and doctor notes.</p>
+                  </div>
+                  <div class="step-box gold-border">
+                    <span class="box-role">Nuhavi (coordination)</span>
+                    <p>Checks files are complete and indexes documents for specialists.</p>
+                  </div>
+                  <div class="step-box navy-border">
+                    <span class="box-role">Treating hospital (clinical)</span>
+                    <p>Prepares appropriate department team for review.</p>
+                  </div>
+                  <div class="step-box green-border">
+                    <span class="box-role">What you receive</span>
+                    <p>Confirmation when records are received and verified.</p>
+                  </div>
+                </div>
+              </div>
+            </details>
+
+            <!-- Step 3 -->
+            <details class="step-item">
+              <summary class="step-summary">
+                <span class="step-number">3</span>
+                <span class="step-title">Clinical review</span>
+                <span class="step-chevron" aria-hidden="true"></span>
+              </summary>
+              <div class="step-body">
+                <p class="step-intro">With your consent, we send your records to a suitable hospital team for review.</p>
+                <div class="four-box-grid">
+                  <div class="step-box">
+                    <span class="box-role">You</span>
+                    <p>Provide clarification on symptoms or recent tests if requested.</p>
+                  </div>
+                  <div class="step-box gold-border">
+                    <span class="box-role">Nuhavi (coordination)</span>
+                    <p>Liaises between you and specialists, tracking turn-around time.</p>
+                  </div>
+                  <div class="step-box navy-border">
+                    <span class="box-role">Treating hospital (clinical)</span>
+                    <p>Tumor board or specialty panel analyzes feasibility and protocols.</p>
+                  </div>
+                  <div class="step-box green-border">
+                    <span class="box-role">What you receive</span>
+                    <p>Written preliminary assessment from the hospital team.</p>
+                  </div>
+                </div>
+              </div>
+            </details>
+
+            <!-- Step 4 -->
+            <details class="step-item">
+              <summary class="step-summary">
+                <span class="step-number">4</span>
+                <span class="step-title">Understand your options</span>
+                <span class="step-chevron" aria-hidden="true"></span>
+              </summary>
+              <div class="step-body">
+                <p class="step-intro">The hospital's opinion explains what they recommend and why.</p>
+                <div class="four-box-grid">
+                  <div class="step-box">
+                    <span class="box-role">You</span>
+                    <p>Review the protocol with your family and local treating physician.</p>
+                  </div>
+                  <div class="step-box gold-border">
+                    <span class="box-role">Nuhavi (coordination)</span>
+                    <p>Explains terminology in plain words and translates clinical notes.</p>
+                  </div>
+                  <div class="step-box navy-border">
+                    <span class="box-role">Treating hospital (clinical)</span>
+                    <p>Answers specific follow-up questions submitted by coordinator.</p>
+                  </div>
+                  <div class="step-box green-border">
+                    <span class="box-role">What you receive</span>
+                    <p>Clarifications in writing with no push toward any decision.</p>
+                  </div>
+                </div>
+              </div>
+            </details>
+
+            <!-- Step 5 -->
+            <details class="step-item">
+              <summary class="step-summary">
+                <span class="step-number">5</span>
+                <span class="step-title">Review estimates</span>
+                <span class="step-chevron" aria-hidden="true"></span>
+              </summary>
+              <div class="step-body">
+                <p class="step-intro">You see written estimates with what is included, what is not and how long they are valid.</p>
+                <div class="four-box-grid">
+                  <div class="step-box">
+                    <span class="box-role">You</span>
+                    <p>Assess financial requirements, payment methods, and room tiers.</p>
+                  </div>
+                  <div class="step-box gold-border">
+                    <span class="box-role">Nuhavi (coordination)</span>
+                    <p>Presents itemized breakdown with transparent zero-markup guarantee.</p>
+                  </div>
+                  <div class="step-box navy-border">
+                    <span class="box-role">Treating hospital (clinical)</span>
+                    <p>Issues official proforma with package inclusions & validity.</p>
+                  </div>
+                  <div class="step-box green-border">
+                    <span class="box-role">What you receive</span>
+                    <p>Official 12-field estimate breakdown and our coordination agreement.</p>
+                  </div>
+                </div>
+              </div>
+            </details>
+
+            <!-- Step 6 -->
+            <details class="step-item">
+              <summary class="step-summary">
+                <span class="step-number">6</span>
+                <span class="step-title">Plan appointments and travel</span>
+                <span class="step-chevron" aria-hidden="true"></span>
+              </summary>
+              <div class="step-body">
+                <p class="step-intro">Once you decide, we plan the visit around your hospital appointments.</p>
+                <div class="four-box-grid">
+                  <div class="step-box">
+                    <span class="box-role">You</span>
+                    <p>Apply for Indian e-Medical visa and book flight tickets.</p>
+                  </div>
+                  <div class="step-box gold-border">
+                    <span class="box-role">Nuhavi (coordination)</span>
+                    <p>Procures hospital visa invitation letter and plans airport reception.</p>
+                  </div>
+                  <div class="step-box navy-border">
+                    <span class="box-role">Treating hospital (clinical)</span>
+                    <p>Schedules initial in-person consult, scan slots, and admission bed.</p>
+                  </div>
+                  <div class="step-box green-border">
+                    <span class="box-role">What you receive</span>
+                    <p>Confirmed itinerary with assigned coordinator contact details.</p>
+                  </div>
+                </div>
+              </div>
+            </details>
+
+            <!-- Step 7 -->
+            <details class="step-item">
+              <summary class="step-summary">
+                <span class="step-number">7</span>
+                <span class="step-title">Follow-up after you return home</span>
+                <span class="step-chevron" aria-hidden="true"></span>
+              </summary>
+              <div class="step-body">
+                <p class="step-intro">Care continues after discharge, so we stay in touch.</p>
+                <div class="four-box-grid">
+                  <div class="step-box">
+                    <span class="box-role">You</span>
+                    <p>Share post-return lab values and recovery progress with coordinator.</p>
+                  </div>
+                  <div class="step-box gold-border">
+                    <span class="box-role">Nuhavi (coordination)</span>
+                    <p>Schedules tele-consultations with treating specialists in India.</p>
+                  </div>
+                  <div class="step-box navy-border">
+                    <span class="box-role">Treating hospital (clinical)</span>
+                    <p>Reviews recovery milestones and updates maintenance medications.</p>
+                  </div>
+                  <div class="step-box green-border">
+                    <span class="box-role">What you receive</span>
+                    <p>Continuous clinical liaison until treatment cycle is complete.</p>
+                  </div>
+                </div>
+              </div>
+            </details>
           </div>
         </div>
       </div>
-    </section>
-
-    <!-- 7-Step Journey Component -->
-    <PatientJourney />
-
-    <!-- Coordinator Benefits Section -->
-    <CoordinatorBenefits />
-
-    <!-- Next Steps CTA -->
-    <section class="cta-section">
-      <div class="container">
-        <div class="cta-card">
-          <h2>Ready to discuss your medical situation?</h2>
-          <p>Send your medical records for a confidential review by qualified specialist teams in India.</p>
-          <div class="cta-actions">
-            <a href="/en/request-opinion/" class="btn-primary">Request a medical opinion</a>
-            <a href="/en/contact/" class="btn-secondary">Contact our team</a>
-          </div>
-        </div>
-      </div>
-    </section>
+    </div>
   </div>
 </BaseLayout>
 
@@ -76,193 +283,296 @@ import CoordinatorBenefits from '../../../components/home/CoordinatorBenefits.as
   .page-container {
     background-color: var(--color-paper);
     color: var(--color-ink);
+    padding: var(--space-8) 0 var(--space-12);
+  }
+
+  /* Gold 72x3 px rule */
+  .gold-rule {
+    width: 72px;
+    height: 3px;
+    background-color: var(--color-gold);
+    margin-bottom: var(--space-3);
   }
 
   .page-header {
-    background: linear-gradient(180deg, var(--color-mist) 0%, var(--color-paper) 100%);
-    padding: var(--space-8) 0 var(--space-6);
-    border-bottom: 1px solid rgba(20, 41, 75, 0.08);
-  }
-
-  .breadcrumb ol {
-    display: flex;
-    gap: var(--space-1);
-    list-style: none;
-    padding: 0;
-    margin: 0 0 var(--space-3);
-    font-size: 0.875rem;
-    color: var(--color-slate);
-  }
-
-  .breadcrumb li + li::before {
-    content: "/";
-    margin-right: var(--space-1);
-    color: var(--color-slate);
-  }
-
-  .breadcrumb a {
-    color: var(--color-navy);
-    text-decoration: none;
-  }
-
-  .breadcrumb a:hover {
-    text-decoration: underline;
-  }
-
-  .eyebrow {
-    display: inline-block;
-    font-size: 0.8125rem;
-    font-weight: var(--font-weight-subheading);
-    letter-spacing: 0.08em;
-    color: var(--color-gold-text);
-    text-transform: uppercase;
-    margin-bottom: var(--space-2);
+    margin-bottom: var(--space-8);
   }
 
   .page-title {
-    font-size: clamp(2rem, 4vw, 3rem);
-    font-weight: var(--font-weight-heading);
+    font-size: clamp(2.25rem, 4vw, 3.25rem);
+    font-weight: 800;
     color: var(--color-navy);
-    line-height: var(--line-height-heading);
-    margin: 0 0 var(--space-3);
+    line-height: 1.15;
+    margin: 0 0 var(--space-2);
   }
 
   .page-deck {
     font-size: 1.125rem;
-    font-weight: var(--font-weight-deck);
-    line-height: var(--line-height-body);
-    color: var(--color-slate);
-    max-width: 720px;
-    margin: 0;
-  }
-
-  .cost-callout-section {
-    padding: var(--space-6) 0;
-    background-color: var(--color-paper);
-  }
-
-  .cost-banner {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-4);
-    background-color: var(--color-deep-navy);
-    color: var(--color-paper);
-    padding: var(--space-6);
-    border-radius: var(--radius-card);
-    border: 1px solid rgba(196, 154, 60, 0.3);
-  }
-
-  @media (min-width: 768px) {
-    .cost-banner {
-      flex-direction: row;
-      align-items: center;
-      justify-content: space-between;
-      padding: var(--space-6) var(--space-8);
-    }
-
-    .cost-banner-content {
-      max-width: 650px;
-    }
-  }
-
-  .banner-badge {
-    display: inline-block;
-    background-color: rgba(196, 154, 60, 0.2);
-    color: var(--color-gold);
-    font-size: 0.75rem;
-    font-weight: var(--font-weight-subheading);
-    padding: 4px 12px;
-    border-radius: var(--radius-pill);
-    letter-spacing: 0.06em;
-    margin-bottom: var(--space-2);
-  }
-
-  .cost-banner h2 {
-    color: var(--color-paper);
-    font-size: 1.5rem;
-    font-weight: var(--font-weight-subheading);
-    margin: 0 0 var(--space-2);
-  }
-
-  .cost-banner p {
-    color: rgba(255, 255, 255, 0.8);
-    margin: 0;
-    font-size: 0.9375rem;
+    font-weight: 300;
     line-height: 1.5;
+    color: var(--color-slate);
+    max-width: 680px;
+    margin: 0;
   }
 
-  .cost-banner-action {
-    flex-shrink: 0;
+  .two-col-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
   }
 
-  .btn-primary {
-    display: inline-flex;
+  @media (min-width: 992px) {
+    .two-col-layout {
+      grid-template-columns: 5fr 7fr;
+      gap: var(--space-10);
+    }
+  }
+
+  /* Left Column */
+  .section-title {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: var(--color-navy);
+    margin: 0 0 var(--space-4);
+    line-height: 1.25;
+  }
+
+  .responsibility-text p {
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--color-ink);
+    margin-bottom: var(--space-3);
+  }
+
+  .responsibility-text strong {
+    color: var(--color-navy);
+    font-weight: 700;
+  }
+
+  .unclear-note {
+    font-size: 0.875rem !important;
+    color: var(--color-slate) !important;
+    margin-bottom: var(--space-5) !important;
+  }
+
+  /* Video slot placeholder (16:9 ratio, dark navy) */
+  .video-slot {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background-color: var(--color-deep-navy);
+    border-radius: 14px;
+    display: flex;
     align-items: center;
     justify-content: center;
-    background-color: var(--color-gold);
-    color: var(--color-deep-navy);
-    font-weight: var(--font-weight-subheading);
-    padding: 12px 24px;
-    border-radius: var(--radius-pill);
-    text-decoration: none;
-    transition: transform 0.15s ease, filter 0.15s ease;
-  }
-
-  .btn-primary:hover {
-    filter: brightness(1.08);
-    transform: translateY(-1px);
-  }
-
-  .cta-section {
-    padding: var(--space-10) 0;
-    background-color: var(--color-mist);
-  }
-
-  .cta-card {
-    background-color: var(--color-paper);
-    padding: var(--space-8);
-    border-radius: var(--radius-card);
+    color: var(--color-paper);
+    padding: var(--space-4);
     text-align: center;
-    max-width: 760px;
-    margin: 0 auto;
-    border: 1px solid rgba(20, 41, 75, 0.08);
+    box-sizing: border-box;
   }
 
-  .cta-card h2 {
-    color: var(--color-navy);
-    font-size: 1.875rem;
-    font-weight: var(--font-weight-heading);
-    margin: 0 0 var(--space-2);
+  .video-overlay {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-2);
+    max-width: 320px;
   }
 
-  .cta-card p {
-    color: var(--color-slate);
+  .play-button {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-paper);
+    margin-bottom: 4px;
+  }
+
+  .video-heading {
     font-size: 1rem;
-    margin: 0 0 var(--space-4);
+    font-weight: 700;
+    letter-spacing: 0.02em;
   }
 
-  .cta-actions {
+  .video-sub {
+    font-size: 0.8125rem;
+    color: rgba(255, 255, 255, 0.75);
+    line-height: 1.4;
+  }
+
+  .video-caption {
+    font-size: 0.8125rem;
+    color: var(--color-slate);
+    margin: var(--space-2) 0 var(--space-5);
+  }
+
+  /* Buttons */
+  .btn-group {
     display: flex;
     gap: var(--space-3);
-    justify-content: center;
     flex-wrap: wrap;
   }
 
-  .btn-secondary {
+  .btn-pill {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    background: transparent;
-    border: 1.5px solid var(--color-navy);
-    color: var(--color-navy);
-    font-weight: var(--font-weight-subheading);
-    padding: 12px 24px;
-    border-radius: var(--radius-pill);
+    min-height: 48px;
+    padding: 0 24px;
+    border-radius: 999px;
+    font-size: 0.9375rem;
+    font-weight: 700;
     text-decoration: none;
-    transition: background 0.15s ease;
+    box-sizing: border-box;
+    transition: filter 0.15s ease, background-color 0.15s ease;
   }
 
-  .btn-secondary:hover {
-    background: rgba(20, 41, 75, 0.05);
+  .btn-navy {
+    background-color: var(--color-navy);
+    color: var(--color-paper);
+  }
+
+  .btn-navy:hover {
+    background-color: var(--color-deep-navy);
+  }
+
+  .btn-outline {
+    background-color: var(--color-paper);
+    color: var(--color-navy);
+    border: 1px solid var(--color-navy);
+  }
+
+  .btn-outline:hover {
+    background-color: var(--color-mist);
+  }
+
+  /* Right Column: Steps */
+  .steps-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .step-item {
+    border: 1px solid rgba(20, 41, 75, 0.12);
+    border-radius: 14px;
+    background-color: var(--color-paper);
+    overflow: hidden;
+    transition: border-color 0.2s ease;
+  }
+
+  .step-item[open] {
+    border-color: rgba(20, 41, 75, 0.25);
+  }
+
+  .step-summary {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    padding: 16px 20px;
+    cursor: pointer;
+    user-select: none;
+    font-weight: 700;
+    color: var(--color-navy);
+    gap: var(--space-3);
+  }
+
+  .step-summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .step-number {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background-color: var(--color-navy);
+    color: var(--color-paper);
+    font-size: 0.8125rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .step-title {
+    font-size: 1rem;
+    flex-grow: 1;
+  }
+
+  .step-chevron {
+    width: 8px;
+    height: 8px;
+    border-right: 2px solid var(--color-slate);
+    border-bottom: 2px solid var(--color-slate);
+    transform: rotate(45deg);
+    transition: transform 0.2s ease;
+    margin-right: 4px;
+  }
+
+  .step-item[open] .step-chevron {
+    transform: rotate(-135deg);
+  }
+
+  .step-body {
+    padding: 0 20px 20px;
+    border-top: 1px solid rgba(20, 41, 75, 0.08);
+  }
+
+  .step-intro {
+    font-size: 0.875rem;
+    color: var(--color-slate);
+    margin: 12px 0 16px;
+    line-height: 1.5;
+  }
+
+  /* 4-Box Grid matching PDF */
+  .four-box-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  @media (min-width: 600px) {
+    .four-box-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .step-box {
+    background-color: var(--color-mist);
+    border: 1px solid rgba(20, 41, 75, 0.1);
+    border-radius: 8px;
+    padding: 12px;
+  }
+
+  .step-box.gold-border {
+    border-left: 3px solid var(--color-gold);
+  }
+
+  .step-box.navy-border {
+    border-left: 3px solid var(--color-navy);
+  }
+
+  .step-box.green-border {
+    border-left: 3px solid var(--color-success);
+  }
+
+  .box-role {
+    display: block;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-slate);
+    margin-bottom: 4px;
+  }
+
+  .step-box p {
+    font-size: 0.8125rem;
+    line-height: 1.45;
+    color: var(--color-ink);
+    margin: 0;
   }
 </style>

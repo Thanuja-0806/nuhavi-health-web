@@ -1,0 +1,761 @@
+---
+/**
+ * src/pages/en/records/index.astro
+ * Secure upload page (Pages 32, 37, 38 of Nuhavi Health Look and Feel PDF)
+ * Features:
+ * - Demonstration mode banner.
+ * - Interactive file chooser & drag-and-drop dropzone.
+ * - Files chosen list with document type assignment and remove buttons (Page 37).
+ * - File validation: flags unaccepted file types (.exe, etc.) (Page 37).
+ * - Progress bar and "Received" state with summary alert (Page 37).
+ * - Uzbek resident mode: hides genetic options and shows amber warning (Page 38).
+ */
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Upload your medical reports | Nuhavi Health"
+  description="Your files go straight into encrypted storage. Only your coordinator and Nuhavi's doctors can open them, and a hospital sees them only after you agree."
+>
+  <div class="page-container">
+    <div class="container main-content">
+      <!-- Gold 72x3 px rule above page title -->
+      <div class="gold-rule" aria-hidden="true"></div>
+
+      <header class="page-header">
+        <h1 class="page-title">Upload your medical reports</h1>
+        <p class="page-deck">
+          Your files go straight into encrypted storage. Only your coordinator and Nuhavi's doctors can open them, and a hospital sees them only after you agree.
+        </p>
+      </header>
+
+      <div class="upload-layout">
+        <!-- Left: Upload Box -->
+        <div class="upload-main">
+          <!-- Demonstration mode banner (PDF Page 32 & 37) -->
+          <div class="demo-mode-banner">
+            Demonstration mode: nothing is uploaded or stored on this preview.
+          </div>
+
+          <!-- Uzbek resident mode toggle (PDF Page 38 interaction state) -->
+          <div class="uzbek-toggle-bar">
+            <label class="uzbek-checkbox-label">
+              <input type="checkbox" id="uzbekResidentToggle" />
+              <span>Simulate patient residing in Uzbekistan (hides genetic test options)</span>
+            </label>
+          </div>
+
+          <!-- Amber Warning for Uzbekistan Residents (PDF Page 38) -->
+          <div class="amber-warning-box" id="uzbekWarningBox" style="display: none;" role="note">
+            Patients living in Uzbekistan: please never upload genetic test results (for example BRCA or NGS reports). Uzbek law requires genetic data to stay in Uzbekistan.
+          </div>
+
+          <div class="upload-box-card">
+            <p class="ref-validity">
+              Reference <strong>DEMO-REFERENCE</strong> · link valid until Nov 1, 2026, 10:32 AM
+            </p>
+
+            <!-- Dropzone -->
+            <div class="dropzone" id="dropzone" role="button" tabindex="0" aria-label="Drop medical report files here">
+              <div class="upload-icon" aria-hidden="true">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 19V5M5 12l7-7 7 7"/>
+                </svg>
+              </div>
+              <p class="drop-title">Choose files or drop them here</p>
+              <p class="drop-specs">PDF, JPEG, PNG or a zipped scan up to 50 MB each · up to 40 files</p>
+              <input type="file" id="file-input" multiple style="display: none;" />
+            </div>
+
+            <!-- Chosen Files List (PDF Page 37) -->
+            <div class="chosen-files-list" id="files-list">
+              <!-- File 1: Biopsy -->
+              <div class="file-item-card" data-filename="biopsy-report.pdf" data-valid="true">
+                <div class="file-item-header">
+                  <div class="file-name-size">
+                    <strong class="file-name">biopsy-report.pdf</strong>
+                    <span class="file-size">1 KB</span>
+                  </div>
+                  <button type="button" class="btn-remove-file" aria-label="Remove biopsy-report.pdf">✕</button>
+                </div>
+                <div class="file-doc-select-wrap">
+                  <select class="doc-type-select" aria-label="Document type for biopsy-report.pdf">
+                    <option value="biopsy" selected>Biopsy or pathology report</option>
+                    <option value="scan">Scan report or images (CT, MRI, PET, X-ray)</option>
+                    <option value="blood">Blood tests</option>
+                    <option value="summary">Summary of treatment</option>
+                    <option value="genetic" class="genetic-option">Genetic test results (BRCA / NGS)</option>
+                    <option value="other">Other document</option>
+                  </select>
+                </div>
+                <div class="file-progress-bar-wrap" style="display: none;">
+                  <div class="file-progress-fill"></div>
+                  <span class="badge-received">Received</span>
+                </div>
+              </div>
+
+              <!-- File 2: CT Scan -->
+              <div class="file-item-card" data-filename="ct-scan-report.pdf" data-valid="true">
+                <div class="file-item-header">
+                  <div class="file-name-size">
+                    <strong class="file-name">ct-scan-report.pdf</strong>
+                    <span class="file-size">1 KB</span>
+                  </div>
+                  <button type="button" class="btn-remove-file" aria-label="Remove ct-scan-report.pdf">✕</button>
+                </div>
+                <div class="file-doc-select-wrap">
+                  <select class="doc-type-select" aria-label="Document type for ct-scan-report.pdf">
+                    <option value="biopsy">Biopsy or pathology report</option>
+                    <option value="scan" selected>Scan report or images (CT, MRI, PET, X-ray)</option>
+                    <option value="blood">Blood tests</option>
+                    <option value="summary">Summary of treatment</option>
+                    <option value="genetic" class="genetic-option">Genetic test results (BRCA / NGS)</option>
+                    <option value="other">Other document</option>
+                  </select>
+                </div>
+                <div class="file-progress-bar-wrap" style="display: none;">
+                  <div class="file-progress-fill"></div>
+                  <span class="badge-received">Received</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Demonstration: Add unaccepted file toggle (Page 37) -->
+            <div class="test-invalid-file-wrap">
+              <button type="button" class="btn-test-invalid" id="btn-toggle-invalid">
+                + Simulate adding unaccepted file (setup.exe)
+              </button>
+            </div>
+
+            <!-- Green Summary Message after Received (PDF Page 37) -->
+            <div class="received-summary-box" id="receivedSummaryBox" style="display: none;" role="status">
+              2 file(s) received (demonstration). Your coordinator will check them and tell you if anything is missing. You can add more files while this link is valid.
+            </div>
+
+            <!-- Upload Action Row -->
+            <div class="upload-action-row" id="action-row">
+              <button type="button" class="btn-upload" id="upload-btn">Upload files</button>
+              <p class="error-notice-upload" id="errorNoticeUpload" style="display: none;">
+                Remove the file(s) we cannot accept to continue
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: What to Send & Privacy -->
+        <aside class="upload-aside">
+          <div class="guide-card">
+            <h2 class="aside-title">What to send</h2>
+            <p class="aside-intro">The most recent reports matter most. Clear photos taken flat in good light are fine.</p>
+
+            <ul class="send-checklist">
+              <li>Biopsy or histopathology report</li>
+              <li>Immunohistochemistry (IHC) report, if done</li>
+              <li>Latest CT, MRI or PET-CT report</li>
+              <li>Scan images (disc or download link)</li>
+              <li>Blood tests from the last 4 weeks</li>
+              <li>Summary of treatment so far, with dates</li>
+              <li>Current medicines and allergies</li>
+            </ul>
+
+            <p class="special-note">
+              Joint replacement: recent standing X-rays and any MRI report. Identity documents only when your coordinator asks for the visa letter.
+            </p>
+          </div>
+
+          <div class="privacy-aside-card">
+            <h2 class="aside-title">Your privacy</h2>
+            <ul class="privacy-bullets">
+              <li>Encrypted in transit and at rest; checked for viruses on arrival.</li>
+              <li>Shared with a hospital only after you agree to that hospital.</li>
+              <li>You can ask us to delete your files at any time.</li>
+            </ul>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  function setupUploadPage() {
+    const dropzone = document.getElementById('dropzone');
+    const fileInput = document.getElementById('file-input') as HTMLInputElement | null;
+    const filesList = document.getElementById('files-list');
+    const uploadBtn = document.getElementById('upload-btn') as HTMLButtonElement | null;
+    const errorNotice = document.getElementById('errorNoticeUpload');
+    const receivedSummary = document.getElementById('receivedSummaryBox');
+    const uzbekToggle = document.getElementById('uzbekResidentToggle') as HTMLInputElement | null;
+    const uzbekWarning = document.getElementById('uzbekWarningBox');
+    const btnToggleInvalid = document.getElementById('btn-toggle-invalid');
+
+    if (dropzone && fileInput) {
+      dropzone.addEventListener('click', () => fileInput.click());
+
+      dropzone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropzone.classList.add('dragover');
+      });
+
+      dropzone.addEventListener('dragleave', () => {
+        dropzone.classList.remove('dragover');
+      });
+
+      dropzone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropzone.classList.remove('dragover');
+        if (e.dataTransfer && e.dataTransfer.files) {
+          handleAddedFiles(e.dataTransfer.files);
+        }
+      });
+
+      fileInput.addEventListener('change', () => {
+        if (fileInput.files) {
+          handleAddedFiles(fileInput.files);
+        }
+      });
+    }
+
+    function checkInvalidFiles() {
+      const invalidFiles = document.querySelectorAll('.file-item-card[data-valid="false"]');
+      if (invalidFiles.length > 0) {
+        if (uploadBtn) {
+          uploadBtn.setAttribute('disabled', 'true');
+          uploadBtn.classList.add('is-disabled');
+        }
+        if (errorNotice) errorNotice.style.display = 'block';
+      } else {
+        if (uploadBtn) {
+          uploadBtn.removeAttribute('disabled');
+          uploadBtn.classList.remove('is-disabled');
+        }
+        if (errorNotice) errorNotice.style.display = 'none';
+      }
+    }
+
+    // Uzbek Resident Toggle (PDF Page 38)
+    if (uzbekToggle && uzbekWarning) {
+      uzbekToggle.addEventListener('change', () => {
+        const isUzbek = uzbekToggle.checked;
+        uzbekWarning.style.display = isUzbek ? 'block' : 'none';
+        const geneticOptions = document.querySelectorAll('.genetic-option');
+        geneticOptions.forEach((opt) => {
+          (opt as HTMLOptionElement).hidden = isUzbek;
+        });
+      });
+    }
+
+    // Add unaccepted file simulation (.exe) (PDF Page 37)
+    if (btnToggleInvalid && filesList) {
+      btnToggleInvalid.addEventListener('click', () => {
+        const existingInvalid = document.querySelector('.file-item-card[data-filename="setup.exe"]');
+        if (existingInvalid) return;
+
+        const invalidCard = document.createElement('div');
+        invalidCard.className = 'file-item-card is-invalid-card';
+        invalidCard.setAttribute('data-filename', 'setup.exe');
+        invalidCard.setAttribute('data-valid', 'false');
+        invalidCard.innerHTML = `
+          <div class="file-item-header">
+            <div class="file-name-size">
+              <strong class="file-name file-error-text">setup.exe</strong>
+              <span class="file-size">1 KB</span>
+            </div>
+            <button type="button" class="btn-remove-file" aria-label="Remove setup.exe">✕</button>
+          </div>
+          <div class="file-doc-select-wrap">
+            <select class="doc-type-select" disabled>
+              <option>What is this document?</option>
+            </select>
+          </div>
+          <p class="file-error-msg">This file type is not accepted.</p>
+        `;
+
+        filesList.appendChild(invalidCard);
+        setupRemoveButtons();
+        checkInvalidFiles();
+      });
+    }
+
+    function handleAddedFiles(files: FileList) {
+      if (!filesList) return;
+      Array.from(files).forEach((file) => {
+        const isSupported = file.name.match(/\.(pdf|jpe?g|png|zip)$/i);
+        const card = document.createElement('div');
+        card.className = `file-item-card ${!isSupported ? 'is-invalid-card' : ''}`;
+        card.setAttribute('data-filename', file.name);
+        card.setAttribute('data-valid', isSupported ? 'true' : 'false');
+
+        const sizeStr = `${Math.max(1, Math.round(file.size / 1024))} KB`;
+
+        card.innerHTML = `
+          <div class="file-item-header">
+            <div class="file-name-size">
+              <strong class="file-name ${!isSupported ? 'file-error-text' : ''}">${file.name}</strong>
+              <span class="file-size">${sizeStr}</span>
+            </div>
+            <button type="button" class="btn-remove-file" aria-label="Remove ${file.name}">✕</button>
+          </div>
+          <div class="file-doc-select-wrap">
+            <select class="doc-type-select" ${!isSupported ? 'disabled' : ''}>
+              <option value="biopsy">Biopsy or pathology report</option>
+              <option value="scan">Scan report or images (CT, MRI, PET, X-ray)</option>
+              <option value="blood">Blood tests</option>
+              <option value="summary">Summary of treatment</option>
+              <option value="other" selected>Other document</option>
+            </select>
+          </div>
+          ${!isSupported ? '<p class="file-error-msg">This file type is not accepted.</p>' : ''}
+          <div class="file-progress-bar-wrap" style="display: none;">
+            <div class="file-progress-fill"></div>
+            <span class="badge-received">Received</span>
+          </div>
+        `;
+
+        filesList.appendChild(card);
+      });
+
+      setupRemoveButtons();
+      checkInvalidFiles();
+    }
+
+    function setupRemoveButtons() {
+      const removeButtons = document.querySelectorAll('.btn-remove-file');
+      removeButtons.forEach((btn) => {
+        btn.onclick = (e) => {
+          const card = (e.target as HTMLElement).closest('.file-item-card');
+          if (card) {
+            card.remove();
+            checkInvalidFiles();
+          }
+        };
+      });
+    }
+    setupRemoveButtons();
+
+    // Upload Files Action -> Triggers "Received" State (PDF Page 37)
+    if (uploadBtn) {
+      uploadBtn.addEventListener('click', () => {
+        const validCards = document.querySelectorAll('.file-item-card[data-valid="true"]');
+        if (validCards.length === 0) return;
+
+        validCards.forEach((card) => {
+          const selectWrap = card.querySelector('.file-doc-select-wrap') as HTMLElement | null;
+          const progressWrap = card.querySelector('.file-progress-bar-wrap') as HTMLElement | null;
+          const selectEl = card.querySelector('.doc-type-select') as HTMLSelectElement | null;
+
+          if (selectEl) selectEl.setAttribute('disabled', 'true');
+          if (progressWrap) progressWrap.style.display = 'flex';
+        });
+
+        if (receivedSummary) {
+          receivedSummary.style.display = 'block';
+          receivedSummary.textContent = `${validCards.length} file(s) received (demonstration). Your coordinator will check them and tell you if anything is missing. You can add more files while this link is valid.`;
+        }
+
+        uploadBtn.textContent = 'Upload more files';
+      });
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', setupUploadPage);
+  setupUploadPage();
+</script>
+
+<style>
+  .page-container {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    padding: var(--space-8) 0 var(--space-12);
+  }
+
+  .gold-rule {
+    width: 72px;
+    height: 3px;
+    background-color: var(--color-gold);
+    margin-bottom: var(--space-3);
+  }
+
+  .page-header {
+    margin-bottom: var(--space-8);
+  }
+
+  .page-title {
+    font-size: clamp(2.25rem, 4vw, 3.25rem);
+    font-weight: 800;
+    color: var(--color-navy);
+    line-height: 1.15;
+    margin: 0 0 var(--space-2);
+  }
+
+  .page-deck {
+    font-size: 1.125rem;
+    font-weight: 300;
+    line-height: 1.5;
+    color: var(--color-slate);
+    max-width: 680px;
+    margin: 0;
+  }
+
+  .upload-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+  }
+
+  @media (min-width: 992px) {
+    .upload-layout {
+      grid-template-columns: 7fr 5fr;
+      gap: var(--space-10);
+      align-items: start;
+    }
+  }
+
+  /* Demonstration banner */
+  .demo-mode-banner {
+    background-color: #FFF6E5;
+    border: 1px solid var(--color-gold);
+    border-radius: 8px;
+    padding: var(--space-3);
+    font-size: 0.8125rem;
+    color: var(--color-ink);
+    margin-bottom: var(--space-4);
+  }
+
+  .uzbek-toggle-bar {
+    margin-bottom: var(--space-3);
+  }
+
+  .uzbek-checkbox-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8125rem;
+    color: var(--color-slate);
+    cursor: pointer;
+  }
+
+  .amber-warning-box {
+    background-color: #FFF6E5;
+    border: 1px solid var(--color-gold);
+    border-radius: 8px;
+    padding: var(--space-3) var(--space-4);
+    font-size: 0.8125rem;
+    color: var(--color-ink);
+    line-height: 1.5;
+    margin-bottom: var(--space-4);
+  }
+
+  .upload-box-card {
+    background-color: var(--color-paper);
+    border: 1px solid rgba(20, 41, 75, 0.12);
+    border-radius: var(--radius-card);
+    padding: var(--space-6);
+  }
+
+  .ref-validity {
+    font-size: 0.8125rem;
+    color: var(--color-slate);
+    margin-bottom: var(--space-4);
+  }
+
+  .ref-validity strong {
+    color: var(--color-navy);
+  }
+
+  /* Dropzone */
+  .dropzone {
+    border: 2px dashed rgba(20, 41, 75, 0.2);
+    border-radius: var(--radius-card);
+    padding: var(--space-8) var(--space-4);
+    text-align: center;
+    cursor: pointer;
+    background-color: var(--color-mist);
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+    margin-bottom: var(--space-5);
+  }
+
+  .dropzone:hover,
+  .dropzone.dragover,
+  .dropzone:focus-visible {
+    border-color: var(--color-gold);
+    background-color: #F0F4F8;
+    outline: none;
+  }
+
+  .upload-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background-color: rgba(20, 41, 75, 0.06);
+    color: var(--color-navy);
+    margin-bottom: var(--space-2);
+  }
+
+  .drop-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--color-navy);
+    margin: 0 0 4px;
+  }
+
+  .drop-specs {
+    font-size: 0.75rem;
+    color: var(--color-slate);
+    margin: 0;
+  }
+
+  /* Chosen Files List (PDF Page 37) */
+  .chosen-files-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    margin-bottom: var(--space-4);
+  }
+
+  .file-item-card {
+    background-color: var(--color-mist);
+    border: 1px solid rgba(20, 41, 75, 0.12);
+    border-radius: 8px;
+    padding: 12px 14px;
+  }
+
+  .is-invalid-card {
+    background-color: #FFF2F0;
+    border-color: var(--color-error);
+  }
+
+  .file-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+
+  .file-name-size {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+  }
+
+  .file-name {
+    font-size: 0.875rem;
+    color: var(--color-navy);
+  }
+
+  .file-error-text {
+    color: var(--color-error);
+  }
+
+  .file-size {
+    font-size: 0.75rem;
+    color: var(--color-slate);
+  }
+
+  .btn-remove-file {
+    background: none;
+    border: none;
+    color: var(--color-slate);
+    cursor: pointer;
+    font-size: 0.875rem;
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+
+  .btn-remove-file:hover {
+    color: var(--color-navy);
+    background-color: rgba(20, 41, 75, 0.08);
+  }
+
+  .file-doc-select-wrap select {
+    width: 100%;
+    padding: 8px 12px;
+    font-family: var(--font-family-base);
+    font-size: 0.8125rem;
+    color: var(--color-ink);
+    border-radius: 6px;
+    border: 1px solid rgba(20, 41, 75, 0.15);
+    background-color: #FFFFFF;
+  }
+
+  .file-error-msg {
+    font-size: 0.75rem;
+    color: var(--color-error);
+    margin-top: 6px;
+  }
+
+  /* File progress bar & received state (PDF Page 37) */
+  .file-progress-bar-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 8px;
+  }
+
+  .file-progress-fill {
+    height: 4px;
+    background-color: var(--color-success);
+    border-radius: 2px;
+    flex: 1;
+    animation: growBar 0.4s ease forwards;
+  }
+
+  @keyframes growBar {
+    from { width: 0%; }
+    to { width: 100%; }
+  }
+
+  .badge-received {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--color-success);
+  }
+
+  .test-invalid-file-wrap {
+    margin-bottom: var(--space-4);
+  }
+
+  .btn-test-invalid {
+    background: none;
+    border: none;
+    font-size: 0.75rem;
+    color: var(--color-slate);
+    cursor: pointer;
+    padding: 0;
+    text-decoration: underline;
+  }
+
+  .btn-test-invalid:hover {
+    color: var(--color-navy);
+  }
+
+  .received-summary-box {
+    background-color: #E8F5E9;
+    border: 1px solid var(--color-success);
+    border-radius: 8px;
+    padding: var(--space-3) var(--space-4);
+    font-size: 0.8125rem;
+    color: #1B5E20;
+    line-height: 1.5;
+    margin-bottom: var(--space-4);
+  }
+
+  /* Upload Action Row */
+  .upload-action-row {
+    margin-top: var(--space-4);
+  }
+
+  .btn-upload {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: var(--button-min-height);
+    padding: 0 var(--space-6);
+    border-radius: var(--radius-pill);
+    font-size: 0.875rem;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    background-color: var(--color-navy);
+    color: var(--color-paper);
+    transition: background-color 0.15s ease;
+  }
+
+  .btn-upload:hover:not(:disabled) {
+    background-color: var(--color-deep-navy);
+  }
+
+  .btn-upload.is-disabled,
+  .btn-upload:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .error-notice-upload {
+    font-size: 0.8125rem;
+    color: var(--color-error);
+    margin-top: 8px;
+  }
+
+  /* Right Sidebar */
+  .upload-aside {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+  }
+
+  .guide-card,
+  .privacy-aside-card {
+    background-color: var(--color-mist);
+    border: 1px solid rgba(20, 41, 75, 0.08);
+    border-radius: var(--radius-card);
+    padding: var(--space-5);
+  }
+
+  .aside-title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--color-navy);
+    margin-bottom: var(--space-3);
+  }
+
+  .aside-intro {
+    font-size: 0.8125rem;
+    color: var(--color-slate);
+    line-height: 1.45;
+    margin-bottom: var(--space-4);
+  }
+
+  .send-checklist,
+  .privacy-bullets {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 var(--space-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .send-checklist li {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 0.8125rem;
+    line-height: 1.45;
+    color: var(--color-ink);
+  }
+
+  .send-checklist li::before {
+    content: "✓";
+    color: var(--color-success);
+    font-weight: 700;
+  }
+
+  .privacy-bullets li {
+    position: relative;
+    padding-left: 14px;
+    font-size: 0.8125rem;
+    line-height: 1.45;
+    color: var(--color-ink);
+  }
+
+  .privacy-bullets li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: var(--color-slate);
+  }
+
+  .special-note {
+    font-size: 0.75rem;
+    color: var(--color-slate);
+    line-height: 1.45;
+    border-top: 1px solid rgba(20, 41, 75, 0.08);
+    padding-top: var(--space-3);
+    margin: 0;
+  }
+</style>

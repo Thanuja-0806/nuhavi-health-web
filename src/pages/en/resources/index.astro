@@ -1,248 +1,521 @@
 ---
 /**
  * src/pages/en/resources/index.astro
- * Patient Guides & Medical Resources Hub
+ * Patient resources landing page (Pages 26 & 27 of Nuhavi Health Look and Feel PDF)
+ * Complete with:
+ * - Six guides grid.
+ * - Three printable interactive checklists with live counters (0 of 8 ready).
+ * - Seven-question FAQ accordion.
  */
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 ---
 
 <BaseLayout
-  title="Patient Guides & Educational Resources | Nuhavi Health"
-  description="Practical medical travel guides on preparing diagnostic records, comparing hospital estimates, and formulating questions for treating physicians."
+  title="Patient resources | Nuhavi Health"
+  description="Practical guides and checklists for patients and families — useful whether or not you choose Nuhavi."
 >
   <div class="page-container">
-    <header class="page-header">
-      <div class="container">
-        <nav class="breadcrumb" aria-label="Breadcrumb">
-          <ol>
-            <li><a href="/en/">Home</a></li>
-            <li aria-current="page">Resources</li>
-          </ol>
-        </nav>
-        <span class="eyebrow">PATIENT GUIDANCE</span>
-        <h1 class="page-title">Resources & Patient Guides</h1>
+    <div class="container main-content">
+      <!-- Gold 72x3 px rule above page title -->
+      <div class="gold-rule" aria-hidden="true"></div>
+
+      <header class="page-header">
+        <h1 class="page-title">Patient resources</h1>
         <p class="page-deck">
-          Clear, unbiased guides designed to help patients and families understand clinical terminology, prepare complete records, and make informed choices.
+          Practical guides and checklists for patients and families — useful whether or not you choose Nuhavi.
         </p>
-      </div>
-    </header>
+      </header>
 
-    <section class="guides-section">
-      <div class="container">
+      <!-- Section: Guides (Page 26) -->
+      <section class="guides-section">
+        <h2 class="section-title">Guides</h2>
+
         <div class="guides-grid">
-          <article class="guide-card">
-            <span class="guide-tag">CLINICAL PREPARATION</span>
-            <h2>How to Prepare Your Medical Records for Review</h2>
-            <p>
-              A checklist of essential diagnostic scans, biopsy slides, pathology reports, and discharge notes required by specialist medical boards in India.
-            </p>
-            <a href="/en/resources/preparing-medical-records/" class="guide-read-link">
-              Read guide &rarr;
-            </a>
-          </article>
+          <a href="/en/resources/preparing-medical-records/" class="guide-item">
+            <h3 class="guide-title">Preparing your medical records</h3>
+            <p class="guide-desc">What to collect, how to scan it, and what not to send.</p>
+          </a>
 
-          <article class="guide-card">
-            <span class="guide-tag">DOCTOR INTERVIEWS</span>
-            <h2>Essential Questions to Ask Your Treating Hospital</h2>
-            <p>
-              Key questions covering surgical experience, complications management, multidisciplinary tumor boards, and post-discharge recovery expectations.
-            </p>
-            <a href="/en/resources/questions-to-ask-hospital/" class="guide-read-link">
-              Read guide &rarr;
-            </a>
-          </article>
+          <a href="/en/resources/questions-to-ask-hospital/" class="guide-item">
+            <h3 class="guide-title">Questions to ask before choosing a hospital</h3>
+            <p class="guide-desc">Questions that help you compare hospitals on what matters.</p>
+          </a>
 
-          <article class="guide-card">
-            <span class="guide-tag">FINANCIAL CLARITY</span>
-            <h2>Understanding Your Hospital Treatment Estimate</h2>
-            <p>
-              How to dissect package inclusions, understand ICU thresholds, prepare for medication contingencies, and avoid surprise hospital bills.
-            </p>
-            <a href="/en/resources/understanding-treatment-estimate/" class="guide-read-link">
-              Read guide &rarr;
-            </a>
-          </article>
+          <a href="/en/resources/understanding-treatment-estimate/" class="guide-item">
+            <h3 class="guide-title">Understanding a treatment estimate</h3>
+            <p class="guide-desc">The difference between a preliminary estimate and a confirmed quotation.</p>
+          </a>
+
+          <div class="guide-item">
+            <h3 class="guide-title">Medical second opinions</h3>
+            <p class="guide-desc">When a second opinion helps, and what it can and cannot tell you.</p>
+          </div>
+
+          <div class="guide-item">
+            <h3 class="guide-title">Travelling with a companion</h3>
+            <p class="guide-desc">Planning for the person who comes with you.</p>
+          </div>
+
+          <div class="guide-item">
+            <h3 class="guide-title">After you return home</h3>
+            <p class="guide-desc">Keeping care going once you are back.</p>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <section class="help-cta">
-      <div class="container">
-        <div class="help-box">
-          <h2>Have questions about preparing your records?</h2>
-          <p>Our coordination team is available to assist you in compiling your diagnostic folder.</p>
-          <a href="/en/request-opinion/" class="btn-primary">Request Record Review</a>
+      <!-- Section: Checklists (PDF Page 26) -->
+      <section class="checklists-section">
+        <div class="checklist-top">
+          <div class="checklist-intro">
+            <h2 class="section-title">Checklists</h2>
+            <p class="checklist-subtext">Tick items off as you go, or print them. Nothing you tick is saved or sent.</p>
+          </div>
+
+          <div class="checklist-rows">
+            <!-- Checklist 1: Cancer Care -->
+            <details class="checklist-accordion" open>
+              <summary class="checklist-row-card">
+                <span class="checklist-name">Cancer care records checklist</span>
+                <span class="checklist-counter" id="counter-cancer">0 of 8 ready</span>
+              </summary>
+              <div class="checklist-body">
+                <ul class="interactive-checklist" id="list-cancer">
+                  <li><label><input type="checkbox" /> <span>Biopsy or histopathology report</span></label></li>
+                  <li><label><input type="checkbox" /> <span>Immunohistochemistry (IHC) report, if done</span></label></li>
+                  <li><label><input type="checkbox" /> <span>Latest CT, MRI or PET-CT report</span></label></li>
+                  <li><label><input type="checkbox" /> <span>Scan images (disc or download link)</span></label></li>
+                  <li><label><input type="checkbox" /> <span>Blood tests from the last 4 weeks</span></label></li>
+                  <li><label><input type="checkbox" /> <span>Summary of treatment so far, with dates</span></label></li>
+                  <li><label><input type="checkbox" /> <span>Current medicines and allergies</span></label></li>
+                  <li><label><input type="checkbox" /> <span>Passport copy (only when your coordinator asks, for the visa letter)</span></label></li>
+                </ul>
+                <div class="checklist-footer">
+                  <button type="button" class="print-btn" onclick="window.print()">Print this checklist</button>
+                </div>
+              </div>
+            </details>
+
+            <!-- Checklist 2: Joint Replacement -->
+            <details class="checklist-accordion">
+              <summary class="checklist-row-card">
+                <span class="checklist-name">Joint replacement records checklist</span>
+                <span class="checklist-counter" id="counter-joints">0 of 6 ready</span>
+              </summary>
+              <div class="checklist-body">
+                <ul class="interactive-checklist" id="list-joints">
+                  <li><label><input type="checkbox" /> <span>Recent standing X-rays of the affected joint(s)</span></label></li>
+                  <li><label><input type="checkbox" /> <span>MRI or CT scan report, if available</span></label></li>
+                  <li><label><input type="checkbox" /> <span>Current walking ability and range of motion notes</span></label></li>
+                  <li><label><input type="checkbox" /> <span>Previous surgery reports or implant details</span></label></li>
+                  <li><label><input type="checkbox" /> <span>Blood tests and cardiac clearance, if done</span></label></li>
+                  <li><label><input type="checkbox" /> <span>Current medicines and allergies</span></label></li>
+                </ul>
+                <div class="checklist-footer">
+                  <button type="button" class="print-btn" onclick="window.print()">Print this checklist</button>
+                </div>
+              </div>
+            </details>
+
+            <!-- Checklist 3: Travel Checklist -->
+            <details class="checklist-accordion">
+              <summary class="checklist-row-card">
+                <span class="checklist-name">Travel checklist</span>
+                <span class="checklist-counter" id="counter-travel">0 of 8 ready</span>
+              </summary>
+              <div class="checklist-body">
+                <ul class="interactive-checklist" id="list-travel">
+                  <li><label><input type="checkbox" /> <span>Passport valid for at least six months</span></label></li>
+                  <li><label><input type="checkbox" /> <span>e-Medical visa applied for (and e-Medical Attendant visa for companion)</span></label></li>
+                  <li><label><input type="checkbox" /> <span>Hospital invitation letter</span></label></li>
+                  <li><label><input type="checkbox" /> <span>Flights booked after visa approval</span></label></li>
+                  <li><label><input type="checkbox" /> <span>Travel insurance checked</span></label></li>
+                  <li><label><input type="checkbox" /> <span>Original medical records and scan discs packed in hand luggage</span></label></li>
+                  <li><label><input type="checkbox" /> <span>Medicines for the journey</span></label></li>
+                  <li><label><input type="checkbox" /> <span>Coordinator's phone number saved</span></label></li>
+                </ul>
+                <div class="checklist-footer">
+                  <button type="button" class="print-btn" onclick="window.print()">Print this checklist</button>
+                </div>
+              </div>
+            </details>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+
+      <!-- Section: Frequently Asked Questions (Page 27) -->
+      <section class="faq-section">
+        <h2 class="section-title">Frequently asked questions</h2>
+
+        <div class="faq-accordion">
+          <details class="faq-item">
+            <summary class="faq-question">
+              <span>Is Nuhavi a hospital?</span>
+              <span class="faq-toggle" aria-hidden="true">+</span>
+            </summary>
+            <div class="faq-answer">
+              <p>No. Nuhavi Health is an independent doctor-led medical travel coordination company based in Hyderabad. We organise reviews, hospital options, and travel logistics. Clinical decisions and treatments stay with the accredited hospital teams.</p>
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-question">
+              <span>Who pays Nuhavi?</span>
+              <span class="faq-toggle" aria-hidden="true">+</span>
+            </summary>
+            <div class="faq-answer">
+              <p>Patients pay us a transparent coordination fee agreed upon in writing before committing. We do not accept referral fees, secret commissions, or marketing payments from hospitals, doctors, or their agents.</p>
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-question">
+              <span>Do you promote particular doctors?</span>
+              <span class="faq-toggle" aria-hidden="true">+</span>
+            </summary>
+            <div class="faq-answer">
+              <p>No. We present hospitals by their infrastructure, technology, multidisciplinary team review, and published accreditations, rather than by promoting individual celebrity physicians.</p>
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-question">
+              <span>Can you guarantee a result, a saving or a visa?</span>
+              <span class="faq-toggle" aria-hidden="true">+</span>
+            </summary>
+            <div class="faq-answer">
+              <p>No. Medical outcomes cannot be guaranteed by anyone ethical. Visa issuance is determined solely by the Government of India. We help ensure your documentation is complete and verifiable.</p>
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-question">
+              <span>How do I send my medical records?</span>
+              <span class="faq-toggle" aria-hidden="true">+</span>
+            </summary>
+            <div class="faq-answer">
+              <p>After you submit a short enquiry, we email you a secure, private upload link valid for 48 hours. Never paste medical records into public web forms or chat apps.</p>
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-question">
+              <span>Which languages do you support?</span>
+              <span class="faq-toggle" aria-hidden="true">+</span>
+            </summary>
+            <div class="faq-answer">
+              <p>We coordinate primarily in English and Russian, with Uzbek and Swahili support currently expanding. We provide language-specific coordinators wherever available.</p>
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-question">
+              <span>What if I have an emergency?</span>
+              <span class="faq-toggle" aria-hidden="true">+</span>
+            </summary>
+            <div class="faq-answer">
+              <p>Nuhavi Health coordinates scheduled, elective cross-border medical travel. We do not provide emergency services. If you have acute chest pain, severe bleeding, or acute trauma, contact your local emergency department immediately.</p>
+            </div>
+          </details>
+        </div>
+      </section>
+    </div>
   </div>
 </BaseLayout>
+
+<script>
+  function setupResourceChecklists() {
+    const accordions = document.querySelectorAll('.checklist-accordion');
+    accordions.forEach((acc) => {
+      const counter = acc.querySelector('.checklist-counter');
+      const checkboxes = acc.querySelectorAll<HTMLInputElement>('input[type="checkbox"]');
+      const total = checkboxes.length;
+
+      function update() {
+        const checked = Array.from(checkboxes).filter((cb) => cb.checked).length;
+        if (counter) {
+          counter.textContent = `${checked} of ${total} ready`;
+        }
+      }
+
+      checkboxes.forEach((cb) => {
+        cb.addEventListener('change', update);
+      });
+      update();
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', setupResourceChecklists);
+  setupResourceChecklists();
+</script>
 
 <style>
   .page-container {
     background-color: var(--color-paper);
     color: var(--color-ink);
+    padding: var(--space-8) 0 var(--space-12);
+  }
+
+  .gold-rule {
+    width: 72px;
+    height: 3px;
+    background-color: var(--color-gold);
+    margin-bottom: var(--space-3);
   }
 
   .page-header {
-    background: linear-gradient(180deg, var(--color-mist) 0%, var(--color-paper) 100%);
-    padding: var(--space-8) 0 var(--space-6);
-    border-bottom: 1px solid rgba(20, 41, 75, 0.08);
-  }
-
-  .breadcrumb ol {
-    display: flex;
-    gap: var(--space-1);
-    list-style: none;
-    padding: 0;
-    margin: 0 0 var(--space-3);
-    font-size: 0.875rem;
-    color: var(--color-slate);
-  }
-
-  .breadcrumb li + li::before {
-    content: "/";
-    margin-right: var(--space-1);
-    color: var(--color-slate);
-  }
-
-  .breadcrumb a {
-    color: var(--color-navy);
-    text-decoration: none;
-  }
-
-  .breadcrumb a:hover {
-    text-decoration: underline;
-  }
-
-  .eyebrow {
-    display: inline-block;
-    font-size: 0.8125rem;
-    font-weight: var(--font-weight-subheading);
-    letter-spacing: 0.08em;
-    color: var(--color-gold-text);
-    text-transform: uppercase;
-    margin-bottom: var(--space-2);
+    margin-bottom: var(--space-8);
   }
 
   .page-title {
-    font-size: clamp(2rem, 4vw, 3rem);
-    font-weight: var(--font-weight-heading);
+    font-size: clamp(2.25rem, 4vw, 3.25rem);
+    font-weight: 800;
     color: var(--color-navy);
-    line-height: var(--line-height-heading);
-    margin: 0 0 var(--space-3);
+    line-height: 1.15;
+    margin: 0 0 var(--space-2);
   }
 
   .page-deck {
     font-size: 1.125rem;
-    font-weight: var(--font-weight-deck);
-    line-height: var(--line-height-body);
+    font-weight: 300;
+    line-height: 1.5;
     color: var(--color-slate);
-    max-width: 720px;
+    max-width: 680px;
     margin: 0;
   }
 
+  /* Guides Section */
   .guides-section {
-    padding: var(--space-8) 0 var(--space-12);
+    padding-bottom: var(--space-10);
+    border-bottom: 1px solid rgba(20, 41, 75, 0.08);
+    margin-bottom: var(--space-10);
+  }
+
+  .section-title {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: var(--color-navy);
+    margin: 0 0 var(--space-6);
   }
 
   .guides-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: var(--space-6);
+    gap: var(--space-4);
   }
 
-  @media (min-width: 768px) {
+  @media (min-width: 640px) {
+    .guides-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 992px) {
     .guides-grid {
       grid-template-columns: repeat(3, 1fr);
     }
   }
 
-  .guide-card {
+  .guide-item {
     background-color: var(--color-mist);
+    border: 1px solid rgba(20, 41, 75, 0.1);
+    border-radius: 14px;
     padding: var(--space-6);
-    border-radius: var(--radius-card);
-    border: 1px solid rgba(20, 41, 75, 0.08);
+    text-decoration: none;
+    color: inherit;
     display: flex;
     flex-direction: column;
+    transition: transform 0.15s ease, border-color 0.15s ease;
   }
 
-  .guide-tag {
-    font-size: 0.6875rem;
-    font-weight: var(--font-weight-subheading);
-    letter-spacing: 0.08em;
-    color: var(--color-gold-text);
-    margin-bottom: var(--space-2);
+  a.guide-item:hover {
+    transform: translateY(-2px);
+    border-color: rgba(20, 41, 75, 0.25);
   }
 
-  .guide-card h2 {
+  .guide-title {
+    font-size: 1.0625rem;
+    font-weight: 700;
     color: var(--color-navy);
-    font-size: 1.25rem;
-    line-height: 1.4;
-    margin: 0 0 var(--space-3);
+    margin: 0 0 8px;
+    line-height: 1.35;
   }
 
-  .guide-card p {
-    color: var(--color-slate);
-    font-size: 0.9375rem;
+  .guide-desc {
+    font-size: 0.875rem;
     line-height: 1.5;
-    margin: 0 0 var(--space-4);
+    color: var(--color-slate);
+    margin: 0;
   }
 
-  .guide-read-link {
-    margin-top: auto;
-    color: var(--color-navy);
-    font-weight: var(--font-weight-subheading);
+  /* Checklists Section */
+  .checklists-section {
+    padding-bottom: var(--space-10);
+    border-bottom: 1px solid rgba(20, 41, 75, 0.08);
+    margin-bottom: var(--space-10);
+  }
+
+  .checklist-top {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+  }
+
+  @media (min-width: 900px) {
+    .checklist-top {
+      grid-template-columns: 5fr 7fr;
+      gap: var(--space-8);
+      align-items: start;
+    }
+  }
+
+  .checklist-subtext {
     font-size: 0.9375rem;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
+    color: var(--color-slate);
+    line-height: 1.5;
   }
 
-  .guide-read-link:hover {
-    color: var(--color-gold-text);
+  .checklist-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .checklist-accordion {
+    background-color: var(--color-mist);
+    border: 1px solid rgba(20, 41, 75, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .checklist-row-card {
+    padding: 14px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .checklist-row-card:hover {
+    background-color: #EBF1F7;
+  }
+
+  .checklist-name {
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: var(--color-navy);
+  }
+
+  .checklist-counter {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: var(--color-slate);
+    background-color: #FFFFFF;
+    padding: 4px 10px;
+    border-radius: 6px;
+    border: 1px solid rgba(20, 41, 75, 0.08);
+  }
+
+  .checklist-body {
+    padding: 12px 20px 16px;
+    background-color: #FFFFFF;
+    border-top: 1px solid rgba(20, 41, 75, 0.08);
+  }
+
+  .interactive-checklist {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .interactive-checklist li label {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 0.8125rem;
+    color: var(--color-ink);
+    line-height: 1.45;
+    cursor: pointer;
+  }
+
+  .interactive-checklist input[type="checkbox"] {
+    margin-top: 2px;
+    accent-color: var(--color-navy);
+  }
+
+  .checklist-footer {
+    padding-top: 8px;
+    border-top: 1px solid rgba(20, 41, 75, 0.06);
+  }
+
+  .print-btn {
+    background: none;
+    border: none;
+    color: var(--color-navy);
+    font-size: 0.75rem;
+    font-weight: 700;
     text-decoration: underline;
+    cursor: pointer;
+    padding: 0;
   }
 
-  .help-cta {
-    background-color: var(--color-deep-navy);
-    color: var(--color-paper);
-    padding: var(--space-10) 0;
+  .print-btn:hover {
+    color: var(--color-gold-text);
   }
 
-  .help-box {
-    text-align: center;
-    max-width: 680px;
-    margin: 0 auto;
+  /* FAQ Accordion Section */
+  .faq-accordion {
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid rgba(20, 41, 75, 0.12);
   }
 
-  .help-box h2 {
-    color: var(--color-paper);
-    font-size: 1.75rem;
-    margin: 0 0 var(--space-2);
+  .faq-item {
+    border-bottom: 1px solid rgba(20, 41, 75, 0.12);
   }
 
-  .help-box p {
-    color: rgba(255, 255, 255, 0.85);
-    margin: 0 0 var(--space-5);
-  }
-
-  .btn-primary {
-    display: inline-flex;
+  .faq-question {
+    padding: var(--space-4) 0;
+    font-size: 1.0625rem;
+    font-weight: 700;
+    color: var(--color-navy);
+    display: flex;
+    justify-content: space-between;
     align-items: center;
-    justify-content: center;
-    background-color: var(--color-gold);
-    color: var(--color-deep-navy);
-    font-weight: var(--font-weight-subheading);
-    padding: 12px 28px;
-    border-radius: var(--radius-pill);
-    text-decoration: none;
-    transition: transform 0.15s ease, filter 0.15s ease;
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
   }
 
-  .btn-primary:hover {
-    filter: brightness(1.08);
-    transform: translateY(-1px);
+  .faq-question::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq-question:hover {
+    color: var(--color-gold-text);
+  }
+
+  .faq-toggle {
+    font-size: 1.5rem;
+    font-weight: 300;
+    color: var(--color-slate);
+    line-height: 1;
+    margin-left: var(--space-4);
+    transition: transform 0.2s ease;
+  }
+
+  .faq-item[open] .faq-toggle {
+    transform: rotate(45deg);
+  }
+
+  .faq-answer {
+    padding: 0 0 var(--space-5);
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--color-ink);
+    max-width: 800px;
   }
 </style>

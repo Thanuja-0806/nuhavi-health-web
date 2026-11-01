@@ -1,100 +1,69 @@
 ---
 /**
  * src/pages/en/countries/index.astro
- * International Patient Travel & Country Support
+ * Countries we serve (Page 21 of Nuhavi Health Look and Feel PDF)
  */
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 ---
 
 <BaseLayout
-  title="International Patient Services by Country | Nuhavi Health"
-  description="Explore medical travel coordination for patients from CIS countries, Middle East, Africa, UK, and worldwide seeking specialized healthcare in India."
+  title="Countries we serve | Nuhavi Health"
+  description="Wherever you start, the route ends at a hospital in Hyderabad and back home again. These are the countries we currently accept enquiries from."
 >
   <div class="page-container">
-    <header class="page-header">
-      <div class="container">
-        <nav class="breadcrumb" aria-label="Breadcrumb">
-          <ol>
-            <li><a href="/en/">Home</a></li>
-            <li aria-current="page">Countries</li>
-          </ol>
-        </nav>
-        <span class="eyebrow">GLOBAL PATIENT DESK</span>
-        <h1 class="page-title">Support for International Patients</h1>
+    <div class="container main-content">
+      <!-- Gold 72x3 px rule above page title -->
+      <div class="gold-rule" aria-hidden="true"></div>
+
+      <header class="page-header">
+        <h1 class="page-title">Countries we serve</h1>
         <p class="page-deck">
-          We assist patients arriving from over 20 countries. Our coordination covers medical visa invitation letters, language translation, dedicated airport transfers, and guest house or hotel bookings near treating hospitals.
+          Wherever you start, the route ends at a hospital in Hyderabad and back home again. These are the countries we currently accept enquiries from.
         </p>
-      </div>
-    </header>
+      </header>
 
-    <section class="regions-section">
-      <div class="container">
-        <div class="regions-grid">
-          <div class="region-card">
-            <h3>Central Asia & CIS Countries</h3>
-            <span class="languages">Russian & English coordination</span>
-            <p>
-              Dedicated support for patients traveling from Uzbekistan, Kazakhstan, Kyrgyzstan, and Tajikistan. Russian-speaking coordinators guide you from initial report review to in-hospital doctor meetings.
+      <div class="countries-grid">
+        <!-- Uzbekistan leads as large navy card -->
+        <a href="/en/countries/uzbekistan/" class="country-card-featured">
+          <h2 class="featured-title">Uzbekistan</h2>
+          <span class="featured-languages">Support in Russian, Uzbek, English</span>
+          <p class="featured-text">
+            We help patients and families from Tashkent, Samarkand and across Uzbekistan plan cancer and joint-replacement care in Hyderabad, with coordinators who speak Russian.
+          </p>
+        </a>
+
+        <!-- Equal cards below -->
+        <div class="sub-countries-row">
+          <div class="country-card">
+            <h3 class="card-title">Kenya</h3>
+            <span class="card-languages">Support in English, Swahili (planned)</span>
+            <p class="card-text">
+              We accept enquiries from Kenya for cancer care and joint replacement in Hyderabad. Swahili support is planned.
             </p>
-            <ul class="feature-bullets">
-              <li>Assistance with Medical Visa (e-Med Visa)</li>
-              <li>Russian translation of discharge summaries</li>
-              <li>Dedicated airport pickup in Delhi, Mumbai & Bengaluru</li>
-            </ul>
           </div>
 
-          <div class="region-card">
-            <h3>Middle East & GCC</h3>
-            <span class="languages">Arabic & English coordination</span>
-            <p>
-              Seamless assistance for patients from Oman, UAE, Saudi Arabia, Bahrain, and Iraq seeking specialized oncology or complex reconstructive treatments.
+          <div class="country-card">
+            <h3 class="card-title">Tanzania</h3>
+            <span class="card-languages">Support in English, Swahili (planned)</span>
+            <p class="card-text">
+              We accept enquiries from Tanzania, including Dar es Salaam, for cancer care and joint replacement in Hyderabad.
             </p>
-            <ul class="feature-bullets">
-              <li>Halal dietary and prayer room accommodation guidance</li>
-              <li>Family suite and extended attendant lodging support</li>
-              <li>Direct coordination with hospital VIP desks</li>
-            </ul>
           </div>
 
-          <div class="region-card">
-            <h3>East & West Africa</h3>
-            <span class="languages">English & French coordination</span>
-            <p>
-              Comprehensive travel pathways for patients from Kenya, Nigeria, Tanzania, Ghana, and Ethiopia seeking cancer therapies, cardiology, and orthopaedic surgery.
+          <div class="country-card">
+            <h3 class="card-title">Nigeria, Uganda, Ghana and Rwanda</h3>
+            <span class="card-languages">Support in English</span>
+            <p class="card-text">
+              We accept enquiries from Nigeria, Uganda, Ghana and Rwanda. Dedicated country pages will follow as we add local language support.
             </p>
-            <ul class="feature-bullets">
-              <li>Official hospital medical visa invitation assistance</li>
-              <li>Guidance on currency conversion and hospital wire transfers</li>
-              <li>Follow-up telemedicine scheduling upon return</li>
-            </ul>
-          </div>
-
-          <div class="region-card">
-            <h3>UK, Europe & North America</h3>
-            <span class="languages">English coordination</span>
-            <p>
-              Rapid access to advanced cancer treatments and elective joint replacements for patients avoiding long clinical waiting periods in domestic systems.
-            </p>
-            <ul class="feature-bullets">
-              <li>Comprehensive pre-travel second opinion dossiers</li>
-              <li>Direct physician-to-physician tele-consults</li>
-              <li>Itemized hospital proforma invoices for private insurance</li>
-            </ul>
           </div>
         </div>
       </div>
-    </section>
 
-    <!-- Support CTA -->
-    <section class="support-cta">
-      <div class="container">
-        <div class="cta-inner">
-          <h2>Need visa guidance or travel advice for your country?</h2>
-          <p>Our international patient coordinator will provide current visa requirements and travel instructions.</p>
-          <a href="/en/request-opinion/" class="btn-primary">Connect with a Coordinator</a>
-        </div>
-      </div>
-    </section>
+      <p class="disclaimer-note">
+        We do not have offices in these countries. Listing a country means we accept enquiries from it and can support you in the languages shown.
+      </p>
+    </div>
   </div>
 </BaseLayout>
 
@@ -102,167 +71,131 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
   .page-container {
     background-color: var(--color-paper);
     color: var(--color-ink);
+    padding: var(--space-8) 0 var(--space-12);
+  }
+
+  .gold-rule {
+    width: 72px;
+    height: 3px;
+    background-color: var(--color-gold);
+    margin-bottom: var(--space-3);
   }
 
   .page-header {
-    background: linear-gradient(180deg, var(--color-mist) 0%, var(--color-paper) 100%);
-    padding: var(--space-8) 0 var(--space-6);
-    border-bottom: 1px solid rgba(20, 41, 75, 0.08);
-  }
-
-  .breadcrumb ol {
-    display: flex;
-    gap: var(--space-1);
-    list-style: none;
-    padding: 0;
-    margin: 0 0 var(--space-3);
-    font-size: 0.875rem;
-    color: var(--color-slate);
-  }
-
-  .breadcrumb li + li::before {
-    content: "/";
-    margin-right: var(--space-1);
-    color: var(--color-slate);
-  }
-
-  .breadcrumb a {
-    color: var(--color-navy);
-    text-decoration: none;
-  }
-
-  .breadcrumb a:hover {
-    text-decoration: underline;
-  }
-
-  .eyebrow {
-    display: inline-block;
-    font-size: 0.8125rem;
-    font-weight: var(--font-weight-subheading);
-    letter-spacing: 0.08em;
-    color: var(--color-gold-text);
-    text-transform: uppercase;
-    margin-bottom: var(--space-2);
+    margin-bottom: var(--space-8);
   }
 
   .page-title {
-    font-size: clamp(2rem, 4vw, 3rem);
-    font-weight: var(--font-weight-heading);
+    font-size: clamp(2.25rem, 4vw, 3.25rem);
+    font-weight: 800;
     color: var(--color-navy);
-    line-height: var(--line-height-heading);
-    margin: 0 0 var(--space-3);
+    line-height: 1.15;
+    margin: 0 0 var(--space-2);
   }
 
   .page-deck {
     font-size: 1.125rem;
-    font-weight: var(--font-weight-deck);
-    line-height: var(--line-height-body);
+    font-weight: 300;
+    line-height: 1.5;
     color: var(--color-slate);
-    max-width: 720px;
+    max-width: 680px;
     margin: 0;
   }
 
-  .regions-section {
-    padding: var(--space-8) 0 var(--space-12);
-  }
-
-  .regions-grid {
-    display: grid;
-    grid-template-columns: 1fr;
+  .countries-grid {
+    display: flex;
+    flex-direction: column;
     gap: var(--space-6);
   }
 
-  @media (min-width: 768px) {
-    .regions-grid {
-      grid-template-columns: 1fr 1fr;
-    }
-  }
-
-  .region-card {
-    background-color: var(--color-mist);
-    padding: var(--space-6);
-    border-radius: var(--radius-card);
-    border: 1px solid rgba(20, 41, 75, 0.08);
-    display: flex;
-    flex-direction: column;
-  }
-
-  .region-card h3 {
-    color: var(--color-navy);
-    font-size: 1.25rem;
-    margin: 0 0 var(--space-1);
-  }
-
-  .languages {
-    font-size: 0.8125rem;
-    font-weight: var(--font-weight-subheading);
-    color: var(--color-gold-text);
-    margin-bottom: var(--space-3);
-  }
-
-  .region-card p {
-    font-size: 0.9375rem;
-    color: var(--color-slate);
-    line-height: 1.5;
-    margin: 0 0 var(--space-4);
-  }
-
-  .feature-bullets {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-2);
-    font-size: 0.875rem;
-    color: var(--color-navy);
-    margin-top: auto;
-  }
-
-  .feature-bullets li::before {
-    content: "✓ ";
-    color: var(--color-gold);
-    font-weight: bold;
-  }
-
-  .support-cta {
+  /* Uzbekistan Large Navy Card */
+  .country-card-featured {
+    display: block;
     background-color: var(--color-deep-navy);
     color: var(--color-paper);
-    padding: var(--space-10) 0;
-  }
-
-  .cta-inner {
-    text-align: center;
-    max-width: 680px;
-    margin: 0 auto;
-  }
-
-  .cta-inner h2 {
-    color: var(--color-paper);
-    font-size: 1.75rem;
-    margin: 0 0 var(--space-2);
-  }
-
-  .cta-inner p {
-    color: rgba(255, 255, 255, 0.8);
-    margin: 0 0 var(--space-5);
-  }
-
-  .btn-primary {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background-color: var(--color-gold);
-    color: var(--color-deep-navy);
-    font-weight: var(--font-weight-subheading);
-    padding: 12px 28px;
-    border-radius: var(--radius-pill);
+    padding: var(--space-6) var(--space-8);
+    border-radius: 14px;
     text-decoration: none;
+    border: 1px solid rgba(255, 255, 255, 0.1);
     transition: transform 0.15s ease, filter 0.15s ease;
   }
 
-  .btn-primary:hover {
-    filter: brightness(1.08);
-    transform: translateY(-1px);
+  .country-card-featured:hover {
+    filter: brightness(1.05);
+    transform: translateY(-2px);
+  }
+
+  .featured-title {
+    font-size: 1.875rem;
+    font-weight: 800;
+    color: var(--color-paper);
+    margin: 0 0 6px;
+  }
+
+  .featured-languages {
+    display: block;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--color-gold);
+    margin-bottom: var(--space-3);
+  }
+
+  .featured-text {
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.85);
+    margin: 0;
+    max-width: 720px;
+  }
+
+  /* 3 Equal Cards */
+  .sub-countries-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+
+  @media (min-width: 768px) {
+    .sub-countries-row {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .country-card {
+    background-color: var(--color-mist);
+    border: 1px solid rgba(20, 41, 75, 0.12);
+    border-radius: 14px;
+    padding: var(--space-6);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .card-title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--color-navy);
+    margin: 0 0 4px;
+    line-height: 1.35;
+  }
+
+  .card-languages {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-slate);
+    margin-bottom: var(--space-3);
+  }
+
+  .card-text {
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--color-ink);
+    margin: 0;
+  }
+
+  .disclaimer-note {
+    font-size: 0.8125rem;
+    color: var(--color-slate);
+    line-height: 1.5;
+    margin-top: var(--space-6);
   }
 </style>
