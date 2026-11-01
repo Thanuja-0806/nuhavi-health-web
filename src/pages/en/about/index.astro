@@ -1,0 +1,334 @@
+---
+/**
+ * src/pages/en/about/index.astro
+ * About Nuhavi Health - Organization, Principles & Role
+ */
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="About Nuhavi Health | Independent Medical Travel Coordination"
+  description="Learn about Nuhavi Health's mission, our independent coordination role, patient advocacy principles, and transparent standards for healthcare in India."
+>
+  <div class="page-container">
+    <header class="page-header">
+      <div class="container">
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <ol>
+            <li><a href="/en/">Home</a></li>
+            <li aria-current="page">About</li>
+          </ol>
+        </nav>
+        <span class="eyebrow">OUR MISSION & ROLE</span>
+        <h1 class="page-title">About Nuhavi Health</h1>
+        <p class="page-deck">
+          We act as independent medical travel coordinators. We bridge the distance between international patients and accredited hospitals in India, advocating for clinical clarity, fair estimates, and patient-first care.
+        </p>
+      </div>
+    </header>
+
+    <!-- Core Philosophy Section -->
+    <section class="about-section">
+      <div class="container">
+        <div class="content-grid">
+          <div class="main-content">
+            <span class="section-tag">WHO WE ARE</span>
+            <h2>People, Not Packages</h2>
+            <p>
+              Nuhavi Health was established on the fundamental belief that complex medical treatment should never be treated as a commercial tour package. When faced with an oncology diagnosis, a deteriorating cardiac condition, or an intricate joint procedure, patients need clinical honesty, not glossy tourism brochures.
+            </p>
+            <p>
+              We coordinate directly with senior specialists, hospital international patient teams, and patient families to ensure every step — from initial opinion review to post-discharge care — is handled with professional diligence.
+            </p>
+
+            <div class="principles-grid">
+              <div class="principle-card">
+                <h3>Clinical Objectivity</h3>
+                <p>We present multiple accredited hospital options and treatment modalities so you and your treating doctor make informed decisions.</p>
+              </div>
+
+              <div class="principle-card">
+                <h3>Direct Hospital Billing</h3>
+                <p>We do not inflate hospital medical estimates. Patients settle treatment costs directly with the hospital's international cashier desk.</p>
+              </div>
+
+              <div class="principle-card">
+                <h3>Dedicated Coordination</h3>
+                <p>From medical visa invitations and airport pickup to bilingual bedside support, a personal coordinator remains assigned to your journey.</p>
+              </div>
+
+              <div class="principle-card">
+                <h3>Post-Return Care Continuity</h3>
+                <p>Coordination does not end at discharge. We help schedule remote tele-consultations and follow-up lab reviews once you return home.</p>
+              </div>
+            </div>
+
+            <!-- Transparency Link -->
+            <div class="commercial-disclosure-card">
+              <h3>Financial & Commercial Transparency</h3>
+              <p>
+                Learn how our services are sustained, how hospital relationships are structured, and our absolute commitment to zero markups.
+              </p>
+              <a href="/en/about/commercial-relationships/" class="disclosure-link">
+                Read Commercial Relationships Disclosure &rarr;
+              </a>
+            </div>
+          </div>
+
+          <!-- Sidebar Facts & Governance -->
+          <aside class="sidebar-about">
+            <div class="sidebar-card">
+              <h3>Coordination Scope</h3>
+              <ul class="scope-list">
+                <li>
+                  <strong>What we do:</strong> Facilitate records review, secure opinions, coordinate travel logistics, translate documents, support on-ground stay.
+                </li>
+                <li>
+                  <strong>What we do NOT do:</strong> We are not a medical facility and do not practice medicine, prescribe medications, or perform diagnoses.
+                </li>
+              </ul>
+            </div>
+
+            <div class="sidebar-card contact-snippet">
+              <h3>Questions or Inquiries?</h3>
+              <p>Contact our leadership and coordination desk directly.</p>
+              <a href="/en/contact/" class="btn-primary">Contact Us</a>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .page-container {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+  }
+
+  .page-header {
+    background: linear-gradient(180deg, var(--color-mist) 0%, var(--color-paper) 100%);
+    padding: var(--space-8) 0 var(--space-6);
+    border-bottom: 1px solid rgba(20, 41, 75, 0.08);
+  }
+
+  .breadcrumb ol {
+    display: flex;
+    gap: var(--space-1);
+    list-style: none;
+    padding: 0;
+    margin: 0 0 var(--space-3);
+    font-size: 0.875rem;
+    color: var(--color-slate);
+  }
+
+  .breadcrumb li + li::before {
+    content: "/";
+    margin-right: var(--space-1);
+    color: var(--color-slate);
+  }
+
+  .breadcrumb a {
+    color: var(--color-navy);
+    text-decoration: none;
+  }
+
+  .breadcrumb a:hover {
+    text-decoration: underline;
+  }
+
+  .eyebrow {
+    display: inline-block;
+    font-size: 0.8125rem;
+    font-weight: var(--font-weight-subheading);
+    letter-spacing: 0.08em;
+    color: var(--color-gold-text);
+    text-transform: uppercase;
+    margin-bottom: var(--space-2);
+  }
+
+  .page-title {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: var(--font-weight-heading);
+    color: var(--color-navy);
+    line-height: var(--line-height-heading);
+    margin: 0 0 var(--space-3);
+  }
+
+  .page-deck {
+    font-size: 1.125rem;
+    font-weight: var(--font-weight-deck);
+    line-height: var(--line-height-body);
+    color: var(--color-slate);
+    max-width: 720px;
+    margin: 0;
+  }
+
+  .about-section {
+    padding: var(--space-8) 0 var(--space-12);
+  }
+
+  .content-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+  }
+
+  @media (min-width: 992px) {
+    .content-grid {
+      grid-template-columns: 2fr 1fr;
+    }
+  }
+
+  .section-tag {
+    font-size: 0.75rem;
+    font-weight: var(--font-weight-subheading);
+    letter-spacing: 0.08em;
+    color: var(--color-gold-text);
+    text-transform: uppercase;
+  }
+
+  .main-content h2 {
+    color: var(--color-navy);
+    font-size: 2rem;
+    margin: var(--space-1) 0 var(--space-3);
+  }
+
+  .main-content p {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--color-ink);
+    margin-bottom: var(--space-4);
+  }
+
+  .principles-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+    margin: var(--space-6) 0;
+  }
+
+  @media (min-width: 600px) {
+    .principles-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .principle-card {
+    background-color: var(--color-mist);
+    padding: var(--space-5);
+    border-radius: var(--radius-card);
+    border: 1px solid rgba(20, 41, 75, 0.08);
+  }
+
+  .principle-card h3 {
+    color: var(--color-navy);
+    font-size: 1.125rem;
+    margin: 0 0 var(--space-2);
+  }
+
+  .principle-card p {
+    font-size: 0.875rem;
+    color: var(--color-slate);
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  .commercial-disclosure-card {
+    background-color: rgba(196, 154, 60, 0.08);
+    border: 1px solid rgba(196, 154, 60, 0.3);
+    border-radius: var(--radius-card);
+    padding: var(--space-6);
+    margin-top: var(--space-6);
+  }
+
+  .commercial-disclosure-card h3 {
+    color: var(--color-navy);
+    font-size: 1.25rem;
+    margin: 0 0 var(--space-2);
+  }
+
+  .commercial-disclosure-card p {
+    color: var(--color-slate);
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    margin-bottom: var(--space-3);
+  }
+
+  .disclosure-link {
+    color: var(--color-navy);
+    font-weight: var(--font-weight-subheading);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .disclosure-link:hover {
+    color: var(--color-gold-text);
+    text-decoration: underline;
+  }
+
+  .sidebar-about {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .sidebar-card {
+    background-color: var(--color-mist);
+    padding: var(--space-6);
+    border-radius: var(--radius-card);
+    border: 1px solid rgba(20, 41, 75, 0.08);
+  }
+
+  .sidebar-card h3 {
+    color: var(--color-navy);
+    font-size: 1.125rem;
+    margin: 0 0 var(--space-3);
+  }
+
+  .scope-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    font-size: 0.875rem;
+    color: var(--color-slate);
+    line-height: 1.5;
+  }
+
+  .scope-list strong {
+    color: var(--color-navy);
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  .contact-snippet p {
+    font-size: 0.875rem;
+    color: var(--color-slate);
+    margin-bottom: var(--space-4);
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-gold);
+    color: var(--color-deep-navy);
+    font-weight: var(--font-weight-subheading);
+    padding: 12px 24px;
+    border-radius: var(--radius-pill);
+    text-decoration: none;
+    transition: transform 0.15s ease, filter 0.15s ease;
+  }
+
+  .btn-primary:hover {
+    filter: brightness(1.08);
+    transform: translateY(-1px);
+  }
+</style>
+

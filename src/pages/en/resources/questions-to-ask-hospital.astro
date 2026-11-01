@@ -1,0 +1,179 @@
+---
+/**
+ * src/pages/en/resources/questions-to-ask-hospital.astro
+ * Guide: Essential Questions to Ask Your Treating Hospital
+ */
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Questions to Ask Your Treating Hospital | Nuhavi Health Guide"
+  description="Crucial questions regarding surgeon experience, infection control, multidisciplinary tumor boards, and post-discharge recovery."
+>
+  <div class="page-container">
+    <header class="page-header">
+      <div class="container">
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <ol>
+            <li><a href="/en/">Home</a></li>
+            <li><a href="/en/resources/">Resources</a></li>
+            <li aria-current="page">Questions to Ask</li>
+          </ol>
+        </nav>
+        <span class="eyebrow">PATIENT ADVOCACY</span>
+        <h1 class="page-title">Questions to Ask Your Treating Hospital</h1>
+        <p class="page-deck">
+          Empowering patients and families to engage confidently with clinical teams. Here are the core questions to explore during your consultations.
+        </p>
+      </div>
+    </header>
+
+    <section class="guide-content">
+      <div class="container">
+        <div class="content-wrapper">
+          <h2>1. Team Experience & Volume</h2>
+          <p>
+            Inquire about how many procedures of your specific type the lead surgeon and surgical team perform each year. High surgical volume in complex procedures (e.g. robotic oncology, revision joint replacement) directly correlates with reduced complication rates.
+          </p>
+
+          <h2>2. Multidisciplinary Review</h2>
+          <p>
+            Ask whether your case will be presented before a comprehensive Tumor Board or Joint Clinical Board. Ensuring medical, surgical, and radiation oncologists collaborate on your therapy plan delivers better clinical outcomes.
+          </p>
+
+          <h2>3. Contingency & ICU Protocols</h2>
+          <p>
+            Clarify the hospital's on-site intensive care facilities, blood bank capabilities, and emergency protocols in case of unexpected surgical complications.
+          </p>
+
+          <h2>4. Post-Discharge & Remote Follow-Up</h2>
+          <p>
+            Understand how many days you must remain in local accommodation near the hospital before flying home, and how your local physician back home can coordinate with the treating team.
+          </p>
+
+          <div class="cta-box">
+            <h3>Need our coordinator to facilitate these questions?</h3>
+            <p>We submit these specific clinical inquiries on your behalf during medical opinion requests.</p>
+            <a href="/en/request-opinion/" class="btn-primary">Request Coordinated Review</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .page-container {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+  }
+
+  .page-header {
+    background: linear-gradient(180deg, var(--color-mist) 0%, var(--color-paper) 100%);
+    padding: var(--space-8) 0 var(--space-6);
+    border-bottom: 1px solid rgba(20, 41, 75, 0.08);
+  }
+
+  .breadcrumb ol {
+    display: flex;
+    gap: var(--space-1);
+    list-style: none;
+    padding: 0;
+    margin: 0 0 var(--space-3);
+    font-size: 0.875rem;
+    color: var(--color-slate);
+  }
+
+  .breadcrumb li + li::before {
+    content: "/";
+    margin-right: var(--space-1);
+    color: var(--color-slate);
+  }
+
+  .breadcrumb a {
+    color: var(--color-navy);
+    text-decoration: none;
+  }
+
+  .breadcrumb a:hover {
+    text-decoration: underline;
+  }
+
+  .eyebrow {
+    display: inline-block;
+    font-size: 0.8125rem;
+    font-weight: var(--font-weight-subheading);
+    letter-spacing: 0.08em;
+    color: var(--color-gold-text);
+    text-transform: uppercase;
+    margin-bottom: var(--space-2);
+  }
+
+  .page-title {
+    font-size: clamp(1.75rem, 3.5vw, 2.75rem);
+    font-weight: var(--font-weight-heading);
+    color: var(--color-navy);
+    line-height: var(--line-height-heading);
+    margin: 0 0 var(--space-3);
+  }
+
+  .page-deck {
+    font-size: 1.125rem;
+    font-weight: var(--font-weight-deck);
+    line-height: var(--line-height-body);
+    color: var(--color-slate);
+    max-width: 720px;
+    margin: 0;
+  }
+
+  .guide-content {
+    padding: var(--space-8) 0 var(--space-12);
+  }
+
+  .content-wrapper {
+    max-width: 760px;
+  }
+
+  .content-wrapper h2 {
+    color: var(--color-navy);
+    font-size: 1.375rem;
+    margin: var(--space-6) 0 var(--space-2);
+  }
+
+  .content-wrapper p {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--color-ink);
+    margin-bottom: var(--space-4);
+  }
+
+  .cta-box {
+    background-color: var(--color-mist);
+    border: 1px solid rgba(20, 41, 75, 0.08);
+    border-radius: var(--radius-card);
+    padding: var(--space-6);
+    margin-top: var(--space-8);
+  }
+
+  .cta-box h3 {
+    color: var(--color-navy);
+    margin: 0 0 var(--space-2);
+  }
+
+  .cta-box p {
+    color: var(--color-slate);
+    margin: 0 0 var(--space-4);
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    background-color: var(--color-gold);
+    color: var(--color-deep-navy);
+    font-weight: var(--font-weight-subheading);
+    padding: 12px 24px;
+    border-radius: var(--radius-pill);
+    text-decoration: none;
+  }
+</style>
+

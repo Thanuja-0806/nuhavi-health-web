@@ -1,0 +1,174 @@
+---
+/**
+ * src/pages/en/resources/understanding-treatment-estimate.astro
+ * Guide: How to Understand & Compare Hospital Treatment Estimates
+ */
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Understanding Hospital Treatment Estimates | Nuhavi Health Guide"
+  description="How to evaluate hospital cost estimates, inclusions, ICU stays, medications, and avoid unexpected expenses during medical travel."
+>
+  <div class="page-container">
+    <header class="page-header">
+      <div class="container">
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <ol>
+            <li><a href="/en/">Home</a></li>
+            <li><a href="/en/resources/">Resources</a></li>
+            <li aria-current="page">Understanding Treatment Estimates</li>
+          </ol>
+        </nav>
+        <span class="eyebrow">FINANCIAL GUIDANCE</span>
+        <h1 class="page-title">Understanding Your Treatment Estimate</h1>
+        <p class="page-deck">
+          Deciphering medical estimates helps avoid unexpected bills. Here is how to evaluate hospital quotes, understand package boundaries, and prepare realistic financial budgets.
+        </p>
+      </div>
+    </header>
+
+    <section class="guide-content">
+      <div class="container">
+        <div class="content-wrapper">
+          <h2>1. Package Estimate vs Open-Ended Billing</h2>
+          <p>
+            Hospitals in India frequently quote a package rate covering surgery, standard room stay (e.g. 3-5 days), surgeon fees, and basic operating room consumables. Always check whether high-cost targeted drugs, special implants, or intensive care (ICU) extensions are included or billed extra.
+          </p>
+
+          <h2>2. Room Category Impact</h2>
+          <p>
+            In many private hospital networks in India, all internal procedural costs (including doctor consultation fees and nursing charges) scale with the room category chosen (e.g. Twin Sharing, Single Private Room, or Deluxe Suite). Selecting your desired room tier before admission ensures estimate precision.
+          </p>
+
+          <h2>3. Recommended Financial Contingency</h2>
+          <p>
+            We advise international patients to maintain an additional 15% to 20% financial buffer over the initial estimate to account for additional pathology tests, specialized medications, or extra post-surgical recovery days.
+          </p>
+
+          <div class="cta-box">
+            <h3>Want a full breakdown of coordination and hospital billing?</h3>
+            <p>Read our dedicated analysis of costs, payment paths, and fees.</p>
+            <a href="/en/how-it-works/costs-and-fees/" class="btn-primary">View Full Costs & Fees Breakdown</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .page-container {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+  }
+
+  .page-header {
+    background: linear-gradient(180deg, var(--color-mist) 0%, var(--color-paper) 100%);
+    padding: var(--space-8) 0 var(--space-6);
+    border-bottom: 1px solid rgba(20, 41, 75, 0.08);
+  }
+
+  .breadcrumb ol {
+    display: flex;
+    gap: var(--space-1);
+    list-style: none;
+    padding: 0;
+    margin: 0 0 var(--space-3);
+    font-size: 0.875rem;
+    color: var(--color-slate);
+  }
+
+  .breadcrumb li + li::before {
+    content: "/";
+    margin-right: var(--space-1);
+    color: var(--color-slate);
+  }
+
+  .breadcrumb a {
+    color: var(--color-navy);
+    text-decoration: none;
+  }
+
+  .breadcrumb a:hover {
+    text-decoration: underline;
+  }
+
+  .eyebrow {
+    display: inline-block;
+    font-size: 0.8125rem;
+    font-weight: var(--font-weight-subheading);
+    letter-spacing: 0.08em;
+    color: var(--color-gold-text);
+    text-transform: uppercase;
+    margin-bottom: var(--space-2);
+  }
+
+  .page-title {
+    font-size: clamp(1.75rem, 3.5vw, 2.75rem);
+    font-weight: var(--font-weight-heading);
+    color: var(--color-navy);
+    line-height: var(--line-height-heading);
+    margin: 0 0 var(--space-3);
+  }
+
+  .page-deck {
+    font-size: 1.125rem;
+    font-weight: var(--font-weight-deck);
+    line-height: var(--line-height-body);
+    color: var(--color-slate);
+    max-width: 720px;
+    margin: 0;
+  }
+
+  .guide-content {
+    padding: var(--space-8) 0 var(--space-12);
+  }
+
+  .content-wrapper {
+    max-width: 760px;
+  }
+
+  .content-wrapper h2 {
+    color: var(--color-navy);
+    font-size: 1.375rem;
+    margin: var(--space-6) 0 var(--space-2);
+  }
+
+  .content-wrapper p {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--color-ink);
+    margin-bottom: var(--space-4);
+  }
+
+  .cta-box {
+    background-color: var(--color-mist);
+    border: 1px solid rgba(20, 41, 75, 0.08);
+    border-radius: var(--radius-card);
+    padding: var(--space-6);
+    margin-top: var(--space-8);
+  }
+
+  .cta-box h3 {
+    color: var(--color-navy);
+    margin: 0 0 var(--space-2);
+  }
+
+  .cta-box p {
+    color: var(--color-slate);
+    margin: 0 0 var(--space-4);
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    background-color: var(--color-gold);
+    color: var(--color-deep-navy);
+    font-weight: var(--font-weight-subheading);
+    padding: 12px 24px;
+    border-radius: var(--radius-pill);
+    text-decoration: none;
+  }
+</style>
+

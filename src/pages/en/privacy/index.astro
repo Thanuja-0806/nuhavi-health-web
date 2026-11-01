@@ -1,0 +1,147 @@
+---
+/**
+ * src/pages/en/privacy/index.astro
+ * Privacy Policy & Data Protection
+ */
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Privacy Policy | Nuhavi Health"
+  description="How Nuhavi Health protects patient personal information, medical records, and digital communications."
+>
+  <div class="page-container">
+    <header class="page-header">
+      <div class="container">
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <ol>
+            <li><a href="/en/">Home</a></li>
+            <li aria-current="page">Privacy Policy</li>
+          </ol>
+        </nav>
+        <span class="eyebrow">LEGAL & PRIVACY</span>
+        <h1 class="page-title">Privacy Policy</h1>
+        <p class="page-deck">
+          We treat your medical records and personal data with the highest degree of confidentiality and data security.
+        </p>
+      </div>
+    </header>
+
+    <section class="legal-section">
+      <div class="container">
+        <div class="legal-content">
+          <h2>1. Data Collection & Purpose</h2>
+          <p>
+            When you request a medical opinion or contact our coordination desk, we collect diagnostic information (e.g. medical summaries, lab results, imaging scans) and contact information (name, email, phone number, nationality). This data is collected solely to coordinate medical reviews and logistical travel support with licensed hospitals in India.
+          </p>
+
+          <h2>2. How Your Records Are Shared</h2>
+          <p>
+            Your clinical files are shared strictly with verified medical specialists and hospital international patient departments involved in reviewing your specific case. We do not sell, rent, or monetize your health information to third-party advertisers or insurance brokers.
+          </p>
+
+          <h2>3. Data Retention & Erasure</h2>
+          <p>
+            You may request the full deletion of your medical records from our coordination database at any time by contacting our privacy officer at <a href="mailto:privacy@nuhavihealth.com">privacy@nuhavihealth.com</a>.
+          </p>
+        </div>
+      </div>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .page-container {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+  }
+
+  .page-header {
+    background: linear-gradient(180deg, var(--color-mist) 0%, var(--color-paper) 100%);
+    padding: var(--space-8) 0 var(--space-6);
+    border-bottom: 1px solid rgba(20, 41, 75, 0.08);
+  }
+
+  .breadcrumb ol {
+    display: flex;
+    gap: var(--space-1);
+    list-style: none;
+    padding: 0;
+    margin: 0 0 var(--space-3);
+    font-size: 0.875rem;
+    color: var(--color-slate);
+  }
+
+  .breadcrumb li + li::before {
+    content: "/";
+    margin-right: var(--space-1);
+    color: var(--color-slate);
+  }
+
+  .breadcrumb a {
+    color: var(--color-navy);
+    text-decoration: none;
+  }
+
+  .breadcrumb a:hover {
+    text-decoration: underline;
+  }
+
+  .eyebrow {
+    display: inline-block;
+    font-size: 0.8125rem;
+    font-weight: var(--font-weight-subheading);
+    letter-spacing: 0.08em;
+    color: var(--color-gold-text);
+    text-transform: uppercase;
+    margin-bottom: var(--space-2);
+  }
+
+  .page-title {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: var(--font-weight-heading);
+    color: var(--color-navy);
+    line-height: var(--line-height-heading);
+    margin: 0 0 var(--space-3);
+  }
+
+  .page-deck {
+    font-size: 1.125rem;
+    font-weight: var(--font-weight-deck);
+    line-height: var(--line-height-body);
+    color: var(--color-slate);
+    max-width: 720px;
+    margin: 0;
+  }
+
+  .legal-section {
+    padding: var(--space-8) 0 var(--space-12);
+  }
+
+  .legal-content {
+    max-width: 760px;
+  }
+
+  .legal-content h2 {
+    color: var(--color-navy);
+    font-size: 1.375rem;
+    margin: var(--space-6) 0 var(--space-2);
+  }
+
+  .legal-content h2:first-of-type {
+    margin-top: 0;
+  }
+
+  .legal-content p {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--color-ink);
+    margin-bottom: var(--space-4);
+  }
+
+  .legal-content a {
+    color: var(--color-navy);
+    font-weight: var(--font-weight-subheading);
+  }
+</style>
+

@@ -1,0 +1,203 @@
+---
+/**
+ * src/pages/en/resources/preparing-medical-records.astro
+ * Guide: How to Prepare Medical Records for Overseas Review
+ */
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="How to Prepare Your Medical Records | Nuhavi Health Guide"
+  description="Step-by-step checklist of pathology, radiological scans, and clinical notes needed for an accurate overseas medical opinion in India."
+>
+  <div class="page-container">
+    <header class="page-header">
+      <div class="container">
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <ol>
+            <li><a href="/en/">Home</a></li>
+            <li><a href="/en/resources/">Resources</a></li>
+            <li aria-current="page">Preparing Medical Records</li>
+          </ol>
+        </nav>
+        <span class="eyebrow">PATIENT CHECKLIST</span>
+        <h1 class="page-title">How to Prepare Your Medical Records</h1>
+        <p class="page-deck">
+          A thorough, accurate doctor's review depends on complete clinical records. Use this checklist to assemble your diagnostic portfolio before submitting your inquiry.
+        </p>
+      </div>
+    </header>
+
+    <section class="guide-content">
+      <div class="container">
+        <div class="content-wrapper">
+          <h2>1. Essential Diagnostic Reports</h2>
+          <ul class="checklist">
+            <li><strong>Histopathology & Biopsy Reports:</strong> Full laboratory text with ER, PR, HER2, Ki-67 or genetic marker analyses where applicable.</li>
+            <li><strong>Imaging Scans (CT, MRI, PET-CT):</strong> Written radiologist impressions along with DICOM digital scan files.</li>
+            <li><strong>Recent Blood Work:</strong> Complete blood count (CBC), liver function test (LFT), kidney function test (KFT), and tumor markers.</li>
+            <li><strong>Discharge Summaries:</strong> Notes from previous surgeries, chemotherapy logs, or radiation discharge papers.</li>
+          </ul>
+
+          <h2>2. How to Share Large Digital Scans (DICOM)</h2>
+          <p>
+            Standard email attachments cannot support large 500MB+ CT or MRI disc images. Once you submit an initial inquiry, our coordinator provides a secure Google Drive or OneDrive upload folder where you can drop the raw DICOM files directly.
+          </p>
+
+          <h2>3. Translation & Legibility</h2>
+          <p>
+            If your diagnostic summaries are in Russian, Arabic, French, or Uzbek, please provide them in the original format. Our multilingual medical coordinators will translate key terminology for the Indian hospital clinical board.
+          </p>
+
+          <div class="cta-box">
+            <h3>Ready to submit your records for review?</h3>
+            <p>Our clinical coordinators will review your documents and coordinate with accredited specialists.</p>
+            <a href="/en/request-opinion/" class="btn-primary">Submit Records for Review</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .page-container {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+  }
+
+  .page-header {
+    background: linear-gradient(180deg, var(--color-mist) 0%, var(--color-paper) 100%);
+    padding: var(--space-8) 0 var(--space-6);
+    border-bottom: 1px solid rgba(20, 41, 75, 0.08);
+  }
+
+  .breadcrumb ol {
+    display: flex;
+    gap: var(--space-1);
+    list-style: none;
+    padding: 0;
+    margin: 0 0 var(--space-3);
+    font-size: 0.875rem;
+    color: var(--color-slate);
+  }
+
+  .breadcrumb li + li::before {
+    content: "/";
+    margin-right: var(--space-1);
+    color: var(--color-slate);
+  }
+
+  .breadcrumb a {
+    color: var(--color-navy);
+    text-decoration: none;
+  }
+
+  .breadcrumb a:hover {
+    text-decoration: underline;
+  }
+
+  .eyebrow {
+    display: inline-block;
+    font-size: 0.8125rem;
+    font-weight: var(--font-weight-subheading);
+    letter-spacing: 0.08em;
+    color: var(--color-gold-text);
+    text-transform: uppercase;
+    margin-bottom: var(--space-2);
+  }
+
+  .page-title {
+    font-size: clamp(1.75rem, 3.5vw, 2.75rem);
+    font-weight: var(--font-weight-heading);
+    color: var(--color-navy);
+    line-height: var(--line-height-heading);
+    margin: 0 0 var(--space-3);
+  }
+
+  .page-deck {
+    font-size: 1.125rem;
+    font-weight: var(--font-weight-deck);
+    line-height: var(--line-height-body);
+    color: var(--color-slate);
+    max-width: 720px;
+    margin: 0;
+  }
+
+  .guide-content {
+    padding: var(--space-8) 0 var(--space-12);
+  }
+
+  .content-wrapper {
+    max-width: 760px;
+  }
+
+  .content-wrapper h2 {
+    color: var(--color-navy);
+    font-size: 1.375rem;
+    margin: var(--space-6) 0 var(--space-3);
+  }
+
+  .content-wrapper p {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--color-ink);
+    margin-bottom: var(--space-4);
+  }
+
+  .checklist {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 var(--space-6);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .checklist li {
+    padding-left: var(--space-4);
+    position: relative;
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    color: var(--color-ink);
+  }
+
+  .checklist li::before {
+    content: "■";
+    color: var(--color-gold);
+    font-size: 0.75rem;
+    position: absolute;
+    left: 0;
+    top: 3px;
+  }
+
+  .cta-box {
+    background-color: var(--color-mist);
+    border: 1px solid rgba(20, 41, 75, 0.08);
+    border-radius: var(--radius-card);
+    padding: var(--space-6);
+    margin-top: var(--space-8);
+  }
+
+  .cta-box h3 {
+    color: var(--color-navy);
+    margin: 0 0 var(--space-2);
+  }
+
+  .cta-box p {
+    color: var(--color-slate);
+    margin: 0 0 var(--space-4);
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    background-color: var(--color-gold);
+    color: var(--color-deep-navy);
+    font-weight: var(--font-weight-subheading);
+    padding: 12px 24px;
+    border-radius: var(--radius-pill);
+    text-decoration: none;
+  }
+</style>
+

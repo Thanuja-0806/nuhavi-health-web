@@ -1,0 +1,142 @@
+---
+/**
+ * src/pages/en/terms/index.astro
+ * Terms & Conditions
+ */
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Terms & Conditions | Nuhavi Health"
+  description="Terms and conditions governing the coordination services provided by Nuhavi Health."
+>
+  <div class="page-container">
+    <header class="page-header">
+      <div class="container">
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <ol>
+            <li><a href="/en/">Home</a></li>
+            <li aria-current="page">Terms and Conditions</li>
+          </ol>
+        </nav>
+        <span class="eyebrow">LEGAL AGREEMENT</span>
+        <h1 class="page-title">Terms & Conditions</h1>
+        <p class="page-deck">
+          Please review the terms governing our coordination role, communication protocols, and scope of service.
+        </p>
+      </div>
+    </header>
+
+    <section class="legal-section">
+      <div class="container">
+        <div class="legal-content">
+          <h2>1. Coordination Service Only</h2>
+          <p>
+            Nuhavi Health operates strictly as an independent healthcare facilitator and medical travel coordinator. We do not provide clinical diagnosis, medical care, surgery, nursing, or prescriptions. All medical evaluations, treatments, and care plans are formulated and executed by independent, licensed hospital staff and doctors in India.
+          </p>
+
+          <h2>2. Non-Binding Nature of Estimates</h2>
+          <p>
+            All cost estimates, duration forecasts, and treatment suggestions relayed by Nuhavi Health are preliminary and issued by partner hospitals based solely on the reports submitted. In-person clinical examinations and repeat scans upon hospital arrival may require modifications to the final treatment protocol or cost.
+          </p>
+
+          <h2>3. Travel & Visa Responsibility</h2>
+          <p>
+            While Nuhavi Health assists with medical visa invitation letters and logistics guidance, final visa issuance and entry permissions remain under the sole discretion of the Government of India immigration authorities.
+          </p>
+        </div>
+      </div>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .page-container {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+  }
+
+  .page-header {
+    background: linear-gradient(180deg, var(--color-mist) 0%, var(--color-paper) 100%);
+    padding: var(--space-8) 0 var(--space-6);
+    border-bottom: 1px solid rgba(20, 41, 75, 0.08);
+  }
+
+  .breadcrumb ol {
+    display: flex;
+    gap: var(--space-1);
+    list-style: none;
+    padding: 0;
+    margin: 0 0 var(--space-3);
+    font-size: 0.875rem;
+    color: var(--color-slate);
+  }
+
+  .breadcrumb li + li::before {
+    content: "/";
+    margin-right: var(--space-1);
+    color: var(--color-slate);
+  }
+
+  .breadcrumb a {
+    color: var(--color-navy);
+    text-decoration: none;
+  }
+
+  .breadcrumb a:hover {
+    text-decoration: underline;
+  }
+
+  .eyebrow {
+    display: inline-block;
+    font-size: 0.8125rem;
+    font-weight: var(--font-weight-subheading);
+    letter-spacing: 0.08em;
+    color: var(--color-gold-text);
+    text-transform: uppercase;
+    margin-bottom: var(--space-2);
+  }
+
+  .page-title {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: var(--font-weight-heading);
+    color: var(--color-navy);
+    line-height: var(--line-height-heading);
+    margin: 0 0 var(--space-3);
+  }
+
+  .page-deck {
+    font-size: 1.125rem;
+    font-weight: var(--font-weight-deck);
+    line-height: var(--line-height-body);
+    color: var(--color-slate);
+    max-width: 720px;
+    margin: 0;
+  }
+
+  .legal-section {
+    padding: var(--space-8) 0 var(--space-12);
+  }
+
+  .legal-content {
+    max-width: 760px;
+  }
+
+  .legal-content h2 {
+    color: var(--color-navy);
+    font-size: 1.375rem;
+    margin: var(--space-6) 0 var(--space-2);
+  }
+
+  .legal-content h2:first-of-type {
+    margin-top: 0;
+  }
+
+  .legal-content p {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--color-ink);
+    margin-bottom: var(--space-4);
+  }
+</style>
+

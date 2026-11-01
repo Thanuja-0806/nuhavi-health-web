@@ -1,0 +1,178 @@
+---
+/**
+ * src/pages/en/about/commercial-relationships.astro
+ * Commercial Relationships & Coordination Disclosure
+ */
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Commercial Relationships & Revenue Disclosure | Nuhavi Health"
+  description="Clear disclosure on how Nuhavi Health operates, how we earn revenue, and our commitment to uninflated hospital pricing."
+>
+  <div class="page-container">
+    <header class="page-header">
+      <div class="container">
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <ol>
+            <li><a href="/en/">Home</a></li>
+            <li><a href="/en/about/">About</a></li>
+            <li aria-current="page">Commercial Relationships</li>
+          </ol>
+        </nav>
+        <span class="eyebrow">TRANSPARENCY STANDARD</span>
+        <h1 class="page-title">Commercial Relationships Disclosure</h1>
+        <p class="page-deck">
+          Ethical medical travel requires complete commercial honesty. Here is a direct explanation of our business model, hospital agreements, and pricing protections.
+        </p>
+      </div>
+    </header>
+
+    <section class="policy-section">
+      <div class="container">
+        <div class="policy-body">
+          <h2>1. How Nuhavi Health is Funded</h2>
+          <p>
+            Nuhavi Health receives standardized coordination and international patient servicing fees directly from partner hospital networks. This covers our operational expenses: document translation, airport transfers, continuous bilingual assistance, and medical report logistics.
+          </p>
+
+          <h2>2. Zero Price Markups Guarantee</h2>
+          <p>
+            We strictly enforce a <strong>Zero Markup Policy</strong>. International patients pay the exact official hospital rate tariff. The medical estimate you receive from us originates from the hospital's clinical billing department, and payment is made directly to the hospital treasury upon registration.
+          </p>
+
+          <h2>3. Clinical Independence</h2>
+          <p>
+            Our fee arrangements are uniform across accredited partner hospitals, preventing any incentive to direct a patient toward one hospital over another based on commercial compensation. Hospital recommendations are based entirely on clinical suitability, doctor specialization, technology availability, and patient preference.
+          </p>
+
+          <div class="back-action">
+            <a href="/en/how-it-works/costs-and-fees/" class="btn-primary">View Costs & Fees Breakdown</a>
+            <a href="/en/about/" class="btn-secondary">Back to About Us</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .page-container {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+  }
+
+  .page-header {
+    background: linear-gradient(180deg, var(--color-mist) 0%, var(--color-paper) 100%);
+    padding: var(--space-8) 0 var(--space-6);
+    border-bottom: 1px solid rgba(20, 41, 75, 0.08);
+  }
+
+  .breadcrumb ol {
+    display: flex;
+    gap: var(--space-1);
+    list-style: none;
+    padding: 0;
+    margin: 0 0 var(--space-3);
+    font-size: 0.875rem;
+    color: var(--color-slate);
+  }
+
+  .breadcrumb li + li::before {
+    content: "/";
+    margin-right: var(--space-1);
+    color: var(--color-slate);
+  }
+
+  .breadcrumb a {
+    color: var(--color-navy);
+    text-decoration: none;
+  }
+
+  .breadcrumb a:hover {
+    text-decoration: underline;
+  }
+
+  .eyebrow {
+    display: inline-block;
+    font-size: 0.8125rem;
+    font-weight: var(--font-weight-subheading);
+    letter-spacing: 0.08em;
+    color: var(--color-gold-text);
+    text-transform: uppercase;
+    margin-bottom: var(--space-2);
+  }
+
+  .page-title {
+    font-size: clamp(1.75rem, 3.5vw, 2.75rem);
+    font-weight: var(--font-weight-heading);
+    color: var(--color-navy);
+    line-height: var(--line-height-heading);
+    margin: 0 0 var(--space-3);
+  }
+
+  .page-deck {
+    font-size: 1.125rem;
+    font-weight: var(--font-weight-deck);
+    line-height: var(--line-height-body);
+    color: var(--color-slate);
+    max-width: 720px;
+    margin: 0;
+  }
+
+  .policy-section {
+    padding: var(--space-8) 0 var(--space-12);
+  }
+
+  .policy-body {
+    max-width: 760px;
+  }
+
+  .policy-body h2 {
+    color: var(--color-navy);
+    font-size: 1.375rem;
+    margin: var(--space-6) 0 var(--space-2);
+  }
+
+  .policy-body h2:first-of-type {
+    margin-top: 0;
+  }
+
+  .policy-body p {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--color-ink);
+    margin-bottom: var(--space-4);
+  }
+
+  .back-action {
+    display: flex;
+    gap: var(--space-3);
+    margin-top: var(--space-8);
+    flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    background-color: var(--color-gold);
+    color: var(--color-deep-navy);
+    font-weight: var(--font-weight-subheading);
+    padding: 12px 24px;
+    border-radius: var(--radius-pill);
+    text-decoration: none;
+  }
+
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    background: transparent;
+    border: 1.5px solid var(--color-navy);
+    color: var(--color-navy);
+    font-weight: var(--font-weight-subheading);
+    padding: 12px 24px;
+    border-radius: var(--radius-pill);
+    text-decoration: none;
+  }
+</style>
+
