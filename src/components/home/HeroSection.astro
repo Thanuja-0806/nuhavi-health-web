@@ -1,87 +1,58 @@
 ---
 /**
  * HeroSection.astro
- * Hero component for the Nuhavi Health English homepage (/en/).
- *
- * Implements:
- * 1. Deep navy (#0D1B33) full-width container with accessible contrast.
- * 2. Exact reference headline (weight 800) and introductory deck (weight 300).
- * 3. Pill-shaped "Request a medical opinion" primary CTA and secondary "Explore treatments" link.
- * 4. Responsibility disclaimer note directly below CTA buttons.
- * 5. Signature gold route line drawn over ~2 seconds with 3 interactive, accessible stops.
- * 6. Full keyboard support (WAI-ARIA tabs), active panel updates, and prefers-reduced-motion handling.
- * 7. Stage 1 & Stage 2 exact panel content; Stage 3 description marked pending confirmation.
+ * Hero component for Nuhavi Health homepage.
+ * Localized for English (/en/), Russian (/ru/), and Arabic (/ar/ RTL).
  */
+import { homeTranslations } from '../../i18n/homeTranslations';
+import type { SupportedLang } from '../../i18n/translations';
 
-interface RouteStop {
-  id: string;
-  stepNumber: string;
-  shortLabel: string;
-  title: string;
-  description: string;
-  isPendingConfirmation?: boolean;
+interface Props {
+  lang?: SupportedLang;
 }
 
-const stops: RouteStop[] = [
-  {
-    id: 'share-details',
-    stepNumber: '01',
-    shortLabel: 'Share your medical details',
-    title: '1. Share your medical details',
-    description: 'Send a short enquiry. Then, if you agree, upload your reports through a private link we email you. A coordinator who speaks your language follows up.'
-  },
-  {
-    id: 'explore-options',
-    stepNumber: '02',
-    shortLabel: 'Explore your options',
-    title: '2. Explore your options',
-    description: 'A hospital team reviews your records. You receive their opinion and written estimates, explained in plain language.'
-  },
-  {
-    id: 'plan-journey',
-    stepNumber: '03',
-    shortLabel: 'Plan your care journey',
-    title: '3. Plan your care journey',
-    description: 'Once you decide, we plan the visit around your hospital appointments. Your coordinator helps with visa letter, stay, and reception.',
-    isPendingConfirmation: false
-  }
-];
+const currentPath = Astro.url.pathname;
+const detectedLang: SupportedLang = currentPath.startsWith('/ar')
+  ? 'ar'
+  : currentPath.startsWith('/ru')
+  ? 'ru'
+  : 'en';
+
+const lang: SupportedLang = Astro.props.lang || detectedLang;
+const hero = homeTranslations[lang].hero;
+const stops = hero.stops;
+const prefix = `/${lang}`;
+const requestOpinionHref = `${prefix}/request-opinion/`;
 ---
 
 <section class="hero-section" aria-labelledby="hero-heading">
   <div class="container hero-container">
     <!-- Top Content Group: Headline, Deck, Action Buttons & Responsibility Note -->
     <div class="hero-intro">
-      <span class="hero-eyebrow">Medical Travel Coordination</span>
+      <span class="hero-eyebrow">{hero.eyebrow}</span>
       
-      <h1 id="hero-heading" class="hero-headline">
-        Expert medical care in India. Support at every step.
-      </h1>
+      <h1 id="hero-heading" class="hero-headline">{hero.headline}</h1>
 
-      <p class="hero-deck">
-        Understand your treatment options, explore appropriate hospitals, receive coordinated medical reviews and plan your healthcare journey &mdash; with support before, during and after treatment.
-      </p>
+      <p class="hero-deck">{hero.deck}</p>
 
       <div class="hero-cta-group">
-        <a href="/en/request-opinion/" class="btn-primary hero-primary-cta">
-          Request a medical opinion
+        <a href={requestOpinionHref} class="btn-primary hero-primary-cta">
+          {hero.primaryCta}
         </a>
         <a href="/en/treatments" class="hero-secondary-cta">
-          Explore treatments <span aria-hidden="true">&rarr;</span>
+          {hero.secondaryCta} <span aria-hidden="true">&rarr;</span>
         </a>
       </div>
 
       <!-- Responsibility Note Directly Below CTA Buttons -->
-      <p class="hero-responsibility-note">
-        We coordinate care. Hospitals examine, decide and treat. We do not promise outcomes, savings or visa approval.
-      </p>
+      <p class="hero-responsibility-note">{hero.responsibilityNote}</p>
     </div>
 
     <!-- Signature Gold Route Line & 3 Interactive Stops -->
     <div class="route-tracker-wrapper">
       <div class="route-header">
-        <span class="route-eyebrow">Your Coordination Journey</span>
-        <span class="route-caption">Select any stage below to inspect how we coordinate each step</span>
+        <span class="route-eyebrow">{hero.routeEyebrow}</span>
+        <span class="route-caption">{hero.routeCaption}</span>
       </div>
 
       <div class="route-tracker">
@@ -125,7 +96,7 @@ const stops: RouteStop[] = [
                 <span class="stop-number">{stop.stepNumber}</span>
               </span>
               <span class="stop-text">
-                <span class="stop-step-label">Stage {index + 1}</span>
+                <span class="stop-step-label">{lang === 'ru' ? `Этап ${index + 1}` : lang === 'ar' ? `المرحلة ${index + 1}` : `Stage ${index + 1}`}</span>
                 <span class="stop-short-label">{stop.shortLabel}</span>
               </span>
             </button>
@@ -145,7 +116,7 @@ const stops: RouteStop[] = [
             tabindex="0"
           >
             <div class="panel-header">
-              <span class="panel-badge">Stage {stop.stepNumber} of 03</span>
+              <span class="panel-badge">{lang === 'ru' ? `Этап ${stop.stepNumber} из 03` : lang === 'ar' ? `المرحلة ${stop.stepNumber} من 03` : `Stage ${stop.stepNumber} of 03`}</span>
               <h3 class="panel-title">{stop.title}</h3>
             </div>
 
@@ -161,8 +132,8 @@ const stops: RouteStop[] = [
             )}
 
             <div class="panel-footer">
-              <a href="/en/request-opinion/" class="panel-cta-link">
-                Begin stage {index + 1} inquiry <span aria-hidden="true">&rarr;</span>
+              <a href={requestOpinionHref} class="panel-cta-link">
+                {lang === 'ru' ? `Начать запрос по этапу ${index + 1}` : lang === 'ar' ? `بدء الاستفسار للمرحلة ${index + 1}` : `Begin stage ${index + 1} inquiry`} <span aria-hidden="true">&rarr;</span>
               </a>
             </div>
           </div>
@@ -654,6 +625,63 @@ const stops: RouteStop[] = [
   .panel-cta-link:hover {
     color: var(--color-paper);
     text-decoration: underline;
+  }
+
+  /* --------------------------------------------------------------------------
+     RTL (RIGHT-TO-LEFT) JOURNEY ROUTE LINE MIRRORING (PDF Page 40)
+     -------------------------------------------------------------------------- */
+  :global([dir="rtl"]) .hero-intro {
+    text-align: right;
+  }
+
+  :global([dir="rtl"]) .hero-cta-group {
+    justify-content: flex-start;
+  }
+
+  :global([dir="rtl"]) .hero-secondary-cta span {
+    display: inline-block;
+    transform: scaleX(-1);
+  }
+
+  :global([dir="rtl"]) .desktop-track .route-svg {
+    transform: scaleX(-1);
+  }
+
+  :global([dir="rtl"]) .desktop-track {
+    left: 8%;
+    right: 8%;
+  }
+
+  :global([dir="rtl"]) .mobile-track {
+    left: auto;
+    right: 21px;
+  }
+
+  :global([dir="rtl"]) .stop-btn {
+    text-align: right;
+  }
+
+  @media (max-width: 768px) {
+    :global([dir="rtl"]) .stop-btn {
+      flex-direction: row-reverse;
+    }
+  }
+
+  :global([dir="rtl"]) .route-header {
+    text-align: right;
+  }
+
+  :global([dir="rtl"]) .panel-content-grid {
+    text-align: right;
+  }
+
+  :global([dir="rtl"]) .panel-footer {
+    justify-content: flex-start;
+  }
+
+  :global([dir="rtl"]) .panel-cta-link span {
+    display: inline-block;
+    transform: scaleX(-1);
   }
 </style>
 

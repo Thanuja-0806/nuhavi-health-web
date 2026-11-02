@@ -1,217 +1,175 @@
 ---
 /**
- * PatientStories.astro
- * Homepage section: "Patient stories" (Module 9)
- * Reference: Page 9 of the Nuhavi Health Look and Feel PDF (30 October 2026).
- *
- * Implements:
- * 1. Clean Mist (#F4F7FB) background with standard section spacing.
- * 2. Exact heading: "Patient stories".
- * 3. Exact supporting text: "Real stories, told with the patient's written permission, will appear here."
- * 4. Separate consent and authenticity information panel on the right:
- *    - "We will not publish invented testimonials, outcome claims or photos without consent."
- *    - "Each story will show what was coordinated and what was not, so that patients can see it at any time."
- * 5. Deliberate empty state: zero fake patient names, AI/stock photos, star ratings, or placeholder story cards.
- * 6. Responsive two-column desktop layout and single-column mobile layout with zero overflow at 390px and 360px.
- * 7. Strict privacy and regulatory safeguards.
+ * src/components/home/PatientStories.astro
+ * Homepage: "Patient stories"
+ * Reference: Page 9 of Nuhavi Health Look and Feel PDF.
+ * Localized for English (/en/), Russian (/ru/), and Arabic (/ar/ RTL).
  */
+import { homeTranslations } from '../../i18n/homeTranslations';
+import type { SupportedLang } from '../../i18n/translations';
+
+interface Props {
+  lang?: SupportedLang;
+}
+
+const currentPath = Astro.url.pathname;
+const detectedLang: SupportedLang = currentPath.startsWith('/ar')
+  ? 'ar'
+  : currentPath.startsWith('/ru')
+  ? 'ru'
+  : 'en';
+
+const lang: SupportedLang = Astro.props.lang || detectedLang;
+const content = homeTranslations[lang].patientStories;
 ---
 
-<section class="stories-section" aria-labelledby="stories-heading">
+<section class="patient-stories-section" aria-labelledby="patient-stories-heading">
   <div class="container stories-container">
-    <div class="stories-layout">
-      <!-- Left Column: Heading and Supporting Copy -->
-      <div class="stories-intro-col">
-        <header class="stories-header">
-          <span class="stories-eyebrow">Patient Experiences</span>
-          <h2 id="stories-heading" class="stories-title">
-            Patient stories
-          </h2>
-          <p class="stories-supporting-text">
-            Real stories, told with the patient's written permission, will appear here.
-          </p>
-        </header>
+    <div class="stories-grid">
+      <!-- Left Column: Title, Deck, Link -->
+      <div class="stories-left-col">
+        <h2 id="patient-stories-heading" class="stories-title">
+          {content.title}
+        </h2>
+        <p class="stories-deck">
+          {content.deck}
+        </p>
+
+        <div class="stories-link-wrap">
+          <a href="/en/stories/" class="stories-text-link">
+            {content.linkText} <span aria-hidden="true">&rarr;</span>
+          </a>
+        </div>
       </div>
 
-      <!-- Right Column: Consent and Authenticity Information Panel -->
-      <div class="stories-panel-col">
-        <aside class="consent-panel" aria-label="Consent and authenticity policy">
-          <span class="panel-eyebrow">AUTHENTICITY &amp; CONSENT</span>
-          <h3 class="panel-title">Our publication standard</h3>
-
-          <div class="panel-body">
-            <p class="panel-text">
-              We will not publish invented testimonials, outcome claims or photos without consent.
-            </p>
-            <p class="panel-text">
-              Each story will show what was coordinated and what was not, so that patients can see it at any time.
-            </p>
-          </div>
-        </aside>
+      <!-- Right Column: Ethical Policy Card -->
+      <div class="stories-right-col">
+        <div class="stories-policy-card">
+          <div class="policy-gold-bar" aria-hidden="true"></div>
+          <h3 class="policy-title">{content.policyTitle}</h3>
+          <p class="policy-text">
+            {content.policyText}
+          </p>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
 <style>
-  /* --------------------------------------------------------------------------
-     SECTION BASE & SHELL (Mist #F4F7FB Background)
-     -------------------------------------------------------------------------- */
-  .stories-section {
+  .patient-stories-section {
     width: 100%;
-    background-color: var(--color-mist);
-    padding-top: var(--section-spacing);
-    padding-bottom: var(--section-spacing);
-    border-top: 1px solid rgba(20, 41, 75, 0.08);
+    background-color: var(--color-paper);
+    padding: var(--space-12) 0;
+    border-bottom: 1px solid rgba(20, 41, 75, 0.08);
   }
 
   .stories-container {
     width: 100%;
     max-width: 1200px;
-    margin-left: auto;
-    margin-right: auto;
-    padding-left: var(--space-3);
-    padding-right: var(--space-3);
+    margin: 0 auto;
+    padding: 0 var(--space-4);
+    box-sizing: border-box;
   }
 
-  @media (max-width: 480px) {
-    .stories-container {
-      padding-left: var(--space-2);
-      padding-right: var(--space-2);
-    }
+  .stories-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
   }
 
-  /* --------------------------------------------------------------------------
-     TWO-COLUMN DESKTOP LAYOUT (1024px+)
-     -------------------------------------------------------------------------- */
-  .stories-layout {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-6);
-  }
-
-  @media (min-width: 1024px) {
-    .stories-layout {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: var(--space-8);
+  @media (min-width: 900px) {
+    .stories-grid {
+      grid-template-columns: 6fr 6fr;
+      gap: var(--space-10);
       align-items: center;
     }
   }
 
-  /* --------------------------------------------------------------------------
-     LEFT COLUMN: HEADER & SUPPORTING COPY
-     -------------------------------------------------------------------------- */
-  .stories-intro-col {
+  .stories-left-col {
     display: flex;
     flex-direction: column;
-    min-width: 0;
-  }
-
-  .stories-header {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-1);
-  }
-
-  .stories-eyebrow {
-    font-size: 0.8125rem;
-    font-weight: var(--font-weight-subheading);
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--color-gold-text);
+    gap: var(--space-4);
   }
 
   .stories-title {
-    font-size: clamp(1.75rem, 3.5vw, 2.375rem);
-    font-weight: var(--font-weight-heading);
-    color: var(--color-deep-navy);
+    font-size: clamp(1.875rem, 3.5vw, 2.5rem);
+    font-weight: 800;
+    color: var(--color-navy);
     line-height: 1.2;
-    letter-spacing: -0.01em;
+    margin: 0;
   }
 
-  .stories-supporting-text {
-    font-size: 1.0625rem;
-    font-weight: var(--font-weight-body);
-    line-height: var(--line-height-body);
-    color: var(--color-slate);
-    margin-top: 4px;
-    max-width: 520px;
-  }
-
-  /* --------------------------------------------------------------------------
-     RIGHT COLUMN: CONSENT AND AUTHENTICITY INFORMATION PANEL
-     -------------------------------------------------------------------------- */
-  .stories-panel-col {
-    width: 100%;
-    min-width: 0;
-  }
-
-  .consent-panel {
-    background-color: var(--color-paper);
-    border: 1px solid rgba(20, 41, 75, 0.1);
-    border-left: 3.5px solid var(--color-gold);
-    border-radius: var(--radius-card);
-    padding: var(--space-5) var(--space-6);
-    box-shadow: 0 2px 10px rgba(20, 41, 75, 0.03);
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
-  }
-
-  .panel-eyebrow {
-    font-size: 0.75rem;
-    font-weight: var(--font-weight-subheading);
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--color-gold-text);
-  }
-
-  .panel-title {
-    font-size: 1.25rem;
-    font-weight: var(--font-weight-heading);
-    color: var(--color-deep-navy);
-    line-height: 1.25;
-    letter-spacing: -0.01em;
-  }
-
-  .panel-body {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
-  }
-
-  .panel-text {
-    font-size: 0.9375rem;
-    font-weight: var(--font-weight-body);
+  .stories-deck {
+    font-size: 1rem;
     line-height: 1.6;
-    color: var(--color-ink);
+    color: var(--color-slate);
+    margin: 0;
   }
 
-  /* --------------------------------------------------------------------------
-     MOBILE REFINEMENTS (<= 640px, 390px, 360px)
-     -------------------------------------------------------------------------- */
-  @media (max-width: 640px) {
-    .stories-layout {
-      gap: var(--space-5);
-    }
+  .stories-link-wrap {
+    margin-top: var(--space-2);
+  }
 
-    .stories-supporting-text {
-      font-size: 1rem;
-    }
+  .stories-text-link {
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: var(--color-gold-text);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.15s ease;
+  }
 
-    .consent-panel {
-      padding: var(--space-4);
-      gap: var(--space-2);
-    }
+  .stories-text-link:hover {
+    color: var(--color-navy);
+    text-decoration: underline;
+  }
 
-    .panel-title {
-      font-size: 1.125rem;
-    }
+  :global([dir="rtl"]) .stories-text-link span {
+    display: inline-block;
+    transform: scaleX(-1);
+  }
 
-    .panel-text {
-      font-size: 0.875rem;
-    }
+  /* Right Column: Policy Card */
+  .stories-policy-card {
+    background-color: var(--color-mist);
+    border: 1px solid rgba(20, 41, 75, 0.08);
+    border-radius: var(--radius-card);
+    padding: var(--space-8);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .policy-gold-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background-color: var(--color-gold);
+  }
+
+  .policy-title {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--color-navy);
+    margin: 0 0 var(--space-3);
+  }
+
+  .policy-text {
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: var(--color-slate);
+    margin: 0;
+  }
+
+  /* RTL Support */
+  :global([dir="rtl"]) .stories-title,
+  :global([dir="rtl"]) .stories-deck,
+  :global([dir="rtl"]) .policy-title,
+  :global([dir="rtl"]) .policy-text {
+    text-align: right;
   }
 </style>
-

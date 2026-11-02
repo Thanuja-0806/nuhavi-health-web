@@ -5,28 +5,50 @@
  * Features the brand wordmark, clear description of the coordination role,
  * logically grouped navigation links, mandatory legal links, and a dynamic copyright year.
  * Complies strictly with zero invented claims, addresses, phone numbers, or social media handles.
+ *
+ * Fully localized for English (/en/), Russian (/ru/), and Arabic (/ar/ RTL).
  */
+import { translations, type SupportedLang } from '../../i18n/translations';
+
+interface Props {
+  currentLang?: SupportedLang;
+}
+
+const currentPath = Astro.url.pathname;
+const detectedLang: SupportedLang = currentPath.startsWith('/ar')
+  ? 'ar'
+  : currentPath.startsWith('/ru')
+  ? 'ru'
+  : 'en';
+
+const currentLang: SupportedLang = Astro.props.currentLang || detectedLang;
+const t = translations[currentLang].footer;
+const tNav = translations[currentLang].nav;
+
+const prefix = `/${currentLang}`;
+const homeHref = `${prefix}/`;
+const contactHref = `${prefix}/contact/`;
 
 const currentYear = new Date().getFullYear();
 
 const coordinationLinks = [
-  { label: 'Treatments', href: '/en/treatments' },
-  { label: 'Hospitals', href: '/en/hospitals' },
-  { label: 'How it works', href: '/en/how-it-works' },
-  { label: 'Countries', href: '/en/countries' },
+  { label: tNav.treatments, href: '/en/treatments' },
+  { label: tNav.hospitals, href: '/en/hospitals' },
+  { label: tNav.howItWorks, href: '/en/how-it-works' },
+  { label: tNav.countries, href: '/en/countries' },
 ];
 
 const companyLinks = [
-  { label: 'About Nuhavi Health', href: '/en/about' },
-  { label: 'Patient Stories', href: '/en/stories' },
-  { label: 'Resources & Guides', href: '/en/resources' },
-  { label: 'Contact Us', href: '/en/contact' },
+  { label: t.aboutHeading, href: '/en/about' },
+  { label: tNav.stories, href: '/en/stories' },
+  { label: tNav.resources, href: '/en/resources' },
+  { label: tNav.contact, href: contactHref },
 ];
 
 const legalLinks = [
-  { label: 'Privacy Policy', href: '/en/privacy' },
-  { label: 'Terms and Conditions', href: '/en/terms' },
-  { label: 'Disclaimer', href: '/en/disclaimer' },
+  { label: t.privacyPolicy, href: '/en/privacy' },
+  { label: t.termsConditions, href: '/en/terms' },
+  { label: t.disclaimer, href: '/en/disclaimer' },
 ];
 ---
 
@@ -36,20 +58,20 @@ const legalLinks = [
     <div class="footer-top">
       <!-- Column 1: Brand Wordmark & Neutral Role Description -->
       <div class="footer-brand-col">
-        <a href="/en/" class="footer-logo" aria-label="Nuhavi Health - Home">
+        <a href={homeHref} class="footer-logo" aria-label="Nuhavi Health - Home">
           <span class="logo-wordmark">Nuhavi Health</span>
         </a>
         <p class="role-description">
-          Nuhavi Health is an independent medical travel coordination service. We assist international patients by coordinating requests, travel logistics, and communication with independent healthcare providers.
+          {t.roleDescription}
         </p>
         <p class="disclaimer-callout">
-          <strong>Notice:</strong> Nuhavi Health facilitates coordination and communication between patients and healthcare providers. We are not a hospital, clinic, or medical provider and do not provide medical diagnosis, treatment, or clinical evaluations.
+          <strong>{currentLang === 'ru' ? 'Внимание:' : currentLang === 'ar' ? 'تنويه:' : 'Notice:'}</strong> {t.disclaimerCallout.replace(/^(Notice:|Внимание:|تنويه:)\s*/, '')}
         </p>
       </div>
 
       <!-- Column 2: Travel & Coordination Links -->
       <div class="footer-nav-col">
-        <h4 class="col-heading">Coordination</h4>
+        <h4 class="col-heading">{t.coordinationHeading}</h4>
         <ul class="footer-link-list">
           {coordinationLinks.map((link) => (
             <li>
@@ -63,7 +85,7 @@ const legalLinks = [
 
       <!-- Column 3: Company & Information Links -->
       <div class="footer-nav-col">
-        <h4 class="col-heading">Information</h4>
+        <h4 class="col-heading">{t.aboutHeading}</h4>
         <ul class="footer-link-list">
           {companyLinks.map((link) => (
             <li>
@@ -75,48 +97,44 @@ const legalLinks = [
         </ul>
       </div>
 
-      <!-- Column 4: Patient Inquiries -->
+      <!-- Column 4: Legal & Policy Links -->
       <div class="footer-nav-col">
-        <h4 class="col-heading">Inquiries</h4>
-        <p class="inquiries-copy">
-          Submit an inquiry to coordinate medical opinion requests and travel logistics with qualified healthcare providers.
-        </p>
-        <a href="/en/request-opinion/" class="btn-primary footer-cta">
-          Request a medical opinion
-        </a>
+        <h4 class="col-heading">{t.legalHeading}</h4>
+        <ul class="footer-link-list">
+          {legalLinks.map((link) => (
+            <li>
+              <a href={link.href} class="footer-link">
+                {link.label}
+              </a>
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
 
-    <!-- Bottom Footer: Legal Links & Dynamic Copyright -->
+    <!-- Bottom Footer: Copyright & Legal Compliance Bar -->
     <div class="footer-bottom">
       <p class="copyright-text">
-        &copy; {currentYear} Nuhavi Health. All rights reserved.
+        {t.copyright(currentYear)}
       </p>
-
-      <ul class="legal-list" aria-label="Legal navigation">
+      <div class="footer-bottom-links">
         {legalLinks.map((link) => (
-          <li>
-            <a href={link.href} class="legal-link">
-              {link.label}
-            </a>
-          </li>
+          <a href={link.href} class="bottom-legal-link">
+            {link.label}
+          </a>
         ))}
-      </ul>
+      </div>
     </div>
   </div>
 </footer>
 
 <style>
-  /* --------------------------------------------------------------------------
-     FOOTER BASE & CONTAINER
-     -------------------------------------------------------------------------- */
   .site-footer {
     background-color: var(--color-deep-navy);
-    color: var(--color-mist);
-    padding-top: var(--space-10);
-    padding-bottom: var(--space-6);
-    border-top: 1px solid rgba(244, 247, 251, 0.08);
-    margin-top: auto; /* Keeps footer pinned to bottom on short pages */
+    color: rgba(244, 247, 251, 0.8);
+    padding: var(--space-10) 0 var(--space-6);
+    border-top: 1px solid rgba(244, 247, 251, 0.1);
+    font-family: var(--font-family-base);
   }
 
   .footer-container {
@@ -126,7 +144,7 @@ const legalLinks = [
   }
 
   /* --------------------------------------------------------------------------
-     TOP FOOTER (4-Column Grid)
+     TOP FOOTER: 4-COLUMN RESPONSIVE GRID
      -------------------------------------------------------------------------- */
   .footer-top {
     display: grid;
@@ -137,21 +155,22 @@ const legalLinks = [
   @media (min-width: 640px) {
     .footer-top {
       grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-6);
     }
   }
 
   @media (min-width: 1024px) {
     .footer-top {
-      grid-template-columns: 2fr 1fr 1fr 1.5fr;
-      gap: var(--space-6);
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: var(--space-8);
     }
   }
 
-  /* Brand Column */
+  /* Column 1: Brand & Role */
   .footer-brand-col {
     display: flex;
     flex-direction: column;
-    gap: var(--space-2);
+    gap: var(--space-3);
   }
 
   .footer-logo {
@@ -168,20 +187,26 @@ const legalLinks = [
   }
 
   .role-description {
-    font-size: 0.9375rem;
+    font-size: 0.875rem;
     line-height: var(--line-height-body);
-    color: rgba(244, 247, 251, 0.85);
-    max-width: 380px;
+    color: rgba(244, 247, 251, 0.7);
+    max-width: 360px;
   }
 
   .disclaimer-callout {
-    font-size: 0.8125rem;
+    font-size: 0.75rem;
     line-height: 1.5;
-    color: rgba(244, 247, 251, 0.65);
+    color: rgba(244, 247, 251, 0.55);
+    background-color: rgba(20, 41, 75, 0.5);
+    border-radius: var(--radius-card);
+    padding: var(--space-2);
     border-left: 2px solid var(--color-gold);
-    padding-left: var(--space-2);
-    margin-top: var(--space-1);
-    max-width: 380px;
+    max-width: 360px;
+  }
+
+  :global([dir="rtl"]) .disclaimer-callout {
+    border-left: none;
+    border-right: 2px solid var(--color-gold);
   }
 
   .disclaimer-callout strong {
@@ -192,15 +217,15 @@ const legalLinks = [
   .footer-nav-col {
     display: flex;
     flex-direction: column;
-    gap: var(--space-2);
+    gap: var(--space-3);
   }
 
   .col-heading {
     font-size: 0.875rem;
     font-weight: var(--font-weight-subheading);
-    color: var(--color-gold);
     text-transform: uppercase;
     letter-spacing: 0.05em;
+    color: var(--color-gold);
     margin-bottom: var(--space-1);
   }
 
@@ -209,12 +234,14 @@ const legalLinks = [
     display: flex;
     flex-direction: column;
     gap: var(--space-2);
+    margin: 0;
+    padding: 0;
   }
 
   .footer-link {
-    color: rgba(244, 247, 251, 0.85);
+    font-size: 0.875rem;
+    color: rgba(244, 247, 251, 0.8);
     text-decoration: none;
-    font-size: 0.9375rem;
     transition: color 0.15s ease;
   }
 
@@ -223,38 +250,16 @@ const legalLinks = [
     text-decoration: underline;
   }
 
-  .inquiries-copy {
-    font-size: 0.875rem;
-    line-height: var(--line-height-body);
-    color: rgba(244, 247, 251, 0.75);
-    margin-bottom: var(--space-1);
-  }
-
-  .footer-cta {
-    align-self: flex-start;
-    background-color: var(--color-gold);
-    border-color: var(--color-gold);
-    color: var(--color-deep-navy);
-    font-size: 0.875rem;
-    padding: 0 var(--space-3);
-  }
-
-  .footer-cta:hover {
-    background-color: var(--color-paper);
-    border-color: var(--color-paper);
-    color: var(--color-deep-navy);
-  }
-
   /* --------------------------------------------------------------------------
-     BOTTOM FOOTER (Copyright & Legal)
+     BOTTOM FOOTER: COPYRIGHT & LEGAL ROW
      -------------------------------------------------------------------------- */
   .footer-bottom {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     gap: var(--space-3);
-    padding-top: var(--space-4);
-    border-top: 1px solid rgba(244, 247, 251, 0.1);
+    padding-top: var(--space-6);
+    border-top: 1px solid rgba(244, 247, 251, 0.08);
   }
 
   @media (min-width: 768px) {
@@ -266,27 +271,25 @@ const legalLinks = [
   }
 
   .copyright-text {
-    font-size: 0.875rem;
-    color: rgba(244, 247, 251, 0.65);
-  }
-
-  .legal-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-3);
-    list-style: none;
-  }
-
-  .legal-link {
     font-size: 0.8125rem;
-    color: rgba(244, 247, 251, 0.7);
+    color: rgba(244, 247, 251, 0.5);
+  }
+
+  .footer-bottom-links {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+  }
+
+  .bottom-legal-link {
+    font-size: 0.8125rem;
+    color: rgba(244, 247, 251, 0.6);
     text-decoration: none;
     transition: color 0.15s ease;
   }
 
-  .legal-link:hover {
-    color: var(--color-gold);
-    text-decoration: underline;
+  .bottom-legal-link:hover {
+    color: var(--color-paper);
   }
 </style>
-

@@ -1,24 +1,33 @@
 ---
 /**
  * src/components/common/ChatWidget.astro
- * Floating "Chat with us" widget and Care Coordinator modal panel.
- * Reference: Nuhavi Health Look and Feel PDF Pages 2, 38, 39, 41.
- * 
- * Rules:
- * - Floating "Chat with us" button on every page.
- * - Shows Telegram first on Russian/Uzbek pages and /en/countries/uzbekistan/.
- * - Shows WhatsApp first elsewhere (English & African pages).
- * - Clearly warns: "Please do not send medical reports in chat. After your enquiry we email you a private, secure upload link."
- * - No automated chatbot; real person replies during office hours.
+ * Floating "Chat with us" widget and Care Coordinator panel.
+ * Reference: Nuhavi Health Look and Feel PDF Page 38.
+ *
+ * Fully localized for English (/en/), Russian (/ru/), and Arabic (/ar/ RTL).
  */
+import { translations, type SupportedLang } from '../../i18n/translations';
 
-// Detect current path to order Telegram vs WhatsApp
+interface Props {
+  currentLang?: SupportedLang;
+}
+
 const currentPath = Astro.url.pathname;
-const isUzbekOrRussian = currentPath.includes('/uzbekistan') || currentPath.startsWith('/ru') || currentPath.startsWith('/uz');
+const detectedLang: SupportedLang = currentPath.startsWith('/ar')
+  ? 'ar'
+  : currentPath.startsWith('/ru')
+  ? 'ru'
+  : 'en';
+
+const currentLang: SupportedLang = Astro.props.currentLang || detectedLang;
+const t = translations[currentLang].chatWidget;
+
+const isUzbekistan = currentPath.includes('/uzbekistan') || currentLang === 'ru';
+const contactHref = `/${currentLang}/contact/`;
 ---
 
-<div class="chat-widget-root" id="chat-widget-root" data-uzbek={isUzbekOrRussian ? "true" : "false"}>
-  <!-- Chat Panel Flyout (hidden by default) -->
+<div class="chat-widget-root" id="chat-widget-root" data-lang={currentLang} data-uzbekistan={isUzbekistan ? "true" : "false"}>
+  <!-- Chat Flyout Panel (PDF Page 38) -->
   <div
     class="chat-panel"
     id="chat-panel"
@@ -27,72 +36,93 @@ const isUzbekOrRussian = currentPath.includes('/uzbekistan') || currentPath.star
     aria-hidden="true"
   >
     <div class="chat-panel-header">
-      <div class="chat-header-text">
-        <h3 id="chat-panel-title" class="chat-title">Talk to a care coordinator</h3>
-        <p class="chat-hours">A coordinator replies during office hours — Monday to Saturday.</p>
-      </div>
-      <button type="button" class="chat-close-btn" id="chat-panel-close" aria-label="Close chat panel">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <line x1="18" y1="6" x2="6" y2="18"></line>
-          <line x1="6" y1="6" x2="18" y2="18"></line>
-        </svg>
-      </button>
+      <h3 id="chat-panel-title" class="chat-title">{t.title}</h3>
+      <p class="chat-hours">{t.subtitle}</p>
     </div>
 
-    <div class="chat-channels-list">
-      {isUzbekOrRussian ? (
+    <!-- Communication Channels -->
+    <div class="chat-channels-list" id="chat-channels-list">
+      {isUzbekistan ? (
         <>
-          <!-- Telegram First -->
-          <a href="/en/contact/" class="channel-card telegram-channel">
-            <div class="channel-icon-wrap telegram-bg">
+          <!-- 1. Telegram (First for Uzbekistan & Russian pages) -->
+          <a href={contactHref} class="channel-card telegram-channel" data-channel="telegram">
+            <div class="channel-icon-wrap telegram-bg" aria-hidden="true">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.75-.55 2.92-1.27 4.86-2.11 5.83-2.52 2.77-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/>
               </svg>
             </div>
             <div class="channel-info">
               <span class="channel-name">Telegram</span>
-              <span class="channel-status">Number coming soon — use the contact page</span>
+              <span class="channel-status">{t.telegramStatus}</span>
             </div>
           </a>
 
-          <!-- WhatsApp Second -->
-          <a href="/en/contact/" class="channel-card whatsapp-channel">
-            <div class="channel-icon-wrap whatsapp-bg">
+          <!-- 2. WhatsApp -->
+          <a href={contactHref} class="channel-card whatsapp-channel" data-channel="whatsapp">
+            <div class="channel-icon-wrap whatsapp-bg" aria-hidden="true">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.63C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.03 14.69 2 12.04 2M12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.15 12.04 20.15C10.56 20.15 9.11 19.76 7.85 19L7.55 18.83L4.43 19.65L5.26 16.61L5.06 16.3C4.24 14.99 3.8 13.47 3.8 11.91C3.81 7.37 7.5 3.67 12.05 3.67M9.05 7.42C8.88 7.42 8.6 7.49 8.36 7.75C8.12 8.01 7.44 8.64 7.44 9.93C7.44 11.22 8.38 12.46 8.51 12.63C8.65 12.81 10.36 15.45 12.97 16.58C13.6 16.85 14.08 17 14.47 17.13C15.1 17.33 15.67 17.3 16.12 17.23C16.63 17.16 17.67 16.6 17.89 15.98C18.11 15.37 18.11 14.84 18.04 14.73C17.97 14.62 17.79 14.56 17.53 14.43C17.27 14.3 15.99 13.67 15.75 13.58C15.52 13.5 15.35 13.45 15.18 13.71C15 13.97 14.5 14.56 14.35 14.73C14.2 14.9 14.05 14.92 13.79 14.79C13.53 14.67 12.7 14.39 11.71 13.51C10.94 12.83 10.42 11.98 10.27 11.72C10.12 11.47 10.25 11.33 10.38 11.2C10.5 11.08 10.65 10.89 10.78 10.74C10.91 10.59 10.95 10.48 11.04 10.31C11.12 10.14 11.08 9.99 11.02 9.86C10.95 9.74 10.44 8.49 10.23 7.98C10.02 7.48 9.81 7.55 9.66 7.54C9.51 7.54 9.34 7.42 9.05 7.42Z"/>
               </svg>
             </div>
             <div class="channel-info">
               <span class="channel-name">WhatsApp</span>
-              <span class="channel-status">Number coming soon — use the contact page</span>
+              <span class="channel-status">{t.whatsappStatus}</span>
+            </div>
+          </a>
+
+          <!-- 3. Email -->
+          <a href={contactHref} class="channel-card email-channel" data-channel="email">
+            <div class="channel-icon-wrap email-bg" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+              </svg>
+            </div>
+            <div class="channel-info">
+              <span class="channel-name">{t.emailTitle}</span>
+              <span class="channel-status">{t.emailStatus}</span>
             </div>
           </a>
         </>
       ) : (
         <>
-          <!-- WhatsApp First (Default / African pages) -->
-          <a href="/en/contact/" class="channel-card whatsapp-channel">
-            <div class="channel-icon-wrap whatsapp-bg">
+          <!-- 1. WhatsApp (First on English & Arabic pages) -->
+          <a href={contactHref} class="channel-card whatsapp-channel" data-channel="whatsapp">
+            <div class="channel-icon-wrap whatsapp-bg" aria-hidden="true">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.63C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.03 14.69 2 12.04 2M12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.15 12.04 20.15C10.56 20.15 9.11 19.76 7.85 19L7.55 18.83L4.43 19.65L5.26 16.61L5.06 16.3C4.24 14.99 3.8 13.47 3.8 11.91C3.81 7.37 7.5 3.67 12.05 3.67M9.05 7.42C8.88 7.42 8.6 7.49 8.36 7.75C8.12 8.01 7.44 8.64 7.44 9.93C7.44 11.22 8.38 12.46 8.51 12.63C8.65 12.81 10.36 15.45 12.97 16.58C13.6 16.85 14.08 17 14.47 17.13C15.1 17.33 15.67 17.3 16.12 17.23C16.63 17.16 17.67 16.6 17.89 15.98C18.11 15.37 18.11 14.84 18.04 14.73C17.97 14.62 17.79 14.56 17.53 14.43C17.27 14.3 15.99 13.67 15.75 13.58C15.52 13.5 15.35 13.45 15.18 13.71C15 13.97 14.5 14.56 14.35 14.73C14.2 14.9 14.05 14.92 13.79 14.79C13.53 14.67 12.7 14.39 11.71 13.51C10.94 12.83 10.42 11.98 10.27 11.72C10.12 11.47 10.25 11.33 10.38 11.2C10.5 11.08 10.65 10.89 10.78 10.74C10.91 10.59 10.95 10.48 11.04 10.31C11.12 10.14 11.08 9.99 11.02 9.86C10.95 9.74 10.44 8.49 10.23 7.98C10.02 7.48 9.81 7.55 9.66 7.54C9.51 7.54 9.34 7.42 9.05 7.42Z"/>
               </svg>
             </div>
             <div class="channel-info">
               <span class="channel-name">WhatsApp</span>
-              <span class="channel-status">Number coming soon — use the contact page</span>
+              <span class="channel-status">{t.whatsappStatus}</span>
             </div>
           </a>
 
-          <!-- Telegram Second -->
-          <a href="/en/contact/" class="channel-card telegram-channel">
-            <div class="channel-icon-wrap telegram-bg">
+          <!-- 2. Telegram -->
+          <a href={contactHref} class="channel-card telegram-channel" data-channel="telegram">
+            <div class="channel-icon-wrap telegram-bg" aria-hidden="true">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.75-.55 2.92-1.27 4.86-2.11 5.83-2.52 2.77-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/>
               </svg>
             </div>
             <div class="channel-info">
               <span class="channel-name">Telegram</span>
-              <span class="channel-status">Number coming soon — use the contact page</span>
+              <span class="channel-status">{t.telegramStatus}</span>
+            </div>
+          </a>
+
+          <!-- 3. Email -->
+          <a href={contactHref} class="channel-card email-channel" data-channel="email">
+            <div class="channel-icon-wrap email-bg" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+              </svg>
+            </div>
+            <div class="channel-info">
+              <span class="channel-name">{t.emailTitle}</span>
+              <span class="channel-status">{t.emailStatus}</span>
             </div>
           </a>
         </>
@@ -102,30 +132,37 @@ const isUzbekOrRussian = currentPath.includes('/uzbekistan') || currentPath.star
     <!-- Warning / Privacy Note (PDF Page 38) -->
     <div class="chat-warning-box">
       <p>
-        Please do not send medical reports in chat. After your enquiry we email you a private, secure upload link.
+        {t.warningNote}
       </p>
     </div>
   </div>
 
-  <!-- Floating Pill Trigger Button (PDF Pages 2, 38) -->
+  <!-- Floating Trigger Button -->
   <button
     type="button"
     class="floating-chat-btn"
     id="floating-chat-btn"
     aria-expanded="false"
     aria-controls="chat-panel"
-    aria-label="Toggle care coordinator chat"
+    aria-label={t.buttonAriaLabel}
   >
-    <span class="chat-btn-icon" aria-hidden="true">
-      <svg class="icon-chat" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-      </svg>
-      <svg class="icon-close" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Cross icon when open -->
+    <span class="btn-icon icon-close" aria-hidden="true">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
         <line x1="18" y1="6" x2="6" y2="18"></line>
         <line x1="6" y1="6" x2="18" y2="18"></line>
       </svg>
     </span>
-    <span class="chat-btn-label">Chat with us</span>
+
+    <!-- Chat bubble icon when closed -->
+    <span class="btn-icon icon-chat" aria-hidden="true">
+      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+      </svg>
+    </span>
+
+    <!-- Text label: visible on desktop, hidden on mobile icon view -->
+    <span class="chat-btn-label">{t.buttonLabel}</span>
   </button>
 </div>
 
@@ -135,80 +172,96 @@ const isUzbekOrRussian = currentPath.includes('/uzbekistan') || currentPath.star
     bottom: 24px;
     right: 24px;
     z-index: 999;
-    font-family: var(--font-family-base);
+    font-family: var(--font-family-base, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  }
+
+  /* RTL Support for Chat Widget */
+  :global([dir="rtl"]) .chat-widget-root {
+    right: auto;
+    left: 24px;
   }
 
   /* Floating Pill Button */
   .floating-chat-btn {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    background-color: var(--color-deep-navy);
-    color: var(--color-paper);
-    padding: 12px 20px;
-    border-radius: var(--radius-pill);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    box-shadow: 0 4px 16px rgba(13, 27, 51, 0.25);
-    font-size: 0.875rem;
+    justify-content: center;
+    gap: 10px;
+    background-color: var(--color-deep-navy, #0D1B33);
+    color: #FFFFFF;
+    padding: 12px 22px;
+    border-radius: var(--radius-pill, 9999px);
+    border: 2px solid var(--color-gold, #C49A3C);
+    box-shadow: 0 4px 18px rgba(13, 27, 51, 0.28);
+    font-size: 0.9375rem;
     font-weight: 700;
     cursor: pointer;
-    transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+    user-select: none;
+    transition: transform 0.18s ease, background-color 0.18s ease, box-shadow 0.18s ease;
   }
 
   .floating-chat-btn:hover {
-    background-color: var(--color-navy);
+    background-color: #14294B;
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(13, 27, 51, 0.35);
+    box-shadow: 0 8px 24px rgba(13, 27, 51, 0.38);
   }
 
   .floating-chat-btn:focus-visible {
-    outline: 3px solid var(--color-gold);
-    outline-offset: 2px;
+    outline: 3px solid var(--color-gold, #C49A3C);
+    outline-offset: 3px;
   }
 
-  .chat-btn-icon {
+  .btn-icon {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    line-height: 1;
   }
 
   .icon-close {
     display: none;
   }
+  .icon-chat {
+    display: inline-flex;
+  }
 
-  /* When Chat is Open */
+  .chat-widget-root.is-open .icon-close {
+    display: inline-flex;
+  }
   .chat-widget-root.is-open .icon-chat {
     display: none;
   }
 
-  .chat-widget-root.is-open .icon-close {
-    display: inline-block;
-  }
-
-  /* Modal / Flyout Panel */
+  /* Care Coordinator Flyout Panel */
   .chat-panel {
     display: none;
     position: absolute;
-    bottom: 60px;
+    bottom: calc(100% + 14px);
     right: 0;
-    width: 320px;
-    background-color: var(--color-paper);
-    border-radius: var(--radius-card);
+    width: 350px;
+    background-color: #FFFFFF;
+    border-radius: 18px;
     border: 1px solid rgba(20, 41, 75, 0.12);
-    box-shadow: 0 12px 32px rgba(13, 27, 51, 0.2);
-    padding: var(--space-4);
+    box-shadow: 0 16px 40px rgba(13, 27, 51, 0.18);
+    padding: 22px 20px 20px;
     box-sizing: border-box;
-    animation: slideUpFade 0.2s ease forwards;
+    animation: chatFlyoutFade 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
 
-  @keyframes slideUpFade {
+  :global([dir="rtl"]) .chat-panel {
+    right: auto;
+    left: 0;
+    text-align: right;
+  }
+
+  @keyframes chatFlyoutFade {
     from {
       opacity: 0;
-      transform: translateY(12px);
+      transform: translateY(10px) scale(0.98);
     }
     to {
       opacity: 1;
-      transform: translateY(0);
+      transform: translateY(0) scale(1);
     }
   }
 
@@ -217,75 +270,61 @@ const isUzbekOrRussian = currentPath.includes('/uzbekistan') || currentPath.star
   }
 
   .chat-panel-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: var(--space-3);
-    padding-bottom: var(--space-2);
-    border-bottom: 1px solid rgba(20, 41, 75, 0.08);
+    margin-bottom: 16px;
   }
 
   .chat-title {
-    font-size: 1rem;
+    font-size: 1.125rem;
     font-weight: 800;
-    color: var(--color-navy);
+    color: var(--color-navy, #14294B);
     line-height: 1.25;
-    margin: 0 0 4px;
+    margin: 0 0 6px;
+    letter-spacing: -0.01em;
   }
 
   .chat-hours {
-    font-size: 0.75rem;
-    color: var(--color-slate);
-    line-height: 1.35;
+    font-size: 0.8125rem;
+    color: var(--color-slate, #5B6A80);
+    line-height: 1.45;
     margin: 0;
-  }
-
-  .chat-close-btn {
-    background: none;
-    border: none;
-    color: var(--color-slate);
-    cursor: pointer;
-    padding: 2px;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .chat-close-btn:hover {
-    color: var(--color-navy);
-    background-color: var(--color-mist);
   }
 
   /* Channels */
   .chat-channels-list {
     display: flex;
     flex-direction: column;
-    gap: var(--space-2);
-    margin-bottom: var(--space-3);
+    gap: 10px;
+    margin-bottom: 14px;
   }
 
   .channel-card {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 10px 12px;
-    border-radius: 10px;
-    border: 1px solid rgba(20, 41, 75, 0.08);
-    background-color: var(--color-mist);
+    gap: 14px;
+    padding: 12px 14px;
+    border-radius: 14px;
+    border: 1px solid rgba(20, 41, 75, 0.12);
+    background-color: #FFFFFF;
     text-decoration: none;
-    transition: background-color 0.15s ease, border-color 0.15s ease;
+    transition: border-color 0.15s ease, background-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
   }
 
   .channel-card:hover {
-    background-color: #EBF1F7;
-    border-color: rgba(20, 41, 75, 0.18);
+    background-color: #F8FAFD;
+    border-color: rgba(20, 41, 75, 0.25);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(13, 27, 51, 0.06);
+  }
+
+  .channel-card:focus-visible {
+    outline: 2px solid var(--color-gold, #C49A3C);
+    outline-offset: 2px;
   }
 
   .channel-icon-wrap {
-    width: 36px;
-    height: 36px;
-    border-radius: 8px;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -301,6 +340,10 @@ const isUzbekOrRussian = currentPath.includes('/uzbekistan') || currentPath.star
     background-color: #25D366;
   }
 
+  .email-bg {
+    background-color: var(--color-deep-navy, #0D1B33);
+  }
+
   .channel-info {
     display: flex;
     flex-direction: column;
@@ -308,59 +351,85 @@ const isUzbekOrRussian = currentPath.includes('/uzbekistan') || currentPath.star
   }
 
   .channel-name {
-    font-size: 0.875rem;
+    font-size: 0.9375rem;
     font-weight: 700;
-    color: var(--color-navy);
-    line-height: 1.2;
+    color: var(--color-navy, #14294B);
+    line-height: 1.25;
   }
 
   .channel-status {
-    font-size: 0.6875rem;
-    color: var(--color-slate);
-    line-height: 1.3;
+    font-size: 0.775rem;
+    color: var(--color-slate, #5B6A80);
+    line-height: 1.35;
     margin-top: 2px;
   }
 
-  /* Warning Box (PDF Page 38) */
+  /* Warning Box */
   .chat-warning-box {
-    background-color: var(--color-confirmation);
-    border: 1px solid var(--color-gold);
-    border-radius: 8px;
-    padding: 8px 10px;
+    background-color: #FFF8EB;
+    border: 1px solid rgba(196, 154, 60, 0.22);
+    border-radius: 12px;
+    padding: 12px 14px;
   }
 
   .chat-warning-box p {
-    font-size: 0.75rem;
-    line-height: 1.45;
-    color: var(--color-ink);
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    color: #8A6726;
     margin: 0;
+    font-weight: 500;
   }
 
-  /* Mobile collapsed view (PDF Page 39) */
-  @media (max-width: 480px) {
+  /* Mobile */
+  @media (max-width: 640px) {
     .chat-widget-root {
       bottom: 16px;
       right: 16px;
     }
 
+    :global([dir="rtl"]) .chat-widget-root {
+      right: auto;
+      left: 16px;
+    }
+
     .floating-chat-btn {
-      padding: 10px 16px;
+      width: 52px;
+      height: 52px;
+      padding: 0;
+      border-radius: 50%;
+    }
+
+    .chat-btn-label {
+      display: none;
+    }
+
+    .btn-icon svg {
+      width: 22px;
+      height: 22px;
     }
 
     .chat-panel {
       width: calc(100vw - 32px);
+      max-width: 360px;
       right: 0;
-      bottom: 56px;
+      bottom: calc(100% + 12px);
+      padding: 18px 16px 16px;
+      border-radius: 16px;
+    }
+
+    :global([dir="rtl"]) .chat-panel {
+      right: auto;
+      left: 0;
     }
   }
 </style>
 
 <script>
-  function setupChatWidget() {
+  function initCareCoordinatorChat() {
     const root = document.getElementById('chat-widget-root');
     const toggleBtn = document.getElementById('floating-chat-btn');
-    const closeBtn = document.getElementById('chat-panel-close');
     const panel = document.getElementById('chat-panel');
+    const channelsList = document.getElementById('chat-channels-list');
 
     if (!root || !toggleBtn || !panel) return;
 
@@ -376,20 +445,29 @@ const isUzbekOrRussian = currentPath.includes('/uzbekistan') || currentPath.star
       panel.setAttribute('aria-hidden', 'true');
     }
 
-    toggleBtn.addEventListener('click', () => {
+    function toggleChat(e) {
+      e.stopPropagation();
       const isOpen = root.classList.contains('is-open');
       if (isOpen) {
         closeChat();
       } else {
         openChat();
       }
-    });
-
-    if (closeBtn) {
-      closeBtn.addEventListener('click', closeChat);
     }
 
-    // Close on Escape key
+    toggleBtn.removeEventListener('click', toggleChat);
+    toggleBtn.addEventListener('click', toggleChat);
+
+    panel.addEventListener('click', (e) => {
+      e.stopPropagation();
+    });
+
+    document.addEventListener('click', (e) => {
+      if (root.classList.contains('is-open') && !root.contains(e.target)) {
+        closeChat();
+      }
+    });
+
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && root.classList.contains('is-open')) {
         closeChat();
@@ -398,7 +476,10 @@ const isUzbekOrRussian = currentPath.includes('/uzbekistan') || currentPath.star
     });
   }
 
-  document.addEventListener('DOMContentLoaded', setupChatWidget);
-  setupChatWidget();
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initCareCoordinatorChat);
+  } else {
+    initCareCoordinatorChat();
+  }
+  document.addEventListener('astro:page-load', initCareCoordinatorChat);
 </script>
-

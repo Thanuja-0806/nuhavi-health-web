@@ -1,0 +1,60 @@
+---
+/**
+ * src/pages/ru/index.astro
+ * Russian Homepage for Nuhavi Health (Русский).
+ * Follows Nuhavi Health Look and Feel PDF Pages 5-10.
+ * Standard LTR Layout with complete Russian translations.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import HeroSection from '../../components/home/HeroSection.astro';
+import WhoWeAre from '../../components/home/WhoWeAre.astro';
+import PeopleNotPackages from '../../components/home/PeopleNotPackages.astro';
+import SpecialtyExplorer from '../../components/home/SpecialtyExplorer.astro';
+import PatientJourney from '../../components/home/PatientJourney.astro';
+import CoordinatorBenefits from '../../components/home/CoordinatorBenefits.astro';
+import CostBreakdown from '../../components/home/CostBreakdown.astro';
+import HospitalSelection from '../../components/home/HospitalSelection.astro';
+import PatientStories from '../../components/home/PatientStories.astro';
+import PrepareWithConfidence from '../../components/home/PrepareWithConfidence.astro';
+import ClosingCTA from '../../components/home/ClosingCTA.astro';
+---
+
+<BaseLayout
+  title="Nuhavi Health | Квалифицированная медицинская помощь в Индии"
+  description="Узнайте о вариантах лечения, выберите подходящие клиники, получите согласованные медицинские заключения и спланируйте поездку с поддержкой на каждом этапе."
+  lang="ru"
+  dir="ltr"
+>
+  <!-- Hero Section (Page 5) -->
+  <HeroSection lang="ru" />
+
+  <!-- Who We Are Section (Page 5) -->
+  <WhoWeAre lang="ru" />
+
+  <!-- People, Not Packages Section (Page 6) -->
+  <PeopleNotPackages lang="ru" />
+
+  <!-- Specialty Explorer Section (Page 7) -->
+  <SpecialtyExplorer lang="ru" />
+
+  <!-- Seven-Step Patient Journey Section (Page 8) -->
+  <PatientJourney lang="ru" />
+
+  <!-- Coordinator Benefits Section (Page 8) -->
+  <CoordinatorBenefits lang="ru" />
+
+  <!-- Homepage Cost Breakdown Section (Page 9) -->
+  <CostBreakdown lang="ru" />
+
+  <!-- Homepage Hospital Selection Standard Section (Page 9) -->
+  <HospitalSelection lang="ru" />
+
+  <!-- Patient Stories Section (Page 9) -->
+  <PatientStories lang="ru" />
+
+  <!-- Prepare with Confidence Section (Page 10) -->
+  <PrepareWithConfidence lang="ru" />
+
+  <!-- Closing CTA Band Section (Page 10) -->
+  <ClosingCTA lang="ru" />
+</BaseLayout>

@@ -5,16 +5,43 @@
  * Provides consistent HTML structure, responsive meta tags,
  * SEO metadata, imports the global design tokens, and incorporates
  * the shared global Header, Footer, and Floating Chat Widget.
+ *
+ * Fully supports localization for English (/en/), Russian (/ru/), and Arabic (/ar/ RTL).
  */
+import type { SupportedLang } from '../i18n/translations';
 
 interface Props {
   title?: string;
   description?: string;
+  lang?: SupportedLang;
+  dir?: 'ltr' | 'rtl';
+  previewNotice?: string;
 }
 
+const currentPath = Astro.url.pathname;
+const isArabic = currentPath.startsWith('/ar') || Astro.props.lang === 'ar';
+const isRussian = currentPath.startsWith('/ru') || Astro.props.lang === 'ru';
+
+const lang: SupportedLang = Astro.props.lang || (isArabic ? 'ar' : isRussian ? 'ru' : 'en');
+const dir: 'ltr' | 'rtl' = Astro.props.dir || (isArabic ? 'rtl' : 'ltr');
+
+const previewNotice = Astro.props.previewNotice || null;
+
+const defaultTitle = isArabic
+  ? "نوهـافي هيلث | رعاية طبية متخصصة في الهند"
+  : isRussian
+  ? "Nuhavi Health | Квалифицированная медицинская помощь в Индии"
+  : "Nuhavi Health | Expert Medical Care in India";
+
+const defaultDescription = isArabic
+  ? "تنسيق طبي متكامل بإشراف أطباء للمرضى الدوليين القادمين للعلاج في الهند."
+  : isRussian
+  ? "Координация медицинских поездок и лечения иностранных пациентов в ведущих клиниках Индии."
+  : "Nuhavi Health coordinates trusted, seamless medical travel and healthcare journeys for international patients.";
+
 const {
-  title = "Nuhavi Health | Medical Tourism Coordination",
-  description = "Nuhavi Health coordinates trusted, seamless medical travel and healthcare journeys for international patients."
+  title = defaultTitle,
+  description = defaultDescription
 } = Astro.props;
 
 // Import our design system tokens and baseline styles
@@ -27,7 +54,7 @@ import ChatWidget from '../components/common/ChatWidget.astro';
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={lang} dir={dir}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -42,11 +69,21 @@ import ChatWidget from '../components/common/ChatWidget.astro';
   <body>
     <!-- Accessible Skip to Content Link -->
     <a href="#main-content" class="skip-to-content">
-      Skip to main content
+      {isArabic ? 'الانتقال إلى المحتوى الرئيسي' : isRussian ? 'Перейти к основному содержимому' : 'Skip to main content'}
     </a>
 
     <!-- Global Header -->
-    <Header />
+    <Header currentLang={lang} />
+
+    <!-- Optional Notice Banner -->
+    {previewNotice && (
+      <aside class="lang-preview-banner" role="status" aria-label="Language notice">
+        <div class="container preview-banner-inner">
+          <span class="preview-badge">Notice</span>
+          <span class="preview-message">{previewNotice}</span>
+        </div>
+      </aside>
+    )}
 
     <!-- Main page content container -->
     <main id="main-content">
@@ -54,10 +91,10 @@ import ChatWidget from '../components/common/ChatWidget.astro';
     </main>
 
     <!-- Global Footer -->
-    <Footer />
+    <Footer currentLang={lang} />
 
     <!-- Floating "Chat with us" Component on every page (PDF Pages 2, 38, 41) -->
-    <ChatWidget />
+    <ChatWidget currentLang={lang} />
   </body>
 </html>
 
@@ -80,5 +117,47 @@ import ChatWidget from '../components/common/ChatWidget.astro';
 
   .skip-to-content:focus {
     top: var(--space-2);
+  }
+
+  /* Language Notice Banner */
+  .lang-preview-banner {
+    background-color: #FFF8EB;
+    border-bottom: 1px solid rgba(196, 154, 60, 0.35);
+    padding: 10px 0;
+    font-family: var(--font-family-base);
+    color: #8A6726;
+  }
+
+  .preview-banner-inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    text-align: center;
+    flex-wrap: wrap;
+  }
+
+  .preview-badge {
+    display: inline-block;
+    background-color: var(--color-gold, #C49A3C);
+    color: var(--color-deep-navy, #0D1B33);
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 2px 10px;
+    border-radius: var(--radius-pill, 9999px);
+  }
+
+  .preview-message {
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+
+  @media (max-width: 640px) {
+    .preview-message {
+      font-size: 0.8125rem;
+    }
   }
 </style>

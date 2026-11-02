@@ -1,0 +1,60 @@
+---
+/**
+ * src/pages/ar/index.astro
+ * Arabic Homepage for Nuhavi Health (العربية).
+ * Follows Nuhavi Health Look and Feel PDF Pages 5-10.
+ * RTL Layout with complete Arabic translations.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import HeroSection from '../../components/home/HeroSection.astro';
+import WhoWeAre from '../../components/home/WhoWeAre.astro';
+import PeopleNotPackages from '../../components/home/PeopleNotPackages.astro';
+import SpecialtyExplorer from '../../components/home/SpecialtyExplorer.astro';
+import PatientJourney from '../../components/home/PatientJourney.astro';
+import CoordinatorBenefits from '../../components/home/CoordinatorBenefits.astro';
+import CostBreakdown from '../../components/home/CostBreakdown.astro';
+import HospitalSelection from '../../components/home/HospitalSelection.astro';
+import PatientStories from '../../components/home/PatientStories.astro';
+import PrepareWithConfidence from '../../components/home/PrepareWithConfidence.astro';
+import ClosingCTA from '../../components/home/ClosingCTA.astro';
+---
+
+<BaseLayout
+  title="نوهـافي هيلث | رعاية طبية متخصصة في الهند"
+  description="تعرف على خيارات العلاج، واستكشف المستشفيات المناسبة، واحصل على تقييمات طبية منسقة، وخطط لرحلتك العلاجية مع الدعم والمتابعة في كل خطوة."
+  lang="ar"
+  dir="rtl"
+>
+  <!-- Hero Section (Page 5) -->
+  <HeroSection lang="ar" />
+
+  <!-- Who We Are Section (Page 5) -->
+  <WhoWeAre lang="ar" />
+
+  <!-- People, Not Packages Section (Page 6) -->
+  <PeopleNotPackages lang="ar" />
+
+  <!-- Specialty Explorer Section (Page 7) -->
+  <SpecialtyExplorer lang="ar" />
+
+  <!-- Seven-Step Patient Journey Section (Page 8) -->
+  <PatientJourney lang="ar" />
+
+  <!-- Coordinator Benefits Section (Page 8) -->
+  <CoordinatorBenefits lang="ar" />
+
+  <!-- Homepage Cost Breakdown Section (Page 9) -->
+  <CostBreakdown lang="ar" />
+
+  <!-- Homepage Hospital Selection Standard Section (Page 9) -->
+  <HospitalSelection lang="ar" />
+
+  <!-- Patient Stories Section (Page 9) -->
+  <PatientStories lang="ar" />
+
+  <!-- Prepare with Confidence Section (Page 10) -->
+  <PrepareWithConfidence lang="ar" />
+
+  <!-- Closing CTA Band Section (Page 10) -->
+  <ClosingCTA lang="ar" />
+</BaseLayout>
