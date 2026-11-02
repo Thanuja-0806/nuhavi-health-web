@@ -59,7 +59,15 @@ const legalLinks = [
       <!-- Column 1: Brand Wordmark & Neutral Role Description -->
       <div class="footer-brand-col">
         <a href={homeHref} class="footer-logo" aria-label="Nuhavi Health - Home">
-          <span class="logo-wordmark">Nuhavi Health</span>
+          <img
+            src="/images/nuhavi-logo-white.svg"
+            alt="Nuhavi Health"
+            class="footer-logo-img"
+            width="162"
+            height="34"
+            loading="lazy"
+            decoding="async"
+          />
         </a>
         <p class="role-description">
           {t.roleDescription}
@@ -175,15 +183,27 @@ const legalLinks = [
 
   .footer-logo {
     text-decoration: none;
-    color: var(--color-paper);
     display: inline-block;
+    transition: opacity 0.15s ease;
   }
 
-  .logo-wordmark {
-    font-size: 1.375rem;
-    font-weight: var(--font-weight-heading);
-    letter-spacing: -0.02em;
-    color: var(--color-paper);
+  .footer-logo:hover {
+    opacity: 0.85;
+  }
+
+  .footer-logo-img {
+    display: block;
+    height: 34px;
+    width: auto;
+    max-width: 170px;
+    object-fit: contain;
+  }
+
+  @media (max-width: 480px) {
+    .footer-logo-img {
+      height: 28px;
+      max-width: 140px;
+    }
   }
 
   .role-description {
