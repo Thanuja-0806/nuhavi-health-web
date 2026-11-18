@@ -1,0 +1,29 @@
+---
+/**
+ * src/pages/ar/contact/index.astro
+ * تواصل مع منسق الرعاية الطبية — نوهـافي هيلث
+ *
+ * تجربة متكاملة باللغة العربية مع دعم كامل للاتجاه من اليمين إلى اليسار (RTL).
+ * - تصميم راقٍ يجمع بين الكحلي الملكي (#14294B) والذهبي (#C49A3C) والأبيض النقي.
+ * - قنوات التواصل المباشرة (تيليجرام، واتساب، البريد الإلكتروني).
+ * - أوقات التنسيق المعتمدة (من الاثنين إلى السبت، 9:00 إلى 19:00 بتوقيت الهند).
+ * - رابط مباشر لنموذج طلب الرأي الطبي.
+ * - تنبيه الطوارئ الطبية الواضح.
+ */
+
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import ContactView from '../../../components/contact/ContactView.astro';
+import { contactData } from '../../../data/contactData';
+
+const data = contactData.ar;
+---
+
+<BaseLayout
+  title={data.metaTitle}
+  description={data.metaDescription}
+  lang="ar"
+  dir="rtl"
+>
+  <ContactView lang="ar" />
+</BaseLayout>
+

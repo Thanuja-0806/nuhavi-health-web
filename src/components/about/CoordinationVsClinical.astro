@@ -1,0 +1,246 @@
+---
+/**
+ * src/components/about/CoordinationVsClinical.astro
+ * Two Distinct Roles: Coordination vs Clinical Responsibility component for Nuhavi Health.
+ *
+ * Requirements:
+ * - Clearly distinguish Nuhavi's coordination role from the hospital's clinical responsibility.
+ * - Strict non-clinical coordination boundary.
+ * - Localized for EN, RU, and AR (RTL).
+ */
+
+import type { ResponsibilityItem } from '../../data/aboutData';
+
+interface Props {
+  sectionTitle: string;
+  sectionDeck: string;
+  coordination: ResponsibilityItem;
+  clinical: ResponsibilityItem;
+  lang?: 'en' | 'ru' | 'ar';
+}
+
+const { sectionTitle, sectionDeck, coordination, clinical, lang = 'en' } = Astro.props;
+---
+
+<section class={`responsibility-section lang-${lang}`} aria-labelledby="responsibility-heading">
+  <div class="resp-header-wrap">
+    <span class="resp-eyebrow">{lang === 'ru' ? 'Разграничение ролей' : lang === 'ar' ? 'تحديد المسؤوليات' : 'Role Clarity'}</span>
+    <h2 id="responsibility-heading" class="resp-main-title">{sectionTitle}</h2>
+    <p class="resp-main-deck">{sectionDeck}</p>
+  </div>
+
+  <div class="roles-comparison-grid">
+    <!-- Nuhavi Coordination Role (Navy) -->
+    <div class="role-column role-coordination">
+      <div class="role-card-top-bar bar-navy" aria-hidden="true"></div>
+      <div class="role-badge-row">
+        <span class="role-badge badge-coord">{lang === 'ru' ? 'Неклиническое сопровождение' : lang === 'ar' ? 'التنسيق الإداري' : 'Non-Clinical Coordination'}</span>
+      </div>
+      <h3 class="role-title">{coordination.title}</h3>
+      <p class="role-summary">{coordination.description}</p>
+
+      <ul class="role-items-list">
+        {coordination.items.map((item) => (
+          <li class="role-list-item">
+            <span class="item-check-icon icon-navy" aria-hidden="true">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </span>
+            <span class="item-text">{item}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <!-- Hospital Clinical Care (Gold) -->
+    <div class="role-column role-clinical">
+      <div class="role-card-top-bar bar-gold" aria-hidden="true"></div>
+      <div class="role-badge-row">
+        <span class="role-badge badge-clin">{lang === 'ru' ? 'Клиническая ответственность' : lang === 'ar' ? 'الرعاية السريرية' : 'Hospital Clinical Care'}</span>
+      </div>
+      <h3 class="role-title">{clinical.title}</h3>
+      <p class="role-summary">{clinical.description}</p>
+
+      <ul class="role-items-list">
+        {clinical.items.map((item) => (
+          <li class="role-list-item">
+            <span class="item-check-icon icon-gold" aria-hidden="true">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </span>
+            <span class="item-text">{item}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .responsibility-section {
+    width: 100%;
+    margin-bottom: var(--space-12, 3rem);
+  }
+
+  .resp-header-wrap {
+    margin-bottom: var(--space-8, 2rem);
+    max-width: 820px;
+  }
+
+  .resp-eyebrow {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-gold-text, #967119);
+    background-color: rgba(196, 154, 60, 0.1);
+    padding: 4px 10px;
+    border-radius: 4px;
+    margin-bottom: var(--space-3, 0.75rem);
+  }
+
+  .resp-main-title {
+    font-family: var(--font-serif, "Playfair Display", Georgia, serif);
+    font-size: clamp(1.75rem, 3.5vw, 2.25rem);
+    font-weight: 700;
+    line-height: 1.25;
+    color: var(--color-navy, #14294B);
+    margin: 0 0 var(--space-3, 0.75rem) 0;
+  }
+
+  .resp-main-deck {
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    color: var(--color-slate, #5B6A80);
+    margin: 0;
+  }
+
+  /* Two Column Roles Grid */
+  .roles-comparison-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-6, 1.5rem);
+  }
+
+  @media (min-width: 768px) {
+    .roles-comparison-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-8, 2rem);
+    }
+  }
+
+  .role-column {
+    background-color: #FFFFFF;
+    border: 1px solid var(--color-border, #E2E8F0);
+    border-radius: 14px;
+    padding: var(--space-6, 1.5rem);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 18px rgba(20, 41, 75, 0.04);
+    display: flex;
+    flex-direction: column;
+  }
+
+  @media (min-width: 1024px) {
+    .role-column {
+      padding: var(--space-8, 2rem);
+    }
+  }
+
+  .role-card-top-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+  }
+
+  .bar-navy {
+    background-color: var(--color-navy, #14294B);
+  }
+
+  .bar-gold {
+    background-color: var(--color-gold, #C49A3C);
+  }
+
+  .role-badge-row {
+    margin-bottom: var(--space-3, 0.75rem);
+  }
+
+  .role-badge {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 3px 8px;
+    border-radius: 4px;
+  }
+
+  .badge-coord {
+    background-color: rgba(20, 41, 75, 0.08);
+    color: var(--color-navy, #14294B);
+  }
+
+  .badge-clin {
+    background-color: rgba(196, 154, 60, 0.12);
+    color: var(--color-gold-text, #967119);
+  }
+
+  .role-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-navy, #14294B);
+    margin: 0 0 var(--space-2, 0.5rem) 0;
+    line-height: 1.35;
+  }
+
+  .role-summary {
+    font-size: 0.9375rem;
+    line-height: 1.55;
+    color: var(--color-slate, #5B6A80);
+    margin: 0 0 var(--space-5, 1.25rem) 0;
+  }
+
+  .role-items-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: auto;
+  }
+
+  .role-list-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--color-ink, #0D1B33);
+  }
+
+  .item-check-icon {
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .icon-navy {
+    color: var(--color-navy, #14294B);
+  }
+
+  .icon-gold {
+    color: var(--color-gold, #C49A3C);
+  }
+
+  /* RTL Support */
+  :global([dir="rtl"]) .role-list-item {
+    flex-direction: row-reverse;
+    text-align: right;
+  }
+</style>
+

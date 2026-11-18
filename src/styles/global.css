@@ -1,7 +1,7 @@
 /* ==========================================================================
    NUHAVI HEALTH — DESIGN SYSTEM FOUNDATION
-   Specification Date: 30 October 2026
-   Context: Medical Tourism Coordination
+   Context: International Medical Tourism Coordination (Hyderabad, India)
+   Style Direction: Premium, clinical clarity, trust-focused healthcare
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
@@ -43,48 +43,96 @@
 
 /* --------------------------------------------------------------------------
    1. DESIGN TOKENS (CSS Custom Properties)
-   These variables act as the single source of truth for all styling.
+   Single source of truth for color, elevation, typography, and spacing.
    -------------------------------------------------------------------------- */
 :root {
-  /* Brand Color Palette */
-  --color-navy: #14294B;
-  --color-deep-navy: #0D1B33;
-  --color-gold: #C49A3C;
+  /* Brand Color Palette — Approved 12-Page Look & Feel (Page 1) */
+  --color-navy: #0F2340;
+  --color-brass: #A88B5A;
+  --color-brass-hover: #967949;
+  --color-ivory: #F6F2EA;
+  --color-mist: #DCE3EC;
+  --color-sage: #E3EBE3;
+  --color-whatsapp: #25D366;
+
+  /* Harmonized Clinical System & Compatibility Tokens */
+  --color-deep-navy: #0F2340;
+  --color-gold: #A88B5A;
+  --color-gold-hover: #967949;
   --color-gold-text: #8A6726;
-  --color-ink: #263449;
-  --color-slate: #5B6A80;
-  --color-mist: #F4F7FB;
+  --color-ink: #0F2340;
+  --color-slate: #4A5568;
+  --color-mist-light: #F6F8FB;
   --color-paper: #FFFFFF;
+  --color-surface-hover: #F6F2EA;
   --color-success: #26734D;
   --color-error: #B42318;
   --color-confirmation: #FFF6E5;
 
-  /* Typography */
-  --font-family-base: 'Manrope', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-  --font-weight-deck: 300;       /* Introductory text / deck */
-  --font-weight-body: 400;       /* Standard body copy */
-  --font-weight-subheading: 700; /* Subheadings, section titles, card headers */
-  --font-weight-heading: 800;    /* Primary page and hero headings */
+  /* Surfaces & Subtle Borders */
+  --color-border: rgba(15, 35, 64, 0.12);
+  --color-border-subtle: rgba(15, 35, 64, 0.06);
+  --color-badge-gold-bg: rgba(168, 139, 90, 0.12);
+  --color-badge-navy-bg: rgba(15, 35, 64, 0.06);
+
+  /* Gradients for Premium Depth */
+  --gradient-hero: linear-gradient(180deg, #F6F2EA 0%, #FFFFFF 100%);
+  --gradient-subtle: linear-gradient(180deg, #FFFFFF 0%, #F6F2EA 100%);
+  --gradient-navy: linear-gradient(135deg, #0F2340 0%, #173154 100%);
+  --gradient-card: linear-gradient(180deg, #FFFFFF 0%, #F8F6F1 100%);
+
+  /* Elevation Shadows */
+  --shadow-xs: 0 1px 2px rgba(15, 35, 64, 0.04);
+  --shadow-sm: 0 2px 4px rgba(15, 35, 64, 0.06);
+  --shadow-md: 0 6px 16px -2px rgba(15, 35, 64, 0.08);
+  --shadow-lg: 0 12px 32px -4px rgba(15, 35, 64, 0.12);
+  --shadow-xl: 0 20px 48px -6px rgba(15, 35, 64, 0.16);
+
+  /* Typography — Cormorant Garamond for headings, Inter for UI & body (Page 1) */
+  --font-family-base: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-family-heading: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  --font-family-arabic: 'IBM Plex Sans Arabic', system-ui, sans-serif;
+  --font-weight-deck: 400;
+  /* Introductory text / deck */
+  --font-weight-body: 400;
+  /* Standard body copy */
+  --font-weight-subheading: 600;
+  /* Subheadings, section titles, card headers */
+  --font-weight-heading: 700;
+  /* Primary page and hero headings */
   --line-height-body: 1.6;
-  --line-height-heading: 1.2;
+  --line-height-heading: 1.15;
 
   /* Spacing System (Strict 8px grid) */
-  --space-1: 8px;    /* 8px */
-  --space-2: 16px;   /* 16px */
-  --space-3: 24px;   /* 24px */
-  --space-4: 32px;   /* 32px */
-  --space-5: 40px;   /* 40px */
-  --space-6: 48px;   /* 48px */
-  --space-7: 56px;   /* 56px (Mobile section spacing) */
-  --space-8: 64px;   /* 64px */
-  --space-10: 80px;  /* 80px */
-  --space-12: 96px;  /* 96px (Desktop section spacing) */
+  --space-1: 8px;
+  /* 8px */
+  --space-2: 16px;
+  /* 16px */
+  --space-3: 24px;
+  /* 24px */
+  --space-4: 32px;
+  /* 32px */
+  --space-5: 40px;
+  /* 40px */
+  --space-6: 48px;
+  /* 48px */
+  --space-7: 56px;
+  /* 56px (Mobile section spacing) */
+  --space-8: 64px;
+  /* 64px */
+  --space-10: 80px;
+  /* 80px */
+  --space-12: 96px;
+  /* 96px (Desktop section spacing) */
 
   /* Section Spacing (Dynamic based on screen size) */
-  --section-spacing: var(--space-12); /* Default to 96px desktop */
+  --section-spacing: var(--space-12);
+  /* Default to 96px desktop */
 
   /* Component Dimensions & Shapes */
+  --radius-sm: 8px;
   --radius-card: 14px;
+  --radius-lg: 20px;
   --radius-pill: 9999px;
   --button-min-height: 48px;
 
@@ -96,7 +144,8 @@
 /* Responsive Section Spacing for Mobile Viewports */
 @media (max-width: 768px) {
   :root {
-    --section-spacing: var(--space-7); /* 56px mobile section spacing */
+    --section-spacing: var(--space-7);
+    /* 56px mobile section spacing */
   }
 }
 
@@ -115,9 +164,12 @@ html {
   font-family: var(--font-family-base);
   font-size: 16px;
   color: var(--color-ink);
-  background-color: var(--color-mist);
+  background-color: var(--color-paper);
   -webkit-text-size-adjust: 100%;
   overflow-x: hidden;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
@@ -126,7 +178,7 @@ body {
   font-weight: var(--font-weight-body);
   line-height: var(--line-height-body);
   color: var(--color-ink);
-  background-color: var(--color-mist);
+  background-color: var(--color-paper);
   display: flex;
   flex-direction: column;
   overflow-x: hidden;
@@ -135,19 +187,48 @@ body {
 /* --------------------------------------------------------------------------
    3. TYPOGRAPHY RULES
    -------------------------------------------------------------------------- */
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-family-heading);
   color: var(--color-deep-navy);
   line-height: var(--line-height-heading);
+  letter-spacing: -0.015em;
+}
+
+[dir="rtl"] h1,
+[dir="rtl"] h2,
+[dir="rtl"] h3,
+[dir="rtl"] h4,
+[dir="rtl"] h5,
+[dir="rtl"] h6,
+[lang="ar"] h1,
+[lang="ar"] h2,
+[lang="ar"] h3,
+[lang="ar"] h4,
+[lang="ar"] h5,
+[lang="ar"] h6 {
+  font-family: var(--font-family-arabic);
+}
+
+[dir="rtl"],
+[lang="ar"] {
+  font-family: var(--font-family-arabic);
 }
 
 h1 {
   font-size: clamp(2rem, 5vw, 3rem);
   font-weight: var(--font-weight-heading);
+  letter-spacing: -0.025em;
 }
 
 h2 {
   font-size: clamp(1.5rem, 4vw, 2.25rem);
   font-weight: var(--font-weight-heading);
+  letter-spacing: -0.02em;
 }
 
 h3 {
@@ -155,7 +236,9 @@ h3 {
   font-weight: var(--font-weight-subheading);
 }
 
-h4, h5, h6 {
+h4,
+h5,
+h6 {
   font-size: 1.125rem;
   font-weight: var(--font-weight-subheading);
 }
@@ -185,8 +268,30 @@ p {
   outline-offset: var(--focus-offset);
 }
 
+/* Accessible Skip to Content Link */
+.skip-to-content {
+  position: absolute;
+  top: -100px;
+  left: var(--space-3);
+  z-index: 9999;
+  background-color: var(--color-deep-navy);
+  color: var(--color-paper);
+  padding: 12px 24px;
+  border-radius: var(--radius-pill);
+  border: 2px solid var(--color-gold);
+  font-weight: var(--font-weight-subheading);
+  text-decoration: none;
+  box-shadow: var(--shadow-lg);
+  transition: top 0.2s ease;
+}
+
+.skip-to-content:focus {
+  top: 16px;
+}
+
 /* Respect user preference for reduced motion */
 @media (prefers-reduced-motion: reduce) {
+
   *,
   *::before,
   *::after {
@@ -205,6 +310,7 @@ p {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 8px;
   min-height: var(--button-min-height);
   padding: 0 var(--space-4);
   font-family: var(--font-family-base);
@@ -216,17 +322,97 @@ p {
   border: 2px solid var(--color-navy);
   border-radius: var(--radius-pill);
   cursor: pointer;
-  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  box-shadow: var(--shadow-xs);
+  transition: background-color 0.18s ease, border-color 0.18s ease, color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
 }
 
 .btn-primary:hover {
   background-color: var(--color-deep-navy);
   border-color: var(--color-deep-navy);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
 }
 
 .btn-primary:active {
   background-color: var(--color-ink);
   border-color: var(--color-ink);
+  transform: translateY(0);
+}
+
+/* High-contrast Gold / Brass Pill CTA button */
+.btn-gold,
+.btn-brass {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: var(--button-min-height);
+  padding: 0 var(--space-4);
+  font-family: var(--font-family-base);
+  font-size: 1rem;
+  font-weight: var(--font-weight-subheading);
+  text-decoration: none;
+  color: #FFFFFF;
+  background-color: var(--color-brass);
+  border: 2px solid var(--color-brass);
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  box-shadow: var(--shadow-xs);
+  transition: background-color 0.18s ease, border-color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.btn-gold:hover,
+.btn-brass:hover {
+  background-color: var(--color-brass-hover);
+  border-color: var(--color-brass-hover);
+  color: #FFFFFF;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-gold:active,
+.btn-brass:active {
+  background-color: #83673B;
+  border-color: #83673B;
+  transform: translateY(0);
+}
+
+.btn-gold:hover {
+  background-color: var(--color-gold-hover);
+  border-color: var(--color-gold-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(196, 154, 60, 0.38);
+}
+
+.btn-gold:active {
+  transform: translateY(0);
+}
+
+/* Secondary Outlined Button */
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: var(--button-min-height);
+  padding: 0 var(--space-4);
+  font-family: var(--font-family-base);
+  font-size: 1rem;
+  font-weight: var(--font-weight-subheading);
+  text-decoration: none;
+  color: var(--color-navy);
+  background-color: transparent;
+  border: 2px solid rgba(20, 41, 75, 0.2);
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition: background-color 0.18s ease, border-color 0.18s ease, color 0.18s ease, transform 0.18s ease;
+}
+
+.btn-secondary:hover {
+  background-color: var(--color-paper);
+  border-color: var(--color-navy);
+  color: var(--color-deep-navy);
+  transform: translateY(-1px);
 }
 
 /* Base Card */
@@ -234,13 +420,159 @@ p {
   background-color: var(--color-paper);
   border-radius: var(--radius-card);
   padding: var(--space-4);
-  border: 1px solid rgba(20, 41, 75, 0.08);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-xs);
+  transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-sm);
+  border-color: rgba(20, 41, 75, 0.18);
+}
+
+/* Premium Clinical Cards (Vaidam / Jus' Onco standard) */
+.card-premium {
+  background-color: #FFFFFF;
+  border: 1px solid rgba(20, 41, 75, 0.1);
+  border-radius: 16px;
+  padding: var(--space-6);
+  box-shadow: 0 2px 8px rgba(20, 41, 75, 0.04);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.card-premium:hover {
+  border-color: rgba(196, 154, 60, 0.45);
+  box-shadow: 0 8px 24px rgba(20, 41, 75, 0.08);
+  transform: translateY(-2px);
+}
+
+.card-navy {
+  background: var(--gradient-navy);
+  color: #FFFFFF;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  padding: var(--space-6);
+}
+
+/* Standard Eyebrow Pill */
+.eyebrow-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-navy);
+  background-color: var(--color-mist);
+  border: 1px solid rgba(20, 41, 75, 0.12);
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  margin-bottom: var(--space-3);
+}
+
+/* Standard Breadcrumbs */
+.breadcrumb {
+  margin-bottom: var(--space-4);
+}
+
+.breadcrumb ol {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8125rem;
+  color: var(--color-slate);
+}
+
+.breadcrumb a {
+  color: var(--color-navy);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.breadcrumb a:hover {
+  color: var(--color-gold);
+  text-decoration: underline;
+}
+
+.breadcrumb .sep {
+  color: rgba(20, 41, 75, 0.3);
+}
+
+.breadcrumb [aria-current="page"] {
+  color: var(--color-slate);
+  font-weight: 600;
+}
+
+/* Standard Emergency Clinical Notice Box */
+.emergency-box {
+  background-color: #FEF3F2;
+  border: 1px solid #FECDCA;
+  border-radius: 12px;
+  padding: var(--space-5);
+}
+
+.emergency-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--color-error);
+  margin-bottom: 6px;
+}
+
+.alert-icon {
+  font-size: 1.125rem;
+  line-height: 1;
+}
+
+.emergency-header strong {
+  font-size: 0.9375rem;
+  font-weight: 800;
+}
+
+.emergency-text,
+.emergency-box p {
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  color: #55160C;
+  margin: 0;
+}
+
+/* Section Background Depth Utilities */
+.bg-paper {
+  background-color: #FFFFFF;
+}
+
+.bg-mist {
+  background-color: var(--color-mist);
+}
+
+.bg-subtle {
+  background-color: var(--color-mist-light);
+}
+
+.bg-navy {
+  background-color: var(--color-deep-navy);
+  color: #FFFFFF;
+}
+
+/* Gold Divider Rule (Standard 72x3 px accent used across all modules) */
+.gold-rule {
+  width: 72px;
+  height: 3px;
+  background-color: var(--color-gold);
+  border-radius: 2px;
+  margin-bottom: var(--space-2);
 }
 
 /* Standard Layout Container */
 .container {
   width: 100%;
-  max-width: 1120px;
+  max-width: 1240px;
   margin-left: auto;
   margin-right: auto;
   padding-left: var(--space-3);
@@ -254,8 +586,8 @@ p {
 }
 
 /* --------------------------------------------------------------------------
-   6. RTL (RIGHT-TO-LEFT) SUPPORT (PDF Page 40)
-   Used for Arabic language preview
+   6. RTL (RIGHT-TO-LEFT) SUPPORT
+   Used for Arabic language (/ar/)
    -------------------------------------------------------------------------- */
 html[dir="rtl"] {
   direction: rtl;
@@ -269,6 +601,14 @@ html[dir="rtl"] body {
 html[dir="rtl"] .skip-to-content {
   left: auto;
   right: var(--space-3);
+}
+
+html[dir="rtl"] .breadcrumb ol {
+  flex-direction: row-reverse;
+}
+
+html[dir="rtl"] .emergency-header {
+  flex-direction: row-reverse;
 }
 
 html[dir="rtl"] .chat-widget-root {

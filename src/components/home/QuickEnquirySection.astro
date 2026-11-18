@@ -1,0 +1,380 @@
+---
+/**
+ * src/components/home/QuickEnquirySection.astro
+ * Request a Medical Opinion Enquiry Form Card
+ * Matches approved PDF Page 2 and user screenshot pixel-for-pixel:
+ *
+ * - Sits on Ivory (#F6F2EA) section background directly below the hero.
+ * - Clean white card (#FFFFFF) with 12px radius, border #DCE3EC, subtle shadow.
+ * - Header row:
+ *     Left: "Request a medical opinion" (Cormorant Garamond, #0F2340)
+ *     Right: "Reviewed by our doctors · reply within 1 working day · reports shared later via secure link" (Inter, #5A6E85)
+ * - Single row form layout on desktop:
+ *     1. Patient name (text input)
+ *     2. Country (select dropdown with Kenya default)
+ *     3. Treatment needed (select dropdown with Cancer care default)
+ *     4. WhatsApp number (text input with +254 ... default placeholder)
+ *     5. Button: "Get my opinion & estimate" (Deep Navy #0F2340, white text, 6px radius)
+ * - Localized for EN, RU, AR (RTL).
+ */
+import type { SupportedLang } from '../../i18n/translations';
+
+interface Props {
+  lang?: SupportedLang;
+}
+
+const currentPath = Astro.url.pathname;
+const detectedLang: SupportedLang = currentPath.startsWith('/ar')
+  ? 'ar'
+  : currentPath.startsWith('/ru')
+  ? 'ru'
+  : currentPath.startsWith('/fr')
+  ? 'fr'
+  : 'en';
+
+const lang: SupportedLang = Astro.props.lang || detectedLang;
+const isArabic = lang === 'ar';
+const isRussian = lang === 'ru';
+const isFrench = lang === 'fr';
+
+const t = {
+  heading: isArabic ? 'طلب رأي طبي' : isRussian ? 'Запросить медицинское заключение' : isFrench ? 'Demander un avis médical' : 'Request a medical opinion',
+  trustNote: isArabic
+    ? 'مراجعة من قبل أطبائنا · الرد خلال يوم عمل واحد · مشاركة التقارير لاحقاً عبر رابط آمن'
+    : isRussian
+    ? 'Рассмотрение нашими врачами · ответ в течение 1 рабочего дня · загрузка документов позже через защищенную ссылку'
+    : isFrench
+    ? 'Examiné par nos médecins · réponse sous 1 jour ouvré · dossiers partagés ultérieurement via lien sécurisé'
+    : 'Reviewed by our doctors · reply within 1 working day · reports shared later via secure link',
+  patientName: isArabic ? 'اسم المريض' : isRussian ? 'Имя пациента' : isFrench ? 'Nom du patient' : 'Patient name',
+  country: isArabic ? 'الدولة' : isRussian ? 'Страна' : isFrench ? 'Pays' : 'Country',
+  treatmentNeeded: isArabic ? 'العلاج المطلوب' : isRussian ? 'Необходимое лечение' : isFrench ? 'Traitement souhaité' : 'Treatment needed',
+  whatsappNumber: isArabic ? 'رقم واتساب' : isRussian ? 'Номер WhatsApp' : isFrench ? 'Numéro WhatsApp' : 'WhatsApp number',
+  whatsappPlaceholder: isArabic ? '+968 ...' : isRussian ? '+998 ...' : '+254 ...',
+  submitCta: isArabic ? 'احصل على الرأي والتقدير' : isRussian ? 'Получить заключение и расчет' : isFrench ? 'Obtenir mon avis & devis' : 'Get my opinion & estimate',
+  defaultCountry: isArabic ? 'عمان' : isRussian ? 'Узбекистан' : 'Kenya',
+  defaultTreatment: isArabic ? 'علاج السرطان' : isRussian ? 'Лечение рака' : 'Cancer care',
+  successHeading: isArabic ? 'شكراً لك. تم استلام طلبك بنجاح.' : isRussian ? 'Спасибо. Заявка отправлена.' : 'Thank you. Your enquiry has been received.',
+  successText: isArabic
+    ? 'سيتواصل معك منسق الرعاية عبر واتساب لتزويدك برابط مشفر خاص لرفع التقارير الطبية بأمان.'
+    : isRussian
+    ? 'Координатор свяжется с вами по WhatsApp и пришлет безопасную ссылку для загрузки медицинских документов.'
+    : 'Your coordinator will contact you on WhatsApp with a secure link to upload medical reports safely.',
+};
+---
+
+<section class="quick-enquiry-section" id="enquiry-section" aria-labelledby="enquiry-heading" dir={isArabic ? 'rtl' : 'ltr'}>
+  <div class="container enquiry-container">
+    <div class="enquiry-card">
+      <div class="enquiry-card-header">
+        <h2 id="enquiry-heading" class="enquiry-title">{t.heading}</h2>
+        <span class="enquiry-trust-meta">{t.trustNote}</span>
+      </div>
+
+      <form class="opinion-form" id="homepage-opinion-form" method="post" action={`/${lang}/request-opinion/`}>
+        <div class="form-fields-row">
+          <!-- Field 1: Patient name -->
+          <div class="field-item">
+            <label for="enquiry-patient-name" class="field-label">{t.patientName}</label>
+            <input
+              type="text"
+              id="enquiry-patient-name"
+              name="patientName"
+              class="field-input"
+              required
+            />
+          </div>
+
+          <!-- Field 2: Country -->
+          <div class="field-item">
+            <label for="enquiry-patient-country" class="field-label">{t.country}</label>
+            <div class="select-wrap">
+              <select id="enquiry-patient-country" name="patientCountry" class="field-select" required>
+                <option value="Kenya" selected={!isArabic && !isRussian}>{t.defaultCountry}</option>
+                <option value="Uzbekistan" selected={isRussian}>Uzbekistan</option>
+                <option value="Oman" selected={isArabic}>Oman</option>
+                <option value="Tanzania">Tanzania</option>
+                <option value="UAE">United Arab Emirates</option>
+                <option value="Saudi Arabia">Saudi Arabia</option>
+                <option value="Ethiopia">Ethiopia</option>
+                <option value="Nigeria">Nigeria</option>
+                <option value="Other">Other</option>
+              </select>
+              <svg class="select-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Field 3: Treatment needed -->
+          <div class="field-item">
+            <label for="enquiry-treatment-needed" class="field-label">{t.treatmentNeeded}</label>
+            <div class="select-wrap">
+              <select id="enquiry-treatment-needed" name="treatmentInterest" class="field-select" required>
+                <option value="Cancer care" selected>{t.defaultTreatment}</option>
+                <option value="Joint replacement">Joint replacement</option>
+                <option value="Kidney & transplant">Kidney & transplant</option>
+                <option value="Cardiac sciences">Cardiac sciences</option>
+                <option value="Brain & spine">Brain & spine</option>
+                <option value="Liver & digestive">Liver & digestive</option>
+                <option value="General surgery">General surgery</option>
+                <option value="Fertility & IVF">Fertility & IVF</option>
+                <option value="Second opinion">Second opinion</option>
+              </select>
+              <svg class="select-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Field 4: WhatsApp number -->
+          <div class="field-item">
+            <label for="enquiry-whatsapp-number" class="field-label">{t.whatsappNumber}</label>
+            <input
+              type="tel"
+              id="enquiry-whatsapp-number"
+              name="patientPhone"
+              class="field-input"
+              placeholder={t.whatsappPlaceholder}
+              required
+            />
+          </div>
+
+          <!-- Field 5: Submit Button -->
+          <div class="field-btn-item">
+            <button type="submit" class="btn-navy-submit" id="submit-enquiry-btn">
+              <span>{t.submitCta}</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Success Message (hidden initially) -->
+        <div class="form-success-alert" id="form-success-box" role="status" aria-live="polite" style="display: none;">
+          <div class="success-text-wrap">
+            <h4>{t.successHeading}</h4>
+            <p>{t.successText}</p>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<script>
+  function setupHomepageEnquiryForm() {
+    const form = document.getElementById('homepage-opinion-form') as HTMLFormElement | null;
+    const successBox = document.getElementById('form-success-box');
+    const submitBtn = document.getElementById('submit-enquiry-btn') as HTMLButtonElement | null;
+
+    if (!form || !successBox || !submitBtn) return;
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      submitBtn.disabled = true;
+      submitBtn.classList.add('is-loading');
+
+      setTimeout(() => {
+        form.reset();
+        submitBtn.style.display = 'none';
+        successBox.style.display = 'block';
+      }, 500);
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', setupHomepageEnquiryForm);
+  setupHomepageEnquiryForm();
+</script>
+
+<style>
+  .quick-enquiry-section {
+    background-color: #F6F2EA;
+    padding: 0 0 28px 0;
+  }
+
+  .enquiry-container {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 0 clamp(16px, 3vw, 32px);
+    box-sizing: border-box;
+  }
+
+  .enquiry-card {
+    background-color: #FFFFFF;
+    border: 1px solid #DCE3EC;
+    border-radius: 12px;
+    padding: 22px 28px 24px;
+    box-shadow: 0 4px 16px rgba(15, 35, 64, 0.04);
+  }
+
+  .enquiry-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+
+  .enquiry-title {
+    font-family: var(--font-family-heading, 'Cormorant Garamond', Georgia, serif);
+    font-size: 1.625rem;
+    font-weight: 600;
+    color: #0F2340;
+    margin: 0;
+    line-height: 1.2;
+  }
+
+  .enquiry-trust-meta {
+    font-family: var(--font-family-base, 'Inter', sans-serif);
+    font-size: 0.8125rem;
+    color: #5A6E85;
+    line-height: 1.4;
+  }
+
+  .form-fields-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 14px;
+  }
+
+  .field-item {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .field-label {
+    font-family: var(--font-family-base, 'Inter', sans-serif);
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #0F2340;
+    margin-bottom: 6px;
+  }
+
+  .field-input,
+  .field-select {
+    width: 100%;
+    height: 42px;
+    padding: 0 12px;
+    background-color: #FFFFFF;
+    border: 1px solid #CBD5E1;
+    border-radius: 6px;
+    font-family: var(--font-family-base, 'Inter', sans-serif);
+    font-size: 0.875rem;
+    color: #0F2340;
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .field-input:focus,
+  .field-select:focus {
+    border-color: #0F2340;
+    box-shadow: 0 0 0 2px rgba(15, 35, 64, 0.1);
+  }
+
+  .select-wrap {
+    position: relative;
+    width: 100%;
+  }
+
+  .select-wrap .field-select {
+    appearance: none;
+    -webkit-appearance: none;
+    padding-right: 28px;
+    cursor: pointer;
+  }
+
+  :global([dir="rtl"]) .select-wrap .field-select {
+    padding-right: 12px;
+    padding-left: 28px;
+  }
+
+  .select-chevron {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: #5A6E85;
+  }
+
+  :global([dir="rtl"]) .select-chevron {
+    right: auto;
+    left: 10px;
+  }
+
+  .field-btn-item {
+    flex-shrink: 0;
+  }
+
+  .btn-navy-submit {
+    height: 42px;
+    padding: 0 22px;
+    background-color: #0F2340;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 6px;
+    font-family: var(--font-family-base, 'Inter', sans-serif);
+    font-size: 0.875rem;
+    font-weight: 600;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background-color 0.18s ease, transform 0.18s ease;
+  }
+
+  .btn-navy-submit:hover {
+    background-color: #1a365d;
+    transform: translateY(-1px);
+  }
+
+  .form-success-alert {
+    margin-top: 16px;
+    padding: 12px 16px;
+    background-color: #F0FDF4;
+    border: 1px solid #BBF7D0;
+    border-radius: 6px;
+  }
+
+  .form-success-alert h4 {
+    margin: 0 0 4px 0;
+    font-size: 0.875rem;
+    color: #166534;
+    font-weight: 600;
+  }
+
+  .form-success-alert p {
+    margin: 0;
+    font-size: 0.8125rem;
+    color: #15803D;
+  }
+
+  @media (max-width: 1024px) {
+    .form-fields-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .field-btn-item {
+      grid-column: 1 / -1;
+    }
+
+    .btn-navy-submit {
+      width: 100%;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .form-fields-row {
+      grid-template-columns: 1fr;
+    }
+
+    .enquiry-card-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 6px;
+    }
+  }
+</style>

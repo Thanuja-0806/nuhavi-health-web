@@ -1,0 +1,26 @@
+---
+/**
+ * src/pages/ru/treatments/index.astro
+ * Russian Treatments Overview Page.
+ * Route: /ru/treatments/
+ */
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import SpecialtyExplorer from '../../../components/home/SpecialtyExplorer.astro';
+---
+
+<BaseLayout
+  title="Направления лечения | Nuhavi Health"
+  description="Выберите необходимое медицинское направление. Узнайте об особенностях лечения, подготовке медицинских документов и вопросах для врачебной команды."
+  lang="ru"
+  dir="ltr"
+>
+  <SpecialtyExplorer
+    eyebrow="НАПРАВЛЕНИЯ"
+    heading="Медицинские направления"
+    headingLevel="h1"
+    supportingText="Выберите необходимое медицинское направление. Узнайте об особенностях лечения, подготовке медицинских документов и вопросах для врачебной команды."
+    variant="page"
+    lang="ru"
+  />
+</BaseLayout>
+

@@ -1,0 +1,445 @@
+---
+/**
+ * src/components/stories/FutureStoriesSection.astro
+ * Reusable layout for verified patient stories with authentic empty state.
+ *
+ * Requirements:
+ * - If verified stories are unavailable, do not create fictional stories.
+ * - Zero invented names, stock photos, fake ratings, or recovery claims.
+ * - Reusable, semantic layout ready for future verified patient stories.
+ * - Shows an authentic empty state explaining the standard of waiting for real consent.
+ * - Localized for EN, RU, and AR (RTL).
+ */
+
+import type { VerifiedPatientStory } from '../../data/storiesData';
+
+interface Props {
+  eyebrow: string;
+  title: string;
+  deck: string;
+  templateBadge: string;
+  blueprintTitle: string;
+  blueprintDesc: string;
+  fields: Array<{ label: string; value: string }>;
+  stories: VerifiedPatientStory[];
+  emptyState: {
+    badge: string;
+    heading: string;
+    description: string;
+    commitment: string;
+  };
+  lang?: 'en' | 'ru' | 'ar';
+}
+
+const {
+  eyebrow,
+  title,
+  deck,
+  templateBadge,
+  blueprintTitle,
+  blueprintDesc,
+  fields,
+  stories,
+  emptyState,
+  lang = 'en',
+} = Astro.props;
+
+const hasVerifiedStories = stories && stories.length > 0;
+---
+
+<section class={`future-stories-section lang-${lang}`} aria-labelledby="future-stories-heading">
+  <div class="section-header">
+    <span class="section-eyebrow">{eyebrow}</span>
+    <h2 id="future-stories-heading" class="section-title">{title}</h2>
+    <p class="section-deck">{deck}</p>
+  </div>
+
+  {hasVerifiedStories ? (
+    <div class="stories-active-grid" role="list">
+      {stories.map((story) => (
+        <article class="verified-story-card" role="listitem">
+          <div class="card-top-meta">
+            <span class="country-tag">{story.country}</span>
+            <span class="specialty-tag">{story.specialty}</span>
+            <span class="consent-verified-badge">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              {story.consentBadge}
+            </span>
+          </div>
+
+          <h3 class="story-patient-alias">{story.patientAlias}</h3>
+          <p class="story-timeline">{story.timeline} &bull; {story.hospitalCategory}</p>
+
+          <div class="story-narrative-body">
+            {story.narrative.map((p) => (
+              <p class="narrative-para">{p}</p>
+            ))}
+          </div>
+
+          <div class="story-takeaway-box">
+            <strong class="takeaway-label">Coordination Experience:</strong>
+            <p class="takeaway-text">{story.keyCoordinationTakeaway}</p>
+          </div>
+        </article>
+      ))}
+    </div>
+  ) : (
+    <div class="stories-empty-container">
+      <div class="empty-state-card" role="status">
+        <div class="card-status-bar">
+          <span class="status-pill">{emptyState.badge}</span>
+        </div>
+        <h3 class="empty-heading">{emptyState.heading}</h3>
+        <p class="empty-desc">{emptyState.description}</p>
+        <div class="commitment-pill-wrap">
+          <span class="commitment-pill">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-gold)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            </svg>
+            <span>{emptyState.commitment}</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="blueprint-card" role="region" aria-label="Future Story Format Blueprint">
+        <div class="blueprint-header">
+          <span class="blueprint-badge">{templateBadge}</span>
+          <h3 class="blueprint-title">{blueprintTitle}</h3>
+          <p class="blueprint-desc">{blueprintDesc}</p>
+        </div>
+
+        <div class="blueprint-mockup">
+          <div class="mockup-header-preview">
+            <div class="preview-tags">
+              <span class="tag-dummy tag-country">Uzbekistan</span>
+              <span class="tag-dummy tag-specialty">Oncology Care</span>
+            </div>
+            <span class="tag-dummy tag-consent">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              Written Consent Verified
+            </span>
+          </div>
+
+          <div class="mockup-fields-table">
+            {fields.map((f) => (
+              <div class="field-row">
+                <span class="field-label">{f.label}</span>
+                <span class="field-value">{f.value}</span>
+              </div>
+            ))}
+          </div>
+
+          <div class="mockup-footer-note">
+            <span class="note-lock-icon" aria-hidden="true">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg>
+            </span>
+            <span class="note-text">
+              Zero stock photos, zero outcome guarantees, zero promotional doctor rankings.
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  )}
+</section>
+
+<style>
+  .future-stories-section {
+    width: 100%;
+    margin-bottom: var(--space-12, 3rem);
+  }
+
+  .section-header {
+    margin-bottom: var(--space-8, 2rem);
+  }
+
+  .section-eyebrow {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-gold-text, #967119);
+    background-color: rgba(196, 154, 60, 0.1);
+    padding: 4px 10px;
+    border-radius: 4px;
+    margin-bottom: var(--space-3, 0.75rem);
+  }
+
+  .section-title {
+    font-family: var(--font-serif, "Playfair Display", Georgia, serif);
+    font-size: clamp(1.75rem, 3.5vw, 2.25rem);
+    font-weight: 700;
+    line-height: 1.25;
+    color: var(--color-navy, #14294B);
+    margin: 0 0 var(--space-3, 0.75rem) 0;
+  }
+
+  .section-deck {
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    color: var(--color-slate, #5B6A80);
+    max-width: 780px;
+    margin: 0;
+  }
+
+  /* Empty State & Blueprint Split */
+  .stories-empty-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-6, 1.5rem);
+  }
+
+  @media (min-width: 900px) {
+    .stories-empty-container {
+      grid-template-columns: 5fr 7fr;
+      align-items: stretch;
+    }
+  }
+
+  /* Empty State Card */
+  .empty-state-card {
+    background-color: #FFFFFF;
+    border: 1px solid var(--color-border, #E2E8F0);
+    border-radius: 12px;
+    padding: var(--space-6, 1.5rem);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 2px 10px rgba(20, 41, 75, 0.04);
+  }
+
+  @media (min-width: 768px) {
+    .empty-state-card {
+      padding: var(--space-8, 2rem);
+    }
+  }
+
+  .card-status-bar {
+    margin-bottom: var(--space-4, 1rem);
+  }
+
+  .status-pill {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-navy, #14294B);
+    background-color: var(--color-mist, #F4F7FB);
+    border: 1px solid rgba(20, 41, 75, 0.12);
+    padding: 3px 8px;
+    border-radius: 4px;
+  }
+
+  .empty-heading {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-navy, #14294B);
+    margin: 0 0 var(--space-3, 0.75rem) 0;
+    line-height: 1.35;
+  }
+
+  .empty-desc {
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--color-slate, #5B6A80);
+    margin: 0 0 var(--space-6, 1.5rem) 0;
+  }
+
+  .commitment-pill-wrap {
+    margin-top: auto;
+  }
+
+  .commitment-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background-color: var(--color-mist, #F4F7FB);
+    border: 1px solid rgba(196, 154, 60, 0.3);
+    border-radius: 6px;
+    padding: var(--space-3, 0.75rem) var(--space-4, 1rem);
+    font-size: 0.8125rem;
+    line-height: 1.45;
+    color: var(--color-ink, #0D1B33);
+  }
+
+  /* Blueprint Card */
+  .blueprint-card {
+    background-color: #FFFFFF;
+    border: 1px dashed rgba(20, 41, 75, 0.25);
+    border-radius: 12px;
+    padding: var(--space-6, 1.5rem);
+    box-shadow: 0 2px 10px rgba(20, 41, 75, 0.02);
+  }
+
+  @media (min-width: 768px) {
+    .blueprint-card {
+      padding: var(--space-8, 2rem);
+    }
+  }
+
+  .blueprint-header {
+    margin-bottom: var(--space-5, 1.25rem);
+  }
+
+  .blueprint-badge {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-gold-text, #967119);
+    background-color: rgba(196, 154, 60, 0.12);
+    padding: 3px 8px;
+    border-radius: 4px;
+    margin-bottom: var(--space-2, 0.5rem);
+  }
+
+  .blueprint-title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--color-navy, #14294B);
+    margin: 0 0 var(--space-2, 0.5rem) 0;
+  }
+
+  .blueprint-desc {
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--color-slate, #5B6A80);
+    margin: 0;
+  }
+
+  /* Mockup Box */
+  .blueprint-mockup {
+    background-color: var(--color-mist, #F4F7FB);
+    border: 1px solid var(--color-border, #E2E8F0);
+    border-radius: 8px;
+    padding: var(--space-4, 1rem) var(--space-5, 1.25rem);
+  }
+
+  .mockup-header-preview {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding-bottom: var(--space-3, 0.75rem);
+    border-bottom: 1px solid rgba(20, 41, 75, 0.08);
+    margin-bottom: var(--space-3, 0.75rem);
+  }
+
+  .preview-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .tag-dummy {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 4px;
+  }
+
+  .tag-country {
+    background-color: #FFFFFF;
+    color: var(--color-navy, #14294B);
+    border: 1px solid rgba(20, 41, 75, 0.15);
+  }
+
+  .tag-specialty {
+    background-color: var(--color-navy, #14294B);
+    color: #FFFFFF;
+  }
+
+  .tag-consent {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background-color: rgba(196, 154, 60, 0.15);
+    color: var(--color-gold-text, #967119);
+    border: 1px solid rgba(196, 154, 60, 0.35);
+  }
+
+  .mockup-fields-table {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: var(--space-4, 1rem);
+  }
+
+  .field-row {
+    display: flex;
+    flex-direction: column;
+    font-size: 0.8125rem;
+    line-height: 1.4;
+    padding: 4px 0;
+    border-bottom: 1px dashed rgba(20, 41, 75, 0.06);
+  }
+
+  @media (min-width: 600px) {
+    .field-row {
+      flex-direction: row;
+      justify-content: space-between;
+      gap: 12px;
+    }
+  }
+
+  .field-label {
+    font-weight: 700;
+    color: var(--color-navy, #14294B);
+    flex-shrink: 0;
+  }
+
+  .field-value {
+    color: var(--color-slate, #5B6A80);
+    text-align: right;
+  }
+
+  @media (max-width: 599px) {
+    .field-value {
+      text-align: left;
+    }
+  }
+
+  .mockup-footer-note {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.75rem;
+    color: var(--color-slate, #5B6A80);
+    padding-top: var(--space-2, 0.5rem);
+  }
+
+  .note-lock-icon {
+    color: var(--color-gold, #C49A3C);
+    flex-shrink: 0;
+  }
+
+  /* RTL Support */
+  :global([dir="rtl"]) .mockup-header-preview {
+    flex-direction: row-reverse;
+  }
+
+  :global([dir="rtl"]) .commitment-pill {
+    flex-direction: row-reverse;
+    text-align: right;
+  }
+
+  :global([dir="rtl"]) .mockup-footer-note {
+    flex-direction: row-reverse;
+    text-align: right;
+  }
+
+  :global([dir="rtl"]) .field-value {
+    text-align: left;
+  }
+</style>

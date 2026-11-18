@@ -1,60 +1,83 @@
 ---
 /**
  * src/pages/ar/index.astro
- * Arabic Homepage for Nuhavi Health (العربية).
- * Follows Nuhavi Health Look and Feel PDF Pages 5-10.
- * RTL Layout with complete Arabic translations.
+ * Arabic language homepage for Nuhavi Health.
+ * Follows Nuhavi Health Look and Feel Approved 12-Page PDF (Pages 2–7, 11 & 12 RTL).
  */
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import HeroSection from '../../components/home/HeroSection.astro';
-import WhoWeAre from '../../components/home/WhoWeAre.astro';
-import PeopleNotPackages from '../../components/home/PeopleNotPackages.astro';
+import QuickEnquirySection from '../../components/home/QuickEnquirySection.astro';
+import TrustIndicators from '../../components/home/TrustIndicators.astro';
+import KnowledgeSpecialtiesGrid from '../../components/home/KnowledgeSpecialtiesGrid.astro';
 import SpecialtyExplorer from '../../components/home/SpecialtyExplorer.astro';
-import PatientJourney from '../../components/home/PatientJourney.astro';
-import CoordinatorBenefits from '../../components/home/CoordinatorBenefits.astro';
-import CostBreakdown from '../../components/home/CostBreakdown.astro';
+import SevenStepJourney from '../../components/home/SevenStepJourney.astro';
+import AfricaMedicalCamps from '../../components/home/AfricaMedicalCamps.astro';
+import WhoWeAre from '../../components/home/WhoWeAre.astro';
 import HospitalSelection from '../../components/home/HospitalSelection.astro';
+import CostBreakdown from '../../components/home/CostBreakdown.astro';
+import PatientJourney from '../../components/home/PatientJourney.astro';
+import DoctorProfilesSection from '../../components/home/DoctorProfilesSection.astro';
 import PatientStories from '../../components/home/PatientStories.astro';
+import PeopleNotPackages from '../../components/home/PeopleNotPackages.astro';
 import PrepareWithConfidence from '../../components/home/PrepareWithConfidence.astro';
+import FaqSection from '../../components/home/FaqSection.astro';
 import ClosingCTA from '../../components/home/ClosingCTA.astro';
 ---
 
 <BaseLayout
   title="نوهـافي هيلث | رعاية طبية متخصصة في الهند"
-  description="تعرف على خيارات العلاج، واستكشف المستشفيات المناسبة، واحصل على تقييمات طبية منسقة، وخطط لرحلتك العلاجية مع الدعم والمتابعة في كل خطوة."
+  description="وضوح تام قبل السفر. ورعاية مستمرة حتى عودتكم بسلام إلى الوطن. تنسيق طبي متكامل بإشراف أطباء لمستشفيات معتمدة في حيدر آباد، الهند."
   lang="ar"
   dir="rtl"
 >
-  <!-- Hero Section (Page 5) -->
+  <!-- 1. Ivory Hero Section with Two Search Fields & Dotted Map (PDF Pages 2 & 11) -->
   <HeroSection lang="ar" />
 
-  <!-- Who We Are Section (Page 5) -->
-  <WhoWeAre lang="ar" />
+  <!-- Request a Medical Opinion Quick Form (PDF Page 2 & User Screenshot) -->
+  <QuickEnquirySection lang="ar" />
 
-  <!-- People, Not Packages Section (Page 6) -->
-  <PeopleNotPackages lang="ar" />
+  <!-- 2. Trust Indicators Strip: 5 Core Markers (PDF Page 2 & User Screenshot) -->
+  <TrustIndicators lang="ar" />
 
-  <!-- Specialty Explorer Section (Page 7) -->
+  <!-- 3A. Specialist Care Across 15 Specialties (Claude PDF Page 1) -->
+  <KnowledgeSpecialtiesGrid lang="ar" />
+
+  <!-- 3B. What We Can Help With: Exactly 8 Specialties (PDF Pages 2–3 & 11) -->
   <SpecialtyExplorer lang="ar" />
 
-  <!-- Seven-Step Patient Journey Section (Page 8) -->
-  <PatientJourney lang="ar" />
+  <!-- 4. How Nuhavi Works: 7-Step Healthcare Journey & Video (Claude PDF Pages 2–3) -->
+  <SevenStepJourney lang="ar" />
 
-  <!-- Coordinator Benefits Section (Page 8) -->
-  <CoordinatorBenefits lang="ar" />
+  <!-- 5. Upcoming Medical Camps in Africa (Claude PDF Pages 3–6) -->
+  <AfricaMedicalCamps lang="ar" />
 
-  <!-- Homepage Cost Breakdown Section (Page 9) -->
-  <CostBreakdown lang="ar" />
+  <!-- 6. Why Nuhavi: 4 Pillars & Clinical Responsibility Matrix (PDF Page 3) -->
+  <WhoWeAre lang="ar" />
 
-  <!-- Homepage Hospital Selection Standard Section (Page 9) -->
+  <!-- 5. Partner Hospitals: Visited and Verified by our Doctors (PDF Page 3) -->
   <HospitalSelection lang="ar" />
 
-  <!-- Patient Stories Section (Page 9) -->
+  <!-- 6. Know the Cost Before You Travel: Comparative Estimates (PDF Page 4) -->
+  <CostBreakdown lang="ar" />
+
+  <!-- 7. Four Steps. One Coordinator Throughout & WhatsApp Dialogue (PDF Pages 4–5) -->
+  <PatientJourney lang="ar" />
+
+  <!-- 8. The People Behind Your Care (Founders) & Why Hyderabad (PDF Pages 5–6) -->
+  <DoctorProfilesSection lang="ar" />
+
+  <!-- 9. Journeys to Hyderabad: Illustrative Case & Privacy Standards (PDF Page 6) -->
   <PatientStories lang="ar" />
 
-  <!-- Prepare with Confidence Section (Page 10) -->
+  <!-- 10. Segment Cards: For NRI Families, Referring Doctors & Medical Camp (PDF Page 6) -->
+  <PeopleNotPackages lang="ar" />
+
+  <!-- 11. Prepare with Confidence Pre-Travel Guides (PDF Page 6) -->
   <PrepareWithConfidence lang="ar" />
 
-  <!-- Closing CTA Band Section (Page 10) -->
+  <!-- 13. Questions Families Ask / FAQ (PDF Page 7) -->
+  <FaqSection />
+
+  <!-- 14. Final Medical Opinion Consultation CTA Band (PDF Page 7) -->
   <ClosingCTA lang="ar" />
 </BaseLayout>

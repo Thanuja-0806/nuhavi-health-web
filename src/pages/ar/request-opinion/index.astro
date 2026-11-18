@@ -1,0 +1,28 @@
+---
+/**
+ * src/pages/ar/request-opinion/index.astro
+ * طلب رأي طبي واستشارة — نوهـافي هيلث
+ *
+ * تجربة متكاملة باللغة العربية مع دعم كامل للاتجاه من اليمين إلى اليسار (RTL).
+ * - تصميم راقٍ يجمع بين الكحلي والذهبي مع تدفق سلس من 3 خطوات.
+ * - الحفاظ التام على معرّفات DOM وأسماء الحقول لربط واجهة برمجة تطبيقات AWS API Gateway.
+ * - إرسال الطلب إلى الخادم السحابي الفعلي ومعالجة حالات الخطأ والنجاح.
+ * - تنبيه الطوارئ الطبية الواضح.
+ */
+
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import RequestOpinionView from '../../../components/request-opinion/RequestOpinionView.astro';
+import { requestOpinionData } from '../../../data/contactData';
+
+const data = requestOpinionData.ar;
+---
+
+<BaseLayout
+  title={data.metaTitle}
+  description={data.metaDescription}
+  lang="ar"
+  dir="rtl"
+>
+  <RequestOpinionView lang="ar" />
+</BaseLayout>
+

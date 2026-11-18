@@ -1,0 +1,397 @@
+---
+/**
+ * src/pages/ar/about/index.astro
+ * عن نوهـافي هيلث ولماذا يختارنا المرضى — نوهـافي هيلث
+ *
+ * المعايير والالتزامات:
+ * - من هي نوهـافي هيلث وما طبيعة خدمات التنسيق المستقلة التي تقدمها.
+ * - التمييز الواضح والصريح بين دور نوهـافي التنسيقي والمسؤولية الطبية للمستشفيات.
+ * - إبراز ركائز الثقة الستة (الاعتماد NABH/JCI، الاختيار التخصصي، التقديرات المكتوبة، منع العمولات، المرافقة الشخصية، سرية البيانات).
+ * - توضيح أسباب اختيار المرضى لنوهـافي للتنسيق الطبي في الهند.
+ * - الهوية البصرية الرسمية لنوهـافي: الكحلي والذهبي والأبيض مع دعم RTL كامل.
+ * - صفر تواريخ تأسيس أو جوائز أو إحصاءات أو شهادات أطباء مفبركة.
+ */
+
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import CoordinationVsClinical from '../../../components/about/CoordinationVsClinical.astro';
+import AboutTrustPrinciples from '../../../components/about/AboutTrustPrinciples.astro';
+import WhyIndiaCoordination from '../../../components/about/WhyIndiaCoordination.astro';
+import { aboutData } from '../../../data/aboutData';
+
+const content = aboutData.ar;
+const pageTitle = content.metaTitle;
+const pageDescription = content.metaDescription;
+---
+
+<BaseLayout title={pageTitle} description={pageDescription} lang="ar" dir="rtl">
+  <div class="page-container" dir="rtl">
+    <div class="container main-content">
+      <!-- مسار التصفح (Breadcrumb) -->
+      <nav class="breadcrumb" aria-label="مسار التنقل">
+        <ol>
+          <li><a href="/ar/">{content.breadcrumbs.home}</a></li>
+          <li aria-hidden="true"><span class="sep">/</span></li>
+          <li aria-current="page">{content.breadcrumbs.about}</li>
+        </ol>
+      </nav>
+
+      <!-- الشريط الذهبي المميز لنوهـافي 72x3 px -->
+      <div class="gold-rule" aria-hidden="true"></div>
+
+      <!-- رأس الصفحة -->
+      <header class="page-header">
+        <span class="eyebrow-pill">{content.eyebrow}</span>
+        <h1 class="page-title">{content.title}</h1>
+        <p class="page-deck">{content.deck}</p>
+      </header>
+
+      <!-- نبذة عن الشركة والخدمات -->
+      <section class="overview-section" aria-labelledby="overview-heading">
+        <div class="overview-card">
+          <h2 id="overview-heading" class="overview-title">{content.overview.heading}</h2>
+          <p class="overview-lead">{content.overview.lead}</p>
+          <div class="overview-body">
+            {content.overview.paragraphs.map((para) => (
+              <p class="overview-para">{para}</p>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <!-- تحديد المسؤوليات: التنسيق الإداري مقابل الرعاية السريرية -->
+      <CoordinationVsClinical
+        sectionTitle={content.responsibilities.sectionTitle}
+        sectionDeck={content.responsibilities.sectionDeck}
+        coordination={content.responsibilities.coordination}
+        clinical={content.responsibilities.clinical}
+        lang="ar"
+      />
+
+      <!-- ركائز الثقة الستة -->
+      <AboutTrustPrinciples
+        eyebrow={content.trustPrinciples.eyebrow}
+        heading={content.trustPrinciples.heading}
+        deck={content.trustPrinciples.deck}
+        principles={content.trustPrinciples.principles}
+        lang="ar"
+      />
+
+      <!-- لماذا يستعين المرضى بنوهـافي للتنسيق في الهند -->
+      <WhyIndiaCoordination
+        eyebrow={content.whyIndia.eyebrow}
+        heading={content.whyIndia.heading}
+        lead={content.whyIndia.lead}
+        reasons={content.whyIndia.reasons}
+        lang="ar"
+      />
+
+      <!-- الحوكمة السريرية والشفافية التجارية -->
+      <section class="governance-section" aria-labelledby="gov-heading">
+        <div class="gov-wrapper">
+          <h2 id="gov-heading" class="gov-title">{content.governance.heading}</h2>
+          <div class="gov-grid">
+            <a href={content.governance.clinicalHref} class="gov-card">
+              <div class="gov-card-header">
+                <span class="gov-icon" aria-hidden="true">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                  </svg>
+                </span>
+                <h3 class="gov-card-title">{content.governance.clinicalLabel}</h3>
+              </div>
+              <p class="gov-card-desc">{content.governance.clinicalDesc}</p>
+              <span class="gov-arrow" aria-hidden="true">&larr;</span>
+            </a>
+
+            <a href={content.governance.commercialHref} class="gov-card">
+              <div class="gov-card-header">
+                <span class="gov-icon" aria-hidden="true">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                  </svg>
+                </span>
+                <h3 class="gov-card-title">{content.governance.commercialLabel}</h3>
+              </div>
+              <p class="gov-card-desc">{content.governance.commercialDesc}</p>
+              <span class="gov-arrow" aria-hidden="true">&larr;</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- التنقل أسفل الصفحة (بدون روابط طلب رأي معطلة في العربية) -->
+      <div class="page-footer-nav">
+        <a href="/ar/" class="back-link">
+          <svg class="back-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+          <span>{content.cta.backHomeLabel}</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .page-container {
+    background-color: var(--color-mist, #F4F7FB);
+    min-height: 80vh;
+    padding-top: var(--space-8, 2rem);
+    padding-bottom: var(--space-16, 4rem);
+  }
+
+  .main-content {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 var(--space-4, 1rem);
+  }
+
+  /* Breadcrumb */
+  .breadcrumb {
+    margin-bottom: var(--space-6, 1.5rem);
+  }
+
+  .breadcrumb ol {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    gap: var(--space-2, 0.5rem);
+    font-size: 0.875rem;
+    color: var(--color-slate, #5B6A80);
+  }
+
+  .breadcrumb a {
+    color: var(--color-navy, #14294B);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.15s ease;
+  }
+
+  .breadcrumb a:hover {
+    color: var(--color-gold-text, #967119);
+    text-decoration: underline;
+  }
+
+  .breadcrumb .sep {
+    color: #CBD5E1;
+  }
+
+  .breadcrumb [aria-current="page"] {
+    color: var(--color-slate, #5B6A80);
+    font-weight: 600;
+  }
+
+  /* 72x3 px Gold Rule */
+  .gold-rule {
+    width: 72px;
+    height: 3px;
+    background-color: var(--color-gold, #C49A3C);
+    margin-bottom: var(--space-4, 1rem);
+    border-radius: 2px;
+  }
+
+  /* Page Header */
+  .page-header {
+    margin-bottom: var(--space-10, 2.5rem);
+  }
+
+  .eyebrow-pill {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--color-gold-text, #967119);
+    background-color: rgba(196, 154, 60, 0.1);
+    padding: 4px 10px;
+    border-radius: 4px;
+    margin-bottom: var(--space-3, 0.75rem);
+  }
+
+  .page-title {
+    font-family: var(--font-serif, "Playfair Display", Georgia, serif);
+    font-size: clamp(2rem, 4vw, 2.75rem);
+    font-weight: 700;
+    line-height: 1.35;
+    color: var(--color-navy, #14294B);
+    margin: 0 0 var(--space-3, 0.75rem) 0;
+  }
+
+  .page-deck {
+    font-size: 1.125rem;
+    line-height: 1.7;
+    color: var(--color-slate, #5B6A80);
+    max-width: 780px;
+    margin: 0;
+  }
+
+  /* Overview Card */
+  .overview-section {
+    margin-bottom: var(--space-12, 3rem);
+  }
+
+  .overview-card {
+    background-color: #FFFFFF;
+    border: 1px solid var(--color-border, #E2E8F0);
+    border-radius: 14px;
+    padding: var(--space-8, 2rem) var(--space-6, 1.5rem);
+    box-shadow: 0 4px 18px rgba(20, 41, 75, 0.04);
+  }
+
+  @media (min-width: 768px) {
+    .overview-card {
+      padding: var(--space-10, 2.5rem);
+    }
+  }
+
+  .overview-title {
+    font-family: var(--font-serif, "Playfair Display", Georgia, serif);
+    font-size: 1.625rem;
+    font-weight: 700;
+    color: var(--color-navy, #14294B);
+    margin: 0 0 var(--space-2, 0.5rem) 0;
+  }
+
+  .overview-lead {
+    font-size: 1.0625rem;
+    font-weight: 600;
+    color: var(--color-gold-text, #967119);
+    margin: 0 0 var(--space-4, 1rem) 0;
+    line-height: 1.6;
+  }
+
+  .overview-body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3, 0.75rem);
+  }
+
+  .overview-para {
+    font-size: 0.9375rem;
+    line-height: 1.75;
+    color: var(--color-slate, #5B6A80);
+    margin: 0;
+  }
+
+  /* Governance Section */
+  .governance-section {
+    margin-bottom: var(--space-12, 3rem);
+  }
+
+  .gov-title {
+    font-family: var(--font-serif, "Playfair Display", Georgia, serif);
+    font-size: 1.375rem;
+    font-weight: 700;
+    color: var(--color-navy, #14294B);
+    margin: 0 0 var(--space-4, 1rem) 0;
+  }
+
+  .gov-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-4, 1rem);
+  }
+
+  @media (min-width: 640px) {
+    .gov-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-6, 1.5rem);
+    }
+  }
+
+  .gov-card {
+    background-color: #FFFFFF;
+    border: 1px solid var(--color-border, #E2E8F0);
+    border-radius: 12px;
+    padding: var(--space-6, 1.5rem);
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    box-shadow: 0 2px 10px rgba(20, 41, 75, 0.03);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  }
+
+  .gov-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(20, 41, 75, 0.08);
+    border-color: rgba(196, 154, 60, 0.4);
+  }
+
+  .gov-card-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: var(--space-2, 0.5rem);
+  }
+
+  .gov-icon {
+    color: var(--color-navy, #14294B);
+  }
+
+  .gov-card-title {
+    font-size: 1.0625rem;
+    font-weight: 700;
+    color: var(--color-navy, #14294B);
+    margin: 0;
+  }
+
+  .gov-card-desc {
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: var(--color-slate, #5B6A80);
+    margin: 0 0 var(--space-4, 1rem) 0;
+  }
+
+  .gov-arrow {
+    margin-top: auto;
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--color-gold-text, #967119);
+    transition: transform 0.15s ease;
+  }
+
+  .gov-card:hover .gov-arrow {
+    transform: translateX(-4px);
+  }
+
+  /* Page Footer Nav */
+  .page-footer-nav {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: var(--space-8, 2rem);
+    border-top: 1px solid rgba(20, 41, 75, 0.1);
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--color-navy, #14294B);
+    text-decoration: none;
+    transition: color 0.15s ease, transform 0.15s ease;
+  }
+
+  .back-link:hover {
+    color: var(--color-gold-text, #967119);
+    transform: translateX(2px);
+  }
+
+  .back-icon {
+    transition: transform 0.15s ease;
+  }
+
+  .back-link:hover .back-icon {
+    transform: translateX(2px);
+  }
+</style>
+

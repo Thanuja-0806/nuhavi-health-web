@@ -1,10 +1,25 @@
 ---
 /**
- * HeroSection.astro
- * Hero component for Nuhavi Health homepage.
- * Localized for English (/en/), Russian (/ru/), and Arabic (/ar/ RTL).
+ * src/components/home/HeroSection.astro
+ * Approved Homepage Hero Section for Nuhavi Health.
+ * PRIMARY SOURCE OF TRUTH: Nuhavi Health — Website Look & Feel.pdf (12 pages — Pages 2 & 11)
+ *
+ * Requirements:
+ * - Ivory / cream background (#F6F2EA).
+ * - Eyebrow: DOCTOR-LED MEDICAL TRAVEL · HYDERABAD, INDIA
+ * - Headline: "Expert medical care in India. Support at every step." (Cormorant Garamond, Navy #0F2340)
+ * - Supporting copy: "Our doctors review your case. You compare written estimates from accredited hospitals. One coordinator stays with your family until you're home."
+ * - Two search fields: "Treatment or condition" and "Hospital or doctor" + Search button.
+ * - Popular links: Cancer treatment, Knee replacement, Kidney transplant, Second opinion.
+ * - Right-side hero visual:
+ *     - Dotted international route map connecting Tashkent, Muscat, Addis Ababa, Nairobi, Dar es Salaam -> Hyderabad.
+ *     - Sample case card labelled "YOUR CASE · SAMPLE" and "Reviewed".
+ *     - Written estimates card showing Partner hospital A, B and C with USD [range] placeholders.
+ *     - Coordinator card showing "Farida, your coordinator; Russian · English · on WhatsApp".
+ * - Below hero action: "Request a medical opinion" CTA pill, "Get my opinion & estimate", and trust statement:
+ *     "Reviewed by our doctors · reply within 1 working day · reports shared later via secure link."
+ * - Mobile responsive at 390px and RTL support for Arabic.
  */
-import { homeTranslations } from '../../i18n/homeTranslations';
 import type { SupportedLang } from '../../i18n/translations';
 
 interface Props {
@@ -16,128 +31,282 @@ const detectedLang: SupportedLang = currentPath.startsWith('/ar')
   ? 'ar'
   : currentPath.startsWith('/ru')
   ? 'ru'
+  : currentPath.startsWith('/fr')
+  ? 'fr'
   : 'en';
 
 const lang: SupportedLang = Astro.props.lang || detectedLang;
-const hero = homeTranslations[lang].hero;
-const stops = hero.stops;
 const prefix = `/${lang}`;
+const kcPrefix = '/en';
+const isArabic = lang === 'ar';
+const isRussian = lang === 'ru';
+const isFrench = lang === 'fr';
+
 const requestOpinionHref = `${prefix}/request-opinion/`;
+const oncologyHref = `${kcPrefix}/knowledge-centre/oncology/`;
+const orthopaedicsHref = `${kcPrefix}/knowledge-centre/orthopedics/`;
+const nephrologyHref = `${kcPrefix}/knowledge-centre/kidney-transplant/`;
+
+// Localized strings
+const t = {
+  eyebrow: isArabic
+    ? 'سفر علاجي بإشراف أطباء · حيدر آباد، الهند'
+    : isRussian
+    ? 'МЕДИЦИНСКИЙ ТУРИЗМ ПОД РУКОВОДСТВОМ ВРАЧЕЙ · ХАЙДАРАБАД, ИНДИЯ'
+    : isFrench
+    ? 'VOYAGE MÉDICAL DIRIGÉ PAR DES MÉDECINS · HYDERABAD, INDE'
+    : 'DOCTOR-LED MEDICAL TRAVEL · HYDERABAD, INDIA',
+  headline: isArabic
+    ? 'رعاية طبية متخصصة في الهند. دعم في كل خطوة.'
+    : isRussian
+    ? 'Квалифицированная медицинская помощь в Индии. Поддержка на каждом этапе.'
+    : isFrench
+    ? 'Soins médicaux experts en Inde. Accompagnement à chaque étape.'
+    : 'Expert medical care in India. Support at every step.',
+  copy: isArabic
+    ? 'أطباؤنا يراجعون حالتك. تقارن بين تقديرات التكلفة المكتوبة من مستشفيات معتمدة. منسق شخصي واحد يرافق عائلتك حتى عودتكم إلى الوطن.'
+    : isRussian
+    ? 'Наши врачи изучат ваши документы. Вы сравните письменные расчеты от аккредитованных клиник. Персональный координатор будет сопровождать вашу семью до возвращения домой.'
+    : isFrench
+    ? 'Nos médecins examinent votre dossier. Vous comparez les devis écrits d\'hôpitaux accrédités. Un coordinateur reste avec votre famille jusqu\'à votre retour.'
+    : 'Our doctors review your case. You compare written estimates from accredited hospitals. One coordinator stays with your family until you\'re home.',
+  searchTreatmentLabel: isArabic ? 'العلاج أو الحالة الطبية' : isRussian ? 'Направление или диагноз' : 'Treatment or condition',
+  searchTreatmentPlaceholder: isArabic ? 'مثال: علاج السرطان، استبدال المفصل' : isRussian ? 'напр. Рак молочной железы, замена сустава' : 'e.g. Breast cancer, knee replacement',
+  searchHospitalLabel: isArabic ? 'المستشفى أو الطبيب' : isRussian ? 'Больница или врач' : 'Hospital or doctor',
+  searchHospitalPlaceholder: isArabic ? 'الكل' : isRussian ? 'Любая' : 'Any',
+  searchBtn: isArabic ? 'بحث' : isRussian ? 'Найти' : isFrench ? 'Rechercher' : 'Search',
+  popularLabel: isArabic ? 'روابط شائعة:' : isRussian ? 'Популярные направления:' : isFrench ? 'Liens populaires :' : 'Popular:',
+  cancerTreatment: isArabic ? 'علاج السرطان' : isRussian ? 'Лечение рака' : isFrench ? 'Traitement du cancer' : 'Cancer treatment',
+  kneeReplacement: isArabic ? 'استبدال مفصل الركبة' : isRussian ? 'Замена коленного сустава' : isFrench ? 'Prothèse de genou' : 'Knee replacement',
+  kidneyTransplant: isArabic ? 'زراعة الكلى' : isRussian ? 'Трансплантация почки' : isFrench ? 'Greffe de rein' : 'Kidney transplant',
+  secondOpinion: isArabic ? 'رأي طبي ثانٍ' : isRussian ? 'Второе мнение' : isFrench ? 'Second avis' : 'Second opinion',
+  requestOpinionCta: isArabic ? 'طلب رأي طبي' : isRussian ? 'Запросить медицинское заключение' : isFrench ? 'Demander un avis médical' : 'Request a medical opinion',
+  formCta: isArabic ? 'احصل على الرأي والتقدير' : isRussian ? 'Получить заключение и расчет' : isFrench ? 'Obtenir mon avis & devis' : 'Get my opinion & estimate',
+  trustStatement: isArabic
+    ? 'مراجعة بإشراف أطبائنا · الرد خلال يوم عمل واحد · مشاركة التقارير لاحقاً عبر رابط آمن'
+    : isRussian
+    ? 'Рассмотрение нашими врачами · ответ в течение 1 рабочего дня · загрузка документов позже по защищенной ссылке'
+    : isFrench
+    ? 'Examiné par nos médecins · réponse sous 1 jour ouvré · dossiers partagés ultérieurement via lien sécurisé'
+    : 'Reviewed by our doctors · reply within 1 working day · reports shared later via secure link.',
+  sampleCardPill: isArabic ? 'حالتك · نموذج توضيحي' : isRussian ? 'ВАШ СЛУЧАЙ · ОБРАЗЕЦ' : 'YOUR CASE · SAMPLE',
+  reviewedBadge: isArabic ? 'تمت المراجعة' : isRussian ? 'Рассмотрено' : 'Reviewed',
+  writtenEstimates: isArabic ? 'تقديرات تكلفة مكتوبة' : isRussian ? 'ПИСЬМЕННЫЕ РАСЧЕТЫ' : 'WRITTEN ESTIMATES',
+  coordinatorName: isArabic ? 'فريدة، منسقة الرعاية' : isRussian ? 'Фарида, ваш координатор' : 'Farida, your coordinator',
+  coordinatorDetails: isArabic ? 'الروسية · الإنجليزية · عبر واتساب' : isRussian ? 'Русский · English · на WhatsApp' : 'Russian · English · on WhatsApp',
+};
 ---
 
 <section class="hero-section" aria-labelledby="hero-heading">
   <div class="container hero-container">
-    <!-- Top Content Group: Headline, Deck, Action Buttons & Responsibility Note -->
-    <div class="hero-intro">
-      <span class="hero-eyebrow">{hero.eyebrow}</span>
-      
-      <h1 id="hero-heading" class="hero-headline">{hero.headline}</h1>
-
-      <p class="hero-deck">{hero.deck}</p>
-
-      <div class="hero-cta-group">
-        <a href={requestOpinionHref} class="btn-primary hero-primary-cta">
-          {hero.primaryCta}
-        </a>
-        <a href="/en/treatments" class="hero-secondary-cta">
-          {hero.secondaryCta} <span aria-hidden="true">&rarr;</span>
-        </a>
+    <!-- Left Column: Copy, Search & Primary CTA -->
+    <div class="hero-left-col">
+      <!-- Eyebrow Badge -->
+      <div class="hero-eyebrow">
+        <span class="eyebrow-icon" aria-hidden="true">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+          </svg>
+        </span>
+        <span class="eyebrow-text">{t.eyebrow}</span>
       </div>
 
-      <!-- Responsibility Note Directly Below CTA Buttons -->
-      <p class="hero-responsibility-note">{hero.responsibilityNote}</p>
+      <!-- Main Headline in Cormorant Garamond -->
+      <h1 id="hero-heading" class="hero-headline">
+        {t.headline}
+      </h1>
+
+      <!-- Supporting Body Copy -->
+      <p class="hero-copy">
+        {t.copy}
+      </p>
+
+      <!-- Two-Field Search Card Connected to Dedicated Knowledge Centre Search Page -->
+      <form class="hero-search-card" id="hero-kc-search-form" action="/en/knowledge-centre/search/" method="get" role="search" aria-label="Search Knowledge Centre">
+        <div class="search-fields-row">
+          <div class="search-field-cell">
+            <label for="hero-treatment-input" class="search-cell-label">{t.searchTreatmentLabel}</label>
+            <input
+              type="text"
+              id="hero-treatment-input"
+              name="q"
+              class="search-cell-input"
+              placeholder={t.searchTreatmentPlaceholder}
+              aria-label={t.searchTreatmentLabel}
+            />
+          </div>
+
+          <div class="search-cell-divider" aria-hidden="true"></div>
+
+          <div class="search-field-cell">
+            <label for="hero-hospital-input" class="search-cell-label">{t.searchHospitalLabel}</label>
+            <input
+              type="text"
+              id="hero-hospital-input"
+              name="hospital"
+              class="search-cell-input"
+              placeholder={t.searchHospitalPlaceholder}
+              aria-label={t.searchHospitalLabel}
+            />
+          </div>
+        </div>
+
+        <div class="search-btn-row">
+          <button type="submit" class="hero-search-btn" id="hero-search-submit-btn">
+            <span>{t.searchBtn}</span>
+          </button>
+        </div>
+      </form>
+
+      <!-- Popular Links Row (User Screenshot Pills) -->
+      <div class="popular-links-row">
+        <span class="popular-label">{t.popularLabel}</span>
+        <div class="popular-tags">
+          <a href={oncologyHref} class="popular-link">{t.cancerTreatment}</a>
+          <a href={orthopaedicsHref} class="popular-link">{t.kneeReplacement}</a>
+          <a href={nephrologyHref} class="popular-link">{t.kidneyTransplant}</a>
+          <a href={requestOpinionHref} class="popular-link">{t.secondOpinion}</a>
+        </div>
+      </div>
     </div>
 
-    <!-- Signature Gold Route Line & 3 Interactive Stops -->
-    <div class="route-tracker-wrapper">
-      <div class="route-header">
-        <span class="route-eyebrow">{hero.routeEyebrow}</span>
-        <span class="route-caption">{hero.routeCaption}</span>
-      </div>
+    <!-- Right Column: Dotted International Map & Floating Visual Cards -->
+    <div class="hero-right-col" aria-hidden="true">
+      <div class="map-visual-card">
+        <!-- Card Header Badge -->
+        <div class="map-card-header">
+          <span class="map-header-tag">INTERNATIONAL CARE COORDINATION</span>
+          <span class="map-hyderabad-badge">
+            <span class="hub-pulse"></span>
+            Destination: Hyderabad, India
+          </span>
+        </div>
 
-      <div class="route-tracker">
-        <!-- SVG Route Lines (Horizontal for Desktop, Vertical for Mobile) -->
-        <div class="route-svg-track desktop-track" aria-hidden="true">
-          <svg class="route-svg" viewBox="0 0 800 6" preserveAspectRatio="none">
-            <!-- Background Guide Line -->
-            <line x1="0" y1="3" x2="800" y2="3" class="route-line-guide" />
-            <!-- Animated Signature Gold Line -->
-            <path d="M 0,3 L 800,3" class="route-line-draw" />
+        <!-- SVG Dotted Map with Gold Flight Routes -->
+        <div class="map-svg-wrap">
+          <svg viewBox="0 0 540 340" class="hero-map-svg" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="goldFlightLine" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#A88B5A" stop-opacity="0.85" />
+                <stop offset="100%" stop-color="#C49A3C" stop-opacity="1" />
+              </linearGradient>
+            </defs>
+
+            <!-- Background subtle world coordinate grid dots -->
+            <g class="map-grid-dots" opacity="0.18" fill="#FFFFFF">
+              <circle cx="60" cy="50" r="1.5" /><circle cx="100" cy="50" r="1.5" /><circle cx="140" cy="50" r="1.5" /><circle cx="180" cy="50" r="1.5" /><circle cx="220" cy="50" r="1.5" /><circle cx="260" cy="50" r="1.5" /><circle cx="300" cy="50" r="1.5" /><circle cx="340" cy="50" r="1.5" /><circle cx="380" cy="50" r="1.5" /><circle cx="420" cy="50" r="1.5" /><circle cx="460" cy="50" r="1.5" /><circle cx="500" cy="50" r="1.5" />
+              <circle cx="60" cy="90" r="1.5" /><circle cx="100" cy="90" r="1.5" /><circle cx="140" cy="90" r="1.5" /><circle cx="180" cy="90" r="1.5" /><circle cx="220" cy="90" r="1.5" /><circle cx="260" cy="90" r="1.5" /><circle cx="300" cy="90" r="1.5" /><circle cx="340" cy="90" r="1.5" /><circle cx="380" cy="90" r="1.5" /><circle cx="420" cy="90" r="1.5" /><circle cx="460" cy="90" r="1.5" /><circle cx="500" cy="90" r="1.5" />
+              <circle cx="60" cy="130" r="1.5" /><circle cx="100" cy="130" r="1.5" /><circle cx="140" cy="130" r="1.5" /><circle cx="180" cy="130" r="1.5" /><circle cx="220" cy="130" r="1.5" /><circle cx="260" cy="130" r="1.5" /><circle cx="300" cy="130" r="1.5" /><circle cx="340" cy="130" r="1.5" /><circle cx="380" cy="130" r="1.5" /><circle cx="420" cy="130" r="1.5" /><circle cx="460" cy="130" r="1.5" /><circle cx="500" cy="130" r="1.5" />
+              <circle cx="60" cy="170" r="1.5" /><circle cx="100" cy="170" r="1.5" /><circle cx="140" cy="170" r="1.5" /><circle cx="180" cy="170" r="1.5" /><circle cx="220" cy="170" r="1.5" /><circle cx="260" cy="170" r="1.5" /><circle cx="300" cy="170" r="1.5" /><circle cx="340" cy="170" r="1.5" /><circle cx="380" cy="170" r="1.5" /><circle cx="420" cy="170" r="1.5" /><circle cx="460" cy="170" r="1.5" /><circle cx="500" cy="170" r="1.5" />
+              <circle cx="60" cy="210" r="1.5" /><circle cx="100" cy="210" r="1.5" /><circle cx="140" cy="210" r="1.5" /><circle cx="180" cy="210" r="1.5" /><circle cx="220" cy="210" r="1.5" /><circle cx="260" cy="210" r="1.5" /><circle cx="300" cy="210" r="1.5" /><circle cx="340" cy="210" r="1.5" /><circle cx="380" cy="210" r="1.5" /><circle cx="420" cy="210" r="1.5" /><circle cx="460" cy="210" r="1.5" /><circle cx="500" cy="210" r="1.5" />
+              <circle cx="60" cy="250" r="1.5" /><circle cx="100" cy="250" r="1.5" /><circle cx="140" cy="250" r="1.5" /><circle cx="180" cy="250" r="1.5" /><circle cx="220" cy="250" r="1.5" /><circle cx="260" cy="250" r="1.5" /><circle cx="300" cy="250" r="1.5" /><circle cx="340" cy="250" r="1.5" /><circle cx="380" cy="250" r="1.5" /><circle cx="420" cy="250" r="1.5" /><circle cx="460" cy="250" r="1.5" /><circle cx="500" cy="250" r="1.5" />
+              <circle cx="60" cy="290" r="1.5" /><circle cx="100" cy="290" r="1.5" /><circle cx="140" cy="290" r="1.5" /><circle cx="180" cy="290" r="1.5" /><circle cx="220" cy="290" r="1.5" /><circle cx="260" cy="290" r="1.5" /><circle cx="300" cy="290" r="1.5" /><circle cx="340" cy="290" r="1.5" /><circle cx="380" cy="290" r="1.5" /><circle cx="420" cy="290" r="1.5" /><circle cx="460" cy="290" r="1.5" /><circle cx="500" cy="290" r="1.5" />
+            </g>
+
+            <!-- Flight Paths (Curved dotted lines to Hyderabad at x=410, y=175) -->
+            <!-- 1. Tashkent (x=270, y=75) -> Hyderabad -->
+            <path d="M 270 75 Q 330 110 410 175" stroke="url(#goldFlightLine)" stroke-width="2" stroke-dasharray="4 5" />
+            <!-- 2. Muscat (x=285, y=145) -> Hyderabad -->
+            <path d="M 285 145 Q 345 155 410 175" stroke="url(#goldFlightLine)" stroke-width="2" stroke-dasharray="4 5" />
+            <!-- 3. Addis Ababa (x=190, y=210) -> Hyderabad -->
+            <path d="M 190 210 Q 290 190 410 175" stroke="url(#goldFlightLine)" stroke-width="2" stroke-dasharray="4 5" />
+            <!-- 4. Nairobi (x=205, y=260) -> Hyderabad -->
+            <path d="M 205 260 Q 300 230 410 175" stroke="url(#goldFlightLine)" stroke-width="2" stroke-dasharray="4 5" />
+            <!-- 5. Dar es Salaam (x=215, y=295) -> Hyderabad -->
+            <path d="M 215 295 Q 315 255 410 175" stroke="url(#goldFlightLine)" stroke-width="2" stroke-dasharray="4 5" />
+
+            <!-- Origin Nodes -->
+            <!-- Tashkent -->
+            <circle cx="270" cy="75" r="4.5" fill="#A88B5A" />
+            <circle cx="270" cy="75" r="2" fill="#0F2340" />
+            <text x="260" y="62" fill="#DCE3EC" font-size="10.5" font-family="'Inter', sans-serif" font-weight="600" text-anchor="middle">Tashkent</text>
+
+            <!-- Muscat -->
+            <circle cx="285" cy="145" r="4.5" fill="#A88B5A" />
+            <circle cx="285" cy="145" r="2" fill="#0F2340" />
+            <text x="270" y="140" fill="#DCE3EC" font-size="10.5" font-family="'Inter', sans-serif" font-weight="600" text-anchor="end">Muscat</text>
+
+            <!-- Addis Ababa -->
+            <circle cx="190" cy="210" r="4.5" fill="#A88B5A" />
+            <circle cx="190" cy="210" r="2" fill="#0F2340" />
+            <text x="175" y="214" fill="#DCE3EC" font-size="10.5" font-family="'Inter', sans-serif" font-weight="600" text-anchor="end">Addis Ababa</text>
+
+            <!-- Nairobi -->
+            <circle cx="205" cy="260" r="4.5" fill="#A88B5A" />
+            <circle cx="205" cy="260" r="2" fill="#0F2340" />
+            <text x="190" y="264" fill="#DCE3EC" font-size="10.5" font-family="'Inter', sans-serif" font-weight="600" text-anchor="end">Nairobi</text>
+
+            <!-- Dar es Salaam -->
+            <circle cx="215" cy="295" r="4.5" fill="#A88B5A" />
+            <circle cx="215" cy="295" r="2" fill="#0F2340" />
+            <text x="200" y="300" fill="#DCE3EC" font-size="10.5" font-family="'Inter', sans-serif" font-weight="600" text-anchor="end">Dar es Salaam</text>
+
+            <!-- Destination: Hyderabad Beacon -->
+            <circle cx="410" cy="175" r="14" fill="#A88B5A" opacity="0.25" />
+            <circle cx="410" cy="175" r="8" fill="#A88B5A" />
+            <circle cx="410" cy="175" r="3.5" fill="#FFFFFF" />
+            <text x="410" y="206" fill="#F6F2EA" font-size="12" font-family="'Inter', sans-serif" font-weight="700" text-anchor="middle">Hyderabad</text>
+            <text x="410" y="220" fill="#A88B5A" font-size="9" font-family="'Inter', sans-serif" font-weight="600" text-anchor="middle">MEDICAL HUB</text>
           </svg>
         </div>
 
-        <div class="route-svg-track mobile-track" aria-hidden="true">
-          <svg class="route-svg-v" viewBox="0 0 6 240" preserveAspectRatio="none">
-            <!-- Background Guide Line -->
-            <line x1="3" y1="0" x2="3" y2="240" class="route-line-guide" />
-            <!-- Animated Signature Gold Line -->
-            <path d="M 3,0 L 3,240" class="route-line-draw-v" />
-          </svg>
-        </div>
-
-        <!-- 3 Accessible Stop Buttons (WAI-ARIA Tablist) -->
-        <div
-          class="route-stops-list"
-          role="tablist"
-          aria-label="Coordination journey stages"
-        >
-          {stops.map((stop, index) => (
-            <button
-              type="button"
-              role="tab"
-              id={`stop-tab-${stop.id}`}
-              class={`stop-btn ${index === 0 ? 'active' : ''}`}
-              aria-selected={index === 0 ? 'true' : 'false'}
-              aria-controls={`stop-panel-${stop.id}`}
-              tabindex={index === 0 ? 0 : -1}
-              data-stop-index={index}
-            >
-              <span class="stop-node" aria-hidden="true">
-                <span class="stop-number">{stop.stepNumber}</span>
+        <!-- Floating Info Cards (PDF Page 2) -->
+        <div class="map-floating-cards">
+          <!-- Card 1: Sample Case Card -->
+          <div class="card-sample-case">
+            <div class="case-header-row">
+              <span class="sample-label">{t.sampleCardPill}</span>
+              <span class="reviewed-badge">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                {t.reviewedBadge}
               </span>
-              <span class="stop-text">
-                <span class="stop-step-label">{lang === 'ru' ? `Этап ${index + 1}` : lang === 'ar' ? `المرحلة ${index + 1}` : `Stage ${index + 1}`}</span>
-                <span class="stop-short-label">{stop.shortLabel}</span>
-              </span>
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <!-- Detail Panels: Dynamically switched via button selection -->
-      <div class="route-panels-container">
-        {stops.map((stop, index) => (
-          <div
-            id={`stop-panel-${stop.id}`}
-            role="tabpanel"
-            class={`stop-panel card ${index === 0 ? 'active' : ''}`}
-            aria-labelledby={`stop-tab-${stop.id}`}
-            hidden={index !== 0}
-            tabindex="0"
-          >
-            <div class="panel-header">
-              <span class="panel-badge">{lang === 'ru' ? `Этап ${stop.stepNumber} из 03` : lang === 'ar' ? `المرحلة ${stop.stepNumber} من 03` : `Stage ${stop.stepNumber} of 03`}</span>
-              <h3 class="panel-title">{stop.title}</h3>
             </div>
+            <p class="case-subtext">Clinical review & multi-specialist assessment completed</p>
+          </div>
 
-            {stop.isPendingConfirmation ? (
-              <div class="pending-content-wrapper">
-                <p class="panel-description pending-text">
-                  <!-- Pending content confirmation from reference specification (pages 5 and 34) -->
-                  <em>[Description pending content confirmation from reference specification]</em>
-                </p>
+          <!-- Card 2: Written Estimates Card -->
+          <div class="card-written-estimates">
+            <div class="estimates-title-row">
+              <span class="estimates-title">{t.writtenEstimates}</span>
+              <span class="estimates-tag">Hyderabad Partners</span>
+            </div>
+            <div class="estimates-list">
+              <div class="est-item">
+                <span class="est-name">Partner hospital A</span>
+                <span class="est-val">USD [range]</span>
               </div>
-            ) : (
-              <p class="panel-description">{stop.description}</p>
-            )}
-
-            <div class="panel-footer">
-              <a href={requestOpinionHref} class="panel-cta-link">
-                {lang === 'ru' ? `Начать запрос по этапу ${index + 1}` : lang === 'ar' ? `بدء الاستفسار للمرحلة ${index + 1}` : `Begin stage ${index + 1} inquiry`} <span aria-hidden="true">&rarr;</span>
-              </a>
+              <div class="est-item">
+                <span class="est-name">Partner hospital B</span>
+                <span class="est-val">USD [range]</span>
+              </div>
+              <div class="est-item">
+                <span class="est-name">Partner hospital C</span>
+                <span class="est-val">USD [range]</span>
+              </div>
             </div>
           </div>
-        ))}
+
+          <!-- Card 3: Coordinator Card -->
+          <div class="card-coordinator">
+            <div class="coord-avatar-col">
+              <div class="coord-avatar">
+                <span>F</span>
+                <span class="coord-online-dot"></span>
+              </div>
+            </div>
+            <div class="coord-info-col">
+              <span class="coord-name">{t.coordinatorName}</span>
+              <div class="coord-sub-row">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="#25D366">
+                  <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.312.045-.694.06-2.146-.541-1.859-.77-3.053-2.659-3.146-2.783-.092-.124-.755-1.004-.755-1.916 0-.912.478-1.36.648-1.533.17-.173.371-.217.495-.217.124 0 .248 0 .356.006.114.006.265-.043.414.316.155.372.531 1.298.577 1.392.046.093.078.202.016.326-.062.124-.093.202-.186.31-.093.109-.196.243-.28.326-.093.093-.19.195-.082.381.109.186.483.796 1.037 1.289.713.636 1.314.833 1.5.925.186.093.295.078.404-.047.109-.124.465-.541.59-.727.124-.186.248-.155.418-.093.17.062 1.083.511 1.269.604.186.093.31.14.356.217.046.077.046.45-.098.855z"/>
+                </svg>
+                <span class="coord-details">{t.coordinatorDetails}</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -145,607 +314,586 @@ const requestOpinionHref = `${prefix}/request-opinion/`;
 
 <style>
   /* --------------------------------------------------------------------------
-     HERO BASE & FULL-WIDTH CONTAINER
+     HERO BASE & IVORY CANVAS (#F6F2EA — Approved 12-Page PDF Page 2)
      -------------------------------------------------------------------------- */
   .hero-section {
     width: 100%;
-    background-color: var(--color-deep-navy);
-    color: var(--color-paper);
-    padding-top: var(--space-10);
-    padding-bottom: var(--space-12);
-    position: relative;
-    overflow: hidden;
+    background-color: #F6F2EA;
+    color: #0F2340;
+    padding-top: clamp(48px, 6vw, 80px);
+    padding-bottom: clamp(56px, 7vw, 96px);
+    border-bottom: 1px solid rgba(15, 35, 64, 0.08);
   }
 
   .hero-container {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-10);
+    max-width: 1366px;
+    margin: 0 auto;
+    padding-left: clamp(16px, 3vw, 40px);
+    padding-right: clamp(16px, 3vw, 40px);
+    display: grid;
+    grid-template-columns: 1.15fr 0.95fr;
+    gap: clamp(32px, 5vw, 64px);
+    align-items: center;
+    box-sizing: border-box;
   }
 
   /* --------------------------------------------------------------------------
-     HERO INTRO CONTENT (Headline, Deck, CTAs, Responsibility Note)
+     LEFT COLUMN: TYPOGRAPHY, SEARCH & CTAS
      -------------------------------------------------------------------------- */
-  .hero-intro {
+  .hero-left-col {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    gap: var(--space-3);
-    max-width: 860px;
+    gap: 20px;
   }
 
   .hero-eyebrow {
-    font-size: 0.875rem;
-    font-weight: var(--font-weight-subheading);
-    letter-spacing: 0.06em;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    align-self: flex-start;
+    padding: 6px 14px;
+    background-color: rgba(168, 139, 90, 0.12);
+    border: 1px solid rgba(168, 139, 90, 0.35);
+    border-radius: 9999px;
+    color: #0F2340;
+  }
+
+  .eyebrow-icon {
+    display: flex;
+    align-items: center;
+    color: #A88B5A;
+  }
+
+  .eyebrow-text {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--color-gold);
-    background-color: rgba(196, 154, 60, 0.12);
-    border: 1px solid rgba(196, 154, 60, 0.35);
-    padding: 6px var(--space-2);
-    border-radius: var(--radius-pill);
-    margin-bottom: var(--space-1);
   }
 
   .hero-headline {
-    font-size: clamp(2.125rem, 4.5vw, 3.5rem);
-    font-weight: var(--font-weight-heading);
-    line-height: 1.15;
+    font-family: var(--font-family-heading);
+    font-size: clamp(2.35rem, 4.4vw, 3.6rem);
+    line-height: 1.12;
+    font-weight: 700;
+    color: #0F2340;
     letter-spacing: -0.02em;
-    color: var(--color-paper);
+    margin: 0;
   }
 
-  .hero-deck {
-    font-size: clamp(1.125rem, 2vw, 1.25rem);
-    font-weight: var(--font-weight-deck);
-    line-height: var(--line-height-body);
-    color: rgba(244, 247, 251, 0.88);
-    max-width: 780px;
-  }
-
-  .hero-cta-group {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: var(--space-3);
-    margin-top: var(--space-2);
-  }
-
-  /* Primary CTA Pill Button */
-  .hero-primary-cta {
-    background-color: var(--color-gold);
-    border-color: var(--color-gold);
-    color: var(--color-deep-navy);
-    font-weight: var(--font-weight-subheading);
-    font-size: 1rem;
-    padding: 0 var(--space-4);
-    box-shadow: 0 4px 16px rgba(196, 154, 60, 0.2);
-    transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
-  }
-
-  .hero-primary-cta:hover {
-    background-color: var(--color-paper);
-    border-color: var(--color-paper);
-    color: var(--color-deep-navy);
-  }
-
-  /* Secondary Link */
-  .hero-secondary-cta {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-1);
-    color: var(--color-mist);
-    font-size: 0.9375rem;
-    font-weight: var(--font-weight-subheading);
-    text-decoration: none;
-    padding: var(--space-1) var(--space-2);
-    border-radius: var(--radius-pill);
-    transition: color 0.15s ease, background-color 0.15s ease;
-  }
-
-  .hero-secondary-cta:hover {
-    color: var(--color-gold);
-    background-color: rgba(244, 247, 251, 0.05);
-  }
-
-  /* Responsibility Note */
-  .hero-responsibility-note {
-    font-size: 0.875rem;
-    line-height: 1.5;
-    color: rgba(244, 247, 251, 0.78);
-    margin-top: var(--space-2);
-    max-width: 720px;
-    border-left: 2px solid var(--color-gold);
-    padding-left: var(--space-2);
+  .hero-copy {
+    font-size: clamp(1.05rem, 1.4vw, 1.2rem);
+    line-height: 1.6;
+    color: #374151;
+    margin: 0;
+    max-width: 600px;
   }
 
   /* --------------------------------------------------------------------------
-     SIGNATURE GOLD ROUTE LINE TRACKER
+     TWO-FIELD SEARCH CARD (PDF Page 2 & User Screenshot)
      -------------------------------------------------------------------------- */
-  .route-tracker-wrapper {
+  .hero-search-card {
+    background-color: #FFFFFF;
+    border: 1px solid #DCE3EC;
+    border-radius: 12px;
+    padding: 16px 20px;
+    box-shadow: 0 4px 16px rgba(15, 35, 64, 0.05);
+    margin-top: 10px;
     display: flex;
     flex-direction: column;
-    gap: var(--space-4);
-    background-color: rgba(20, 41, 75, 0.45);
-    border: 1px solid rgba(196, 154, 60, 0.2);
-    border-radius: var(--radius-card);
-    padding: var(--space-5);
+    gap: 14px;
+    transition: border-color 0.18s ease, box-shadow 0.18s ease;
   }
 
-  .route-header {
+  .hero-search-card:focus-within {
+    border-color: #A88B5A;
+    box-shadow: 0 4px 20px rgba(168, 139, 90, 0.15);
+  }
+
+  .search-fields-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .search-field-cell {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .search-cell-label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #5A6E85;
+    margin-bottom: 4px;
+    font-family: var(--font-family-base, 'Inter', sans-serif);
+  }
+
+  .search-cell-input {
+    width: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-family: var(--font-family-base, 'Inter', sans-serif);
+    font-size: 0.9375rem;
+    color: #0F2340;
+    padding: 0;
+  }
+
+  .search-cell-input::placeholder {
+    color: #0F2340;
+    opacity: 0.85;
+  }
+
+  .search-cell-divider {
+    width: 1px;
+    height: 38px;
+    background-color: #DCE3EC;
+    flex-shrink: 0;
+  }
+
+  .search-btn-row {
+    display: flex;
+    justify-content: flex-start;
+  }
+
+  .hero-search-btn {
+    background-color: #0F2340;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 6px;
+    padding: 9px 24px;
+    font-family: var(--font-family-base, 'Inter', sans-serif);
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background-color 0.18s ease, transform 0.18s ease;
+  }
+
+  .hero-search-btn:hover {
+    background-color: #1a365d;
+    transform: translateY(-1px);
+  }
+
+  /* --------------------------------------------------------------------------
+     POPULAR LINKS ROW (User Screenshot Pills)
+     -------------------------------------------------------------------------- */
+  .popular-links-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    font-size: 0.8125rem;
+    margin-top: 12px;
+  }
+
+  .popular-label {
+    font-weight: 500;
+    color: #5A6E85;
+    margin-right: 4px;
+  }
+
+  .popular-tags {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .popular-link {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 13px;
+    background-color: #FFFFFF;
+    border: 1px solid #DCE3EC;
+    border-radius: 999px;
+    color: #0F2340;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+  }
+
+  .popular-link:hover {
+    border-color: #A88B5A;
+    background-color: #FAF8F5;
+  }
+
+  /* --------------------------------------------------------------------------
+     HERO CTA BLOCK & TRUST STATEMENT
+     -------------------------------------------------------------------------- */
+  .hero-cta-block {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-top: 8px;
+  }
+
+  .cta-actions-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+
+  .btn-brass-hero {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #A88B5A;
+    color: #FFFFFF;
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 14px 28px;
+    border-radius: 9999px;
+    text-decoration: none;
+    box-shadow: 0 4px 14px rgba(168, 139, 90, 0.28);
+    transition: background-color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+  }
+
+  .btn-brass-hero:hover {
+    background-color: #967949;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(168, 139, 90, 0.36);
+  }
+
+  .btn-secondary-hero {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    color: #0F2340;
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 12px 24px;
+    border-radius: 9999px;
+    border: 2px solid rgba(15, 35, 64, 0.3);
+    text-decoration: none;
+    transition: all 0.18s ease;
+  }
+
+  .btn-secondary-hero:hover {
+    border-color: #0F2340;
+    background-color: rgba(15, 35, 64, 0.05);
+  }
+
+  .hero-trust-note {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8125rem;
+    color: #4B5563;
+    line-height: 1.4;
+  }
+
+  .trust-shield-icon {
+    color: #A88B5A;
+    flex-shrink: 0;
+  }
+
+  /* --------------------------------------------------------------------------
+     RIGHT COLUMN: NAVY DOTTED MAP CARD & FLOATING CARDS
+     -------------------------------------------------------------------------- */
+  .hero-right-col {
+    display: flex;
+    justify-content: center;
+  }
+
+  .map-visual-card {
+    width: 100%;
+    max-width: 540px;
+    background-color: #0F2340;
+    border-radius: 20px;
+    padding: 24px 20px 20px;
+    box-shadow: 0 20px 48px -8px rgba(15, 35, 64, 0.32);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    position: relative;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .map-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 12px;
+  }
+
+  .map-header-tag {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: #A88B5A;
+    text-transform: uppercase;
+  }
+
+  .map-hyderabad-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #F6F2EA;
+    background-color: rgba(255, 255, 255, 0.08);
+    padding: 3px 10px;
+    border-radius: 9999px;
+  }
+
+  .hub-pulse {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: #A88B5A;
+    box-shadow: 0 0 8px #A88B5A;
+  }
+
+  .map-svg-wrap {
+    width: 100%;
+    position: relative;
+  }
+
+  .hero-map-svg {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  /* Floating Info Cards Inside the Navy Card */
+  .map-floating-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 4px;
+  }
+
+  .card-sample-case {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 10px;
+    padding: 10px 12px;
     display: flex;
     flex-direction: column;
     gap: 4px;
-    border-bottom: 1px solid rgba(244, 247, 251, 0.08);
-    padding-bottom: var(--space-3);
   }
 
-  .route-eyebrow {
-    font-size: 0.8125rem;
-    font-weight: var(--font-weight-subheading);
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--color-gold);
-  }
-
-  .route-caption {
-    font-size: 0.875rem;
-    color: rgba(244, 247, 251, 0.7);
-  }
-
-  .route-tracker {
-    position: relative;
-    padding: var(--space-4) 0;
-  }
-
-  /* SVG Route Tracks */
-  .route-svg-track {
-    position: absolute;
-    pointer-events: none;
-    z-index: 1;
-  }
-
-  /* Desktop Track: Horizontal line behind circular nodes */
-  .desktop-track {
-    display: none;
-    top: 36px;
-    left: 8%;
-    right: 8%;
-    width: 84%;
-    height: 6px;
-  }
-
-  @media (min-width: 769px) {
-    .desktop-track {
-      display: block;
-    }
-  }
-
-  .route-svg {
-    width: 100%;
-    height: 6px;
-    display: block;
-    overflow: visible;
-  }
-
-  /* Mobile Track: Vertical line along the left edge behind nodes */
-  .mobile-track {
-    display: block;
-    top: 36px;
-    bottom: 36px;
-    left: 21px;
-    width: 6px;
-    height: calc(100% - 72px);
-  }
-
-  @media (min-width: 769px) {
-    .mobile-track {
-      display: none;
-    }
-  }
-
-  .route-svg-v {
-    width: 6px;
-    height: 100%;
-    display: block;
-    overflow: visible;
-  }
-
-  /* Base Guide Line (Dim track) */
-  .route-line-guide {
-    stroke: rgba(244, 247, 251, 0.15);
-    stroke-width: 2px;
-  }
-
-  /* Signature Gold Animated Line (Draws once over ~2s on load) */
-  .route-line-draw {
-    stroke: var(--color-gold);
-    stroke-width: 3px;
-    stroke-linecap: round;
-    stroke-dasharray: 800;
-    stroke-dashoffset: 800;
-    animation: drawHorizontalRoute 2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-  }
-
-  .route-line-draw-v {
-    stroke: var(--color-gold);
-    stroke-width: 3px;
-    stroke-linecap: round;
-    stroke-dasharray: 240;
-    stroke-dashoffset: 240;
-    animation: drawVerticalRoute 2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-  }
-
-  @keyframes drawHorizontalRoute {
-    from {
-      stroke-dashoffset: 800;
-    }
-    to {
-      stroke-dashoffset: 0;
-    }
-  }
-
-  @keyframes drawVerticalRoute {
-    from {
-      stroke-dashoffset: 240;
-    }
-    to {
-      stroke-dashoffset: 0;
-    }
-  }
-
-  /* Respect prefers-reduced-motion: draw line immediately without animation */
-  @media (prefers-reduced-motion: reduce) {
-    .route-line-draw,
-    .route-line-draw-v {
-      animation: none !important;
-      stroke-dashoffset: 0 !important;
-    }
-  }
-
-  /* --------------------------------------------------------------------------
-     ACCESSIBLE ROUTE STOPS (WAI-ARIA Tablist)
-     -------------------------------------------------------------------------- */
-  .route-stops-list {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-4);
-    position: relative;
-    z-index: 2;
-  }
-
-  @media (min-width: 769px) {
-    .route-stops-list {
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: var(--space-3);
-    }
-  }
-
-  /* Individual Stop Button */
-  .stop-btn {
+  .case-header-row {
     display: flex;
     align-items: center;
-    gap: var(--space-2);
-    background: transparent;
-    border: none;
-    padding: var(--space-1);
-    border-radius: var(--radius-card);
-    cursor: pointer;
-    text-align: left;
-    color: var(--color-paper);
-    font-family: var(--font-family-base);
-    transition: background-color 0.2s ease;
+    justify-content: space-between;
+    gap: 6px;
   }
 
-  @media (min-width: 769px) {
-    .stop-btn {
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      flex: 1;
-      padding: var(--space-2);
-    }
+  .sample-label {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    color: #A88B5A;
+    letter-spacing: 0.06em;
   }
 
-  .stop-btn:hover .stop-node {
-    border-color: var(--color-paper);
-    transform: scale(1.05);
+  .reviewed-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.625rem;
+    font-weight: 600;
+    color: #E3EBE3;
+    background-color: rgba(46, 125, 50, 0.3);
+    border: 1px solid rgba(46, 125, 50, 0.5);
+    padding: 2px 6px;
+    border-radius: 4px;
   }
 
-  .stop-btn:hover .stop-short-label {
-    color: var(--color-paper);
+  .case-subtext {
+    font-size: 0.72rem;
+    color: #DCE3EC;
+    margin: 0;
+    line-height: 1.35;
   }
 
-  /* Node Pin */
-  .stop-node {
-    width: 44px;
-    height: 44px;
+  .card-written-estimates {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 10px;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .estimates-title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4px;
+  }
+
+  .estimates-title {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    color: #F6F2EA;
+    letter-spacing: 0.06em;
+  }
+
+  .estimates-tag {
+    font-size: 0.625rem;
+    color: #A88B5A;
+  }
+
+  .estimates-list {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .est-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.6875rem;
+    color: #DCE3EC;
+  }
+
+  .est-val {
+    font-weight: 600;
+    color: #A88B5A;
+  }
+
+  .card-coordinator {
+    grid-column: 1 / -1;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 10px;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .coord-avatar {
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
-    background-color: var(--color-deep-navy);
-    border: 2px solid var(--color-gold);
+    background-color: #A88B5A;
+    color: #FFFFFF;
+    font-weight: 700;
+    font-size: 0.8125rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    flex-shrink: 0;
-    box-shadow: 0 0 0 4px var(--color-deep-navy);
-    transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+    position: relative;
   }
 
-  .stop-number {
-    font-size: 0.875rem;
-    font-weight: var(--font-weight-subheading);
-    color: var(--color-gold);
-    letter-spacing: 0.02em;
-    transition: color 0.2s ease;
+  .coord-online-dot {
+    position: absolute;
+    bottom: -1px;
+    right: -1px;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background-color: #25D366;
+    border: 2px solid #0F2340;
   }
 
-  /* Active Stop State */
-  .stop-btn.active .stop-node {
-    background-color: var(--color-gold);
-    border-color: var(--color-paper);
-    box-shadow: 0 0 0 4px var(--color-deep-navy), 0 0 16px rgba(196, 154, 60, 0.6);
-  }
-
-  .stop-btn.active .stop-number {
-    color: var(--color-deep-navy);
-    font-weight: var(--font-weight-heading);
-  }
-
-  .stop-text {
+  .coord-info-col {
     display: flex;
     flex-direction: column;
     gap: 2px;
   }
 
-  .stop-step-label {
-    font-size: 0.75rem;
-    font-weight: var(--font-weight-subheading);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--color-gold);
+  .coord-name {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #FFFFFF;
   }
 
-  .stop-short-label {
-    font-size: 0.9375rem;
-    font-weight: var(--font-weight-subheading);
-    color: rgba(244, 247, 251, 0.85);
-    transition: color 0.2s ease;
-  }
-
-  .stop-btn.active .stop-short-label {
-    color: var(--color-paper);
-  }
-
-  /* Keyboard Focus Indicator */
-  .stop-btn:focus-visible {
-    outline: var(--focus-ring);
-    outline-offset: var(--focus-offset);
-  }
-
-  /* --------------------------------------------------------------------------
-     DETAIL PANELS CONTAINER (WAI-ARIA Tabpanels)
-     -------------------------------------------------------------------------- */
-  .route-panels-container {
-    margin-top: var(--space-3);
-  }
-
-  .stop-panel {
-    display: none;
-    background-color: rgba(13, 27, 51, 0.75);
-    border: 1px solid rgba(196, 154, 60, 0.3);
-    border-radius: var(--radius-card);
-    padding: var(--space-4);
-    color: var(--color-paper);
-    animation: fadeInPanel 0.25s ease-out;
-  }
-
-  .stop-panel.active {
+  .coord-sub-row {
     display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
-  }
-
-  @keyframes fadeInPanel {
-    from {
-      opacity: 0;
-      transform: translateY(4px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .stop-panel {
-      animation: none;
-    }
-  }
-
-  .panel-header {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-1);
-    border-bottom: 1px solid rgba(244, 247, 251, 0.08);
-    padding-bottom: var(--space-2);
-  }
-
-  .panel-badge {
-    align-self: flex-start;
-    font-size: 0.75rem;
-    font-weight: var(--font-weight-subheading);
-    color: var(--color-gold);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-
-  .panel-title {
-    font-size: clamp(1.125rem, 2.5vw, 1.375rem);
-    font-weight: var(--font-weight-heading);
-    color: var(--color-paper);
-    line-height: 1.3;
-  }
-
-  .panel-description {
-    font-size: 1.0625rem;
-    font-weight: var(--font-weight-body);
-    line-height: var(--line-height-body);
-    color: rgba(244, 247, 251, 0.92);
-  }
-
-  .pending-content-wrapper {
-    padding: var(--space-2) 0;
-  }
-
-  .pending-text {
-    font-style: italic;
-    color: rgba(244, 247, 251, 0.7);
-  }
-
-  /* Panel Footer CTA */
-  .panel-footer {
-    display: flex;
-    justify-content: flex-end;
-    padding-top: var(--space-2);
-  }
-
-  .panel-cta-link {
-    color: var(--color-gold);
-    font-size: 0.9375rem;
-    font-weight: var(--font-weight-subheading);
-    text-decoration: none;
-    display: inline-flex;
     align-items: center;
-    gap: 6px;
-    transition: color 0.15s ease;
+    gap: 5px;
   }
 
-  .panel-cta-link:hover {
-    color: var(--color-paper);
-    text-decoration: underline;
+  .coord-details {
+    font-size: 0.72rem;
+    color: #DCE3EC;
   }
 
   /* --------------------------------------------------------------------------
-     RTL (RIGHT-TO-LEFT) JOURNEY ROUTE LINE MIRRORING (PDF Page 40)
+     RESPONSIVE BREAKPOINTS (PDF Page 11 — 390px Mobile)
      -------------------------------------------------------------------------- */
-  :global([dir="rtl"]) .hero-intro {
-    text-align: right;
-  }
+  @media (max-width: 1024px) {
+    .hero-container {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
 
-  :global([dir="rtl"]) .hero-cta-group {
-    justify-content: flex-start;
-  }
+    .hero-right-col {
+      order: 2;
+    }
 
-  :global([dir="rtl"]) .hero-secondary-cta span {
-    display: inline-block;
-    transform: scaleX(-1);
-  }
-
-  :global([dir="rtl"]) .desktop-track .route-svg {
-    transform: scaleX(-1);
-  }
-
-  :global([dir="rtl"]) .desktop-track {
-    left: 8%;
-    right: 8%;
-  }
-
-  :global([dir="rtl"]) .mobile-track {
-    left: auto;
-    right: 21px;
-  }
-
-  :global([dir="rtl"]) .stop-btn {
-    text-align: right;
-  }
-
-  @media (max-width: 768px) {
-    :global([dir="rtl"]) .stop-btn {
-      flex-direction: row-reverse;
+    .map-visual-card {
+      max-width: 600px;
     }
   }
 
-  :global([dir="rtl"]) .route-header {
-    text-align: right;
-  }
+  @media (max-width: 640px) {
+    .hero-search-box {
+      flex-direction: column;
+      align-items: stretch;
+      padding: 8px;
+    }
 
-  :global([dir="rtl"]) .panel-content-grid {
-    text-align: right;
-  }
+    .search-field-group {
+      flex-direction: column;
+    }
 
-  :global([dir="rtl"]) .panel-footer {
-    justify-content: flex-start;
-  }
+    .field-divider {
+      width: 100%;
+      height: 1px;
+      margin: 4px 0;
+    }
 
-  :global([dir="rtl"]) .panel-cta-link span {
-    display: inline-block;
-    transform: scaleX(-1);
+    .hero-search-btn {
+      width: 100%;
+    }
+
+    .map-floating-cards {
+      grid-template-columns: 1fr;
+    }
+
+    .cta-actions-row {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .btn-brass-hero,
+    .btn-secondary-hero {
+      width: 100%;
+      box-sizing: border-box;
+    }
   }
 </style>
 
 <script>
-  /**
-   * Accessible Tablist Script for the 3-Stop Route Tracker
-   * Handles:
-   * 1. Click stop selection.
-   * 2. Arrow key navigation between stops (ArrowRight/ArrowLeft, ArrowDown/ArrowUp).
-   * 3. Home / End keyboard navigation.
-   * 4. Automatic panel display updates and ARIA state synchronization.
-   */
-  function setupRouteTracker() {
-    const tabs = Array.from(document.querySelectorAll<HTMLButtonElement>('.stop-btn'));
-    const panels = Array.from(document.querySelectorAll<HTMLElement>('.stop-panel'));
+  document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('hero-kc-search-form') as HTMLFormElement | null;
+    const treatmentInput = document.getElementById('hero-treatment-input') as HTMLInputElement | null;
+    const hospitalInput = document.getElementById('hero-hospital-input') as HTMLInputElement | null;
 
-    if (tabs.length === 0 || panels.length === 0) return;
-
-    function activateTab(index: number, shouldFocus: boolean = true) {
-      tabs.forEach((tab, i) => {
-        const isSelected = i === index;
-        tab.setAttribute('aria-selected', isSelected ? 'true' : 'false');
-        tab.setAttribute('tabindex', isSelected ? '0' : '-1');
-        tab.classList.toggle('active', isSelected);
-
-        const panel = panels[i];
-        if (panel) {
-          panel.hidden = !isSelected;
-          panel.classList.toggle('active', isSelected);
-        }
-      });
-
-      if (shouldFocus && tabs[index]) {
-        tabs[index].focus();
+    form?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const term = (treatmentInput?.value || '').trim() || (hospitalInput?.value || '').trim();
+      if (!term) {
+        treatmentInput?.focus();
+        return;
       }
-    }
-
-    tabs.forEach((tab, index) => {
-      tab.addEventListener('click', () => {
-        activateTab(index, false);
-      });
-
-      tab.addEventListener('keydown', (e: KeyboardEvent) => {
-        let targetIndex = -1;
-
-        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-          targetIndex = (index + 1) % tabs.length;
-        } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-          targetIndex = (index - 1 + tabs.length) % tabs.length;
-        } else if (e.key === 'Home') {
-          targetIndex = 0;
-        } else if (e.key === 'End') {
-          targetIndex = tabs.length - 1;
-        }
-
-        if (targetIndex !== -1) {
-          e.preventDefault();
-          activateTab(targetIndex, true);
-        }
-      });
+      window.location.href = `/en/knowledge-centre/search/?q=${encodeURIComponent(term)}`;
     });
-  }
-
-  // Run on initial load and handle Astro page transitions
-  document.addEventListener('DOMContentLoaded', setupRouteTracker);
-  setupRouteTracker();
+  });
 </script>

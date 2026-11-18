@@ -1,0 +1,29 @@
+---
+/**
+ * src/pages/ru/contact/index.astro
+ * Свяжитесь с медицинским координатором — Nuhavi Health
+ *
+ * Локализовано на русском языке (LTR).
+ * - Премиальный дизайн: темно-синий (#14294B), золото (#C49A3C), белый.
+ * - Прямые каналы (Telegram, WhatsApp, Email).
+ * - Часы работы координаторов (с 09:00 до 19:00 IST).
+ * - Переход к форме медицинского запроса.
+ * - Предупреждение о неотложной помощи.
+ */
+
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import ContactView from '../../../components/contact/ContactView.astro';
+import { contactData } from '../../../data/contactData';
+
+const data = contactData.ru;
+---
+
+<BaseLayout
+  title={data.metaTitle}
+  description={data.metaDescription}
+  lang="ru"
+  dir="ltr"
+>
+  <ContactView lang="ru" />
+</BaseLayout>
+

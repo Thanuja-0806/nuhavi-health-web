@@ -1,0 +1,658 @@
+---
+/**
+ * src/components/how-it-works/CostsAndFeesAccordion.astro
+ * Premium expandable accordion/dropdown component for Nuhavi Health Costs & Fees.
+ *
+ * Implements 6 Expandable Sections (All collapsed initially):
+ * 1. Understanding Treatment Costs (with approved 22/16/14/20/10/10/8% baseline model)
+ * 2. Hospital Charges vs Nuhavi Fees
+ * 3. What Is Included
+ * 4. Additional Expenses
+ * 5. Payment Process
+ * 6. Cost Estimates & Disclaimer
+ *
+ * All sections collapsed initially. Users can expand and collapse each section independently.
+ * Fully localized for English (/en/), Russian (/ru/), and Arabic (/ar/ RTL).
+ */
+
+import { costsData } from '../../data/costsData';
+import type { SupportedLang } from '../../i18n/translations';
+
+interface Props {
+  lang?: SupportedLang;
+}
+
+const currentPath = Astro.url.pathname;
+const detectedLang: SupportedLang = currentPath.startsWith('/ar')
+  ? 'ar'
+  : currentPath.startsWith('/ru')
+  ? 'ru'
+  : 'en';
+
+const lang: SupportedLang = Astro.props.lang || detectedLang;
+const content = costsData[lang];
+const categories = content.categories;
+const isArabic = lang === 'ar';
+const dir: 'ltr' | 'rtl' = isArabic ? 'rtl' : 'ltr';
+---
+
+<div class={`costs-accordion-wrapper lang-${lang}`} dir={dir}>
+  <div class="accordion-list" id="costs-accordion-root">
+    {content.sections.map((section) => {
+      const panelId = `costs-panel-${section.id}`;
+      const btnId = `costs-btn-${section.id}`;
+
+      return (
+        <div class="accordion-item-card" data-section-id={section.id}>
+          <!-- Accordion Header Button (Collapsed Initially) -->
+          <button
+            type="button"
+            class="accordion-header-btn"
+            id={btnId}
+            aria-expanded="false"
+            aria-controls={panelId}
+          >
+            <div class="header-left">
+              <span class="item-number-badge" aria-hidden="true">{section.number}</span>
+              <div class="header-text-group">
+                <h2 class="item-title">{section.title}</h2>
+                <p class="item-summary">{section.summary}</p>
+              </div>
+            </div>
+
+            <div class="header-right">
+              {section.badge && (
+                <span class="item-tag-badge">{section.badge}</span>
+              )}
+              <span class="chevron-circle" aria-hidden="true">
+                <svg
+                  class="chevron-svg"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </span>
+            </div>
+          </button>
+
+          <!-- Accordion Collapsible Panel (Collapsed Initially) -->
+          <div
+            id={panelId}
+            class="accordion-collapse-panel"
+            role="region"
+            aria-labelledby={btnId}
+            hidden
+          >
+            <div class="panel-body">
+              <!-- Section 1 Special: Understanding Treatment Costs (7-Part Percentage Bar & Cards) -->
+              {section.id === 'understanding-treatment-costs' && (
+                <div class="costs-visual-container">
+                  <div class="visual-meta-row">
+                    <span class="illustrative-tag">{content.illustrativeNote}</span>
+                  </div>
+
+                  <!-- 7-Color Segmented Horizontal Proportion Bar (22 + 16 + 14 + 20 + 10 + 10 + 8 = 100%) -->
+                  <div
+                    class="segmented-proportion-bar"
+                    role="img"
+                    aria-label="Cost distribution model: Hospital charges 22%, Professional fees 16%, Investigations 14%, Medicines & implants 20%, Rehabilitation 10%, Travel & stay 10%, Nuhavi coordination fee 8%"
+                  >
+                    {categories.map((cat, cIdx) => (
+                      <div
+                        class={`bar-segment segment-${cIdx + 1}`}
+                        style={`width: ${cat.percent}; background-color: ${cat.color};`}
+                        title={`${cat.name}: ${cat.percent}`}
+                      >
+                        <span class="segment-pct-label">{cat.percent}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  <!-- 7 Detailed Category Cards -->
+                  <div class="categories-breakdown-grid" role="list">
+                    {categories.map((cat) => (
+                      <div class="category-info-card" role="listitem">
+                        <div class="cat-card-header">
+                          <span class="cat-color-dot" style={`background-color: ${cat.color};`}></span>
+                          <span class="cat-card-name">{cat.name}</span>
+                          <span class="cat-card-percent">{cat.percent}</span>
+                        </div>
+                        <p class="cat-card-description">{cat.desc}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <!-- Explanatory Paragraphs -->
+              {section.paragraphs && section.paragraphs.map((p) => (
+                <p class="panel-text-para">{p}</p>
+              ))}
+
+              <!-- Structured Bullets Grid -->
+              {section.bullets && (
+                <div class="panel-bullets-container">
+                  {section.bullets.map((b) => (
+                    <div class="bullet-row-card">
+                      <div class="bullet-checkmark-wrap" aria-hidden="true">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--color-gold)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                          <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                      </div>
+                      <div class="bullet-content">
+                        {b.title && <strong class="bullet-bold-title">{b.title} </strong>}
+                        <span class="bullet-body-text">{b.text}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              <!-- Informative / Trust / Disclaimer Callout Box -->
+              {section.callout && (
+                <div class={`panel-callout-card callout-type-${section.callout.type || 'info'}`} role="note">
+                  <div class="callout-symbol-wrap" aria-hidden="true">
+                    {section.callout.type === 'trust' && (
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                      </svg>
+                    )}
+                    {section.callout.type === 'notice' && (
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                      </svg>
+                    )}
+                    {(!section.callout.type || section.callout.type === 'info') && (
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="16" x2="12" y2="12"></line>
+                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                      </svg>
+                    )}
+                  </div>
+                  <div class="callout-text-group">
+                    <h3 class="callout-heading">{section.callout.title}</h3>
+                    <p class="callout-description">{section.callout.text}</p>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      );
+    })}
+  </div>
+</div>
+
+<style>
+  /* --------------------------------------------------------------------------
+     ACCORDION ROOT & LIST
+     -------------------------------------------------------------------------- */
+  .costs-accordion-wrapper {
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  .accordion-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  /* --------------------------------------------------------------------------
+     ACCORDION CARD
+     -------------------------------------------------------------------------- */
+  .accordion-item-card {
+    background-color: #FFFFFF;
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    box-shadow: var(--shadow-xs);
+    transition: border-color 0.18s ease, box-shadow 0.18s ease;
+    overflow: hidden;
+  }
+
+  .accordion-item-card:hover {
+    border-color: rgba(20, 41, 75, 0.22);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .accordion-item-card.is-expanded {
+    border-color: var(--color-navy);
+    box-shadow: var(--shadow-md);
+  }
+
+  /* --------------------------------------------------------------------------
+     HEADER TRIGGER BUTTON
+     -------------------------------------------------------------------------- */
+  .accordion-header-btn {
+    width: 100%;
+    min-height: 76px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 24px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    font-family: inherit;
+    gap: var(--space-3);
+    transition: background-color 0.15s ease;
+  }
+
+  .accordion-header-btn:hover {
+    background-color: var(--color-surface-hover);
+  }
+
+  .accordion-header-btn:focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: -2px;
+  }
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .item-number-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    background-color: rgba(20, 41, 75, 0.06);
+    color: var(--color-navy);
+    font-size: 0.875rem;
+    font-weight: 800;
+    border-radius: 8px;
+    flex-shrink: 0;
+    transition: background-color 0.18s ease, color 0.18s ease;
+  }
+
+  .accordion-item-card.is-expanded .item-number-badge {
+    background-color: var(--color-navy);
+    color: #FFFFFF;
+  }
+
+  .header-text-group {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  .item-title {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--color-deep-navy);
+    line-height: 1.35;
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+
+  .item-summary {
+    font-size: 0.875rem;
+    color: var(--color-slate);
+    line-height: 1.4;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  @media (max-width: 640px) {
+    .item-summary {
+      display: none;
+    }
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+  }
+
+  .item-tag-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    background-color: rgba(196, 154, 60, 0.12);
+    color: #8A6726;
+  }
+
+  .chevron-circle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background-color: rgba(20, 41, 75, 0.04);
+    color: var(--color-navy);
+    transition: background-color 0.18s ease;
+  }
+
+  .chevron-svg {
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .accordion-item-card.is-expanded .chevron-svg,
+  .accordion-header-btn[aria-expanded="true"] .chevron-svg {
+    transform: rotate(180deg);
+  }
+
+  /* --------------------------------------------------------------------------
+     PANEL BODY CONTENT
+     -------------------------------------------------------------------------- */
+  .accordion-collapse-panel {
+    border-top: 1px solid var(--color-border-subtle);
+    background-color: #FFFFFF;
+  }
+
+  .panel-body {
+    padding: 24px;
+  }
+
+  .panel-text-para {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--color-ink);
+    margin: 0 0 var(--space-4);
+  }
+
+  /* --------------------------------------------------------------------------
+     SECTION 1: VISUAL PROPORTION BAR & CARDS
+     -------------------------------------------------------------------------- */
+  .costs-visual-container {
+    background-color: var(--color-surface-hover);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: 10px;
+    padding: var(--space-4);
+    margin-bottom: var(--space-5);
+  }
+
+  .visual-meta-row {
+    margin-bottom: var(--space-3);
+  }
+
+  .illustrative-tag {
+    font-size: 0.775rem;
+    color: var(--color-slate);
+    font-weight: 600;
+  }
+
+  .segmented-proportion-bar {
+    display: flex;
+    width: 100%;
+    height: 32px;
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: var(--space-4);
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.08);
+  }
+
+  .bar-segment {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .segment-pct-label {
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: #FFFFFF;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+    pointer-events: none;
+  }
+
+  @media (max-width: 600px) {
+    .segment-pct-label {
+      display: none;
+    }
+  }
+
+  .categories-breakdown-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+  }
+
+  .category-info-card {
+    background-color: #FFFFFF;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .cat-card-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .cat-color-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .cat-card-name {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--color-navy);
+    flex: 1 1 auto;
+  }
+
+  .cat-card-percent {
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: var(--color-slate);
+    background-color: rgba(20, 41, 75, 0.05);
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+
+  .cat-card-description {
+    font-size: 0.8125rem;
+    line-height: 1.45;
+    color: var(--color-slate);
+    margin: 0;
+  }
+
+  /* --------------------------------------------------------------------------
+     BULLETS GRID
+     -------------------------------------------------------------------------- */
+  .panel-bullets-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-bottom: var(--space-4);
+  }
+
+  @media (min-width: 768px) {
+    .panel-bullets-container {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .bullet-row-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background-color: var(--color-surface-hover);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: 8px;
+    padding: 12px 16px;
+  }
+
+  .bullet-checkmark-wrap {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    background-color: rgba(196, 154, 60, 0.12);
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .bullet-content {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--color-ink);
+  }
+
+  .bullet-bold-title {
+    color: var(--color-deep-navy);
+    font-weight: 700;
+  }
+
+  .bullet-body-text {
+    color: var(--color-slate);
+  }
+
+  /* --------------------------------------------------------------------------
+     CALLOUT BOXES
+     -------------------------------------------------------------------------- */
+  .panel-callout-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-top: var(--space-3);
+  }
+
+  .callout-symbol-wrap {
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .callout-text-group {
+    flex: 1 1 auto;
+  }
+
+  .callout-heading {
+    font-size: 0.9375rem;
+    font-weight: 800;
+    margin: 0 0 4px 0;
+    line-height: 1.35;
+  }
+
+  .callout-description {
+    font-size: 0.875rem;
+    line-height: 1.55;
+    margin: 0;
+  }
+
+  /* Trust Callout (Green/Navy) */
+  .callout-type-trust {
+    background-color: #F4F8F6;
+    border: 1px solid rgba(38, 115, 77, 0.25);
+    color: var(--color-success);
+  }
+
+  .callout-type-trust .callout-heading {
+    color: var(--color-success);
+  }
+
+  .callout-type-trust .callout-description {
+    color: #1F5438;
+  }
+
+  /* Notice Callout (Amber/Warning) */
+  .callout-type-notice {
+    background-color: #FFF9EE;
+    border: 1px solid rgba(196, 154, 60, 0.35);
+    color: #8A6726;
+  }
+
+  .callout-type-notice .callout-heading {
+    color: #704F18;
+  }
+
+  .callout-type-notice .callout-description {
+    color: #614413;
+  }
+
+  /* Info Callout (Navy) */
+  .callout-type-info {
+    background-color: #F8FAFD;
+    border: 1px solid var(--color-border);
+    color: var(--color-navy);
+  }
+
+  .callout-type-info .callout-heading {
+    color: var(--color-navy);
+  }
+
+  .callout-type-info .callout-description {
+    color: var(--color-slate);
+  }
+
+  /* --------------------------------------------------------------------------
+     RTL (RIGHT-TO-LEFT) ARABIC SUPPORT
+     -------------------------------------------------------------------------- */
+  :global([dir="rtl"]) .accordion-header-btn {
+    text-align: right;
+  }
+</style>
+
+<script>
+  function setupCostsAccordion() {
+    const cards = document.querySelectorAll<HTMLElement>('.accordion-item-card');
+
+    cards.forEach((card) => {
+      const btn = card.querySelector<HTMLButtonElement>('.accordion-header-btn');
+      const panel = card.querySelector<HTMLElement>('.accordion-collapse-panel');
+
+      if (!btn || !panel || (btn as any).__accordionInitialized) return;
+      (btn as any).__accordionInitialized = true;
+
+      btn.addEventListener('click', () => {
+        const isCurrentlyExpanded = btn.getAttribute('aria-expanded') === 'true';
+
+        if (isCurrentlyExpanded) {
+          // Collapse
+          btn.setAttribute('aria-expanded', 'false');
+          card.classList.remove('is-expanded');
+          panel.hidden = true;
+        } else {
+          // Expand
+          btn.setAttribute('aria-expanded', 'true');
+          card.classList.add('is-expanded');
+          panel.hidden = false;
+        }
+      });
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupCostsAccordion);
+  } else {
+    setupCostsAccordion();
+  }
+  document.addEventListener('astro:page-load', setupCostsAccordion);
+</script>

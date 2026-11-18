@@ -1,0 +1,464 @@
+---
+/**
+ * src/components/home/DoctorProfilesSection.astro
+ * Approved Doctors ("The people behind your care") & "Why Hyderabad" (PDF Page 5)
+ *
+ * Part 1: LED BY DOCTORS
+ * - Heading: The people behind your care
+ * - Copy: Nuhavi was founded by physicians. A doctor reviews every case before any hospital sees it.
+ * - Meet the team →
+ * - Cards: Maj. Dr. Smaran Kalyan (Retd.), Dr. Suhasini Bandaru, Advisory panel placeholder
+ *
+ * Part 2: WHY HYDERABAD (Deep Navy #0F2340)
+ * - Charminar gold architectural outline on left
+ * - Heading: A major centre for specialist hospitals
+ * - Accredited hospitals, International airport, Stay for families, Language support
+ */
+import type { SupportedLang } from '../../i18n/translations';
+
+interface Props {
+  lang?: SupportedLang;
+}
+
+const currentPath = Astro.url.pathname;
+const detectedLang: SupportedLang = currentPath.startsWith('/ar')
+  ? 'ar'
+  : currentPath.startsWith('/ru')
+  ? 'ru'
+  : currentPath.startsWith('/fr')
+  ? 'fr'
+  : 'en';
+
+const lang: SupportedLang = Astro.props.lang || detectedLang;
+const isArabic = lang === 'ar';
+const isRussian = lang === 'ru';
+const isFrench = lang === 'fr';
+
+const prefix = `/${lang}`;
+const doctorsHref = `${prefix}/doctors/`;
+
+const t = {
+  doctorsEyebrow: isArabic ? 'بإشراف أطباء' : isRussian ? 'ПОД РУКОВОДСТВОМ ВРАЧЕЙ' : 'LED BY DOCTORS',
+  doctorsHeading: isArabic ? 'الفريق الطبي وراء رعايتك' : isRussian ? 'Люди, стоящие за вашей заботой' : 'The people behind your care',
+  doctorsCopy: isArabic
+    ? 'تأسست نوهـافي على يد أطباء. يراجع طبيب كل حالة قبل أن تراها أي مستشفى.'
+    : isRussian
+    ? 'Nuhavi основана врачами. Доктор изучает каждый случай до того, как его увидит клиника.'
+    : 'Nuhavi was founded by physicians. A doctor reviews every case before any hospital sees it.',
+  meetTeamLink: isArabic ? 'تعرف على الفريق ←' : isRussian ? 'Познакомиться с командой →' : 'Meet the team →',
+
+  founder1Name: 'Maj. Dr. Smaran Kalyan (Retd.)',
+  founder1Role: isArabic ? 'المؤسس · طبيب، ماجستير إدارة المستشفيات' : isRussian ? 'Основатель · MBBS, MBA' : 'Founder · MBBS, MBA (Hospital & Health Systems)',
+  founder1Bio: isArabic ? 'سلاح الخدمات الطبية العسكري سابقاً · رئيس الأطباء السابق بمطار حيدر آباد الدولي' : isRussian ? 'В прошлом военный врач · бывший главный врач аэропорта Хайдарабада' : 'Ex-Army Medical Corps · former CMO, Hyderabad International Airport',
+
+  founder2Name: 'Dr. Suhasini Bandaru',
+  founder2Role: isArabic ? 'مؤسس مشارك · أخصائية علاج الأورام بالإشعاع' : isRussian ? 'Сооснователь · Радиационный онколог' : 'Co-founder · Radiation Oncologist',
+  founder2Bio: isArabic ? 'مراجعة وتدقيق حالات الأورام' : isRussian ? 'Экспертиза случаев онкологии' : 'Oncology case review',
+
+  advisoryTitle: isArabic ? 'الهيئة الاستشارية' : isRussian ? 'Консультативный совет' : 'Advisory panel',
+  advisoryNote: isArabic ? 'يتم الإضافة مع انضمام المتخصصين' : isRussian ? 'Пополняется по мере вступления врачей' : 'Added as specialists join',
+  advisorySpecialties: isArabic ? 'الهيئة الاستشارية الطبية · جراحة العظام · أمراض الكلى · والمزيد' : isRussian ? 'Медицинский совет · ортопедия · нефрология · др.' : 'Medical advisory panel · orthopaedics · nephrology · more',
+
+  hydEyebrow: isArabic ? 'لماذا حيدر آباد' : isRussian ? 'ПОЧЕМУ ХАЙДАРАБАД' : 'WHY HYDERABAD',
+  hydHeading: isArabic ? 'مركز رئيسي للمستشفيات التخصصية' : isRussian ? 'Крупнейший центр специализированных клиник' : 'A major centre for specialist hospitals',
+  hydDeck: isArabic
+    ? 'مطار دولي، ومستشفيات معتمدة للأورام والتخصصات الدقيقة، وشقق فندقية مجهزة بالقرب منها — نرتبها جميعاً لك.'
+    : isRussian
+    ? 'Международный аэропорт, аккредитованные онкологические и многопрофильные клиники, комфортное жилье рядом — все организовано для вас.'
+    : 'An international airport, accredited multi-specialty and cancer hospitals, and serviced stays close to them — coordinated for you.',
+
+  f1Title: isArabic ? 'مستشفيات معتمدة' : isRussian ? 'Аккредитованные клиники' : 'Accredited hospitals',
+  f1Sub: 'NABH / JCI partners',
+  f2Title: isArabic ? 'مطار دولي' : isRussian ? 'Международный аэропорт' : 'International airport',
+  f2Sub: 'Rajiv Gandhi International (RGIA)',
+  f3Title: isArabic ? 'إقامة مريحة للعائلات' : isRussian ? 'Проживание для семей' : 'Stay for families',
+  f3Sub: isArabic ? 'شقق فندقية بالقرب من المستشفيات' : isRussian ? 'Апартаменты рядом с клиниками' : 'Serviced apartments near hospitals',
+  f4Title: isArabic ? 'دعم لغوي متكامل' : isRussian ? 'Языковая поддержка' : 'Language support',
+  f4Sub: isArabic ? 'مترجمون للروسية والعربية والفرنسية' : isRussian ? 'Переводчики: русский, арабский, французский' : 'Russian, Arabic, French interpreters',
+};
+---
+
+<section class="doctors-hyderabad-section" id="doctors" aria-labelledby="doctors-heading" dir={isArabic ? 'rtl' : 'ltr'}>
+  <!-- Part 1: Led by Doctors (PDF Page 5) -->
+  <div class="container doc-container">
+    <div class="doc-split-grid">
+      <!-- Left: Heading & Intro -->
+      <div class="doc-left-col">
+        <span class="doc-eyebrow">{t.doctorsEyebrow}</span>
+        <h2 id="doctors-heading" class="doc-title">
+          {t.doctorsHeading}
+        </h2>
+        <p class="doc-copy">
+          {t.doctorsCopy}
+        </p>
+        <a href={doctorsHref} class="doc-team-link">
+          <span>{t.meetTeamLink}</span>
+        </a>
+      </div>
+
+      <!-- Right: Team Cards Grid -->
+      <div class="doc-cards-col">
+        <!-- Founder 1: SK -->
+        <div class="team-card">
+          <div class="monogram-box box-sk">SK</div>
+          <div class="team-card-info">
+            <h3 class="team-name">{t.founder1Name}</h3>
+            <p class="team-role">{t.founder1Role}</p>
+            <p class="team-bio">{t.founder1Bio}</p>
+          </div>
+        </div>
+
+        <!-- Founder 2: SB -->
+        <div class="team-card">
+          <div class="monogram-box box-sb">SB</div>
+          <div class="team-card-info">
+            <h3 class="team-name">{t.founder2Name}</h3>
+            <p class="team-role">{t.founder2Role}</p>
+            <p class="team-bio">{t.founder2Bio}</p>
+          </div>
+        </div>
+
+        <!-- Advisory Panel -->
+        <div class="team-card card-advisory">
+          <div class="advisory-inner-box">
+            <span class="advisory-sub-tag">{t.advisorySpecialties}</span>
+          </div>
+          <div class="team-card-info">
+            <h3 class="team-name">{t.advisoryTitle}</h3>
+            <p class="team-role">{t.advisoryNote}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Part 2: Why Hyderabad Banner (Deep Navy #0F2340) (PDF Page 5) -->
+  <div class="why-hyderabad-banner">
+    <div class="container hyd-container">
+      <div class="hyd-split-grid">
+        <!-- Left: Charminar Gold Architectural Drawing SVG -->
+        <div class="hyd-illustration-col" aria-hidden="true">
+          <svg class="charminar-svg" viewBox="0 0 200 240" fill="none" stroke="#A88B5A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <!-- Charminar Iconic Silhouette -->
+            <path d="M20 230 H 180" stroke-width="2" />
+            <path d="M30 230 V 80 H 50 V 230" />
+            <path d="M150 230 V 80 H 170 V 230" />
+            <path d="M50 140 H 150" />
+            <path d="M50 100 H 150" stroke-width="2" />
+            <!-- Central Grand Arch -->
+            <path d="M65 230 V 160 Q 100 130 135 160 V 230" />
+            <!-- Upper Gallery -->
+            <path d="M50 80 H 150 V 60 H 50 Z" />
+            <circle cx="100" cy="70" r="4" fill="#A88B5A" />
+            <circle cx="75" cy="70" r="3" fill="#A88B5A" />
+            <circle cx="125" cy="70" r="3" fill="#A88B5A" />
+            <!-- 4 Minarets (Towers & Domes) -->
+            <!-- Minaret Left -->
+            <path d="M30 80 V 35" />
+            <path d="M50 80 V 35" />
+            <path d="M26 35 H 54 V 30 H 26 Z" />
+            <path d="M40 15 Q 26 28 40 30 Q 54 28 40 15" fill="rgba(168, 139, 90, 0.2)" />
+            <path d="M40 15 V 5" />
+            <!-- Minaret Right -->
+            <path d="M150 80 V 35" />
+            <path d="M170 80 V 35" />
+            <path d="M146 35 H 174 V 30 H 146 Z" />
+            <path d="M160 15 Q 146 28 160 30 Q 174 28 160 15" fill="rgba(168, 139, 90, 0.2)" />
+            <path d="M160 15 V 5" />
+          </svg>
+        </div>
+
+        <!-- Right: Text & 4 Features Grid -->
+        <div class="hyd-content-col">
+          <span class="hyd-eyebrow">{t.hydEyebrow}</span>
+          <h2 class="hyd-title">{t.hydHeading}</h2>
+          <p class="hyd-deck">{t.hydDeck}</p>
+
+          <div class="hyd-features-grid">
+            <div class="hyd-feature-item">
+              <h3 class="feat-heading">{t.f1Title}</h3>
+              <p class="feat-sub">{t.f1Sub}</p>
+            </div>
+            <div class="hyd-feature-item">
+              <h3 class="feat-heading">{t.f2Title}</h3>
+              <p class="feat-sub">{t.f2Sub}</p>
+            </div>
+            <div class="hyd-feature-item">
+              <h3 class="feat-heading">{t.f3Title}</h3>
+              <p class="feat-sub">{t.f3Sub}</p>
+            </div>
+            <div class="hyd-feature-item">
+              <h3 class="feat-heading">{t.f4Title}</h3>
+              <p class="feat-sub">{t.f4Sub}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .doctors-hyderabad-section {
+    width: 100%;
+    background-color: #FFFFFF;
+  }
+
+  /* Part 1: Led by Doctors */
+  .doc-container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: clamp(64px, 8vw, 92px) clamp(20px, 4vw, 40px);
+    box-sizing: border-box;
+  }
+
+  .doc-split-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.6fr;
+    gap: 48px;
+    align-items: flex-start;
+  }
+
+  .doc-left-col {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .doc-eyebrow {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    color: #A88B5A;
+    text-transform: uppercase;
+  }
+
+  .doc-title {
+    font-family: var(--font-family-heading);
+    font-size: clamp(2.1rem, 3.2vw, 2.85rem);
+    color: #0F2340;
+    font-weight: 600;
+    margin: 0;
+    line-height: 1.15;
+  }
+
+  .doc-copy {
+    font-size: 1rem;
+    color: #4B5563;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .doc-team-link {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: #0F2340;
+    text-decoration: underline;
+    transition: color 0.15s ease;
+    margin-top: 8px;
+  }
+
+  .doc-team-link:hover {
+    color: #A88B5A;
+  }
+
+  /* Team Cards */
+  .doc-cards-col {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .team-card {
+    background-color: #FAF8F5;
+    border: 1px solid rgba(15, 35, 64, 0.1);
+    border-radius: 8px;
+    padding: 20px 24px;
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 20px;
+    align-items: center;
+  }
+
+  .monogram-box {
+    width: 80px;
+    height: 80px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-family-heading);
+    font-size: 1.85rem;
+    font-weight: 600;
+  }
+
+  .box-sk {
+    background-color: #DCE3EC;
+    color: #0F2340;
+  }
+
+  .box-sb {
+    background-color: #E3EBE3;
+    color: #26734D;
+  }
+
+  .card-advisory {
+    border-style: dashed;
+    border-color: rgba(168, 139, 90, 0.4);
+  }
+
+  .advisory-inner-box {
+    background-color: #F6F2EA;
+    border: 1px dashed rgba(168, 139, 90, 0.5);
+    border-radius: 6px;
+    height: 80px;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    box-sizing: border-box;
+  }
+
+  .advisory-sub-tag {
+    font-size: 0.72rem;
+    color: #64748B;
+    line-height: 1.35;
+  }
+
+  .team-name {
+    font-family: var(--font-family-heading);
+    font-size: 1.35rem;
+    font-weight: 600;
+    color: #0F2340;
+    margin: 0 0 2px 0;
+  }
+
+  .team-role {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #A88B5A;
+    margin: 0 0 4px 0;
+  }
+
+  .team-bio {
+    font-size: 0.8125rem;
+    color: #4B5563;
+    line-height: 1.45;
+    margin: 0;
+  }
+
+  /* Part 2: Why Hyderabad Banner (Deep Navy #0F2340) */
+  .why-hyderabad-banner {
+    background-color: #0F2340;
+    color: #FFFFFF;
+    padding: clamp(64px, 8vw, 92px) 0;
+  }
+
+  .hyd-container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 clamp(20px, 4vw, 40px);
+    box-sizing: border-box;
+  }
+
+  .hyd-split-grid {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 56px;
+    align-items: center;
+  }
+
+  .hyd-illustration-col {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .charminar-svg {
+    width: 100%;
+    max-width: 200px;
+    height: auto;
+    opacity: 0.9;
+  }
+
+  .hyd-content-col {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .hyd-eyebrow {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    color: #A88B5A;
+    text-transform: uppercase;
+  }
+
+  .hyd-title {
+    font-family: var(--font-family-heading);
+    font-size: clamp(2.1rem, 3.2vw, 2.85rem);
+    color: #FFFFFF;
+    font-weight: 600;
+    margin: 0;
+    line-height: 1.15;
+  }
+
+  .hyd-deck {
+    font-size: 1.05rem;
+    color: #CBD5E1;
+    line-height: 1.6;
+    margin: 0 0 16px 0;
+  }
+
+  .hyd-features-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px 36px;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    padding-top: 28px;
+  }
+
+  .feat-heading {
+    font-family: var(--font-family-heading);
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #FFFFFF;
+    margin: 0 0 4px 0;
+  }
+
+  .feat-sub {
+    font-size: 0.8125rem;
+    color: #94A3B8;
+    margin: 0;
+    line-height: 1.4;
+  }
+
+  @media (max-width: 960px) {
+    .doc-split-grid {
+      grid-template-columns: 1fr;
+    }
+    .hyd-split-grid {
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+    .hyd-illustration-col {
+      display: none;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .team-card {
+      grid-template-columns: 1fr;
+      text-align: center;
+    }
+    .monogram-box,
+    .advisory-inner-box {
+      margin: 0 auto;
+    }
+    .hyd-features-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

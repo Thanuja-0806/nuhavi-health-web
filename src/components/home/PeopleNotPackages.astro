@@ -1,11 +1,12 @@
 ---
 /**
- * PeopleNotPackages.astro
- * Homepage section: "People, not packages"
- * Reference: Page 6 of the Nuhavi Health Look and Feel PDF.
- * Localized for English (/en/), Russian (/ru/), and Arabic (/ar/ RTL).
+ * src/components/home/PeopleNotPackages.astro
+ * 3 Segment Cards: NRI Families, Referring Doctors, Meet Our Doctors (PDF Page 6)
+ *
+ * 1. For NRI Families: Nuhavi Care for Parents
+ * 2. For Referring Doctors: Refer a patient. Stay in the clinical loop. (Navy card)
+ * 3. Meet Our Doctors: Medical camp · January 2027
  */
-import { homeTranslations } from '../../i18n/homeTranslations';
 import type { SupportedLang } from '../../i18n/translations';
 
 interface Props {
@@ -17,294 +18,202 @@ const detectedLang: SupportedLang = currentPath.startsWith('/ar')
   ? 'ar'
   : currentPath.startsWith('/ru')
   ? 'ru'
+  : currentPath.startsWith('/fr')
+  ? 'fr'
   : 'en';
 
 const lang: SupportedLang = Astro.props.lang || detectedLang;
-const content = homeTranslations[lang].peopleNotPackages;
-const photos = content.photos;
+const isArabic = lang === 'ar';
+const isRussian = lang === 'ru';
+const isFrench = lang === 'fr';
 
-const leftPhoto = photos[0];
-const rightTopPhoto = photos[1];
-const rightBottomPhoto = photos[2];
+const prefix = `/${lang}`;
+const requestOpinionHref = `${prefix}/request-opinion/`;
+const contactHref = `${prefix}/contact/`;
+
+const t = {
+  nriTag: isArabic ? 'للعائلات المقيمة بالخارج' : isRussian ? 'ДЛЯ СЕМЕЙ ЗА РУБЕЖОМ' : 'FOR NRI FAMILIES',
+  nriTitle: isArabic ? 'رعاية نوهـافي للوالدين' : isRussian ? 'Забота о родителях от Nuhavi' : 'Nuhavi Care for Parents',
+  nriDeck: isArabic
+    ? 'نعتني بعلاج والديك في الهند أثناء وجودك في الخارج — مع إحاطتك بتحديثات يومية يمكنك الاعتماد عليها.'
+    : isRussian
+    ? 'Мы позаботимся о лечении ваших родителей в Индии, пока вы находитесь за рубежом, с надежными регулярными отчетами.'
+    : 'We look after your parents\' treatment in India while you\'re abroad — with updates you can rely on.',
+  nriLink: isArabic ? 'معرفة المزيد ←' : isRussian ? 'Узнать больше →' : 'Learn more →',
+
+  docTag: isArabic ? 'للأطباء المحولين' : isRussian ? 'ДЛЯ НАПРАВЛЯЮЩИХ ВРАЧЕЙ' : 'FOR REFERRING DOCTORS',
+  docTitle: isArabic ? 'أحِل مريضك. وابقَ مطلعاً على المسار الطبي.' : isRussian ? 'Направьте пациента. Оставайтесь в курсе лечения.' : 'Refer a patient. Stay in the clinical loop.',
+  docDeck: isArabic
+    ? 'مراجعة طبية مشتركة بين الأطباء، وتحديثات متواصلة وتقرير خروج شامل لمريضك.'
+    : isRussian
+    ? 'Врачебный консилиум «доктор-доктор», регулярные отчеты о динамике и выписной эпикриз для вашего пациента.'
+    : 'Doctor-to-doctor case review, shared updates and the discharge summary for your patient.',
+  docBtn: isArabic ? 'انضم كشريك إحالة' : isRussian ? 'Стать партнером по направлению' : 'Become a referral partner',
+
+  campTag: isArabic ? 'لقاء أطبائنا' : isRussian ? 'ВСТРЕЧА С ВРАЧАМИ' : 'MEET OUR DOCTORS',
+  campTitle: isArabic ? 'مخيم استشاري طبي · يناير 2027' : isRussian ? 'Медицинский консилиум · Январь 2027' : 'Medical camp · January 2027',
+  campDeck: isArabic
+    ? 'استشارات في الأورام والجراحة العامة في [المدينة]. أحضر تقاريرك الطبية؛ واخرج بخطة واضحة.'
+    : isRussian
+    ? 'Консультации по онкологии и общей хирургии в [городе]. Принесите ваши выписки и получите четкий план действий.'
+    : 'Oncology and general surgery consultations in [city]. Bring your reports; leave with a plan.',
+  campLink: isArabic ? 'التسجيل في المخيم ←' : isRussian ? 'Зарегистрироваться →' : 'Register for the camp →',
+};
 ---
 
-<section class="people-section" aria-labelledby="people-section-heading">
-  <div class="container people-container">
-    <div class="people-card">
-      <header class="people-header">
-        <div class="header-title-col">
-          <span class="section-eyebrow">{content.eyebrow}</span>
-          <h2 id="people-section-heading" class="section-title">
-            {content.title}
-          </h2>
+<section class="segment-cards-section" aria-label="Audiences and services" dir={isArabic ? 'rtl' : 'ltr'}>
+  <div class="container segment-container">
+    <div class="segment-cards-grid">
+      <!-- Card 1: For NRI Families -->
+      <article class="segment-card card-nri">
+        <span class="segment-tag">{t.nriTag}</span>
+        <h3 class="segment-title">{t.nriTitle}</h3>
+        <p class="segment-deck">{t.nriDeck}</p>
+        <a href={requestOpinionHref} class="segment-link">
+          <span>{t.nriLink}</span>
+        </a>
+      </article>
+
+      <!-- Card 2: For Referring Doctors (Navy Background) -->
+      <article class="segment-card card-doctors">
+        <span class="segment-tag tag-gold">{t.docTag}</span>
+        <h3 class="segment-title text-white">{t.docTitle}</h3>
+        <p class="segment-deck text-mist">{t.docDeck}</p>
+        <div class="card-btn-wrap">
+          <a href={contactHref} class="btn-brass-partner">
+            {t.docBtn}
+          </a>
         </div>
-        <p class="section-supporting-text">
-          {content.deck}
-        </p>
-      </header>
+      </article>
 
-      <!-- Three-Photo Collage Grid -->
-      <div class="collage-grid">
-        <!-- LEFT: Large Portrait Photo Placeholder -->
-        <figure class="collage-figure portrait-figure">
-          <div
-            class="placeholder-frame portrait-frame"
-            role="img"
-            aria-label={`Photo placeholder: ${leftPhoto.description}`}
-          >
-            <div class="placeholder-content">
-              <svg class="placeholder-camera-icon" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
-                <circle cx="12" cy="13" r="4"></circle>
-              </svg>
-              <span class="placeholder-badge">{leftPhoto.label}</span>
-            </div>
-          </div>
-          <figcaption class="collage-caption">
-            {leftPhoto.caption}
-          </figcaption>
-        </figure>
-
-        <!-- RIGHT: Two Stacked Landscape Photo Placeholders -->
-        <div class="right-column-stack">
-          <!-- Top Landscape Photo -->
-          <figure class="collage-figure landscape-figure">
-            <div
-              class="placeholder-frame landscape-frame"
-              role="img"
-              aria-label={`Photo placeholder: ${rightTopPhoto.description}`}
-            >
-              <div class="placeholder-content">
-                <svg class="placeholder-camera-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
-                  <circle cx="12" cy="13" r="4"></circle>
-                </svg>
-                <span class="placeholder-badge">{rightTopPhoto.label}</span>
-              </div>
-            </div>
-            <figcaption class="collage-caption">
-              {rightTopPhoto.caption}
-            </figcaption>
-          </figure>
-
-          <!-- Bottom Landscape Photo -->
-          <figure class="collage-figure landscape-figure">
-            <div
-              class="placeholder-frame landscape-frame"
-              role="img"
-              aria-label={`Photo placeholder: ${rightBottomPhoto.description}`}
-            >
-              <div class="placeholder-content">
-                <svg class="placeholder-camera-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
-                  <circle cx="12" cy="13" r="4"></circle>
-                </svg>
-                <span class="placeholder-badge">{rightBottomPhoto.label}</span>
-              </div>
-            </div>
-            <figcaption class="collage-caption">
-              {rightBottomPhoto.caption}
-            </figcaption>
-          </figure>
-        </div>
-      </div>
+      <!-- Card 3: Meet Our Doctors -->
+      <article class="segment-card card-camp">
+        <span class="segment-tag">{t.campTag}</span>
+        <h3 class="segment-title">{t.campTitle}</h3>
+        <p class="segment-deck">{t.campDeck}</p>
+        <a href={contactHref} class="segment-link">
+          <span>{t.campLink}</span>
+        </a>
+      </article>
     </div>
   </div>
 </section>
 
 <style>
-  .people-section {
+  .segment-cards-section {
     width: 100%;
-    background-color: var(--color-mist);
-    padding: var(--space-8) 0 var(--space-10);
-    overflow: hidden;
+    background-color: #FFFFFF;
+    padding: clamp(48px, 6vw, 72px) 0;
   }
 
-  .people-container {
-    width: 100%;
-    max-width: 1200px;
+  .segment-container {
+    max-width: 1280px;
     margin: 0 auto;
-    padding: 0 var(--space-3);
+    padding: 0 clamp(20px, 4vw, 40px);
     box-sizing: border-box;
   }
 
-  .people-card {
-    background-color: var(--color-paper);
-    border: 1px solid rgba(20, 41, 75, 0.08);
-    border-radius: var(--radius-card);
-    padding: var(--space-6) var(--space-5);
-    box-shadow: 0 4px 20px -2px rgba(20, 41, 75, 0.04);
-  }
-
-  @media (min-width: 768px) {
-    .people-card {
-      padding: var(--space-8) var(--space-7);
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .people-card {
-      padding: var(--space-10) var(--space-8);
-    }
-  }
-
-  .people-header {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
-    margin-bottom: var(--space-8);
-  }
-
-  @media (min-width: 768px) {
-    .people-header {
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: flex-end;
-      gap: var(--space-6);
-    }
-  }
-
-  .header-title-col {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-1);
-    max-width: 540px;
-  }
-
-  .section-eyebrow {
-    font-size: 0.8125rem;
-    font-weight: var(--font-weight-subheading);
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--color-gold);
-    line-height: 1.2;
-  }
-
-  .section-title {
-    font-size: clamp(1.75rem, 3.5vw, 2.5rem);
-    font-weight: var(--font-weight-heading);
-    color: var(--color-deep-navy);
-    line-height: var(--line-height-heading);
-    letter-spacing: -0.02em;
-    margin: 0;
-  }
-
-  .section-supporting-text {
-    font-size: 1.0625rem;
-    font-weight: var(--font-weight-deck);
-    line-height: var(--line-height-body);
-    color: var(--color-slate);
-    max-width: 460px;
-    margin: 0;
-  }
-
-  /* Collage Grid */
-  .collage-grid {
+  .segment-cards-grid {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--space-5);
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    align-items: stretch;
   }
 
-  @media (min-width: 768px) {
-    .collage-grid {
-      grid-template-columns: 1fr 1fr;
-      gap: var(--space-6);
-      align-items: stretch;
-    }
-  }
-
-  .collage-figure {
+  .segment-card {
+    border-radius: 8px;
+    padding: 32px 28px;
     display: flex;
     flex-direction: column;
-    gap: var(--space-2);
-    margin: 0;
+    justify-content: space-between;
+    gap: 16px;
+    border: 1px solid rgba(15, 35, 64, 0.12);
   }
 
-  .right-column-stack {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-5);
+  .card-nri,
+  .card-camp {
+    background-color: #FAF8F5;
   }
 
-  @media (min-width: 768px) {
-    .right-column-stack {
-      gap: var(--space-6);
-    }
+  .card-doctors {
+    background-color: #0F2340;
+    border-color: #0F2340;
+    color: #FFFFFF;
   }
 
-  .placeholder-frame {
-    position: relative;
-    width: 100%;
-    background-color: var(--color-navy);
-    border-radius: var(--radius-card);
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .placeholder-frame::after {
-    content: '';
-    position: absolute;
-    inset: 12px;
-    border: 1px dashed rgba(196, 154, 60, 0.4);
-    border-radius: calc(var(--radius-card) - 4px);
-    pointer-events: none;
-  }
-
-  .portrait-frame {
-    aspect-ratio: 3 / 4;
-    min-height: 280px;
-  }
-
-  @media (min-width: 768px) {
-    .portrait-frame {
-      height: 100%;
-      min-height: 480px;
-    }
-  }
-
-  .landscape-frame {
-    aspect-ratio: 16 / 9;
-    min-height: 160px;
-  }
-
-  .placeholder-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: var(--space-2);
-    z-index: 2;
-  }
-
-  .placeholder-camera-icon {
-    color: var(--color-gold);
-    opacity: 0.9;
-  }
-
-  .placeholder-badge {
-    font-size: 0.75rem;
-    font-weight: var(--font-weight-subheading);
-    letter-spacing: 0.04em;
+  .segment-tag {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: #A88B5A;
     text-transform: uppercase;
-    color: var(--color-paper);
-    background-color: rgba(13, 27, 51, 0.6);
-    border: 1px solid rgba(244, 247, 251, 0.15);
-    padding: 4px 10px;
-    border-radius: var(--radius-pill);
   }
 
-  .collage-caption {
+  .tag-gold {
+    color: #A88B5A;
+  }
+
+  .segment-title {
+    font-family: var(--font-family-heading);
+    font-size: 1.45rem;
+    font-weight: 600;
+    color: #0F2340;
+    margin: 0;
+    line-height: 1.25;
+  }
+
+  .text-white {
+    color: #FFFFFF;
+  }
+
+  .segment-deck {
     font-size: 0.875rem;
-    line-height: 1.45;
-    color: var(--color-slate);
-    font-weight: var(--font-weight-body);
+    color: #4B5563;
+    line-height: 1.55;
+    margin: 0;
+    flex-grow: 1;
   }
 
-  /* RTL Support */
-  :global([dir="rtl"]) .section-title,
-  :global([dir="rtl"]) .section-supporting-text,
-  :global([dir="rtl"]) .collage-caption {
-    text-align: right;
+  .text-mist {
+    color: #CBD5E1;
+  }
+
+  .segment-link {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #0F2340;
+    text-decoration: underline;
+    transition: color 0.15s ease;
+  }
+
+  .segment-link:hover {
+    color: #A88B5A;
+  }
+
+  .card-btn-wrap {
+    margin-top: 8px;
+  }
+
+  .btn-brass-partner {
+    display: inline-block;
+    background-color: #A88B5A;
+    color: #FFFFFF;
+    padding: 10px 18px;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-decoration: none;
+    text-align: center;
+    transition: background-color 0.15s ease;
+  }
+
+  .btn-brass-partner:hover {
+    background-color: #967949;
+  }
+
+  @media (max-width: 960px) {
+    .segment-cards-grid {
+      grid-template-columns: 1fr;
+    }
   }
 </style>

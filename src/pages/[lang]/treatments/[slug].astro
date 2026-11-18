@@ -1,0 +1,45 @@
+---
+/**
+ * src/pages/[lang]/treatments/[slug].astro
+ * Dynamic localized route for Nuhavi Health's specialty detail pages across EN, RU, and AR.
+ *
+ * Route Mapping:
+ * - English: /en/treatments/<slug>/ (9 specialties; /en/treatments/oncology/ is preserved as a static file)
+ * - Russian: /ru/treatments/<slug>/ (all 10 specialties)
+ * - Arabic:  /ar/treatments/<slug>/ (all 10 specialties)
+ */
+import SpecialtyPageTemplate from '../../../components/treatments/SpecialtyPageTemplate.astro';
+import { specialtiesList, type SpecialtyDefinition } from '../../../data/specialtyData';
+import type { SupportedLang } from '../../../i18n/translations';
+
+export function getStaticPaths() {
+  const paths = [];
+  const locales: SupportedLang[] = ['en', 'ru', 'ar'];
+
+  for (const lang of locales) {
+    for (const specialty of specialtiesList) {
+      // For en, skip 'oncology' because src/pages/en/treatments/oncology/index.astro is the preserved original file
+      if (lang === 'en' && specialty.slug === 'oncology') {
+        continue;
+      }
+
+      paths.push({
+        params: { lang, slug: specialty.slug },
+        props: { specialty, lang },
+      });
+    }
+  }
+
+  return paths;
+}
+
+interface Props {
+  specialty: SpecialtyDefinition;
+  lang: SupportedLang;
+}
+
+const { specialty, lang } = Astro.props;
+---
+
+<SpecialtyPageTemplate specialty={specialty} lang={lang} />
+

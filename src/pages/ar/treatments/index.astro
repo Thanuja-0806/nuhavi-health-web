@@ -1,0 +1,26 @@
+---
+/**
+ * src/pages/ar/treatments/index.astro
+ * Arabic Treatments Overview Page.
+ * Route: /ar/treatments/
+ */
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import SpecialtyExplorer from '../../../components/home/SpecialtyExplorer.astro';
+---
+
+<BaseLayout
+  title="التخصصات الطبية والعلاجات | نوهـافي هيلث"
+  description="ابدأ باختيار التخصص الطبي المطلوب. توضح كل صفحة الإجراءات المتبعة، والتقارير الطبية المطلوب تجهيزها، وأهم الأسئلة الموجهة للفريق الطبي المعالج."
+  lang="ar"
+  dir="rtl"
+>
+  <SpecialtyExplorer
+    eyebrow="التخصصات الطبية"
+    heading="العلاجات والتخصصات"
+    headingLevel="h1"
+    supportingText="ابدأ باختيار التخصص الطبي المطلوب. توضح كل صفحة الإجراءات المتبعة، والتقارير الطبية المطلوب تجهيزها، وأهم الأسئلة الموجهة للفريق الطبي المعالج."
+    variant="page"
+    lang="ar"
+  />
+</BaseLayout>
+

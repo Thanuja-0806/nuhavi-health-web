@@ -1,0 +1,287 @@
+---
+/**
+ * src/pages/ru/stories/index.astro
+ * Истории пациентов и путь координации — Nuhavi Health
+ *
+ * Требования:
+ * - Уведомление о том, что истории публикуются исключительно с письменного согласия.
+ * - Ноль вымышленных историй, ноль заказных отзывов, ноль фотографий моделей.
+ * - Раздел с 5 этапами независимой неклинической координации лечения.
+ * - Готовая масштабируемая структура для будущих подтвержденных историй.
+ * - Фирменный стиль Nuhavi: синий, золотой и белый.
+ */
+
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import EthicalConsentCard from '../../../components/stories/EthicalConsentCard.astro';
+import PatientJourneyTimeline from '../../../components/stories/PatientJourneyTimeline.astro';
+import FutureStoriesSection from '../../../components/stories/FutureStoriesSection.astro';
+import { storiesData } from '../../../data/storiesData';
+
+const content = storiesData.ru;
+const pageTitle = content.metaTitle;
+const pageDescription = content.metaDescription;
+---
+
+<BaseLayout title={pageTitle} description={pageDescription} lang="ru" dir="ltr">
+  <div class="page-container">
+    <div class="container main-content">
+      <!-- Навигационная цепочка (Breadcrumbs) -->
+      <nav class="breadcrumb" aria-label="Хлебные крошки">
+        <ol>
+          <li><a href="/ru/">{content.breadcrumbs.home}</a></li>
+          <li aria-hidden="true"><span class="sep">/</span></li>
+          <li aria-current="page">{content.breadcrumbs.stories}</li>
+        </ol>
+      </nav>
+
+      <!-- Фирменная золотая полоса 72x3 px -->
+      <div class="gold-rule" aria-hidden="true"></div>
+
+      <!-- Заголовок страницы -->
+      <header class="page-header">
+        <span class="eyebrow-pill">{content.eyebrow}</span>
+        <h1 class="page-title">{content.title}</h1>
+        <p class="page-deck">{content.deck}</p>
+      </header>
+
+      <!-- Основные разделы страницы -->
+      <main class="stories-main-flow">
+        <!-- 1. Стандарт информированного согласия и защита данных -->
+        <EthicalConsentCard
+          badge={content.consentNotice.badge}
+          title={content.consentNotice.title}
+          lead={content.consentNotice.lead}
+          rules={content.consentNotice.rules}
+          legalDisclaimer={content.consentNotice.legalDisclaimer}
+          lang="ru"
+        />
+
+        <!-- 2. 5 этапов неклинической координации лечения -->
+        <PatientJourneyTimeline
+          eyebrow={content.journeySection.eyebrow}
+          title={content.journeySection.title}
+          deck={content.journeySection.deck}
+          coordinationRole={content.journeySection.coordinationRole}
+          clinicalRole={content.journeySection.clinicalRole}
+          steps={content.journeySection.steps}
+          lang="ru"
+        />
+
+        <!-- 3. Этическое объяснение отсутствия историй и будущий макет -->
+        <FutureStoriesSection
+          eyebrow={content.futureStoriesLayout.eyebrow}
+          title={content.futureStoriesLayout.title}
+          deck={content.futureStoriesLayout.deck}
+          templateBadge={content.futureStoriesLayout.templateBadge}
+          blueprintTitle={content.futureStoriesLayout.blueprintTitle}
+          blueprintDesc={content.futureStoriesLayout.blueprintDesc}
+          fields={content.futureStoriesLayout.fields}
+          stories={content.futureStoriesLayout.stories}
+          emptyState={content.emptyState}
+          lang="ru"
+        />
+      </main>
+
+      <!-- Нижняя навигация и целевое действие -->
+      <div class="page-footer-nav">
+        <a href="/ru/" class="back-link">
+          <svg class="back-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span>{content.ctaSection.backHomeLabel}</span>
+        </a>
+
+        <a href="/ru/request-opinion/" class="btn-pill btn-navy">
+          <span>{content.ctaSection.btnLabel}</span>
+          <svg class="cta-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .page-container {
+    background-color: var(--color-mist, #F4F7FB);
+    min-height: 80vh;
+    padding-top: var(--space-8, 2rem);
+    padding-bottom: var(--space-16, 4rem);
+  }
+
+  .main-content {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 var(--space-4, 1rem);
+  }
+
+  /* Breadcrumb */
+  .breadcrumb {
+    margin-bottom: var(--space-6, 1.5rem);
+  }
+
+  .breadcrumb ol {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    gap: var(--space-2, 0.5rem);
+    font-size: 0.875rem;
+    color: var(--color-slate, #5B6A80);
+  }
+
+  .breadcrumb a {
+    color: var(--color-navy, #14294B);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.15s ease;
+  }
+
+  .breadcrumb a:hover {
+    color: var(--color-gold-text, #967119);
+    text-decoration: underline;
+  }
+
+  .breadcrumb .sep {
+    color: #CBD5E1;
+  }
+
+  .breadcrumb [aria-current="page"] {
+    color: var(--color-slate, #5B6A80);
+    font-weight: 600;
+  }
+
+  /* 72x3 px Gold Rule */
+  .gold-rule {
+    width: 72px;
+    height: 3px;
+    background-color: var(--color-gold, #C49A3C);
+    margin-bottom: var(--space-4, 1rem);
+    border-radius: 2px;
+  }
+
+  /* Page Header */
+  .page-header {
+    margin-bottom: var(--space-10, 2.5rem);
+  }
+
+  .eyebrow-pill {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-gold-text, #967119);
+    background-color: rgba(196, 154, 60, 0.1);
+    padding: 4px 10px;
+    border-radius: 4px;
+    margin-bottom: var(--space-3, 0.75rem);
+  }
+
+  .page-title {
+    font-family: var(--font-serif, "Playfair Display", Georgia, serif);
+    font-size: clamp(2rem, 4vw, 2.75rem);
+    font-weight: 700;
+    line-height: 1.25;
+    color: var(--color-navy, #14294B);
+    margin: 0 0 var(--space-3, 0.75rem) 0;
+  }
+
+  .page-deck {
+    font-size: 1.125rem;
+    line-height: 1.6;
+    color: var(--color-slate, #5B6A80);
+    max-width: 760px;
+    margin: 0;
+  }
+
+  .stories-main-flow {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6, 1.5rem);
+  }
+
+  /* Page Footer Nav */
+  .page-footer-nav {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4, 1rem);
+    align-items: center;
+    justify-content: space-between;
+    padding-top: var(--space-8, 2rem);
+    border-top: 1px solid rgba(20, 41, 75, 0.1);
+    margin-top: var(--space-8, 2rem);
+  }
+
+  @media (min-width: 640px) {
+    .page-footer-nav {
+      flex-direction: row;
+    }
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--color-navy, #14294B);
+    text-decoration: none;
+    transition: color 0.15s ease, transform 0.15s ease;
+  }
+
+  .back-link:hover {
+    color: var(--color-gold-text, #967119);
+    transform: translateX(-2px);
+  }
+
+  .back-icon {
+    transition: transform 0.15s ease;
+  }
+
+  .back-link:hover .back-icon {
+    transform: translateX(-2px);
+  }
+
+  /* CTA Button Pill */
+  .btn-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 48px;
+    padding: 0 24px;
+    border-radius: 9999px;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.18s ease, transform 0.15s ease, box-shadow 0.18s ease;
+  }
+
+  .btn-navy {
+    background-color: var(--color-navy, #14294B);
+    color: #FFFFFF;
+    box-shadow: 0 2px 8px rgba(20, 41, 75, 0.15);
+  }
+
+  .btn-navy:hover {
+    background-color: var(--color-deep-navy, #0D1B33);
+    color: #FFFFFF;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(20, 41, 75, 0.22);
+  }
+
+  .cta-arrow {
+    transition: transform 0.15s ease;
+  }
+
+  .btn-navy:hover .cta-arrow {
+    transform: translateX(3px);
+  }
+</style>
+

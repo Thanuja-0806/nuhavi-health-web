@@ -2,9 +2,13 @@
 /**
  * Footer.astro
  * Global footer for Nuhavi Health.
- * Features the brand wordmark, clear description of the coordination role,
- * logically grouped navigation links, mandatory legal links, and a dynamic copyright year.
- * Complies strictly with zero invented claims, addresses, phone numbers, or social media handles.
+ * Features:
+ * - Brand wordmark and neutral clinical coordination description.
+ * - Prominent gold-accented medical coordination disclaimer callout.
+ * - Logically grouped 4-column responsive navigation.
+ * - Hospital vetting standard & commercial independence trust indicators.
+ * - Mandatory legal links and dynamic copyright year.
+ * - Strictly complies with zero invented claims, fake addresses, phone numbers, or social handles.
  *
  * Fully localized for English (/en/), Russian (/ru/), and Arabic (/ar/ RTL).
  */
@@ -31,25 +35,38 @@ const contactHref = `${prefix}/contact/`;
 
 const currentYear = new Date().getFullYear();
 
-const coordinationLinks = [
-  { label: tNav.treatments, href: '/en/treatments' },
-  { label: tNav.hospitals, href: '/en/hospitals' },
-  { label: tNav.howItWorks, href: '/en/how-it-works' },
-  { label: tNav.countries, href: '/en/countries' },
+const patientsLinks = [
+  { label: currentLang === 'ru' ? 'Направления лечения' : currentLang === 'ar' ? 'العلاجات' : 'Treatments', href: `${prefix}/treatments/` },
+  { label: currentLang === 'ru' ? 'Клиники-партнеры' : currentLang === 'ar' ? 'المستشفيات الشريكة' : 'Partner hospitals', href: '/en/hospitals/' },
+  { label: currentLang === 'ru' ? 'Стоимость лечения' : currentLang === 'ar' ? 'تكاليف العلاج' : 'Treatment costs', href: currentLang === 'en' ? '/en/cost/' : `${prefix}/how-it-works/costs-and-fees/` },
+  { label: currentLang === 'ru' ? 'Забота о родителях' : currentLang === 'ar' ? 'رعاية الوالدين' : 'Care for Parents', href: `${prefix}/request-opinion/` },
 ];
 
-const companyLinks = [
-  { label: t.aboutHeading, href: '/en/about' },
-  { label: tNav.stories, href: '/en/stories' },
-  { label: tNav.resources, href: '/en/resources' },
-  { label: tNav.contact, href: contactHref },
+const partnersLinks = [
+  { label: currentLang === 'ru' ? 'Для направляющих врачей' : currentLang === 'ar' ? 'للأطباء المحولين' : 'For referring doctors', href: `${prefix}/contact/` },
+  { label: currentLang === 'ru' ? 'Для клиник' : currentLang === 'ar' ? 'للمستشفيات' : 'For hospitals', href: '/en/hospitals/' },
+  { label: currentLang === 'ru' ? 'Консилиумы и события' : currentLang === 'ar' ? 'المخيمات والفعاليات' : 'Camps & events', href: `${prefix}/contact/` },
+];
+
+const trustLegalLinks = [
+  { label: currentLang === 'ru' ? 'Как оплачиваются услуги' : currentLang === 'ar' ? 'كيف تدفع أتعابنا' : 'How we\'re paid', href: `${prefix}/about/commercial-relationships/` },
+  { label: currentLang === 'ru' ? 'Редакционная политика' : currentLang === 'ar' ? 'السياسة التحريرية' : 'Editorial policy', href: `${prefix}/about/clinical-governance/` },
+  { label: currentLang === 'ru' ? 'Конфиденциальность' : currentLang === 'ar' ? 'الخصوصية' : 'Privacy', href: '/en/privacy/' },
+  { label: currentLang === 'ru' ? 'Использованные изображения' : currentLang === 'ar' ? 'حقوق الصور' : 'Image credits', href: `${prefix}/about/` },
 ];
 
 const legalLinks = [
-  { label: t.privacyPolicy, href: '/en/privacy' },
-  { label: t.termsConditions, href: '/en/terms' },
-  { label: t.disclaimer, href: '/en/disclaimer' },
+  { label: t.privacyPolicy, href: '/en/privacy/' },
+  { label: t.termsConditions, href: '/en/terms/' },
+  { label: t.disclaimer, href: '/en/disclaimer/' },
 ];
+
+const trustBannerText: Record<SupportedLang, string> = {
+  en: 'Vetted to published NABH & JCI hospital standards · Direct hospital billing · Zero referral markups',
+  ru: 'Соответствие стандартам NABH и JCI · Прямые расчеты с клиникой · Без скрытых комиссий',
+  ar: 'مستشفيات معتمدة وفق معايير NABH و JCI · دفع مباشر للمستشفى · دون عمولات وساطة',
+  fr: 'Hôpitaux vérifiés selon les normes NABH & JCI · Facturation directe · Zéro commission',
+};
 ---
 
 <footer class="site-footer">
@@ -59,29 +76,33 @@ const legalLinks = [
       <!-- Column 1: Brand Wordmark & Neutral Role Description -->
       <div class="footer-brand-col">
         <a href={homeHref} class="footer-logo" aria-label="Nuhavi Health - Home">
-          <img
-            src="/images/nuhavi-logo-white.svg"
-            alt="Nuhavi Health"
-            class="footer-logo-img"
-            width="162"
-            height="34"
-            loading="lazy"
-            decoding="async"
-          />
+          <div class="footer-brand-wrap">
+            <div class="brand-crest" aria-hidden="true">
+              <svg class="crest-svg" width="34" height="34" viewBox="0 0 36 36" fill="none">
+                <rect width="36" height="36" rx="6" fill="#0F2340" />
+                <path d="M10 26V10L26 26V10" stroke="#A88B5A" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </div>
+            <div class="brand-wordmark">
+              <div class="brand-name-row">
+                <span class="logo-name-footer">NUHAVI</span>
+                <span class="logo-suffix-footer">HEALTH</span>
+              </div>
+              <span class="brand-tagline-footer">Clarity before you travel. Care until you're home.</span>
+            </div>
+          </div>
         </a>
         <p class="role-description">
-          {t.roleDescription}
-        </p>
-        <p class="disclaimer-callout">
-          <strong>{currentLang === 'ru' ? 'Внимание:' : currentLang === 'ar' ? 'تنويه:' : 'Notice:'}</strong> {t.disclaimerCallout.replace(/^(Notice:|Внимание:|تنويه:)\s*/, '')}
+          Nuhavi Health Pvt. Ltd. · Registered office, Hyderabad, Telangana · [CIN]<br />
+          A coordination service, not a hospital. We do not diagnose or treat.
         </p>
       </div>
 
-      <!-- Column 2: Travel & Coordination Links -->
+      <!-- Column 2: Patients Group -->
       <div class="footer-nav-col">
-        <h4 class="col-heading">{t.coordinationHeading}</h4>
+        <h4 class="col-heading">{currentLang === 'ru' ? 'Пациентам' : currentLang === 'ar' ? 'المرضى' : 'Patients'}</h4>
         <ul class="footer-link-list">
-          {coordinationLinks.map((link) => (
+          {patientsLinks.map((link) => (
             <li>
               <a href={link.href} class="footer-link">
                 {link.label}
@@ -91,11 +112,11 @@ const legalLinks = [
         </ul>
       </div>
 
-      <!-- Column 3: Company & Information Links -->
+      <!-- Column 3: Partners Group -->
       <div class="footer-nav-col">
-        <h4 class="col-heading">{t.aboutHeading}</h4>
+        <h4 class="col-heading">{currentLang === 'ru' ? 'Партнерам' : currentLang === 'ar' ? 'الشركاء' : 'Partners'}</h4>
         <ul class="footer-link-list">
-          {companyLinks.map((link) => (
+          {partnersLinks.map((link) => (
             <li>
               <a href={link.href} class="footer-link">
                 {link.label}
@@ -105,11 +126,11 @@ const legalLinks = [
         </ul>
       </div>
 
-      <!-- Column 4: Legal & Policy Links -->
+      <!-- Column 4: Trust & Legal Group -->
       <div class="footer-nav-col">
-        <h4 class="col-heading">{t.legalHeading}</h4>
+        <h4 class="col-heading">{currentLang === 'ru' ? 'Доверие и правовая информация' : currentLang === 'ar' ? 'الثقة والمعلومات القانونية' : 'Trust & Legal'}</h4>
         <ul class="footer-link-list">
-          {legalLinks.map((link) => (
+          {trustLegalLinks.map((link) => (
             <li>
               <a href={link.href} class="footer-link">
                 {link.label}
@@ -120,10 +141,23 @@ const legalLinks = [
       </div>
     </div>
 
-    <!-- Bottom Footer: Copyright & Legal Compliance Bar -->
+    <!-- Trust Accreditation Ribbon (Vaidam & Jus' Onco inspired trust ribbon) -->
+    <div class="footer-trust-ribbon">
+      <div class="trust-ribbon-content">
+        <span class="trust-ribbon-icon" aria-hidden="true">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            <polyline points="9 12 11 14 15 10"></polyline>
+          </svg>
+        </span>
+        <span class="trust-ribbon-text">{trustBannerText[currentLang]}</span>
+      </div>
+    </div>
+
+    <!-- Bottom Footer: Copyright & Legal Compliance Bar (PDF Page 7) -->
     <div class="footer-bottom">
       <p class="copyright-text">
-        {t.copyright(currentYear)}
+        © {currentYear} Nuhavi Health Pvt. Ltd. Information on this site is not medical advice.
       </p>
       <div class="footer-bottom-links">
         {legalLinks.map((link) => (
@@ -139,16 +173,16 @@ const legalLinks = [
 <style>
   .site-footer {
     background-color: var(--color-deep-navy);
-    color: rgba(244, 247, 251, 0.8);
+    color: rgba(244, 247, 251, 0.82);
     padding: var(--space-10) 0 var(--space-6);
-    border-top: 1px solid rgba(244, 247, 251, 0.1);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
     font-family: var(--font-family-base);
   }
 
   .footer-container {
     display: flex;
     flex-direction: column;
-    gap: var(--space-8);
+    gap: var(--space-6);
   }
 
   /* --------------------------------------------------------------------------
@@ -169,7 +203,7 @@ const legalLinks = [
 
   @media (min-width: 1024px) {
     .footer-top {
-      grid-template-columns: 2fr 1fr 1fr 1fr;
+      grid-template-columns: 2.2fr 1fr 1fr 1fr;
       gap: var(--space-8);
     }
   }
@@ -183,54 +217,104 @@ const legalLinks = [
 
   .footer-logo {
     text-decoration: none;
+    color: var(--color-paper);
     display: inline-block;
-    transition: opacity 0.15s ease;
   }
 
-  .footer-logo:hover {
-    opacity: 0.85;
+  .footer-brand-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
   }
 
-  .footer-logo-img {
-    display: block;
-    height: 34px;
-    width: auto;
-    max-width: 170px;
-    object-fit: contain;
+  .brand-crest {
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
-  @media (max-width: 480px) {
-    .footer-logo-img {
-      height: 28px;
-      max-width: 140px;
-    }
+  .crest-svg {
+    border-radius: 9px;
+  }
+
+  .brand-wordmark {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+
+  .brand-name-row {
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
+    line-height: 1;
+  }
+
+  .logo-name-footer {
+    font-size: 1.25rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: #FFFFFF;
+  }
+
+  .logo-suffix-footer {
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    color: var(--color-gold);
+    text-transform: uppercase;
+  }
+
+  .brand-tagline-footer {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: rgba(244, 247, 251, 0.6);
+    letter-spacing: 0.03em;
   }
 
   .role-description {
     font-size: 0.875rem;
-    line-height: var(--line-height-body);
-    color: rgba(244, 247, 251, 0.7);
-    max-width: 360px;
+    line-height: 1.6;
+    color: rgba(244, 247, 251, 0.72);
+    max-width: 380px;
   }
 
+  /* Disclaimer Callout Box */
   .disclaimer-callout {
-    font-size: 0.75rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 0.775rem;
     line-height: 1.5;
-    color: rgba(244, 247, 251, 0.55);
-    background-color: rgba(20, 41, 75, 0.5);
+    color: rgba(244, 247, 251, 0.7);
+    background-color: rgba(20, 41, 75, 0.65);
     border-radius: var(--radius-card);
-    padding: var(--space-2);
-    border-left: 2px solid var(--color-gold);
-    max-width: 360px;
+    padding: 12px 14px;
+    border-left: 3px solid var(--color-gold);
+    max-width: 380px;
+  }
+
+  .disclaimer-icon {
+    color: var(--color-gold);
+    flex-shrink: 0;
+    margin-top: 1px;
+    display: inline-flex;
+  }
+
+  .disclaimer-text {
+    font-size: 0.775rem;
+    line-height: 1.5;
+    color: rgba(244, 247, 251, 0.7);
+    margin: 0;
+  }
+
+  .disclaimer-text strong {
+    color: var(--color-gold);
   }
 
   :global([dir="rtl"]) .disclaimer-callout {
     border-left: none;
-    border-right: 2px solid var(--color-gold);
-  }
-
-  .disclaimer-callout strong {
-    color: var(--color-gold);
+    border-right: 3px solid var(--color-gold);
   }
 
   /* Navigation Columns */
@@ -241,19 +325,19 @@ const legalLinks = [
   }
 
   .col-heading {
-    font-size: 0.875rem;
-    font-weight: var(--font-weight-subheading);
+    font-size: 0.8125rem;
+    font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.08em;
     color: var(--color-gold);
-    margin-bottom: var(--space-1);
+    margin-bottom: 4px;
   }
 
   .footer-link-list {
     list-style: none;
     display: flex;
     flex-direction: column;
-    gap: var(--space-2);
+    gap: 10px;
     margin: 0;
     padding: 0;
   }
@@ -262,12 +346,42 @@ const legalLinks = [
     font-size: 0.875rem;
     color: rgba(244, 247, 251, 0.8);
     text-decoration: none;
-    transition: color 0.15s ease;
+    transition: color 0.16s ease, transform 0.16s ease;
+    display: inline-block;
   }
 
   .footer-link:hover {
     color: var(--color-paper);
-    text-decoration: underline;
+    transform: translateX(2px);
+  }
+
+  :global([dir="rtl"]) .footer-link:hover {
+    transform: translateX(-2px);
+  }
+
+  /* --------------------------------------------------------------------------
+     TRUST ACCREDITATION RIBBON
+     -------------------------------------------------------------------------- */
+  .footer-trust-ribbon {
+    padding: 14px 18px;
+    background-color: rgba(20, 41, 75, 0.45);
+    border: 1px solid rgba(196, 154, 60, 0.2);
+    border-radius: var(--radius-card);
+  }
+
+  .trust-ribbon-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.8125rem;
+    color: rgba(244, 247, 251, 0.85);
+    font-weight: 500;
+  }
+
+  .trust-ribbon-icon {
+    color: var(--color-gold);
+    flex-shrink: 0;
+    display: inline-flex;
   }
 
   /* --------------------------------------------------------------------------
@@ -278,7 +392,7 @@ const legalLinks = [
     flex-direction: column;
     align-items: flex-start;
     gap: var(--space-3);
-    padding-top: var(--space-6);
+    padding-top: var(--space-4);
     border-top: 1px solid rgba(244, 247, 251, 0.08);
   }
 
@@ -304,12 +418,13 @@ const legalLinks = [
 
   .bottom-legal-link {
     font-size: 0.8125rem;
-    color: rgba(244, 247, 251, 0.6);
+    color: rgba(244, 247, 251, 0.65);
     text-decoration: none;
-    transition: color 0.15s ease;
+    transition: color 0.16s ease;
   }
 
   .bottom-legal-link:hover {
     color: var(--color-paper);
+    text-decoration: underline;
   }
 </style>

@@ -1,0 +1,312 @@
+---
+/**
+ * src/components/home/KnowledgeSpecialtiesGrid.astro
+ * 15 Specialties Grid linking to Nuhavi Knowledge Centre Guides
+ * SOURCE OF TRUTH: Nuhavi Knowledge Centre website - Claude.pdf (Page 1)
+ *
+ * Requirements:
+ * - Eyebrow: OUR SPECIALTIES
+ * - Heading: Specialist care across 15 specialties
+ * - Subtext: Each specialty links to plain-language guides in the Nuhavi Knowledge Centre.
+ * - 15 specialties in clean 3-column grid with dedicated icons.
+ * - Multi-language support (EN, RU, AR).
+ */
+import type { SupportedLang } from '../../i18n/translations';
+import SpecialtyIcon from '../common/SpecialtyIcon.astro';
+
+interface Props {
+  lang?: SupportedLang;
+}
+
+const currentPath = Astro.url.pathname;
+const detectedLang: SupportedLang = currentPath.startsWith('/ar')
+  ? 'ar'
+  : currentPath.startsWith('/ru')
+  ? 'ru'
+  : currentPath.startsWith('/fr')
+  ? 'fr'
+  : 'en';
+
+const lang: SupportedLang = Astro.props.lang || detectedLang;
+const isArabic = lang === 'ar';
+const isRussian = lang === 'ru';
+const isFrench = lang === 'fr';
+
+const prefix = `/${lang}`;
+
+const t = {
+  eyebrow: isArabic ? 'تخصصاتنا الطبية' : isRussian ? 'НАШИ НАПРАВЛЕНИЯ' : 'OUR SPECIALTIES',
+  heading: isArabic
+    ? 'رعاية متخصصة في ١٥ مجالاً طبياً'
+    : isRussian
+    ? 'Квалифицированная помощь по 15 направлениям'
+    : 'Specialist care across 15 specialties',
+  subtext: isArabic
+    ? 'كل تخصص يربطك بأدلة إرشادية مبسطة في مركز المعرفة الطبي لنوهـافي.'
+    : isRussian
+    ? 'Каждое направление ведет к понятным руководствам в Центре знаний Nuhavi.'
+    : 'Each specialty links to plain-language guides in the Nuhavi Knowledge Centre.',
+};
+
+const specialties = [
+  {
+    id: 'cardiology',
+    name: isArabic ? 'طب وجراحة القلب' : isRussian ? 'Кардиология' : 'Cardiology',
+    href: `${prefix}/resources/cardiology/`,
+    icon: 'heart',
+    iconColor: '#E11D48',
+    image: '/images/specialties/cardiology.jpg',
+  },
+  {
+    id: 'oncology',
+    name: isArabic ? 'علاج الأورام والسرطان' : isRussian ? 'Онкология' : 'Oncology',
+    href: `${prefix}/resources/oncology/`,
+    icon: 'ribbon',
+    iconColor: '#7C3AED',
+    image: '/images/specialties/oncology.jpg',
+  },
+  {
+    id: 'neurology',
+    name: isArabic ? 'أمراض وجراحة المخ والأعصاب' : isRussian ? 'Неврология' : 'Neurology',
+    href: `${prefix}/resources/neurology/`,
+    icon: 'brain',
+    iconColor: '#2563EB',
+    image: '/images/specialties/neurology.jpg',
+  },
+  {
+    id: 'orthopedics',
+    name: isArabic ? 'جراحة العظام والمفاصل' : isRussian ? 'Ортопедия' : 'Orthopedics',
+    href: `${prefix}/resources/orthopedics/`,
+    icon: 'bone',
+    iconColor: '#059669',
+    image: '/images/specialties/orthopedics.jpg',
+  },
+  {
+    id: 'spine',
+    name: isArabic ? 'جراحة العمود الفقري' : isRussian ? 'Хирургия позвоночника' : 'Spine Surgery',
+    href: `${prefix}/resources/spine-surgery/`,
+    icon: 'spine',
+    iconColor: '#0891B2',
+    image: '/images/specialties/spine-surgery.jpg',
+  },
+  {
+    id: 'hair',
+    name: isArabic ? 'زراعة الشعر' : isRussian ? 'Трансплантация волос' : 'Hair Transplantation',
+    href: `${prefix}/resources/hair-transplantation/`,
+    icon: 'hair',
+    iconColor: '#B45309',
+    image: '/images/specialties/hair-transplantation.jpg',
+  },
+  {
+    id: 'bariatric',
+    name: isArabic ? 'جراحات علاج البدانة' : isRussian ? 'Бариатрическая хирургия' : 'Weight Loss Surgery',
+    href: `${prefix}/resources/weight-loss-surgery/`,
+    icon: 'scale',
+    iconColor: '#16A34A',
+    image: '/images/specialties/weight-loss-surgery.jpg',
+  },
+  {
+    id: 'ivf',
+    name: isArabic ? 'علاج العقم وأطفال الأنابيب' : isRussian ? 'ЭКО и репродуктология' : 'IVF & Reproductive Medicine',
+    href: `${prefix}/resources/ivf/`,
+    icon: 'ivf',
+    iconColor: '#C026D3',
+    image: '/images/specialties/ivf.jpg',
+  },
+  {
+    id: 'bmt',
+    name: isArabic ? 'زراعة نخاع العظم' : isRussian ? 'Трансплантация костного мозга' : 'Bone Marrow Transplant',
+    href: `${prefix}/resources/bone-marrow-transplant/`,
+    icon: 'bmt',
+    iconColor: '#DC2626',
+    image: '/images/specialties/bone-marrow-transplant.jpg',
+  },
+  {
+    id: 'kidney',
+    name: isArabic ? 'زراعة الكلى والمسالك' : isRussian ? 'Трансплантация почки' : 'Kidney Transplant',
+    href: `${prefix}/resources/kidney-transplant/`,
+    icon: 'kidney',
+    iconColor: '#0284C7',
+    image: '/images/specialties/kidney-transplant.jpg',
+  },
+  {
+    id: 'liver',
+    name: isArabic ? 'زراعة الكبد والجهاز الهضمي' : isRussian ? 'Трансплантация печени' : 'Liver Transplant',
+    href: `${prefix}/resources/liver-transplant/`,
+    icon: 'liver',
+    iconColor: '#D97706',
+    image: '/images/specialties/liver-transplant.jpg',
+  },
+  {
+    id: 'dental',
+    name: isArabic ? 'طب وجراحة الأسنان' : isRussian ? 'Стоматология' : 'Dental Care',
+    href: `${prefix}/resources/dental-care/`,
+    icon: 'tooth',
+    iconColor: '#0D9488',
+    image: '/images/specialties/dental-care.jpg',
+  },
+  {
+    id: 'ayush',
+    name: isArabic ? 'طب الأيورفيدا والصحة التكاملية' : isRussian ? 'Аюрведа и оздоровление' : 'AYUSH Wellness',
+    href: `${prefix}/resources/ayush-wellness/`,
+    icon: 'leaf',
+    iconColor: '#65A30D',
+    image: '/images/specialties/ayush-wellness.jpg',
+  },
+  {
+    id: 'surgery',
+    name: isArabic ? 'الجراحة العامة والمناظير' : isRussian ? 'Общая хирургия' : 'General Surgery',
+    href: `${prefix}/resources/general-surgery/`,
+    icon: 'scalpel',
+    iconColor: '#475569',
+    image: '/images/specialties/general-surgery.jpg',
+  },
+  {
+    id: 'cosmetic',
+    name: isArabic ? 'جراحة التجميل والترميم' : isRussian ? 'Пластическая хирургия' : 'Cosmetic & Plastic Surgery',
+    href: `${prefix}/resources/cosmetic-surgery/`,
+    icon: 'sparkle',
+    iconColor: '#DB2777',
+    image: '/images/specialties/cosmetic-surgery.jpg',
+  },
+];
+---
+
+<section class="knowledge-specialties-section" id="specialties-grid" aria-labelledby="knowledge-specialties-heading" dir={isArabic ? 'rtl' : 'ltr'}>
+  <div class="container specialties-container">
+    <div class="specialties-header">
+      <span class="specialties-eyebrow">{t.eyebrow}</span>
+      <h2 id="knowledge-specialties-heading" class="specialties-title">{t.heading}</h2>
+      <p class="specialties-subtext">{t.subtext}</p>
+    </div>
+
+    <div class="specialties-cards-grid">
+      {specialties.map((item) => (
+        <a href={item.href} class="specialty-nav-card" aria-label={item.name}>
+          <div class="specialty-icon-box">
+            <img src={item.image} alt="" class="specialty-thumb-img" width="36" height="36" loading="lazy" />
+          </div>
+          <span class="specialty-card-label">{item.name}</span>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .knowledge-specialties-section {
+    background-color: #FFFFFF;
+    padding: clamp(56px, 7vw, 84px) 0;
+    border-bottom: 1px solid #DCE3EC;
+  }
+
+  .specialties-container {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 0 clamp(16px, 3vw, 32px);
+    box-sizing: border-box;
+  }
+
+  .specialties-header {
+    margin-bottom: clamp(28px, 4vw, 40px);
+  }
+
+  .specialties-eyebrow {
+    display: inline-block;
+    font-family: var(--font-family-base, 'Inter', sans-serif);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #A88B5A;
+    margin-bottom: 8px;
+  }
+
+  .specialties-title {
+    font-family: var(--font-family-heading, 'Cormorant Garamond', Georgia, serif);
+    font-size: clamp(2rem, 3.2vw, 2.75rem);
+    font-weight: 700;
+    color: #0F2340;
+    line-height: 1.15;
+    margin: 0 0 10px 0;
+  }
+
+  .specialties-subtext {
+    font-family: var(--font-family-base, 'Inter', sans-serif);
+    font-size: 1rem;
+    color: #5A6E85;
+    line-height: 1.55;
+    margin: 0;
+  }
+
+  .specialties-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  .specialty-nav-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background-color: #FFFFFF;
+    border: 1px solid #DCE3EC;
+    border-radius: 12px;
+    padding: 16px 20px;
+    text-decoration: none;
+    box-shadow: 0 2px 8px rgba(15, 35, 64, 0.03);
+    transition: border-color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+  }
+
+  .specialty-nav-card:hover {
+    border-color: #A88B5A;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(15, 35, 64, 0.08);
+  }
+
+  .specialty-icon-box {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #F8FAFC;
+    flex-shrink: 0;
+  }
+
+  .specialty-thumb-img {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    object-fit: cover;
+    display: block;
+  }
+
+  .specialty-card-label {
+    font-family: var(--font-family-base, 'Inter', sans-serif);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: #0F2340;
+    line-height: 1.35;
+  }
+
+  @media (max-width: 992px) {
+    .specialties-cards-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 640px) {
+    .specialties-cards-grid {
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    .specialty-nav-card {
+      padding: 14px 16px;
+    }
+  }
+</style>
+

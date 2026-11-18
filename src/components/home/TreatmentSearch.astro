@@ -1,0 +1,247 @@
+---
+/**
+ * src/components/home/TreatmentSearch.astro
+ * Section 3: Medical Treatment Search and Popular Treatment Shortcuts.
+ * Allows patients to search through all 10 specialties and 105 conditions
+ * with interactive shortcuts for the most queried medical procedures.
+ */
+import type { SupportedLang } from '../../i18n/translations';
+
+interface Props {
+  lang?: SupportedLang;
+}
+
+const { lang = 'en' } = Astro.props;
+
+const shortcuts = [
+  { name: 'Cancer Care (Oncology)', href: '/en/treatments/oncology/', count: '11 guides' },
+  { name: 'Knee & Hip Replacement', href: '/en/treatments/orthopaedics/', count: '11 guides' },
+  { name: 'Cardiac Bypass & Valves', href: '/en/treatments/cardiac-sciences/', count: '11 guides' },
+  { name: 'Spine Surgery & Scoliosis', href: '/en/treatments/spine-surgery/', count: '10 guides' },
+  { name: 'Liver & Kidney Transplants', href: '/en/treatments/organ-transplants/', count: '10 guides' },
+  { name: 'Brain Care & Neurosciences', href: '/en/treatments/neurosciences/', count: '10 guides' },
+  { name: 'IVF & Fertility Medicine', href: '/en/treatments/fertility/', count: '10 guides' },
+  { name: 'Corneal & Eye Surgeries', href: '/en/treatments/ophthalmology/', count: '10 guides' },
+];
+---
+
+<section class="treatment-search-section" aria-labelledby="search-heading">
+  <div class="container search-container">
+    <div class="search-box-card">
+      <div class="search-header">
+        <h2 id="search-heading" class="search-title">Explore Medical Treatments & Procedures in India</h2>
+        <p class="search-deck">
+          Search across 10 medical specialties, 105 clinical education guides, and accredited hospital programs.
+        </p>
+      </div>
+
+      <!-- Live Search Form -->
+      <div class="search-input-wrap">
+        <div class="input-icon-left" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </div>
+        <input
+          type="search"
+          id="treatment-search-input"
+          class="treatment-search-field"
+          placeholder="Search by diagnosis or treatment (e.g. Breast cancer, Robotic knee replacement, CABG, Living donor transplant)..."
+          aria-label="Search treatments and clinical guides"
+          autocomplete="off"
+        />
+        <a href="/en/resources/" class="search-action-btn">
+          <span>Search</span>
+        </a>
+      </div>
+
+      <!-- Popular Treatment Shortcuts -->
+      <div class="shortcuts-group">
+        <span class="shortcuts-label">Popular Treatment Shortcuts:</span>
+        <div class="shortcuts-chips-list">
+          {shortcuts.map((sc) => (
+            <a href={sc.href} class="shortcut-chip">
+              <span class="chip-name">{sc.name}</span>
+              <span class="chip-count" aria-hidden="true">{sc.count}</span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .treatment-search-section {
+    background-color: var(--color-surface);
+    padding: 32px 0 48px;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .search-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 clamp(16px, 2vw, 32px);
+  }
+
+  .search-box-card {
+    background-color: #FFFFFF;
+    border: 1px solid var(--color-border);
+    border-radius: 18px;
+    padding: 36px clamp(20px, 3vw, 40px);
+    box-shadow: 0 4px 20px rgba(15, 35, 64, 0.05);
+  }
+
+  .search-header {
+    margin-bottom: 24px;
+    text-align: center;
+  }
+
+  .search-title {
+    font-family: var(--font-family-heading);
+    font-size: clamp(1.625rem, 2.5vw, 2.25rem);
+    color: var(--color-navy);
+    line-height: 1.2;
+    margin-bottom: 8px;
+  }
+
+  .search-deck {
+    font-size: 1rem;
+    color: var(--color-slate);
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  .search-input-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    max-width: 860px;
+    margin: 0 auto 28px;
+    background-color: #FAFBFD;
+    border: 2px solid #DCE3EC;
+    border-radius: var(--radius-pill);
+    padding: 6px 6px 6px 18px;
+    transition: all 0.2s ease;
+  }
+
+  .search-input-wrap:focus-within {
+    border-color: var(--color-brass);
+    box-shadow: 0 0 0 4px rgba(168, 139, 90, 0.15);
+    background-color: #FFFFFF;
+  }
+
+  .input-icon-left {
+    color: var(--color-slate);
+    display: flex;
+    align-items: center;
+    margin-right: 12px;
+  }
+
+  .treatment-search-field {
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-family: var(--font-family-base);
+    font-size: 1rem;
+    color: var(--color-navy);
+    outline: none;
+    padding: 10px 0;
+  }
+
+  .treatment-search-field::placeholder {
+    color: #94A3B8;
+  }
+
+  .search-action-btn {
+    background-color: var(--color-navy);
+    color: #FFFFFF;
+    font-weight: 600;
+    font-size: 0.9375rem;
+    padding: 10px 24px;
+    border-radius: var(--radius-pill);
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+    white-space: nowrap;
+  }
+
+  .search-action-btn:hover {
+    background-color: #1A375E;
+  }
+
+  .shortcuts-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .shortcuts-label {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: var(--color-slate);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .shortcuts-chips-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    max-width: 980px;
+  }
+
+  .shortcut-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #F8FAFD;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-pill);
+    padding: 8px 16px;
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-navy);
+    transition: all 0.2s ease;
+  }
+
+  .shortcut-chip:hover {
+    background-color: var(--color-navy);
+    color: #FFFFFF;
+    border-color: var(--color-navy);
+    transform: translateY(-1px);
+  }
+
+  .chip-count {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--color-slate);
+    background-color: #FFFFFF;
+    border-radius: var(--radius-pill);
+    padding: 2px 8px;
+    border: 1px solid var(--color-border);
+  }
+
+  .shortcut-chip:hover .chip-count {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: #FFFFFF;
+    border-color: transparent;
+  }
+
+  @media (max-width: 640px) {
+    .search-input-wrap {
+      flex-direction: column;
+      border-radius: 16px;
+      padding: 12px;
+      gap: 10px;
+    }
+    .search-action-btn {
+      width: 100%;
+      text-align: center;
+    }
+  }
+</style>
+

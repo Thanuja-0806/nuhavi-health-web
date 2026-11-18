@@ -1,0 +1,233 @@
+---
+/**
+ * src/components/home/FourStepJourney.astro
+ * Section 11: Four-Step Patient Journey
+ * 1. Send enquiry -> 2. Secure records review -> 3. Review options & estimates -> 4. Travel, care & return.
+ */
+import type { SupportedLang } from '../../i18n/translations';
+
+interface Props {
+  lang?: SupportedLang;
+}
+
+const { lang = 'en' } = Astro.props;
+
+const fourSteps = [
+  {
+    step: '01',
+    title: 'Send Enquiry',
+    who: 'You & Care Coordinator',
+    summary: 'Submit a confidential enquiry with your condition and contact details. No medical reports or personal documents are shared over public forms.',
+    deliverable: 'Prompt response from a dedicated coordinator who speaks your language.'
+  },
+  {
+    step: '02',
+    title: 'Secure Records Review',
+    who: 'Hospital Specialists & Tumour Board',
+    summary: 'Receive a private, 256-bit encrypted upload link to share diagnostic scans (DICOM discs, biopsy slides, blood work). Accredited department leads review completeness.',
+    deliverable: 'Confirmation of case eligibility and preliminary clinical questions.'
+  },
+  {
+    step: '03',
+    title: 'Review Options & Estimates',
+    who: 'You & Your Family',
+    summary: 'Receive signed written second opinions from hospital specialists, alongside itemised, side-by-side cost comparisons detailing room categories, implants, and stay durations.',
+    deliverable: 'Objective comparative treatment dossier with 90-day price validity.'
+  },
+  {
+    step: '04',
+    title: 'Travel, Care & Return',
+    who: 'Coordinator & Hospital Clinical Team',
+    summary: 'Your coordinator assists with official hospital visa invitation letters, airport greeting in Hyderabad, hospital accompaniment, and scheduled teleconsultation follow-up once home.',
+    deliverable: 'Complete medical records transfer and ongoing remote physician liaison.'
+  }
+];
+---
+
+<section class="four-step-journey-section" aria-labelledby="four-step-heading">
+  <div class="container journey-container">
+    <div class="journey-header">
+      <span class="journey-badge">Your Coordination Pathway</span>
+      <h2 id="four-step-heading" class="journey-title">Four Steps to Clarity & Safe Care</h2>
+      <p class="journey-deck">
+        A clear, predictable roadmap from your initial question to recovery at home.
+      </p>
+    </div>
+
+    <div class="steps-grid">
+      {fourSteps.map((s, idx) => (
+        <div class="step-card">
+          <div class="step-card-header">
+            <span class="step-number">{s.step}</span>
+            <span class="step-tag">{s.who}</span>
+          </div>
+          <h3 class="step-title">{s.title}</h3>
+          <p class="step-summary">{s.summary}</p>
+          <div class="step-deliverable">
+            <strong>Key Outcome:</strong>
+            <span>{s.deliverable}</span>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <div class="journey-footer-action">
+      <a href="/en/how-it-works/" class="btn-secondary-link">
+        <span>Explore the full detailed 7-step process</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <polyline points="12 5 19 12 12 19"></polyline>
+        </svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .four-step-journey-section {
+    background-color: #FAFBFD;
+    padding: 72px 0 80px;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .journey-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 clamp(16px, 2vw, 32px);
+  }
+
+  .journey-header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+
+  .journey-badge {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-navy);
+    background-color: var(--color-ivory);
+    border: 1px solid rgba(168, 139, 90, 0.3);
+    padding: 4px 14px;
+    border-radius: var(--radius-pill);
+    margin-bottom: 12px;
+  }
+
+  .journey-title {
+    font-family: var(--font-family-heading);
+    font-size: clamp(2rem, 3.2vw, 2.75rem);
+    color: var(--color-navy);
+    line-height: 1.2;
+    margin-bottom: 12px;
+  }
+
+  .journey-deck {
+    font-size: 1.0625rem;
+    color: var(--color-slate);
+    max-width: 760px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  .steps-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 24px;
+    margin-bottom: 36px;
+  }
+
+  .step-card {
+    background-color: #FFFFFF;
+    border: 1px solid var(--color-border);
+    border-radius: 16px;
+    padding: 28px 24px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 16px rgba(15, 35, 64, 0.04);
+    transition: all 0.2s ease;
+  }
+
+  .step-card:hover {
+    border-color: var(--color-brass);
+    box-shadow: 0 8px 24px rgba(15, 35, 64, 0.08);
+    transform: translateY(-2px);
+  }
+
+  .step-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+
+  .step-number {
+    font-family: var(--font-family-heading);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-brass);
+  }
+
+  .step-tag {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-slate);
+    background-color: #F1F5F9;
+    padding: 3px 8px;
+    border-radius: 4px;
+  }
+
+  .step-title {
+    font-size: 1.1875rem;
+    font-weight: 700;
+    color: var(--color-navy);
+    margin-bottom: 10px;
+    line-height: 1.3;
+  }
+
+  .step-summary {
+    font-size: 0.9375rem;
+    color: #4A5B73;
+    line-height: 1.55;
+    margin-bottom: 16px;
+  }
+
+  .step-deliverable {
+    margin-top: auto;
+    padding-top: 12px;
+    border-top: 1px dashed var(--color-border);
+    font-size: 0.8125rem;
+    color: var(--color-navy);
+    line-height: 1.45;
+  }
+
+  .step-deliverable strong {
+    display: block;
+    color: var(--color-brass);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 2px;
+  }
+
+  .journey-footer-action {
+    text-align: center;
+  }
+
+  .btn-secondary-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--color-navy);
+    text-decoration: none;
+    transition: color 0.15s ease;
+  }
+
+  .btn-secondary-link:hover {
+    color: var(--color-brass);
+  }
+</style>
+

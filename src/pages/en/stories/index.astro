@@ -1,47 +1,104 @@
 ---
 /**
  * src/pages/en/stories/index.astro
- * Patient stories (Page 25 of Nuhavi Health Look and Feel PDF)
+ * Patient Stories & Coordination Journey — Nuhavi Health
+ *
+ * Implements:
+ * - Clear notice that patient stories will only be published with written informed consent.
+ * - Zero fictional patient stories, zero invented testimonials, zero stock photos.
+ * - Clear patient journey section detailing the 5-step coordination process.
+ * - Reusable layout prepared for future verified patient stories.
+ * - Signature Nuhavi navy, gold, and white design system.
  */
+
 import BaseLayout from '../../../layouts/BaseLayout.astro';
+import EthicalConsentCard from '../../../components/stories/EthicalConsentCard.astro';
+import PatientJourneyTimeline from '../../../components/stories/PatientJourneyTimeline.astro';
+import FutureStoriesSection from '../../../components/stories/FutureStoriesSection.astro';
+import { storiesData } from '../../../data/storiesData';
+
+const content = storiesData.en;
+const pageTitle = content.metaTitle;
+const pageDescription = content.metaDescription;
 ---
 
-<BaseLayout
-  title="Patient stories | Nuhavi Health"
-  description="Stories from real patients and families will appear here, told in their words and with their permission."
->
+<BaseLayout title={pageTitle} description={pageDescription} lang="en" dir="ltr">
   <div class="page-container">
     <div class="container main-content">
-      <!-- Gold 72x3 px rule above page title -->
+      <!-- Breadcrumb navigation -->
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <ol>
+          <li><a href="/en/">{content.breadcrumbs.home}</a></li>
+          <li aria-hidden="true"><span class="sep">/</span></li>
+          <li aria-current="page">{content.breadcrumbs.stories}</li>
+        </ol>
+      </nav>
+
+      <!-- Signature 72x3 px Gold Rule -->
       <div class="gold-rule" aria-hidden="true"></div>
 
+      <!-- Page Header -->
       <header class="page-header">
-        <h1 class="page-title">Patient stories</h1>
-        <p class="page-deck">
-          Stories from real patients and families will appear here, told in their words and with their permission.
-        </p>
+        <span class="eyebrow-pill">{content.eyebrow}</span>
+        <h1 class="page-title">{content.title}</h1>
+        <p class="page-deck">{content.deck}</p>
       </header>
 
-      <div class="stories-grid">
-        <!-- Left Box: Empty state by design -->
-        <div class="story-box empty-state">
-          <h2 class="box-title">No stories are published yet.</h2>
-          <p class="box-text">
-            We are a new company. Rather than show invented testimonials, we will wait for real ones.
-          </p>
-        </div>
+      <!-- Main Content Structure -->
+      <main class="stories-main-flow">
+        <!-- 1. Ethical Informed Consent Notice & Standards -->
+        <EthicalConsentCard
+          badge={content.consentNotice.badge}
+          title={content.consentNotice.title}
+          lead={content.consentNotice.lead}
+          rules={content.consentNotice.rules}
+          legalDisclaimer={content.consentNotice.legalDisclaimer}
+          lang="en"
+        />
 
-        <!-- Right Box: Rules for patient stories -->
-        <div class="story-box rules-box">
-          <h2 class="box-title">Our rules for patient stories</h2>
-          <ul class="rules-list">
-            <li>Every story is published only with the patient's written consent (or a parent's or guardian's for a child).</li>
-            <li>The patient approves the final words and photos, and can ask us to remove the story at any time.</li>
-            <li>Stories describe the coordination experience. They do not promise that anyone else will have the same result.</li>
-            <li>We do not name or promote individual doctors in stories.</li>
-            <li>Identifying details are removed unless the patient chooses to include them.</li>
-          </ul>
-        </div>
+        <!-- 2. Detailed 5-Step Patient Coordination Journey -->
+        <PatientJourneyTimeline
+          eyebrow={content.journeySection.eyebrow}
+          title={content.journeySection.title}
+          deck={content.journeySection.deck}
+          coordinationRole={content.journeySection.coordinationRole}
+          clinicalRole={content.journeySection.clinicalRole}
+          steps={content.journeySection.steps}
+          lang="en"
+        />
+
+        <!-- 3. Authentic Empty State & Reusable Layout for Future Verified Stories -->
+        <FutureStoriesSection
+          eyebrow={content.futureStoriesLayout.eyebrow}
+          title={content.futureStoriesLayout.title}
+          deck={content.futureStoriesLayout.deck}
+          templateBadge={content.futureStoriesLayout.templateBadge}
+          blueprintTitle={content.futureStoriesLayout.blueprintTitle}
+          blueprintDesc={content.futureStoriesLayout.blueprintDesc}
+          fields={content.futureStoriesLayout.fields}
+          stories={content.futureStoriesLayout.stories}
+          emptyState={content.emptyState}
+          lang="en"
+        />
+      </main>
+
+      <!-- Page Footer Nav & CTA -->
+      <div class="page-footer-nav">
+        <a href="/en/" class="back-link">
+          <svg class="back-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span>{content.ctaSection.backHomeLabel}</span>
+        </a>
+
+        <a href="/en/request-opinion/" class="btn-pill btn-navy">
+          <span>{content.ctaSection.btnLabel}</span>
+          <svg class="cta-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </a>
       </div>
     </div>
   </div>
@@ -49,103 +106,181 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
 
 <style>
   .page-container {
-    background-color: var(--color-paper);
-    color: var(--color-ink);
-    padding: var(--space-8) 0 var(--space-12);
+    background-color: var(--color-mist, #F4F7FB);
+    min-height: 80vh;
+    padding-top: var(--space-8, 2rem);
+    padding-bottom: var(--space-16, 4rem);
   }
 
+  .main-content {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 var(--space-4, 1rem);
+  }
+
+  /* Breadcrumb */
+  .breadcrumb {
+    margin-bottom: var(--space-6, 1.5rem);
+  }
+
+  .breadcrumb ol {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    gap: var(--space-2, 0.5rem);
+    font-size: 0.875rem;
+    color: var(--color-slate, #5B6A80);
+  }
+
+  .breadcrumb a {
+    color: var(--color-navy, #14294B);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.15s ease;
+  }
+
+  .breadcrumb a:hover {
+    color: var(--color-gold-text, #967119);
+    text-decoration: underline;
+  }
+
+  .breadcrumb .sep {
+    color: #CBD5E1;
+  }
+
+  .breadcrumb [aria-current="page"] {
+    color: var(--color-slate, #5B6A80);
+    font-weight: 600;
+  }
+
+  /* 72x3 px Gold Rule */
   .gold-rule {
     width: 72px;
     height: 3px;
-    background-color: var(--color-gold);
-    margin-bottom: var(--space-3);
+    background-color: var(--color-gold, #C49A3C);
+    margin-bottom: var(--space-4, 1rem);
+    border-radius: 2px;
   }
 
+  /* Page Header */
   .page-header {
-    margin-bottom: var(--space-8);
+    margin-bottom: var(--space-10, 2.5rem);
+  }
+
+  .eyebrow-pill {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-gold-text, #967119);
+    background-color: rgba(196, 154, 60, 0.1);
+    padding: 4px 10px;
+    border-radius: 4px;
+    margin-bottom: var(--space-3, 0.75rem);
   }
 
   .page-title {
-    font-size: clamp(2.25rem, 4vw, 3.25rem);
-    font-weight: 800;
-    color: var(--color-navy);
-    line-height: 1.15;
-    margin: 0 0 var(--space-2);
+    font-family: var(--font-serif, "Playfair Display", Georgia, serif);
+    font-size: clamp(2rem, 4vw, 2.75rem);
+    font-weight: 700;
+    line-height: 1.25;
+    color: var(--color-navy, #14294B);
+    margin: 0 0 var(--space-3, 0.75rem) 0;
   }
 
   .page-deck {
     font-size: 1.125rem;
-    font-weight: 300;
-    line-height: 1.5;
-    color: var(--color-slate);
-    max-width: 680px;
-    margin: 0;
-  }
-
-  .stories-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--space-6);
-  }
-
-  @media (min-width: 800px) {
-    .stories-grid {
-      grid-template-columns: 5fr 7fr;
-      gap: var(--space-8);
-    }
-  }
-
-  .story-box {
-    background-color: var(--color-mist);
-    border: 1px solid rgba(20, 41, 75, 0.12);
-    border-radius: 14px;
-    padding: var(--space-6);
-  }
-
-  @media (min-width: 768px) {
-    .story-box {
-      padding: var(--space-8);
-    }
-  }
-
-  .box-title {
-    font-size: 1.375rem;
-    font-weight: 700;
-    color: var(--color-navy);
-    margin: 0 0 var(--space-3);
-    line-height: 1.3;
-  }
-
-  .box-text {
-    font-size: 0.9375rem;
     line-height: 1.6;
-    color: var(--color-slate);
+    color: var(--color-slate, #5B6A80);
+    max-width: 760px;
     margin: 0;
   }
 
-  .rules-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+  .stories-main-flow {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: var(--space-6, 1.5rem);
   }
 
-  .rules-list li {
-    font-size: 0.875rem;
-    line-height: 1.5;
-    color: var(--color-ink);
-    padding-left: 20px;
-    position: relative;
+  /* Page Footer Nav */
+  .page-footer-nav {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4, 1rem);
+    align-items: center;
+    justify-content: space-between;
+    padding-top: var(--space-8, 2rem);
+    border-top: 1px solid rgba(20, 41, 75, 0.1);
+    margin-top: var(--space-8, 2rem);
   }
 
-  .rules-list li::before {
-    content: "✓";
-    position: absolute;
-    left: 0;
-    top: 0;
-    color: var(--color-navy);
-    font-weight: 700;
+  @media (min-width: 640px) {
+    .page-footer-nav {
+      flex-direction: row;
+    }
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--color-navy, #14294B);
+    text-decoration: none;
+    transition: color 0.15s ease, transform 0.15s ease;
+  }
+
+  .back-link:hover {
+    color: var(--color-gold-text, #967119);
+    transform: translateX(-2px);
+  }
+
+  .back-icon {
+    transition: transform 0.15s ease;
+  }
+
+  .back-link:hover .back-icon {
+    transform: translateX(-2px);
+  }
+
+  /* CTA Button Pill */
+  .btn-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 48px;
+    padding: 0 24px;
+    border-radius: 9999px;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.18s ease, transform 0.15s ease, box-shadow 0.18s ease;
+  }
+
+  .btn-navy {
+    background-color: var(--color-navy, #14294B);
+    color: #FFFFFF;
+    box-shadow: 0 2px 8px rgba(20, 41, 75, 0.15);
+  }
+
+  .btn-navy:hover {
+    background-color: var(--color-deep-navy, #0D1B33);
+    color: #FFFFFF;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(20, 41, 75, 0.22);
+  }
+
+  .cta-arrow {
+    transition: transform 0.15s ease;
+  }
+
+  .btn-navy:hover .cta-arrow {
+    transform: translateX(3px);
   }
 </style>

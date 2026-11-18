@@ -1,0 +1,891 @@
+---
+/**
+ * src/components/home/AfricaMedicalCamps.astro
+ * Upcoming Medical Camps in Africa — International Medical Outreach
+ * SOURCE OF TRUTH: Nuhavi Knowledge Centre website - Claude.pdf (Pages 3–6)
+ *
+ * Requirements:
+ * - Eyebrow: UPCOMING MEDICAL CAMPS IN AFRICA
+ * - Heading: Bringing Specialist Healthcare Closer to You
+ * - Deck: Connect with experienced specialists from India through Nuhavi's international medical outreach programmes.
+ * - Illustrated East Africa Map graphic highlighting Kampala, Nairobi, Dar es Salaam with legend.
+ * - Dynamic client-side filter controls (Country, City, Specialty, Clear).
+ * - 3 Planned Camp Cards (Nairobi Kenya, Kampala Uganda, Dar es Salaam Tanzania).
+ * - Detail grid: CAMP DATE (TBA), REGISTRATION DEADLINE (TBA), VISITING SPECIALIST (TBC), LOCAL PARTNER (TBC).
+ * - Actions: "Register Your Interest" & "Camp details".
+ * - Planned camps footnote.
+ * - 3 Real photo placeholders (dashed box, camera icon: "Photo from Nuhavi's own camps to be added. No stock images.").
+ * - Medical disclaimer.
+ */
+import type { SupportedLang } from '../../i18n/translations';
+
+interface Props {
+  lang?: SupportedLang;
+}
+
+const currentPath = Astro.url.pathname;
+const detectedLang: SupportedLang = currentPath.startsWith('/ar')
+  ? 'ar'
+  : currentPath.startsWith('/ru')
+  ? 'ru'
+  : currentPath.startsWith('/fr')
+  ? 'fr'
+  : 'en';
+
+const lang: SupportedLang = Astro.props.lang || detectedLang;
+const isArabic = lang === 'ar';
+const isRussian = lang === 'ru';
+const isFrench = lang === 'fr';
+
+const prefix = `/${lang}`;
+const requestOpinionHref = `${prefix}/request-opinion/`;
+
+const t = {
+  eyebrow: isArabic ? 'القوافل والمخيمات الطبية القادمة في أفريقيا' : isRussian ? 'МЕДИЦИНСКИЕ МИССИИ В АФРИКЕ' : 'UPCOMING MEDICAL CAMPS IN AFRICA',
+  heading: isArabic
+    ? 'تقريب الرعاية التخصصية إليك'
+    : isRussian
+    ? 'Квалифицированная помощь ближе к вам'
+    : 'Bringing Specialist Healthcare Closer to You',
+  deck: isArabic
+    ? 'تواصل مع كبار الاستشاريين من الهند من خلال برامج القوافل الطبية الإنسانية لنوهـافي.'
+    : isRussian
+    ? 'Консультации ведущих индийских врачей в рамках международных выездных программ Nuhavi.'
+    : "Connect with experienced specialists from India through Nuhavi's international medical outreach programmes.",
+  campsPlanned: isArabic ? 'مخيمات مخطط لها' : isRussian ? 'Запланированные миссии' : 'Camps planned',
+  campCity: isArabic ? 'مدينة المخيم' : isRussian ? 'Город проведения' : 'Camp city',
+  allCountries: isArabic ? 'جميع الدول' : isRussian ? 'Все страны' : 'All countries',
+  allCities: isArabic ? 'جميع المدن' : isRussian ? 'Все города' : 'All cities',
+  allSpecialties: isArabic ? 'جميع التخصصات' : isRussian ? 'Все специальности' : 'All specialties',
+  clearBtn: isArabic ? 'إعادة ضبط' : isRussian ? 'Сбросить' : 'Clear',
+  plannedBadge: isArabic ? 'مخطط له · المواعيد ستعلن قريباً' : isRussian ? 'Запланировано · даты уточняются' : 'Planned · dates to be announced',
+  campDateLabel: isArabic ? 'موعد المخيم' : isRussian ? 'ДАТА ПРОВЕДЕНИЯ' : 'CAMP DATE',
+  deadlineLabel: isArabic ? 'آخر موعد للتسجيل' : isRussian ? 'СРОК РЕГИСТРАЦИИ' : 'REGISTRATION DEADLINE',
+  specialistLabel: isArabic ? 'الطبيب الزائر' : isRussian ? 'ВЕДУЩИЙ СПЕЦИАЛИСТ' : 'VISITING SPECIALIST',
+  partnerLabel: isArabic ? 'الشريك المحلي' : isRussian ? 'МЕСТНЫЙ ПАРТНЕР' : 'LOCAL PARTNER',
+  tba: isArabic ? 'سيعلن قريباً' : isRussian ? 'Уточняется' : 'To be announced',
+  tbc: isArabic ? 'قيد التأكيد' : isRussian ? 'На подтверждении' : 'To be confirmed',
+  registerInterest: isArabic ? 'سجّل اهتمامك' : isRussian ? 'Зарегистрироваться' : 'Register Your Interest',
+  campDetails: isArabic ? 'تفاصيل المخيم' : isRussian ? 'Подробнее' : 'Camp details',
+  footnote: isArabic
+    ? 'جميع المخيمات المعروضة قيد التخطيط. سيتم نشر المواعيد وأسماء الأطباء الزائرين والشركاء المحليين فور اعتمادها رسمياً. التخصصات استرشادية وقابلة للتحديث.'
+    : isRussian
+    ? 'Все указанные миссии запланированы. Точные даты, имена специалистов и клиники-партнеры будут опубликованы после официального утверждения. Специальности являются ориентировочными.'
+    : 'All camps shown are planned. Dates, visiting specialists and local partners will be published here once confirmed. Specialties are indicative and may change.',
+  photoNote: isArabic ? 'صورة من مخيمات نوهـافي الخاصة ستضاف لاحقاً. لا نستخدم صوراً جاهزة.' : isRussian ? 'Будет добавлено фото из миссий Nuhavi. Мы не используем стоковые фото.' : "Photo from Nuhavi's own camps to be added. No stock images.",
+  disclaimer: isArabic
+    ? 'نوهـافي هيلث تربط المرضى بالأطباء الاستشاريين والمستشفيات المعتمدة. المعلومات الواردة في هذا الموقع لا تعد بديلاً عن المشورة الطبية المباشرة. في حالات الطوارئ يرجى الاتصال بخدمات الإسعاف المحلية.'
+    : isRussian
+    ? 'Nuhavi Health организует связь пациентов со специалистами и клиниками. Информация на сайте не заменяет медицинскую консультацию. В экстренных случаях обращайтесь в службу скорой помощи.'
+    : 'Nuhavi Health connects patients with specialists and accredited hospitals. Information on this website is not a substitute for medical advice. In an emergency, contact your local emergency services.',
+};
+
+const camps = [
+  {
+    id: 'nairobi',
+    city: 'Nairobi',
+    country: 'Kenya',
+    countryCode: 'kenya',
+    status: t.plannedBadge,
+    desc: isArabic
+      ? 'استشارات تخصصية ومراجعة دقيقة لتقارير الأورام والجراحة العامة مع توجيه واضح لخيارات العلاج.'
+      : isRussian
+      ? 'Консультации специалистов и разбор документации по онкологии и общей хирургии с определением тактики лечения.'
+      : 'Specialist consultations and report reviews for cancer and general surgical conditions with clear guidance on treatment options.',
+    specialties: ['Oncology', 'General Surgery'],
+    campDate: t.tba,
+    deadline: t.tba,
+    specialist: t.tbc,
+    partner: t.tbc,
+  },
+  {
+    id: 'kampala',
+    city: 'Kampala',
+    country: 'Uganda',
+    countryCode: 'uganda',
+    status: t.plannedBadge,
+    desc: isArabic
+      ? 'استشارات متقدمة لآلام المفاصل، استبدال المفاصل، مشكلات الظهر والرقبة وأمراض المخ والأعصاب.'
+      : isRussian
+      ? 'Консультации при заболеваниях суставов, замене суставов, проблемах позвоночника и неврологических нарушениях.'
+      : 'Consultations for joint pain, joint replacement, back and neck problems and neurological conditions.',
+    specialties: ['Orthopedics', 'Spine Surgery', 'Neurology'],
+    campDate: t.tba,
+    deadline: t.tba,
+    specialist: t.tbc,
+    partner: t.tbc,
+  },
+  {
+    id: 'daressalaam',
+    city: 'Dar es Salaam',
+    country: 'Tanzania',
+    countryCode: 'tanzania',
+    status: t.plannedBadge,
+    desc: isArabic
+      ? 'استشارات لأمراض القلب، علاج العقم وتأخر الإنجاب، وأمراض الكلى المتقدمة بما في ذلك تقييم زراعة الكلى.'
+      : isRussian
+      ? 'Консультации по сердечно-сосудистым патологиям, лечению бесплодия и заболеваниям почек, включая трансплантацию.'
+      : 'Consultations for heart conditions, infertility and advanced kidney disease, including transplant evaluation.',
+    specialties: ['Cardiology', 'IVF', 'Kidney Transplant'],
+    campDate: t.tba,
+    deadline: t.tba,
+    specialist: t.tbc,
+    partner: t.tbc,
+  },
+];
+---
+
+<section class="africa-camps-section" id="medical-camps" aria-labelledby="africa-camps-heading" dir={isArabic ? 'rtl' : 'ltr'}>
+  <div class="container camps-container">
+    <div class="camps-header">
+      <span class="camps-eyebrow">{t.eyebrow}</span>
+      <h2 id="africa-camps-heading" class="camps-title">{t.heading}</h2>
+      <p class="camps-deck">{t.deck}</p>
+    </div>
+
+    <!-- Africa & East Africa Map Display (PDF Page 3 & 4) -->
+    <div class="africa-map-wrapper">
+      <div class="map-card-container">
+        <!-- SVG Map Graphic of Africa with East Africa Highlighted -->
+        <div class="map-graphic-box">
+          <svg viewBox="0 0 680 440" class="africa-map-svg" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Map of Africa showing planned camp cities in Nairobi, Kampala, and Dar es Salaam">
+            <!-- Background continent outline in Navy (#0F2340) -->
+            <path
+              d="M 280 40 Q 380 40 440 80 Q 520 130 540 180 Q 560 210 510 260 L 480 340 Q 420 420 360 430 Q 300 370 290 280 Q 220 280 180 230 Q 120 210 100 160 Q 80 110 140 70 Q 200 40 280 40 Z"
+              fill="#0F2340"
+              stroke="#1C3D6E"
+              stroke-width="1.5"
+            />
+
+            <!-- Madagascar -->
+            <path
+              d="M 540 280 Q 570 300 550 370 Q 530 360 525 320 Z"
+              fill="#0F2340"
+              stroke="#1C3D6E"
+              stroke-width="1.5"
+            />
+
+            <!-- East Africa Highlighted Region (Uganda, Kenya, Tanzania) in Tan/Gold (#C4A470) -->
+            <path
+              d="M 380 180 Q 470 170 480 230 Q 490 290 440 330 Q 390 320 370 270 Q 360 220 380 180 Z"
+              fill="#C4A470"
+              stroke="#A88B5A"
+              stroke-width="2"
+            />
+
+            <!-- Country Internal Borders in East Africa -->
+            <!-- Kenya / Uganda border line -->
+            <path d="M 405 185 L 400 235" stroke="#0F2340" stroke-width="1.5" stroke-dasharray="3 3" />
+            <!-- Kenya / Tanzania border line -->
+            <path d="M 400 235 L 470 255" stroke="#0F2340" stroke-width="1.5" stroke-dasharray="3 3" />
+
+            <!-- Camp City Pins -->
+            <!-- 1. Kampala (Uganda) -->
+            <g class="map-city-pin" transform="translate(378, 222)">
+              <circle cx="0" cy="0" r="10" fill="#FFFFFF" stroke="#0F2340" stroke-width="3" />
+              <circle cx="0" cy="0" r="4" fill="#0F2340" />
+              <text x="-12" y="-14" fill="#FFFFFF" font-family="'Inter', sans-serif" font-size="13" font-weight="700" text-anchor="end">Kampala</text>
+            </g>
+
+            <!-- 2. Nairobi (Kenya) -->
+            <g class="map-city-pin" transform="translate(438, 238)">
+              <circle cx="0" cy="0" r="10" fill="#FFFFFF" stroke="#0F2340" stroke-width="3" />
+              <circle cx="0" cy="0" r="4" fill="#0F2340" />
+              <text x="14" y="4" fill="#FFFFFF" font-family="'Inter', sans-serif" font-size="14" font-weight="700">Nairobi</text>
+            </g>
+
+            <!-- 3. Dar es Salaam (Tanzania) -->
+            <g class="map-city-pin" transform="translate(465, 305)">
+              <circle cx="0" cy="0" r="10" fill="#FFFFFF" stroke="#0F2340" stroke-width="3" />
+              <circle cx="0" cy="0" r="4" fill="#0F2340" />
+              <text x="14" y="4" fill="#FFFFFF" font-family="'Inter', sans-serif" font-size="13" font-weight="700">Dar es Salaam</text>
+            </g>
+
+            <!-- Region Label -->
+            <text x="32" y="36" fill="#A88B5A" font-family="'Inter', sans-serif" font-size="12" font-weight="700" letter-spacing="1.5">EAST AFRICA</text>
+          </svg>
+        </div>
+
+        <!-- Map Legend (PDF Page 4) -->
+        <div class="map-legend-row">
+          <div class="legend-item">
+            <span class="legend-swatch swatch-planned" aria-hidden="true"></span>
+            <span class="legend-text">{t.campsPlanned}</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-pin-dot" aria-hidden="true"></span>
+            <span class="legend-text">{t.campCity}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filter Bar (PDF Page 4) -->
+    <div class="camps-filter-bar" role="search" aria-label="Filter medical camps">
+      <div class="filter-group">
+        <label for="filter-country" class="filter-label">Country</label>
+        <div class="filter-select-wrap">
+          <select id="filter-country" class="filter-select" aria-label="Filter by country">
+            <option value="all">{t.allCountries}</option>
+            <option value="kenya">Kenya</option>
+            <option value="uganda">Uganda</option>
+            <option value="tanzania">Tanzania</option>
+          </select>
+          <svg class="filter-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <label for="filter-city" class="filter-label">City</label>
+        <div class="filter-select-wrap">
+          <select id="filter-city" class="filter-select" aria-label="Filter by city">
+            <option value="all">{t.allCities}</option>
+            <option value="nairobi">Nairobi</option>
+            <option value="kampala">Kampala</option>
+            <option value="daressalaam">Dar es Salaam</option>
+          </select>
+          <svg class="filter-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <label for="filter-specialty" class="filter-label">Specialty</label>
+        <div class="filter-select-wrap">
+          <select id="filter-specialty" class="filter-select" aria-label="Filter by specialty">
+            <option value="all">{t.allSpecialties}</option>
+            <option value="oncology">Oncology</option>
+            <option value="general-surgery">General Surgery</option>
+            <option value="orthopedics">Orthopedics</option>
+            <option value="spine">Spine Surgery</option>
+            <option value="neurology">Neurology</option>
+            <option value="cardiology">Cardiology</option>
+            <option value="ivf">IVF</option>
+            <option value="kidney">Kidney Transplant</option>
+          </select>
+          <svg class="filter-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </div>
+      </div>
+
+      <div class="filter-btn-group">
+        <button type="button" class="btn-clear-filters" id="btn-clear-camps">
+          {t.clearBtn}
+        </button>
+      </div>
+    </div>
+
+    <!-- 3 Camp Cards (PDF Page 4 & 5) -->
+    <div class="camps-cards-stack" id="camps-list">
+      {camps.map((camp) => (
+        <article class="camp-card-item" data-country={camp.countryCode} data-city={camp.id} data-specialties={camp.specialties.join(',').toLowerCase()}>
+          <div class="camp-card-top-row">
+            <div>
+              <h3 class="camp-city-heading">{camp.city}</h3>
+              <span class="camp-country-sub">{camp.country}</span>
+            </div>
+            <span class="camp-status-badge">{camp.status}</span>
+          </div>
+
+          <p class="camp-card-description">{camp.desc}</p>
+
+          <div class="camp-indicative-wrap">
+            <span class="indicative-title">SPECIALTIES (INDICATIVE)</span>
+            <div class="indicative-pills">
+              {camp.specialties.map((spec) => (
+                <span class="spec-pill">{spec}</span>
+              ))}
+            </div>
+          </div>
+
+          <!-- 4-Item Details Grid -->
+          <div class="camp-meta-grid">
+            <div class="meta-grid-cell">
+              <span class="meta-cell-label">{t.campDateLabel}</span>
+              <span class="meta-cell-val">{camp.campDate}</span>
+            </div>
+            <div class="meta-grid-cell">
+              <span class="meta-cell-label">{t.deadlineLabel}</span>
+              <span class="meta-cell-val">{camp.deadline}</span>
+            </div>
+            <div class="meta-grid-cell">
+              <span class="meta-cell-label">{t.specialistLabel}</span>
+              <span class="meta-cell-val">{camp.specialist}</span>
+            </div>
+            <div class="meta-grid-cell">
+              <span class="meta-cell-label">{t.partnerLabel}</span>
+              <span class="meta-cell-val">{camp.partner}</span>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="camp-actions-row">
+            <a href={`${requestOpinionHref}?camp=${camp.id}`} class="btn-camp-primary">
+              {t.registerInterest}
+            </a>
+            <button type="button" class="btn-camp-outline" data-camp-id={camp.id}>
+              {t.campDetails}
+            </button>
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <!-- Footnote (PDF Page 6) -->
+    <p class="camps-footnote">
+      {t.footnote}
+    </p>
+
+    <!-- 3 Real Camp Photo Placeholders (PDF Page 6) -->
+    <div class="camps-photo-placeholders">
+      <div class="photo-placeholder-box">
+        <div class="camera-icon-wrap" aria-hidden="true">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#A88B5A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+            <circle cx="12" cy="13" r="4"></circle>
+          </svg>
+        </div>
+        <h4 class="placeholder-title">Nuhavi specialist with local doctors</h4>
+        <p class="placeholder-sub">{t.photoNote}</p>
+      </div>
+
+      <div class="photo-placeholder-box">
+        <div class="camera-icon-wrap" aria-hidden="true">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#A88B5A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+            <circle cx="12" cy="13" r="4"></circle>
+          </svg>
+        </div>
+        <h4 class="placeholder-title">Patient consultation at a camp</h4>
+        <p class="placeholder-sub">{t.photoNote}</p>
+      </div>
+
+      <div class="photo-placeholder-box">
+        <div class="camera-icon-wrap" aria-hidden="true">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#A88B5A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+            <circle cx="12" cy="13" r="4"></circle>
+          </svg>
+        </div>
+        <h4 class="placeholder-title">Camp registration desk</h4>
+        <p class="placeholder-sub">{t.photoNote}</p>
+      </div>
+    </div>
+
+    <!-- Medical Disclaimer (PDF Page 6) -->
+    <div class="camps-disclaimer-box" role="note">
+      <p>{t.disclaimer}</p>
+    </div>
+  </div>
+</section>
+
+<script>
+  function setupCampsFilter() {
+    const countrySelect = document.getElementById('filter-country') as HTMLSelectElement | null;
+    const citySelect = document.getElementById('filter-city') as HTMLSelectElement | null;
+    const specialtySelect = document.getElementById('filter-specialty') as HTMLSelectElement | null;
+    const clearBtn = document.getElementById('btn-clear-camps') as HTMLButtonElement | null;
+    const cards = document.querySelectorAll<HTMLElement>('.camp-card-item');
+
+    if (!countrySelect || !citySelect || !specialtySelect || !clearBtn || cards.length === 0) return;
+
+    function applyFilter() {
+      const selectedCountry = countrySelect?.value || 'all';
+      const selectedCity = citySelect?.value || 'all';
+      const selectedSpecialty = specialtySelect?.value || 'all';
+
+      cards.forEach((card) => {
+        const cCountry = card.getAttribute('data-country') || '';
+        const cCity = card.getAttribute('data-city') || '';
+        const cSpecs = card.getAttribute('data-specialties') || '';
+
+        let match = true;
+        if (selectedCountry !== 'all' && cCountry !== selectedCountry) match = false;
+        if (selectedCity !== 'all' && cCity !== selectedCity) match = false;
+        if (selectedSpecialty !== 'all' && !cSpecs.includes(selectedSpecialty)) match = false;
+
+        card.style.display = match ? 'block' : 'none';
+      });
+    }
+
+    countrySelect.addEventListener('change', applyFilter);
+    citySelect.addEventListener('change', applyFilter);
+    specialtySelect.addEventListener('change', applyFilter);
+
+    clearBtn.addEventListener('click', () => {
+      countrySelect.value = 'all';
+      citySelect.value = 'all';
+      specialtySelect.value = 'all';
+      applyFilter();
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', setupCampsFilter);
+  setupCampsFilter();
+</script>
+
+<style>
+  .africa-camps-section {
+    background-color: #FFFFFF;
+    padding: clamp(60px, 8vw, 96px) 0;
+    border-bottom: 1px solid #DCE3EC;
+  }
+
+  .camps-container {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 0 clamp(16px, 3vw, 32px);
+    box-sizing: border-box;
+  }
+
+  .camps-header {
+    text-align: center;
+    max-width: 760px;
+    margin: 0 auto clamp(36px, 5vw, 48px);
+  }
+
+  .camps-eyebrow {
+    display: inline-block;
+    font-family: var(--font-family-base, 'Inter', sans-serif);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #A88B5A;
+    margin-bottom: 8px;
+  }
+
+  .camps-title {
+    font-family: var(--font-family-heading, 'Cormorant Garamond', Georgia, serif);
+    font-size: clamp(2rem, 3.4vw, 2.85rem);
+    font-weight: 700;
+    color: #0F2340;
+    line-height: 1.15;
+    margin: 0 0 12px 0;
+  }
+
+  .camps-deck {
+    font-family: var(--font-family-base, 'Inter', sans-serif);
+    font-size: 1.0625rem;
+    color: #5A6E85;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  /* Africa Map Card */
+  .africa-map-wrapper {
+    margin-bottom: 32px;
+  }
+
+  .map-card-container {
+    background: linear-gradient(180deg, #0D1E36 0%, #0F2340 100%);
+    border: 1px solid #1C3D6E;
+    border-radius: 16px;
+    padding: clamp(20px, 3vw, 32px);
+    box-shadow: 0 10px 30px rgba(15, 35, 64, 0.12);
+  }
+
+  .map-graphic-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .africa-map-svg {
+    width: 100%;
+    max-height: 380px;
+    height: auto;
+  }
+
+  .map-legend-row {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(220, 227, 236, 0.12);
+    margin-top: 12px;
+    justify-content: flex-start;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .legend-swatch {
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+  }
+
+  .swatch-planned {
+    background-color: #C4A470;
+  }
+
+  .legend-pin-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: #FFFFFF;
+    border: 2.5px solid #0F2340;
+  }
+
+  .legend-text {
+    font-family: var(--font-family-base, 'Inter', sans-serif);
+    font-size: 0.8125rem;
+    color: #DCE3EC;
+  }
+
+  /* Filter Bar */
+  .camps-filter-bar {
+    display: flex;
+    align-items: flex-end;
+    gap: 16px;
+    background-color: #FAF8F5;
+    border: 1px solid #DCE3EC;
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+  }
+
+  .filter-group {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 160px;
+  }
+
+  .filter-label {
+    font-family: var(--font-family-base, 'Inter', sans-serif);
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #5A6E85;
+    margin-bottom: 6px;
+  }
+
+  .filter-select-wrap {
+    position: relative;
+    width: 100%;
+  }
+
+  .filter-select {
+    width: 100%;
+    height: 42px;
+    padding: 0 12px;
+    background-color: #FFFFFF;
+    border: 1px solid #CBD5E1;
+    border-radius: 6px;
+    font-family: var(--font-family-base, 'Inter', sans-serif);
+    font-size: 0.875rem;
+    color: #0F2340;
+    appearance: none;
+    cursor: pointer;
+  }
+
+  .filter-chevron {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: #5A6E85;
+  }
+
+  :global([dir="rtl"]) .filter-chevron {
+    right: auto;
+    left: 12px;
+  }
+
+  .filter-btn-group {
+    flex-shrink: 0;
+  }
+
+  .btn-clear-filters {
+    height: 42px;
+    padding: 0 18px;
+    background: transparent;
+    border: 1px solid #CBD5E1;
+    border-radius: 6px;
+    color: #0F2340;
+    font-family: var(--font-family-base, 'Inter', sans-serif);
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+  }
+
+  .btn-clear-filters:hover {
+    background-color: #E2E8F0;
+  }
+
+  /* Camp Cards */
+  .camps-cards-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-bottom: 32px;
+  }
+
+  .camp-card-item {
+    background-color: #FFFFFF;
+    border: 1px solid #DCE3EC;
+    border-radius: 12px;
+    padding: 24px 28px;
+    box-shadow: 0 4px 16px rgba(15, 35, 64, 0.04);
+  }
+
+  .camp-card-top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+
+  .camp-city-heading {
+    font-family: var(--font-family-heading, 'Cormorant Garamond', Georgia, serif);
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: #0F2340;
+    margin: 0;
+    line-height: 1.2;
+  }
+
+  .camp-country-sub {
+    font-family: var(--font-family-base, 'Inter', sans-serif);
+    font-size: 0.875rem;
+    color: #5A6E85;
+  }
+
+  .camp-status-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    background-color: #FAF4E8;
+    color: #A88B5A;
+    border: 1px solid #E6D9BE;
+    border-radius: 999px;
+    font-family: var(--font-family-base, 'Inter', sans-serif);
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+
+  .camp-card-description {
+    font-family: var(--font-family-base, 'Inter', sans-serif);
+    font-size: 0.9375rem;
+    color: #0F2340;
+    line-height: 1.55;
+    margin: 0 0 16px 0;
+  }
+
+  .camp-indicative-wrap {
+    margin-bottom: 20px;
+  }
+
+  .indicative-title {
+    display: block;
+    font-family: var(--font-family-base, 'Inter', sans-serif);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: #5A6E85;
+    margin-bottom: 8px;
+  }
+
+  .indicative-pills {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .spec-pill {
+    padding: 4px 12px;
+    background-color: #F1F5F9;
+    border: 1px solid #E2E8F0;
+    border-radius: 999px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: #0F2340;
+  }
+
+  /* 4-Item Details Grid */
+  .camp-meta-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    padding: 16px 0;
+    border-top: 1px solid #DCE3EC;
+    border-bottom: 1px solid #DCE3EC;
+    margin-bottom: 20px;
+  }
+
+  .meta-grid-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .meta-cell-label {
+    font-family: var(--font-family-base, 'Inter', sans-serif);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: #5A6E85;
+  }
+
+  .meta-cell-val {
+    font-family: var(--font-family-base, 'Inter', sans-serif);
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #0F2340;
+  }
+
+  /* Actions Row */
+  .camp-actions-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .btn-camp-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 22px;
+    background-color: #0F2340;
+    color: #FFFFFF;
+    border-radius: 6px;
+    font-family: var(--font-family-base, 'Inter', sans-serif);
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.18s ease;
+  }
+
+  .btn-camp-primary:hover {
+    background-color: #1a365d;
+  }
+
+  .btn-camp-outline {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 9px 20px;
+    background: transparent;
+    border: 1px solid #CBD5E1;
+    border-radius: 6px;
+    color: #0F2340;
+    font-family: var(--font-family-base, 'Inter', sans-serif);
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+  }
+
+  .btn-camp-outline:hover {
+    background-color: #F8FAFC;
+    border-color: #0F2340;
+  }
+
+  /* Footnote */
+  .camps-footnote {
+    font-family: var(--font-family-base, 'Inter', sans-serif);
+    font-size: 0.8125rem;
+    color: #5A6E85;
+    line-height: 1.55;
+    margin: 0 0 32px 0;
+  }
+
+  /* 3 Real Camp Photo Placeholders */
+  .camps-photo-placeholders {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  .photo-placeholder-box {
+    border: 1.5px dashed #A88B5A;
+    border-radius: 12px;
+    background-color: #FAF8F5;
+    padding: 24px 20px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 160px;
+  }
+
+  .camera-icon-wrap {
+    margin-bottom: 12px;
+  }
+
+  .placeholder-title {
+    font-family: var(--font-family-base, 'Inter', sans-serif);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: #0F2340;
+    margin: 0 0 6px 0;
+    line-height: 1.3;
+  }
+
+  .placeholder-sub {
+    font-family: var(--font-family-base, 'Inter', sans-serif);
+    font-size: 0.8125rem;
+    color: #5A6E85;
+    line-height: 1.45;
+    margin: 0;
+  }
+
+  /* Disclaimer Box */
+  .camps-disclaimer-box {
+    padding: 16px 20px;
+    background-color: #F1F5F9;
+    border-radius: 8px;
+    text-align: center;
+  }
+
+  .camps-disclaimer-box p {
+    font-family: var(--font-family-base, 'Inter', sans-serif);
+    font-size: 0.8125rem;
+    color: #475569;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  @media (max-width: 860px) {
+    .camp-meta-grid {
+      grid-template-columns: repeat(2, 1fr);
+      row-gap: 12px;
+    }
+
+    .camps-photo-placeholders {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .camps-filter-bar {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .btn-clear-filters {
+      width: 100%;
+    }
+
+    .camp-actions-row {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .btn-camp-primary,
+    .btn-camp-outline {
+      width: 100%;
+    }
+  }
+</style>
+

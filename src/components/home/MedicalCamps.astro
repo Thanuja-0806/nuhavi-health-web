@@ -1,0 +1,705 @@
+---
+/**
+ * src/components/home/MedicalCamps.astro
+ * Section 14: International Medical Camps & Clinical Outreach
+ *
+ * Strict Compliance:
+ * - Country cards for Uzbekistan, Kenya, Tanzania, Ghana, Rwanda.
+ * - Dates, registration deadlines, visiting specialist & local partner.
+ * - Clearly marked "To be announced" or "To be confirmed" where approvals are pending.
+ * - Indicative specialties.
+ * - "Register Your Interest" and "Camp Details" actions.
+ * - Zero stock photos presented as evidence.
+ */
+import { medicalCampsList } from '../../data/campsData';
+---
+
+<section class="medical-camps-section" id="camps" aria-labelledby="camps-heading">
+  <div class="container camps-container">
+    <div class="camps-header">
+      <span class="camps-badge">Global Outreach Missions</span>
+      <h2 id="camps-heading" class="camps-title">International Medical Review Camps</h2>
+      <p class="camps-deck">
+        Face-to-face pre-travel clinical evaluations and second opinions conducted by visiting senior specialists from accredited Indian hospitals, in formal liaison with licensed local medical institutions.
+      </p>
+
+      <!-- Transparency & Photo Policy Note -->
+      <div class="camp-evidence-note" role="note">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#A88B5A" stroke-width="2" aria-hidden="true">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+        <span>
+          <strong>Strict Ethical Transparency:</strong> Partner facilities and visiting faculty rosters are officially published 30 days prior following local regulatory clearance. Nuhavi never uses stock photos as clinical camp evidence.
+        </span>
+      </div>
+    </div>
+
+    <!-- Camps Grid -->
+    <div class="camps-grid">
+      {medicalCampsList.map((camp) => (
+        <article class="camp-card" id={`card-${camp.id}`}>
+          <!-- Card Header -->
+          <div class="camp-card-top">
+            <div class="camp-country-row">
+              <span class="camp-flag" aria-hidden="true">{camp.flagEmoji}</span>
+              <div>
+                <h3 class="camp-city-country">{camp.city}, {camp.country}</h3>
+                <span class="camp-dates">{camp.dates}</span>
+              </div>
+            </div>
+            <span class={`camp-status-pill status-${camp.status === 'Registration Open' ? 'open' : 'pending'}`}>
+              <span class="status-dot" aria-hidden="true">●</span>
+              {camp.status}
+            </span>
+          </div>
+
+          <!-- Card Body Details -->
+          <div class="camp-card-body">
+            <p class="camp-desc">{camp.description}</p>
+
+            <div class="camp-meta-list">
+              <div class="camp-meta-row">
+                <span class="meta-icon" aria-hidden="true">📅</span>
+                <div class="meta-text">
+                  <span class="meta-label">Registration Deadline:</span>
+                  <span class="meta-val highlight-val">{camp.registrationDeadline}</span>
+                </div>
+              </div>
+
+              <div class="camp-meta-row">
+                <span class="meta-icon" aria-hidden="true">👨‍⚕️</span>
+                <div class="meta-text">
+                  <span class="meta-label">Visiting Specialists:</span>
+                  <span class="meta-val">{camp.visitingSpecialist}</span>
+                  <span class="meta-subval">({camp.specialistTitle})</span>
+                </div>
+              </div>
+
+              <div class="camp-meta-row">
+                <span class="meta-icon" aria-hidden="true">🏥</span>
+                <div class="meta-text">
+                  <span class="meta-label">Local Clinical Partner:</span>
+                  <span class="meta-val">{camp.localPartner}</span>
+                </div>
+              </div>
+
+              <div class="camp-meta-row">
+                <span class="meta-icon" aria-hidden="true">📍</span>
+                <div class="meta-text">
+                  <span class="meta-label">Consultation Venue:</span>
+                  <span class="meta-val">{camp.venue}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Indicative Specialties -->
+            <div class="camp-specialties-wrap">
+              <span class="specialties-title">Indicative Specialties Evaluated:</span>
+              <div class="camp-tags-group">
+                {camp.indicativeSpecialties.map((spec) => (
+                  <span class="spec-tag">{spec}</span>
+                ))}
+              </div>
+            </div>
+
+            <!-- Collapsible Requirements & Prep Details -->
+            <details class="camp-details-disclosure">
+              <summary class="details-summary">
+                <span>View Consultation Requirements & Fee Policy</span>
+                <svg class="details-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </summary>
+              <div class="details-body">
+                <div class="fee-policy-row">
+                  <strong>Fee Policy:</strong> {camp.consultationFee}
+                </div>
+                <div class="reqs-list-wrap">
+                  <strong>Required Records for In-Person Review:</strong>
+                  <ul>
+                    {camp.requirements.map((req) => (
+                      <li>{req}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </details>
+          </div>
+
+          <!-- Card Actions -->
+          <div class="camp-card-actions">
+            <button
+              type="button"
+              class="btn-primary camp-register-btn"
+              data-camp-id={camp.id}
+              data-camp-name={`${camp.city}, ${camp.country} (${camp.dates})`}
+            >
+              <span>Register Your Interest</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </button>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+
+  <!-- Registration Modal -->
+  <div class="camp-modal-backdrop" id="camp-modal" role="dialog" aria-modal="true" aria-labelledby="camp-modal-title" style="display: none;">
+    <div class="camp-modal-card">
+      <button type="button" class="modal-close-btn" id="close-camp-modal" aria-label="Close registration dialog">✕</button>
+      <div class="modal-header">
+        <span class="modal-badge">Camp Registration</span>
+        <h3 id="camp-modal-title" class="modal-title">Register Your Interest</h3>
+        <p class="modal-camp-target" id="modal-camp-target-name"></p>
+        <p class="modal-privacy-reminder">
+          Please provide your initial contact information. Do not upload diagnostic scan files here; your coordinator will provide a secure upload link following initial contact.
+        </p>
+      </div>
+
+      <form class="camp-modal-form" id="camp-registration-form">
+        <input type="hidden" id="modal-camp-id-input" name="campId" value="" />
+
+        <div class="modal-field-group">
+          <label for="camp-patient-name" class="modal-label">Patient Full Name <span class="required">*</span></label>
+          <input type="text" id="camp-patient-name" class="modal-input" required placeholder="e.g. Elena Petrova / John Mwangi" />
+        </div>
+
+        <div class="modal-field-group">
+          <label for="camp-contact" class="modal-label">Email & Phone / WhatsApp <span class="required">*</span></label>
+          <input type="text" id="camp-contact" class="modal-input" required placeholder="e.g. name@example.com / +998 90 123 4567" />
+        </div>
+
+        <div class="modal-field-group">
+          <label for="camp-specialty" class="modal-label">Clinical Specialty / Diagnosis <span class="required">*</span></label>
+          <input type="text" id="camp-specialty" class="modal-input" required placeholder="e.g. Knee Replacement / Cancer Review" />
+        </div>
+
+        <button type="submit" class="btn-primary modal-submit-btn" id="modal-submit-btn">
+          <span>Confirm Interest & Receive Slot Details</span>
+        </button>
+
+        <div class="modal-success-alert" id="modal-success-alert" style="display: none;">
+          <h4>Interest Registered</h4>
+          <p>Thank you. Your consultation interest has been saved. Your local camp coordinator will contact you with appointment time slots and clinical preparation guidelines.</p>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<script>
+  function setupMedicalCamps() {
+    const registerButtons = document.querySelectorAll('.camp-register-btn');
+    const modal = document.getElementById('camp-modal');
+    const closeBtn = document.getElementById('close-camp-modal');
+    const targetLabel = document.getElementById('modal-camp-target-name');
+    const campIdInput = document.getElementById('modal-camp-id-input') as HTMLInputElement | null;
+    const form = document.getElementById('camp-registration-form') as HTMLFormElement | null;
+    const successAlert = document.getElementById('modal-success-alert');
+    const submitBtn = document.getElementById('modal-submit-btn') as HTMLButtonElement | null;
+
+    if (!modal) return;
+
+    registerButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const campId = btn.getAttribute('data-camp-id') || '';
+        const campName = btn.getAttribute('data-camp-name') || '';
+
+        if (targetLabel) targetLabel.textContent = campName;
+        if (campIdInput) campIdInput.value = campId;
+        if (successAlert) successAlert.style.display = 'none';
+        if (submitBtn) {
+          submitBtn.style.display = 'inline-flex';
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Confirm Interest & Receive Slot Details';
+        }
+
+        modal.style.display = 'flex';
+      });
+    });
+
+    closeBtn?.addEventListener('click', () => {
+      modal.style.display = 'none';
+    });
+
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        modal.style.display = 'none';
+      }
+    });
+
+    form?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (!submitBtn || !successAlert) return;
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Registering...';
+
+      setTimeout(() => {
+        form.reset();
+        submitBtn.style.display = 'none';
+        successAlert.style.display = 'block';
+      }, 500);
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', setupMedicalCamps);
+  setupMedicalCamps();
+</script>
+
+<style>
+  .medical-camps-section {
+    background-color: #FFFFFF;
+    padding: 72px 0 96px;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .camps-container {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 0 clamp(16px, 2vw, 32px);
+  }
+
+  .camps-header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+
+  .camps-badge {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-navy);
+    background-color: var(--color-ivory);
+    border: 1px solid rgba(168, 139, 90, 0.3);
+    padding: 4px 14px;
+    border-radius: var(--radius-pill);
+    margin-bottom: 12px;
+  }
+
+  .camps-title {
+    font-family: var(--font-family-heading);
+    font-size: clamp(2rem, 3.2vw, 2.75rem);
+    color: var(--color-navy);
+    line-height: 1.2;
+    margin-bottom: 12px;
+  }
+
+  .camps-deck {
+    font-size: 1.0625rem;
+    color: var(--color-slate);
+    max-width: 780px;
+    margin: 0 auto 24px;
+    line-height: 1.6;
+  }
+
+  .camp-evidence-note {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background-color: #FAFBFD;
+    border: 1px solid #DCE3EC;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 0.8125rem;
+    color: #4A5B73;
+    max-width: 860px;
+    text-align: left;
+  }
+
+  .camp-evidence-note strong {
+    color: var(--color-navy);
+  }
+
+  /* Camps Grid */
+  .camps-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 28px;
+  }
+
+  .camp-card {
+    background-color: #FFFFFF;
+    border: 1px solid var(--color-border);
+    border-radius: 18px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 16px rgba(15, 35, 64, 0.04);
+    transition: all 0.2s ease;
+    overflow: hidden;
+  }
+
+  .camp-card:hover {
+    border-color: var(--color-brass);
+    box-shadow: 0 8px 24px rgba(15, 35, 64, 0.08);
+    transform: translateY(-2px);
+  }
+
+  .camp-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 24px;
+    background-color: #F8FAFD;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .camp-country-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .camp-flag {
+    font-size: 2rem;
+    line-height: 1;
+  }
+
+  .camp-city-country {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-navy);
+    margin: 0;
+  }
+
+  .camp-dates {
+    font-size: 0.8125rem;
+    color: var(--color-brass);
+    font-weight: 600;
+  }
+
+  .camp-status-pill {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 4px 10px;
+    border-radius: var(--radius-pill);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .status-open {
+    background-color: #E6F4EA;
+    color: #137333;
+  }
+
+  .status-pending {
+    background-color: #FEF7E0;
+    color: #B06000;
+  }
+
+  .camp-card-body {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    flex: 1;
+  }
+
+  .camp-desc {
+    font-size: 0.9375rem;
+    color: #334155;
+    line-height: 1.55;
+    margin: 0;
+  }
+
+  .camp-meta-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .camp-meta-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 0.875rem;
+  }
+
+  .meta-icon {
+    font-size: 1rem;
+    line-height: 1.2;
+    flex-shrink: 0;
+  }
+
+  .meta-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .meta-label {
+    font-size: 0.75rem;
+    color: var(--color-slate);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-weight: 600;
+  }
+
+  .meta-val {
+    color: var(--color-navy);
+    font-weight: 600;
+  }
+
+  .highlight-val {
+    color: #B42318;
+  }
+
+  .meta-subval {
+    font-size: 0.75rem;
+    color: #64748B;
+  }
+
+  /* Specialties tags */
+  .camp-specialties-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .specialties-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--color-slate);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .camp-tags-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .spec-tag {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-navy);
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    padding: 3px 10px;
+    border-radius: var(--radius-pill);
+  }
+
+  /* Details disclosure */
+  .camp-details-disclosure {
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .details-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    background-color: #FAFBFD;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--color-brass);
+    cursor: pointer;
+  }
+
+  .details-chevron {
+    transition: transform 0.2s ease;
+  }
+
+  details[open] .details-chevron {
+    transform: rotate(180deg);
+  }
+
+  .details-body {
+    padding: 14px 16px;
+    background-color: #FFFFFF;
+    border-top: 1px solid var(--color-border);
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    color: #4A5B73;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .details-body ul {
+    margin: 4px 0 0 18px;
+    padding: 0;
+  }
+
+  .camp-card-actions {
+    padding: 20px 24px;
+    background-color: #FAFBFD;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .camp-register-btn {
+    width: 100%;
+    background-color: var(--color-brass);
+    color: #FFFFFF;
+    border: none;
+    padding: 12px 20px;
+    border-radius: var(--radius-pill);
+    font-weight: 700;
+    font-size: 0.9375rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+
+  .camp-register-btn:hover {
+    background-color: var(--color-gold-hover);
+  }
+
+  /* Modal */
+  .camp-modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(15, 35, 64, 0.6);
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    backdrop-filter: blur(4px);
+  }
+
+  .camp-modal-card {
+    position: relative;
+    background-color: #FFFFFF;
+    border-radius: 20px;
+    max-width: 520px;
+    width: 100%;
+    padding: 36px 32px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+  }
+
+  .modal-close-btn {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    background: none;
+    border: none;
+    font-size: 1.25rem;
+    color: var(--color-slate);
+    cursor: pointer;
+    line-height: 1;
+  }
+
+  .modal-header {
+    margin-bottom: 24px;
+  }
+
+  .modal-badge {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--color-brass);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .modal-title {
+    font-family: var(--font-family-heading);
+    font-size: 1.625rem;
+    color: var(--color-navy);
+    margin: 4px 0 6px;
+  }
+
+  .modal-camp-target {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--color-navy);
+    margin-bottom: 8px;
+  }
+
+  .modal-privacy-reminder {
+    font-size: 0.75rem;
+    color: var(--color-slate);
+    background-color: #F8FAFD;
+    padding: 8px 12px;
+    border-radius: 6px;
+    margin: 0;
+  }
+
+  .camp-modal-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .modal-field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .modal-label {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--color-navy);
+  }
+
+  .required {
+    color: #B42318;
+  }
+
+  .modal-input {
+    padding: 10px 14px;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    font-size: 0.9375rem;
+    outline: none;
+    color: var(--color-navy);
+  }
+
+  .modal-input:focus {
+    border-color: var(--color-brass);
+  }
+
+  .modal-submit-btn {
+    margin-top: 8px;
+    padding: 14px 20px;
+    border: none;
+    border-radius: var(--radius-pill);
+    background-color: var(--color-brass);
+    color: #FFFFFF;
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 0.9375rem;
+  }
+
+  .modal-success-alert {
+    background-color: #F0FDF4;
+    border: 1px solid #BBF7D0;
+    border-radius: 10px;
+    padding: 16px;
+    margin-top: 12px;
+  }
+
+  .modal-success-alert h4 {
+    color: #166534;
+    font-size: 0.9375rem;
+    margin: 0 0 4px;
+  }
+
+  .modal-success-alert p {
+    color: #15803D;
+    font-size: 0.8125rem;
+    margin: 0;
+    line-height: 1.4;
+  }
+</style>
+

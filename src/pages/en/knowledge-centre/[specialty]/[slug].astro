@@ -1,0 +1,1457 @@
+---
+/**
+ * src/pages/en/knowledge-centre/[specialty]/[slug].astro
+ * Dynamic patient education article template for Nuhavi Health Knowledge Centre.
+ * Generates static pages for all 105 articles across 10 specialties.
+ *
+ * Strict Compliance:
+ * - 12-page Look & Feel PDF styling (Navy #0F2340, Brass #A88B5A, Ivory #F6F2EA, Mist #DCE3EC).
+ * - Cormorant Garamond headings + Inter body copy.
+ * - Prominent "DRAFT — For Specialist Review" banner (Clinical governance requirement).
+ * - Exact 4-step Diagram visualization matching PDF diagram blocks.
+ * - Dynamic FAQ accordions, When to Consult specialist callout, and Medical Disclaimer.
+ */
+import BaseLayout from '../../../../layouts/BaseLayout.astro';
+import { knowledgeArticles, specialtyCategories, type KnowledgeArticle } from '../../../../data/knowledgeData';
+import SpecialtyIcon from '../../../../components/common/SpecialtyIcon.astro';
+import { getSpecialtyMeta } from '../../../../data/unifiedSpecialties';
+
+export function getStaticPaths() {
+  const paths: { params: { specialty: string; slug: string }; props: { article: KnowledgeArticle } }[] = [];
+  
+  for (const article of knowledgeArticles) {
+    // Canonical route
+    paths.push({
+      params: {
+        specialty: article.specialtySlug,
+        slug: article.slug,
+      },
+      props: { article },
+    });
+    
+    // Alias routes if present
+    const cat = specialtyCategories.find((c) => c.slug === article.specialtySlug);
+    if (cat && cat.aliases) {
+      for (const alias of cat.aliases) {
+        paths.push({
+          params: {
+            specialty: alias,
+            slug: article.slug,
+          },
+          props: { article },
+        });
+      }
+    }
+  }
+  
+  return paths;
+}
+
+interface Props {
+  article: KnowledgeArticle;
+}
+
+const { article } = Astro.props;
+const meta = getSpecialtyMeta(article.specialtySlug);
+const relatedArticles = knowledgeArticles
+  .filter((a) => a.specialtySlug === article.specialtySlug && a.slug !== article.slug)
+  .slice(0, 3);
+---
+
+<BaseLayout
+  title={`${article.title} | Nuhavi Health Knowledge Centre`}
+  description={article.overview.substring(0, 160)}
+  lang="en"
+>
+  <main class="article-page" id="main-content" style={`--spec-color: ${meta.color}; --spec-bg: ${meta.bgColor}; --spec-border: ${meta.borderColor}; --spec-gradient: ${meta.gradient};`}>
+    <!-- Breadcrumb Bar -->
+    <nav class="breadcrumb-bar" aria-label="Breadcrumb">
+      <div class="container breadcrumb-container">
+        <a href="/en/" class="bc-link">Home</a>
+        <span class="bc-sep" aria-hidden="true">/</span>
+        <a href="/en/knowledge-centre/" class="bc-link">Knowledge Centre</a>
+        <span class="bc-sep" aria-hidden="true">/</span>
+        <a href={`/en/knowledge-centre/${article.specialtySlug}/`} class="bc-link">{article.specialtyTitle}</a>
+        <span class="bc-sep" aria-hidden="true">/</span>
+        <span class="bc-current" aria-current="page">{article.title}</span>
+      </div>
+    </nav>
+
+    <article class="article-body-wrapper">
+      <div class="container article-container">
+        <!-- Article Header -->
+        <header class="article-header">
+          <div class="header-meta-row">
+            <span class="specialty-badge" style={`color: ${meta.color}; background-color: ${meta.bgColor}; border: 1px solid ${meta.borderColor};`}>
+              <img src={meta.image} alt="" class="badge-spec-photo" width="16" height="16" loading="lazy" />
+              <span>{article.specialtyTitle}</span>
+            </span>
+            <span class="meta-item reading-time">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+              {article.readingTime}
+            </span>
+          </div>
+
+          <h1 class="article-main-title">{article.title}</h1>
+
+          <!-- Reviewer Metadata -->
+          <div class="reviewer-meta-bar">
+            <span class="rev-label">Medical reviewer: <strong>{article.reviewer}</strong></span>
+            <span class="rev-dot">·</span>
+            <span class="rev-label">Review date: <strong>{article.reviewDate}</strong></span>
+          </div>
+
+          <!-- Clinical Review Draft Banner -->
+          <div class="draft-notice-banner" role="status" aria-label="Clinical Draft Status">
+            <div class="draft-badge-pill">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+              </svg>
+              <span>DRAFT — For Specialist Review</span>
+            </div>
+            <p class="draft-notice-text">
+              This patient education article is a plain-language draft awaiting clinical sign-off by a qualified medical specialist before final publication. It provides general educational context and should not be used as medical advice.
+            </p>
+          </div>
+
+          <!-- Refined Medical Featured Banner (Natural Illustration Integration, Zero Ornamental Circles) -->
+          <div class="article-featured-hero-box" style={`background: ${meta.gradient}; border: 1px solid ${meta.borderColor};`}>
+            <!-- Left: Clinical Context and Specialty Identity -->
+            <div class="featured-hero-content-col">
+              <span class="featured-hero-kicker-label" style={`color: ${meta.color};`}>
+                {article.specialtyTitle} • Clinical Education
+              </span>
+              <h2 class="featured-hero-article-title">{article.title}</h2>
+              <span class="featured-hero-trust-tag">Evidence-Based Patient Guide</span>
+            </div>
+
+            <!-- Right: Authentic Anatomical Medical Illustration / Photo (Clean Natural Framing) -->
+            <div class="featured-hero-visual-col">
+              <div class="featured-hero-photo-container">
+                <img
+                  src={meta.image}
+                  alt={`${article.specialtyTitle} clinical illustration`}
+                  class="featured-hero-clean-photo"
+                  width="220"
+                  height="150"
+                  loading="eager"
+                />
+              </div>
+            </div>
+          </div>
+
+          {article.illustrationPlaceholder && (
+            <p class="featured-image-brief-caption">
+              <span class="brief-label">Featured image brief:</span> {article.illustrationPlaceholder}
+            </p>
+          )}
+        </header>
+
+        <!-- Table of Contents ("On this page") -->
+        <nav class="article-toc-box" aria-label="Table of contents">
+          <div class="toc-header">
+            <span class="toc-title">On this page</span>
+          </div>
+          <ul class="toc-links-list">
+            {article.overview && (
+              <li><a href="#overview" class="toc-link">Overview</a></li>
+            )}
+            {article.diagram && (
+              <li><a href="#clinical-diagram" class="toc-link">Clinical Process</a></li>
+            )}
+            {article.sections && article.sections.map((sec, idx) => (
+              <li><a href={`#sec-${idx}`} class="toc-link">{sec.heading}</a></li>
+            ))}
+            {article.whenToConsult && (
+              <li><a href="#when-to-consult" class="toc-link">When to consult</a></li>
+            )}
+            {article.faqs && article.faqs.length > 0 && (
+              <li><a href="#faqs" class="toc-link">Frequently asked questions</a></li>
+            )}
+          </ul>
+        </nav>
+
+        <!-- Lead Overview Section -->
+        {article.overview && (
+          <section class="overview-lead-box" id="overview" aria-label="Article Summary">
+            <h2 class="sr-only">Article Overview</h2>
+            <p class="lead-paragraph">{article.overview}</p>
+          </section>
+        )}
+
+        <!-- Clinical Process Diagram (if present) -->
+        {article.diagram && (
+          <section class="process-diagram-card" id="clinical-diagram" aria-label="Clinical Diagram">
+            <div class="diagram-header">
+              <span class="diagram-eyebrow">DIAGRAM</span>
+              <h2 class="diagram-title">{article.diagram.title}</h2>
+            </div>
+            <div class="diagram-steps-grid">
+              {article.diagram.steps.map((step) => (
+                <div class="step-card">
+                  <div class="step-num-pill">{step.number}</div>
+                  <h3 class="step-title">{step.title}</h3>
+                  <p class="step-desc">{step.description}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        <!-- Main Structured Content Sections -->
+        <div class="article-sections-stack">
+          {article.sections && article.sections.map((sec, idx) => (
+            <section class="content-section" id={`sec-${idx}`}>
+              <h2 class="section-heading">{sec.heading}</h2>
+              <div class="section-content-wrap">
+                {/* Paragraphs */}
+                {sec.paragraphs && sec.paragraphs.length > 0 && (
+                  <div class="section-paragraphs-flow">
+                    {sec.paragraphs.map((p) => (
+                      <p class="section-p">{p}</p>
+                    ))}
+                  </div>
+                )}
+
+                {/* Numbered Steps */}
+                {sec.steps && sec.steps.length > 0 && (
+                  <div class="section-steps-container">
+                    <div class="section-steps-grid">
+                      {sec.steps.map((st) => (
+                        <div class="numbered-step-card">
+                          <div class="step-num-badge">{st.number}</div>
+                          <div class="step-text-wrap">
+                            <p class="step-detail-text">{st.text}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Bullet Points with optional bold labels */}
+                {sec.bullets && sec.bullets.length > 0 && (
+                  <ul class="section-bullets-list">
+                    {sec.bullets.map((b) => (
+                      <li class="bullet-item">
+                        <span class="bullet-marker" aria-hidden="true">•</span>
+                        <span class="bullet-content">
+                          {b.label && <strong class="bullet-label">{b.label} </strong>}
+                          <span class="bullet-text">{b.text}</span>
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+
+                {/* Structured Data / Comparison Table */}
+                {sec.table && (
+                  <div class="section-table-container">
+                    <div class="table-responsive-wrapper">
+                      <table class="medical-data-table">
+                        <thead>
+                          <tr>
+                            {sec.table.headers.map((h) => (
+                              <th scope="col">{h}</th>
+                            ))}
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {sec.table.rows.map((row) => (
+                            <tr>
+                              {row.map((cell, cIdx) => (
+                                <td class={cIdx === 0 ? "col-primary-cell" : "col-cell"}>{cell}</td>
+                              ))}
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )}
+
+                {/* Important Clinical Callout Alerts */}
+                {sec.callouts && sec.callouts.length > 0 && (
+                  <div class="section-callouts-stack">
+                    {sec.callouts.map((co) => (
+                      <div class="clinical-callout-box" role="note">
+                        <div class="callout-icon-col" aria-hidden="true">
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#A88B5A" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                          </svg>
+                        </div>
+                        <div class="callout-text-col">
+                          <p class="callout-p">{co}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Backward compatibility fallback */}
+                {(!sec.paragraphs || sec.paragraphs.length === 0) && (!sec.bullets || sec.bullets.length === 0) && (!sec.steps || sec.steps.length === 0) && (!sec.table) && sec.content && (
+                  <p class="section-p">{sec.content}</p>
+                )}
+              </div>
+            </section>
+          ))}
+        </div>
+
+        <!-- When Should You Consult a Specialist? -->
+        {article.whenToConsult && (
+          <aside class="when-to-consult-card" id="when-to-consult" aria-label="When to consult a specialist">
+            <div class="consult-icon-col">
+              <div class="consult-icon-wrap" aria-hidden="true">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#A88B5A" stroke-width="2">
+                  <path d="M4.8 2.3A.3.3 0 1 0 5 2H4a2 2 0 0 0-2 2v5a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6V4a2 2 0 0 0-2-2h-1a.2.2 0 1 0 .3.3"></path>
+                  <path d="M8 15v1a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6v-4"></path>
+                  <circle cx="20" cy="10" r="2"></circle>
+                </svg>
+              </div>
+            </div>
+            <div class="consult-text-col">
+              <h2 class="consult-title">When should you consult a specialist?</h2>
+              <p class="consult-p">{article.whenToConsult}</p>
+            </div>
+          </aside>
+        )}
+
+        <!-- Frequently Asked Questions -->
+        {article.faqs && article.faqs.length > 0 && (
+          <section class="content-section faqs-section" id="faqs">
+            <h2 class="section-heading">Frequently Asked Questions</h2>
+            <div class="faq-accordion-stack">
+              {article.faqs.map((faq, idx) => (
+                <details class="faq-accordion-item" open={idx === 0}>
+                  <summary class="faq-question-btn">
+                    <span class="faq-q-text">{faq.q}</span>
+                    <svg class="faq-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                      <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                  </summary>
+                  <div class="faq-answer-panel">
+                    <p>{faq.a}</p>
+                  </div>
+                </details>
+              ))}
+            </div>
+          </section>
+        )}
+
+        <!-- Related Articles in this Specialty -->
+        {relatedArticles.length > 0 && (
+          <section class="related-articles-section" aria-label={`Related articles in ${article.specialtyTitle}`}>
+            <div class="related-section-header">
+              <span class="related-kicker">MORE IN THIS SPECIALTY</span>
+              <h2 class="related-heading">Related {article.specialtyTitle} Articles</h2>
+            </div>
+            <div class="related-articles-grid">
+              {relatedArticles.map((rel) => (
+                <article class="related-card">
+                  <a href={`/en/knowledge-centre/${article.specialtySlug}/${rel.slug}/`} class="related-card-clickable">
+                    <!-- Clean Refined Accent Top (No decorative emblems) -->
+                    <div class="related-visual-top" style={`background: ${meta.gradient}; border-bottom: 1px solid ${meta.borderColor};`}>
+                      <span class="related-kicker-tag" style={`color: ${meta.color};`}>
+                        {article.specialtyTitle}
+                      </span>
+                    </div>
+                    <div class="related-card-body">
+                      <div class="related-meta-row">
+                        <span class="related-meta-time">{rel.readingTime}</span>
+                        <span class="related-meta-dot">•</span>
+                        <span class="related-meta-spec" style={`color: ${meta.color};`}>
+                          Clinical Guide
+                        </span>
+                      </div>
+                      <h3 class="related-card-title">{rel.title}</h3>
+                      <p class="related-card-overview">{rel.overview ? rel.overview.substring(0, 110) + '...' : ''}</p>
+                    </div>
+                  </a>
+                </article>
+              ))}
+            </div>
+          </section>
+        )}
+
+        <!-- Medical Disclaimer -->
+        <section class="disclaimer-section" aria-label="Medical Disclaimer">
+          <div class="disclaimer-card">
+            <div class="disclaimer-header">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+              </svg>
+              <h3 class="disclaimer-title">Medical Disclaimer</h3>
+            </div>
+            <p class="disclaimer-text">
+              {article.disclaimer || "This article is for general education only and does not replace a consultation with a qualified doctor. Treatment decisions depend on your individual medical history and examination. If you have severe or sudden symptoms, call 108 or 112 in India, or your local emergency number, immediately."}
+            </p>
+          </div>
+        </section>
+
+        <!-- Non-clinical Coordination Notice & CTA -->
+        <footer class="article-footer">
+          <div class="enquiry-cta-card">
+            <div class="cta-text-side">
+              <span class="cta-kicker">INDEPENDENT CLINICAL SECOND OPINION</span>
+              <h3>Have your medical records reviewed by accredited hospital specialists</h3>
+              <p>Receive independent treatment alternatives and itemised cost comparisons from top Indian tertiary hospitals without commercial pressure.</p>
+            </div>
+            <div class="cta-btn-side">
+              <a href="/en/request-opinion/" class="btn-primary cta-action-btn">
+                <span>Request a Medical Opinion</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </footer>
+      </div>
+    </article>
+  </main>
+</BaseLayout>
+
+<style>
+  .article-page {
+    background-color: #FAFCFF;
+    color: var(--color-ink, #0F2340);
+    padding-bottom: 80px;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  .breadcrumb-bar {
+    background-color: #FFFFFF;
+    border-bottom: 1px solid #E5E7EB;
+    padding: 14px 0;
+    font-size: 0.875rem;
+  }
+
+  .breadcrumb-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .bc-link {
+    color: #4B5563;
+    text-decoration: none;
+    transition: color 0.15s ease;
+  }
+
+  .bc-link:hover {
+    color: #0F2340;
+    text-decoration: underline;
+  }
+
+  .bc-sep {
+    color: #9CA3AF;
+  }
+
+  .bc-current {
+    color: #0F2340;
+    font-weight: 500;
+  }
+
+  .article-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 20px;
+  }
+
+  /* Header */
+  .article-header {
+    margin-bottom: 32px;
+  }
+
+  .header-meta-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+
+  .specialty-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    background-color: #0F2340;
+    color: #F6F2EA;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    border-radius: 4px;
+  }
+
+  .badge-spec-photo {
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+
+  .badge-inline-icon {
+    flex-shrink: 0;
+  }
+
+  .meta-item {
+    font-size: 0.8125rem;
+    color: #4B5563;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .article-main-title {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 2.25rem;
+    line-height: 1.25;
+    font-weight: 700;
+    color: #0F2340;
+    margin: 0 0 16px 0;
+  }
+
+  @media (min-width: 768px) {
+    .article-main-title {
+      font-size: 2.75rem;
+    }
+  }
+
+  .reviewer-meta-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.875rem;
+    color: #4B5563;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #E5E7EB;
+  }
+
+  .rev-dot {
+    color: #9CA3AF;
+  }
+
+  /* Draft Banner */
+  .draft-notice-banner {
+    background-color: #FEF3C7;
+    border: 1px solid #F59E0B;
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 32px;
+  }
+
+  .draft-badge-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #92400E;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    margin-bottom: 6px;
+  }
+
+  .draft-notice-text {
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: #78350F;
+    margin: 0;
+  }
+
+  /* --------------------------------------------------------------------------
+     ARTICLE FEATURED IMAGE / HERO BOX (REFINED MEDICAL BANNER, ZERO ORNAMENTAL CIRCLES)
+     -------------------------------------------------------------------------- */
+  .article-featured-hero-box {
+    width: 100%;
+    min-height: 200px;
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    padding: 2rem 2.5rem;
+    box-sizing: border-box;
+    box-shadow: 0 4px 16px -2px rgba(15, 35, 64, 0.05);
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .featured-hero-content-col {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    max-width: 62%;
+    z-index: 2;
+  }
+
+  .featured-hero-kicker-label {
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .featured-hero-article-title {
+    font-family: var(--font-heading, "Cormorant Garamond", Georgia, serif);
+    font-size: clamp(1.4rem, 2.2vw, 1.85rem);
+    font-weight: 700;
+    line-height: 1.25;
+    color: #0F2340;
+    margin: 0;
+  }
+
+  .featured-hero-trust-tag {
+    display: inline-block;
+    align-self: flex-start;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #475569;
+    background: rgba(255, 255, 255, 0.85);
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    padding: 0.2rem 0.55rem;
+    border-radius: 4px;
+    margin-top: 0.25rem;
+  }
+
+  .featured-hero-visual-col {
+    flex-shrink: 0;
+    z-index: 2;
+  }
+
+  .featured-hero-photo-container {
+    width: 220px;
+    height: 150px;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    background: #FFFFFF;
+    box-shadow: 0 4px 14px rgba(15, 35, 64, 0.06);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .featured-hero-clean-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  @media (max-width: 768px) {
+    .article-featured-hero-box {
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 1.5rem;
+      gap: 1.25rem;
+    }
+    .featured-hero-content-col {
+      max-width: 100%;
+    }
+    .featured-hero-photo-container {
+      width: 100%;
+      height: 180px;
+    }
+  }
+
+  .featured-image-brief-caption {
+    font-size: 0.85rem;
+    line-height: 1.5;
+    color: #64748B;
+    margin: 0 0 2rem;
+    font-style: italic;
+  }
+
+  .featured-image-brief-caption .brief-label {
+    font-weight: 600;
+    color: #475569;
+    font-style: normal;
+  }
+
+  /* Table of Contents ("On this page") */
+  .article-toc-box {
+    background-color: #FFFFFF;
+    border: 1px solid var(--spec-border, #E2E8F0);
+    border-left: 4px solid var(--spec-color, #0284C7);
+    border-radius: 10px;
+    padding: 1.15rem 1.35rem;
+    margin-bottom: 2.25rem;
+    box-shadow: 0 1px 4px rgba(15, 35, 64, 0.04);
+  }
+
+  .toc-header {
+    margin-bottom: 0.65rem;
+  }
+
+  .toc-title {
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--spec-color, #0284C7);
+  }
+
+  .toc-links-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.25rem;
+  }
+
+  .toc-link {
+    font-size: 0.88rem;
+    color: #334155;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    transition: color 0.15s ease;
+  }
+
+  .toc-link:hover {
+    color: var(--spec-color, #0284C7);
+    text-decoration: underline;
+  }
+
+  @media (max-width: 640px) {
+    .article-featured-hero-box {
+      min-height: 180px;
+      padding: 1.25rem;
+      gap: 1rem;
+    }
+    .featured-hero-photo-container {
+      width: 100%;
+      height: 160px;
+    }
+  }
+
+  /* Overview Box */
+  .overview-lead-box {
+    background-color: var(--spec-bg, #F6F2EA);
+    border: 1px solid var(--spec-border, #E2E8F0);
+    border-left: 4px solid var(--spec-color, #A88B5A);
+    border-radius: 4px 8px 8px 4px;
+    padding: 24px 28px;
+    margin-bottom: 40px;
+  }
+
+  .lead-paragraph {
+    font-size: 1.125rem;
+    line-height: 1.7;
+    color: #1F2937;
+    margin: 0;
+    font-weight: 450;
+  }
+
+  /* Process Diagram */
+  .process-diagram-card {
+    background-color: #FFFFFF;
+    border: 1px solid #DCE3EC;
+    border-radius: 12px;
+    padding: 28px;
+    margin-bottom: 40px;
+    box-shadow: 0 2px 8px rgba(15, 35, 64, 0.04);
+  }
+
+  .diagram-header {
+    margin-bottom: 24px;
+    text-align: center;
+  }
+
+  .diagram-eyebrow {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--spec-color, #A88B5A);
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .diagram-title {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 1.75rem;
+    color: #0F2340;
+    margin: 0;
+  }
+
+  .diagram-steps-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  @media (min-width: 640px) {
+    .diagram-steps-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 900px) {
+    .diagram-steps-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .step-card {
+    background-color: #FAFCFF;
+    border: 1px solid #E5E7EB;
+    border-radius: 8px;
+    padding: 20px 16px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .step-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(15, 35, 64, 0.06);
+    border-color: #A88B5A;
+  }
+
+  .step-num-pill {
+    width: 32px;
+    height: 32px;
+    background-color: #0F2340;
+    color: #F6F2EA;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.9375rem;
+    margin-bottom: 12px;
+  }
+
+  .step-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #0F2340;
+    margin: 0 0 8px 0;
+    line-height: 1.35;
+  }
+
+  .step-desc {
+    font-size: 0.875rem;
+    color: #4B5563;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  /* Content Sections */
+  .article-sections-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    margin-bottom: 40px;
+  }
+
+  .content-section {
+    background-color: #FFFFFF;
+    border: 1px solid #E5E7EB;
+    border-radius: 12px;
+    padding: 32px 36px;
+    box-shadow: 0 2px 8px rgba(15, 35, 64, 0.03);
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+  }
+
+  .content-section:hover {
+    box-shadow: 0 4px 16px rgba(15, 35, 64, 0.06);
+    border-color: #DCE3EC;
+  }
+
+  .section-heading {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #0F2340;
+    margin: 0 0 20px 0;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #F3F4F6;
+    position: relative;
+  }
+
+  .section-heading::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 48px;
+    height: 2px;
+    background-color: var(--spec-color, #A88B5A);
+  }
+
+  .section-content-wrap {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .section-paragraphs-flow {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .section-p {
+    font-size: 1.03125rem;
+    line-height: 1.75;
+    color: #2D3748;
+    margin: 0;
+  }
+
+  /* Numbered Steps in Section */
+  .section-steps-container {
+    margin: 20px 0;
+  }
+
+  .section-steps-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .numbered-step-card {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    background-color: #FAFCFF;
+    border: 1px solid var(--spec-border, #E2E8F0);
+    border-left: 4px solid var(--spec-color, #0F2340);
+    border-radius: 8px;
+    padding: 16px 20px;
+    transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .numbered-step-card:hover {
+    transform: translateX(3px);
+    border-left-color: var(--spec-color, #A88B5A);
+    box-shadow: 0 3px 10px rgba(15, 35, 64, 0.05);
+  }
+
+  .step-num-badge {
+    width: 30px;
+    height: 30px;
+    background-color: var(--spec-color, #0F2340);
+    color: #F6F2EA;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.875rem;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .step-text-wrap {
+    flex: 1;
+  }
+
+  .step-detail-text {
+    font-size: 1rem;
+    line-height: 1.65;
+    color: #1F2937;
+    margin: 0;
+  }
+
+  /* Bullets with Bold Labels */
+  .section-bullets-list {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .bullet-item {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    font-size: 1rem;
+    line-height: 1.65;
+    color: #374151;
+  }
+
+  .bullet-marker {
+    color: #A88B5A;
+    font-size: 1.25rem;
+    line-height: 1.2;
+    flex-shrink: 0;
+    user-select: none;
+  }
+
+  .bullet-content {
+    flex: 1;
+  }
+
+  .bullet-label {
+    font-weight: 600;
+    color: #0F2340;
+  }
+
+  .bullet-text {
+    color: #374151;
+  }
+
+  /* Clinical Data Table */
+  .section-table-container {
+    margin: 24px 0;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #DCE3EC;
+    box-shadow: 0 2px 6px rgba(15, 35, 64, 0.03);
+    background-color: #FFFFFF;
+  }
+
+  .table-responsive-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+  }
+
+  .medical-data-table {
+    width: 100%;
+    min-width: 580px;
+    border-collapse: collapse;
+    font-size: 0.9375rem;
+    text-align: left;
+  }
+
+  .medical-data-table th {
+    background-color: #0F2340;
+    color: #F6F2EA;
+    font-weight: 600;
+    padding: 14px 18px;
+    letter-spacing: 0.02em;
+    border-bottom: 2px solid #A88B5A;
+    border-right: 1px solid rgba(246, 242, 234, 0.15);
+  }
+
+  .medical-data-table th:last-child {
+    border-right: none;
+  }
+
+  .medical-data-table td {
+    padding: 14px 18px;
+    border-bottom: 1px solid #E2E8F0;
+    border-right: 1px solid #EDF2F7;
+    line-height: 1.55;
+    color: #334155;
+    vertical-align: top;
+  }
+
+  .medical-data-table td:last-child {
+    border-right: none;
+  }
+
+  .medical-data-table tr:last-child td {
+    border-bottom: none;
+  }
+
+  .medical-data-table tr:nth-child(even) {
+    background-color: #F8FAFC;
+  }
+
+  .medical-data-table tr:hover {
+    background-color: #F1F5F9;
+  }
+
+  .col-primary-cell {
+    font-weight: 600;
+    color: #0F2340;
+    background-color: rgba(15, 35, 64, 0.02);
+  }
+
+  /* Clinical Callout Alert Boxes */
+  .section-callouts-stack {
+    margin: 20px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .clinical-callout-box {
+    background-color: var(--spec-bg, #F8FAFC);
+    border: 1px solid var(--spec-border, #DCE3EC);
+    border-left: 4px solid var(--spec-color, #A88B5A);
+    border-radius: 8px;
+    padding: 16px 20px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+
+  .callout-icon-col {
+    flex-shrink: 0;
+    margin-top: 2px;
+    color: var(--spec-color, #0F2340);
+  }
+
+  .callout-text-col {
+    flex: 1;
+  }
+
+  .callout-p {
+    font-size: 0.9375rem;
+    line-height: 1.65;
+    color: #1E293B;
+    margin: 0;
+    font-weight: 500;
+  }
+
+  /* When to Consult — Specialty Themed */
+  .when-to-consult-card {
+    background-color: var(--spec-bg, #F8FAFC);
+    border: 1px solid var(--spec-border, #DCE3EC);
+    border-left: 4px solid var(--spec-color, #0F2340);
+    border-radius: 12px;
+    padding: 24px 28px;
+    margin-bottom: 40px;
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    box-shadow: 0 2px 8px rgba(15, 35, 64, 0.03);
+  }
+
+  .consult-icon-wrap {
+    width: 44px;
+    height: 44px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border: 1px solid var(--spec-border, #DCE3EC);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: var(--spec-color, #0F2340);
+  }
+
+  .consult-title {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 1.5rem;
+    color: var(--spec-color, #0F2340);
+    margin: 0 0 8px 0;
+    font-weight: 700;
+  }
+
+  .consult-p {
+    font-size: 0.9375rem;
+    line-height: 1.65;
+    color: #334155;
+    margin: 0;
+  }
+
+  /* FAQs */
+  .faq-accordion-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 16px;
+  }
+
+  .faq-accordion-item {
+    border: 1px solid #E5E7EB;
+    border-radius: 8px;
+    background-color: #FAFCFF;
+    overflow: hidden;
+  }
+
+  .faq-question-btn {
+    padding: 16px 20px;
+    font-weight: 600;
+    font-size: 1rem;
+    color: #0F2340;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    list-style: none;
+    user-select: none;
+  }
+
+  .faq-question-btn::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq-chevron {
+    transition: transform 0.2s ease;
+    color: #6B7280;
+    flex-shrink: 0;
+  }
+
+  .faq-accordion-item[open] .faq-chevron {
+    transform: rotate(180deg);
+  }
+
+  .faq-answer-panel {
+    padding: 0 20px 20px 20px;
+    border-top: 1px solid #F3F4F6;
+    margin-top: 8px;
+  }
+
+  .faq-answer-panel p {
+    font-size: 0.9375rem;
+    line-height: 1.65;
+    color: #4B5563;
+    margin: 12px 0 0 0;
+  }
+
+  /* Related Articles Section */
+  .related-articles-section {
+    margin-top: 3.5rem;
+    margin-bottom: 3.5rem;
+  }
+
+  .related-section-header {
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid var(--spec-border, #E2E8F0);
+    padding-bottom: 0.75rem;
+  }
+
+  .related-kicker {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--spec-color, #0284C7);
+    display: block;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+  }
+
+  .related-heading {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #0F2340;
+    margin: 0;
+  }
+
+  .related-articles-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+  }
+
+  @media (max-width: 860px) {
+    .related-articles-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .related-card {
+    background: #FFFFFF;
+    border: 1px solid var(--spec-border, #E2E8F0);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  }
+
+  .related-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(15, 35, 64, 0.07);
+    border-color: var(--spec-color, #CBD5E1);
+  }
+
+  .related-card-clickable {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  /* Clean Refined Related Card Header Bar (No decorative emblems) */
+  .related-visual-top {
+    height: 38px;
+    padding: 0 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .related-kicker-tag {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .related-card-body {
+    padding: 1rem 1.15rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+
+  .related-meta-row {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.75rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .related-meta-spec {
+    font-weight: 600;
+  }
+
+  .related-meta-dot {
+    color: #CBD5E1;
+  }
+
+  .related-meta-time {
+    color: #64748B;
+  }
+
+  .related-card-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    line-height: 1.35;
+    color: #0F2340;
+    margin: 0 0 0.5rem;
+  }
+
+  .related-card:hover .related-card-title {
+    color: var(--spec-color, #0F2340);
+  }
+
+  .related-card-overview {
+    font-size: 0.82rem;
+    line-height: 1.5;
+    color: #475569;
+    margin: 0;
+  }
+
+  /* Disclaimer */
+  .disclaimer-section {
+    margin-bottom: 40px;
+  }
+
+  .disclaimer-card {
+    background-color: #FFF5F5;
+    border: 1px solid #FCA5A5;
+    border-radius: 8px;
+    padding: 20px 24px;
+  }
+
+  .disclaimer-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+
+  .disclaimer-title {
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: #991B1B;
+    margin: 0;
+  }
+
+  .disclaimer-text {
+    font-size: 0.84375rem;
+    line-height: 1.6;
+    color: #7F1D1D;
+    margin: 0;
+  }
+
+  /* CTA */
+  .enquiry-cta-card {
+    background: linear-gradient(135deg, #0F2340 0%, #1A365D 100%);
+    border-radius: 12px;
+    padding: 36px 32px;
+    color: #FFFFFF;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  @media (min-width: 768px) {
+    .enquiry-cta-card {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
+
+  .cta-kicker {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: #A88B5A;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  .cta-text-side h3 {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 1.75rem;
+    color: #F6F2EA;
+    margin: 0 0 8px 0;
+  }
+
+  .cta-text-side p {
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    color: #DCE3EC;
+    margin: 0;
+    max-width: 500px;
+  }
+
+  .cta-action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background-color: #A88B5A;
+    color: #FFFFFF;
+    font-weight: 600;
+    padding: 14px 28px;
+    border-radius: 6px;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background-color 0.15s ease, transform 0.15s ease;
+  }
+
+  .cta-action-btn:hover {
+    background-color: #8C7349;
+    transform: translateY(-1px);
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+  }
+</style>

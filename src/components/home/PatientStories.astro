@@ -1,11 +1,16 @@
 ---
 /**
  * src/components/home/PatientStories.astro
- * Homepage: "Patient stories"
- * Reference: Page 9 of Nuhavi Health Look and Feel PDF.
- * Localized for English (/en/), Russian (/ru/), and Arabic (/ar/ RTL).
+ * Approved Patient Stories Section — 12-Page PDF (Page 5)
+ *
+ * Eyebrow: PATIENT STORIES
+ * Heading: Journeys to Hyderabad
+ * Link: How we share stories →
+ * 3 Cards Grid:
+ * 1. KENYA → HYDERABAD: [Consented patient story]
+ * 2. GOOGLE REVIEWS: [Rating] from [n] reviews
+ * 3. ILLUSTRATIVE JOURNEY: A daughter in Tashkent arranging knee replacement for her father
  */
-import { homeTranslations } from '../../i18n/homeTranslations';
 import type { SupportedLang } from '../../i18n/translations';
 
 interface Props {
@@ -17,41 +22,83 @@ const detectedLang: SupportedLang = currentPath.startsWith('/ar')
   ? 'ar'
   : currentPath.startsWith('/ru')
   ? 'ru'
+  : currentPath.startsWith('/fr')
+  ? 'fr'
   : 'en';
 
 const lang: SupportedLang = Astro.props.lang || detectedLang;
-const content = homeTranslations[lang].patientStories;
+const isArabic = lang === 'ar';
+const isRussian = lang === 'ru';
+const isFrench = lang === 'fr';
+
+const prefix = `/${lang}`;
+const storiesIndexHref = `${prefix}/stories/`;
+
+const t = {
+  eyebrow: isArabic ? 'تجارب المرضى' : isRussian ? 'ИСТОРИИ ПАЦИЕНТОВ' : 'PATIENT STORIES',
+  heading: isArabic ? 'رحلات إلى حيدر آباد' : isRussian ? 'Поездки в Хайдарабад' : 'Journeys to Hyderabad',
+  shareLink: isArabic ? 'كيف نشارك التجارب ←' : isRussian ? 'Как мы публикуем истории →' : 'How we share stories →',
+  cards: [
+    {
+      tag: isArabic ? 'كينيا ← حيدر آباد' : isRussian ? 'КЕНИЯ → ХАЙДАРАБАД' : 'KENYA → HYDERABAD',
+      title: isArabic ? '[قصة مريض بموافقة موثقة]' : isRussian ? '[История пациента с согласия]' : '[Consented patient story]',
+      deck: isArabic
+        ? 'تُنشر فقط بموافقة خطية من العائلة. نركز على مسار التنسيق والرحلة — دون إعطاء وعود بنتائج علاجية.'
+        : isRussian
+        ? 'Публикуется только с письменного согласия семьи. О процессе организации — без обещаний медицинских результатов.'
+        : 'Published only with the family\'s written consent. About the process — never promises of results.',
+    },
+    {
+      tag: isArabic ? 'تقييمات GOOGLE' : isRussian ? 'ОТЗЫВЫ GOOGLE' : 'GOOGLE REVIEWS',
+      title: isArabic ? '[التقييم] من أصل [عدد] مراجعة' : isRussian ? '[Рейтинг] на основе [n] отзывов' : '[Rating] from [n] reviews',
+      deck: isArabic
+        ? 'ستتاح فور قيام مرضى نوهـافي الموثقين بترك مراجعاتهم.'
+        : isRussian
+        ? 'Станет доступно, как только верифицированные пациенты Nuhavi оставят отзывы.'
+        : 'Live once verified Nuhavi patients have left reviews.',
+    },
+    {
+      tag: isArabic ? 'رحلة توضيحية' : isRussian ? 'ПРИМЕР ОРГАНИЗАЦИИ' : 'ILLUSTRATIVE JOURNEY',
+      title: isArabic
+        ? 'ابنة في طشقند ترتب استبدال مفصل الركبة لوالدها'
+        : isRussian
+        ? 'Дочь в Ташкенте организует замену коленного сустава для отца'
+        : 'A daughter in Tashkent arranging knee replacement for her father',
+      deck: isArabic
+        ? 'الأسبوع 0: استفسار أولي · الأسبوع 1: مكالمة فيديو مع الجراح · الأسبوع 3: السفر · الأسبوع 8: استشارة متابعة عن بعد.'
+        : isRussian
+        ? 'Неделя 0: запрос · Неделя 1: видеосвязь с хирургом · Неделя 3: поездка · Неделя 8: контрольная телеконсультация.'
+        : 'Week 0 enquiry · week 1 surgeon video call · week 3 travel · week 8 teleconsult follow-up.',
+    },
+  ],
+};
 ---
 
-<section class="patient-stories-section" aria-labelledby="patient-stories-heading">
+<section class="patient-stories-section" id="stories" aria-labelledby="stories-heading" dir={isArabic ? 'rtl' : 'ltr'}>
   <div class="container stories-container">
-    <div class="stories-grid">
-      <!-- Left Column: Title, Deck, Link -->
-      <div class="stories-left-col">
-        <h2 id="patient-stories-heading" class="stories-title">
-          {content.title}
+    <div class="stories-header-row">
+      <div class="header-left">
+        <span class="stories-eyebrow">{t.eyebrow}</span>
+        <h2 id="stories-heading" class="stories-title">
+          {t.heading}
         </h2>
-        <p class="stories-deck">
-          {content.deck}
-        </p>
-
-        <div class="stories-link-wrap">
-          <a href="/en/stories/" class="stories-text-link">
-            {content.linkText} <span aria-hidden="true">&rarr;</span>
-          </a>
-        </div>
       </div>
-
-      <!-- Right Column: Ethical Policy Card -->
-      <div class="stories-right-col">
-        <div class="stories-policy-card">
-          <div class="policy-gold-bar" aria-hidden="true"></div>
-          <h3 class="policy-title">{content.policyTitle}</h3>
-          <p class="policy-text">
-            {content.policyText}
-          </p>
-        </div>
+      <div class="header-right">
+        <a href={storiesIndexHref} class="share-stories-link">
+          <span>{t.shareLink}</span>
+        </a>
       </div>
+    </div>
+
+    <!-- 3 Cards Grid (PDF Page 5) -->
+    <div class="stories-cards-grid">
+      {t.cards.map((card) => (
+        <article class="story-card">
+          <span class="story-tag">{card.tag}</span>
+          <h3 class="story-title">{card.title}</h3>
+          <p class="story-deck">{card.deck}</p>
+        </article>
+      ))}
     </div>
   </div>
 </section>
@@ -59,117 +106,109 @@ const content = homeTranslations[lang].patientStories;
 <style>
   .patient-stories-section {
     width: 100%;
-    background-color: var(--color-paper);
-    padding: var(--space-12) 0;
-    border-bottom: 1px solid rgba(20, 41, 75, 0.08);
+    background-color: #FAF8F5;
+    padding: clamp(64px, 8vw, 88px) 0;
   }
 
   .stories-container {
-    width: 100%;
-    max-width: 1200px;
+    max-width: 1280px;
     margin: 0 auto;
-    padding: 0 var(--space-4);
+    padding: 0 clamp(20px, 4vw, 40px);
     box-sizing: border-box;
   }
 
-  .stories-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--space-8);
-  }
-
-  @media (min-width: 900px) {
-    .stories-grid {
-      grid-template-columns: 6fr 6fr;
-      gap: var(--space-10);
-      align-items: center;
-    }
-  }
-
-  .stories-left-col {
+  .stories-header-row {
     display: flex;
-    flex-direction: column;
-    gap: var(--space-4);
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+  }
+
+  .stories-eyebrow {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    color: #A88B5A;
+    text-transform: uppercase;
+    margin-bottom: 8px;
   }
 
   .stories-title {
-    font-size: clamp(1.875rem, 3.5vw, 2.5rem);
-    font-weight: 800;
-    color: var(--color-navy);
-    line-height: 1.2;
+    font-family: var(--font-family-heading);
+    font-size: clamp(2rem, 3.2vw, 2.85rem);
+    color: #0F2340;
+    font-weight: 600;
     margin: 0;
+    line-height: 1.15;
   }
 
-  .stories-deck {
-    font-size: 1rem;
-    line-height: 1.6;
-    color: var(--color-slate);
-    margin: 0;
-  }
-
-  .stories-link-wrap {
-    margin-top: var(--space-2);
-  }
-
-  .stories-text-link {
+  .share-stories-link {
     font-size: 0.9375rem;
-    font-weight: 700;
-    color: var(--color-gold-text);
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
+    font-weight: 600;
+    color: #0F2340;
+    text-decoration: underline;
     transition: color 0.15s ease;
   }
 
-  .stories-text-link:hover {
-    color: var(--color-navy);
-    text-decoration: underline;
+  .share-stories-link:hover {
+    color: #A88B5A;
   }
 
-  :global([dir="rtl"]) .stories-text-link span {
-    display: inline-block;
-    transform: scaleX(-1);
+  /* 3 Cards Grid */
+  .stories-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
   }
 
-  /* Right Column: Policy Card */
-  .stories-policy-card {
-    background-color: var(--color-mist);
-    border: 1px solid rgba(20, 41, 75, 0.08);
-    border-radius: var(--radius-card);
-    padding: var(--space-8);
-    position: relative;
-    overflow: hidden;
+  .story-card {
+    background-color: #FFFFFF;
+    border: 1px solid rgba(15, 35, 64, 0.12);
+    border-radius: 8px;
+    padding: 28px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    box-shadow: 0 1px 3px rgba(15, 35, 64, 0.03);
+    transition: box-shadow 0.18s ease, border-color 0.18s ease;
   }
 
-  .policy-gold-bar {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background-color: var(--color-gold);
+  .story-card:hover {
+    border-color: #A88B5A;
+    box-shadow: 0 6px 18px rgba(15, 35, 64, 0.06);
   }
 
-  .policy-title {
-    font-size: 1.25rem;
-    font-weight: 800;
-    color: var(--color-navy);
-    margin: 0 0 var(--space-3);
+  .story-tag {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: #A88B5A;
+    text-transform: uppercase;
   }
 
-  .policy-text {
+  .story-title {
+    font-family: var(--font-family-heading);
+    font-size: 1.35rem;
+    font-weight: 600;
+    color: #0F2340;
+    margin: 0;
+    line-height: 1.3;
+  }
+
+  .story-deck {
     font-size: 0.875rem;
-    line-height: 1.6;
-    color: var(--color-slate);
+    color: #4B5563;
+    line-height: 1.55;
     margin: 0;
   }
 
-  /* RTL Support */
-  :global([dir="rtl"]) .stories-title,
-  :global([dir="rtl"]) .stories-deck,
-  :global([dir="rtl"]) .policy-title,
-  :global([dir="rtl"]) .policy-text {
-    text-align: right;
+  @media (max-width: 900px) {
+    .stories-cards-grid {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
   }
 </style>

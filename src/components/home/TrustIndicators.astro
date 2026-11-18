@@ -1,0 +1,177 @@
+---
+/**
+ * src/components/home/TrustIndicators.astro
+ * 5 Trust Indicators Row — Approved 12-Page PDF (Page 2 & User Screenshot)
+ *
+ * Items:
+ * 1. Founded by doctors / Every case clinically reviewed
+ * 2. Written estimates / From 2–3 hospitals, side by side
+ * 3. NABH & JCI / Accredited partner hospitals
+ * 4. One coordinator / English · Русский · العربية · Français
+ * 5. 1 working day / Reply commitment
+ *
+ * Pure typography with vertical dividers between columns, no icons.
+ */
+import type { SupportedLang } from '../../i18n/translations';
+
+interface Props {
+  lang?: SupportedLang;
+}
+
+const currentPath = Astro.url.pathname;
+const detectedLang: SupportedLang = currentPath.startsWith('/ar')
+  ? 'ar'
+  : currentPath.startsWith('/ru')
+  ? 'ru'
+  : currentPath.startsWith('/fr')
+  ? 'fr'
+  : 'en';
+
+const lang: SupportedLang = Astro.props.lang || detectedLang;
+const isArabic = lang === 'ar';
+const isRussian = lang === 'ru';
+const isFrench = lang === 'fr';
+
+const indicators = [
+  {
+    title: isArabic ? 'أسسها أطباء' : isRussian ? 'Основано врачами' : isFrench ? 'Fondé par des médecins' : 'Founded by doctors',
+    sub: isArabic ? 'مراجعة كل حالة' : isRussian ? 'Клинический разбор каждого случая' : isFrench ? 'Chaque cas examiné cliniquement' : 'Every case clinically reviewed',
+  },
+  {
+    title: isArabic ? 'تقديرات مكتوبة' : isRussian ? 'Письменные расчеты' : isFrench ? 'Devis écrits' : 'Written estimates',
+    sub: isArabic ? 'من ٢–٣ مستشفيات جنباً إلى جنب' : isRussian ? 'От 2–3 клиник, наглядно' : isFrench ? 'De 2–3 hôpitaux, côte à côte' : 'From 2–3 hospitals, side by side',
+  },
+  {
+    title: isArabic ? 'JCI و NABH' : 'NABH & JCI',
+    sub: isArabic ? 'مستشفيات معتمدة' : isRussian ? 'Аккредитованные клиники' : isFrench ? 'Hôpitaux partenaires accrédités' : 'Accredited partner hospitals',
+  },
+  {
+    title: isArabic ? 'منسق شخصي واحد' : isRussian ? 'Один координатор' : isFrench ? 'Un coordinateur' : 'One coordinator',
+    sub: 'English · Русский · العربية · Français',
+  },
+  {
+    title: isArabic ? 'يوم عمل واحد' : isRussian ? '1 рабочий день' : isFrench ? '1 jour ouvré' : '1 working day',
+    sub: isArabic ? 'التزام بالرد' : isRussian ? 'Срок ответа' : isFrench ? 'Engagement de réponse' : 'Reply commitment',
+  },
+];
+---
+
+<section class="trust-strip-section" aria-label="Trust indicators" dir={isArabic ? 'rtl' : 'ltr'}>
+  <div class="container trust-strip-container">
+    <div class="indicators-grid">
+      {indicators.map((item) => (
+        <div class="indicator-item">
+          <h3 class="indicator-title">{item.title}</h3>
+          <p class="indicator-sub">{item.sub}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .trust-strip-section {
+    background-color: #F6F2EA;
+    padding: 0 0 44px 0;
+  }
+
+  .trust-strip-container {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 0 clamp(16px, 3vw, 32px);
+    box-sizing: border-box;
+  }
+
+  .indicators-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    border-top: 1px solid #DCE3EC;
+    padding-top: 24px;
+  }
+
+  .indicator-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 0 20px;
+    border-right: 1px solid #DCE3EC;
+  }
+
+  .indicator-item:first-child {
+    padding-left: 0;
+  }
+
+  :global([dir="rtl"]) .indicator-item:first-child {
+    padding-left: 20px;
+    padding-right: 0;
+  }
+
+  .indicator-item:last-child {
+    border-right: none;
+    padding-right: 0;
+  }
+
+  :global([dir="rtl"]) .indicator-item:last-child {
+    border-left: none;
+    padding-left: 0;
+  }
+
+  :global([dir="rtl"]) .indicator-item {
+    border-right: none;
+    border-left: 1px solid #DCE3EC;
+  }
+
+  .indicator-title {
+    font-family: var(--font-family-heading, 'Cormorant Garamond', Georgia, serif);
+    font-size: 1.1875rem;
+    font-weight: 600;
+    color: #0F2340;
+    margin: 0 0 6px 0;
+    line-height: 1.25;
+  }
+
+  .indicator-sub {
+    font-family: var(--font-family-base, 'Inter', sans-serif);
+    font-size: 0.8125rem;
+    color: #5A6E85;
+    line-height: 1.45;
+    margin: 0;
+  }
+
+  @media (max-width: 1024px) {
+    .indicators-grid {
+      grid-template-columns: repeat(3, 1fr);
+      row-gap: 20px;
+    }
+
+    .indicator-item {
+      padding: 0 16px;
+      border-right: 1px solid #DCE3EC;
+    }
+
+    .indicator-item:nth-child(3) {
+      border-right: none;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .indicators-grid {
+      grid-template-columns: 1fr;
+      row-gap: 16px;
+    }
+
+    .indicator-item {
+      padding: 12px 0;
+      border-right: none;
+      border-bottom: 1px solid #DCE3EC;
+    }
+
+    .indicator-item:last-child {
+      border-bottom: none;
+    }
+
+    :global([dir="rtl"]) .indicator-item {
+      border-left: none;
+    }
+  }
+</style>
