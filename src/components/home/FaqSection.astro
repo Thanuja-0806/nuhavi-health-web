@@ -1,0 +1,208 @@
+---
+/**
+ * src/components/home/FaqSection.astro
+ * Homepage: "Questions families ask" — 12-Page PDF (Page 6)
+ */
+import type { SupportedLang } from '../../i18n/translations';
+
+interface Props {
+  lang?: SupportedLang;
+}
+
+const currentPath = Astro.url.pathname;
+const detectedLang: SupportedLang = currentPath.startsWith('/ar')
+  ? 'ar'
+  : currentPath.startsWith('/ru')
+  ? 'ru'
+  : currentPath.startsWith('/fr')
+  ? 'fr'
+  : 'en';
+
+const lang: SupportedLang = Astro.props.lang || detectedLang;
+const isArabic = lang === 'ar';
+const isRussian = lang === 'ru';
+const isFrench = lang === 'fr';
+
+const t = {
+  heading: isArabic ? 'أسئلة تطرحها العائلات' : isRussian ? 'Вопросы, которые задают семьи' : 'Questions families ask',
+  faqs: [
+    {
+      q: isArabic
+        ? 'كم تبلغ تكلفة الاستعانة بنوهـافي؟'
+        : isRussian
+        ? 'Сколько стоят услуги Nuhavi?'
+        : 'How much does it cost to use Nuhavi?',
+      a: isArabic
+        ? '[الصيغة النهائية بعد تأكيد نموذج الرسوم — على سبيل المثال، كيف تدفع المستشفيات الشريكة لنوهـافي وما إذا كان المرضى يدفعون أي شيء.] تقدير المستشفى الخاص بك لا تتم زيادته أبداً بسبب نوهـافي.'
+        : isRussian
+        ? '[Окончательная формулировка после утверждения модели — например, как клиники оплачивают Nuhavi и платят ли пациенты.] Ваша смета от больницы никогда не увеличивается из-за Nuhavi.'
+        : '[Final wording once the fee model is confirmed — e.g. how partner hospitals pay Nuhavi and whether patients pay anything.] Your hospital estimate is never increased because of Nuhavi.',
+    },
+    {
+      q: isArabic
+        ? 'من الذي يراجع تقاريري الطبية؟'
+        : isRussian
+        ? 'Кто изучает мои медицинские документы?'
+        : 'Who reviews my medical reports?',
+      a: isArabic
+        ? 'تتم مراجعة كل ملف سريرياً بواسطة مؤسسي نوهـافي الأطباء وفريقنا الاستشاري قبل أن ترى أي مستشفى تقاريرك.'
+        : isRussian
+        ? 'Каждый случай изучается врачами-основателями Nuhavi и консультативным советом до того, как документы направляются в клиники.'
+        : 'Every case is clinically reviewed by Nuhavi\'s physician founders and medical advisory team before any hospital sees your files.',
+    },
+    {
+      q: isArabic
+        ? 'كم من الوقت يستغرق استخراج التأشيرة الطبية للهند؟'
+        : isRussian
+        ? 'Сколько времени занимает получение медицинской визы в Индию?'
+        : 'How long does a medical visa for India take?',
+      a: isArabic
+        ? 'عادة ما يستغرق الأمر من 3 إلى 5 أيام عمل بمجرد إصدار وتقديم خطاب الدعوة الطبية الرسمي من المستشفى المعالج.'
+        : isRussian
+        ? 'Обычно от 3 до 5 рабочих дней после подачи официального визового приглашения от принимающей клиники.'
+        : 'Typically 3 to 5 working days once the treating hospital\'s official visa invitation letter is submitted to the visa portal or embassy.',
+    },
+    {
+      q: isArabic
+        ? 'هل يمكن لأحد أفراد العائلة السفر معي؟'
+        : isRussian
+        ? 'Может ли член семьи поехать со мной?'
+        : 'Can a family member travel with me?',
+      a: isArabic
+        ? 'نعم. تتيح تأشيرة المرافق الطبي سفر ما يصل إلى مرافقين اثنين من العائلة لمرافقة المريض، ونرتب لهما الإقامة والدعم الكامل.'
+        : isRussian
+        ? 'Да. Виза медицинского сопровождающего позволяет приехать до двух членов семьи или ухаживающих с организацией проживания.'
+        : 'Yes. The medical attendant visa allows up to two family members or caregivers to accompany the patient with full accommodation and support.',
+    },
+    {
+      q: isArabic
+        ? 'كيف يتم اختيار المستشفيات الشريكة؟'
+        : isRussian
+        ? 'Как отбираются клиники-партнеры?'
+        : 'How are partner hospitals chosen?',
+      a: isArabic
+        ? 'نختار مجموعة محددة من المستشفيات المعتمدة من NABH و JCI في حيدر آباد التي زارها أطباؤنا ودققوا في بنيتها التحتية الجراحية وجودة مكافحة العدوى.'
+        : isRussian
+        ? 'Мы работаем с избранными клиниками в Хайдарабаде, аккредитованными NABH и JCI, лично проверенными нашими врачами по хирургическим стандартам и инфекционному контролю.'
+        : 'We select a small group of NABH and JCI accredited hospitals in Hyderabad personally visited and audited by our doctors on clinical infrastructure and surgical volumes.',
+    },
+  ],
+};
+---
+
+<section class="home-faq-section" aria-labelledby="faq-section-heading" id="faqs" dir={isArabic ? 'rtl' : 'ltr'}>
+  <div class="container faq-container">
+    <div class="faq-header">
+      <h2 id="faq-section-heading" class="faq-title">
+        {t.heading}
+      </h2>
+    </div>
+
+    <div class="faq-accordion-group">
+      {t.faqs.map((faq, idx) => (
+        <details class="faq-accordion-item" open={idx === 0}>
+          <summary class="faq-summary">
+            <span class="faq-q-text">{faq.q}</span>
+            <span class="faq-icon" aria-hidden="true"></span>
+          </summary>
+          <div class="faq-body">
+            <p>{faq.a}</p>
+          </div>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .home-faq-section {
+    background-color: #FAF8F5;
+    padding: clamp(64px, 8vw, 92px) 0;
+    border-bottom: 1px solid rgba(15, 35, 64, 0.08);
+  }
+
+  .faq-container {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 clamp(20px, 4vw, 40px);
+    box-sizing: border-box;
+  }
+
+  .faq-header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  .faq-title {
+    font-family: var(--font-family-heading);
+    font-size: clamp(2.1rem, 3.2vw, 2.85rem);
+    color: #0F2340;
+    font-weight: 600;
+    margin: 0;
+    line-height: 1.2;
+  }
+
+  .faq-accordion-group {
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid rgba(15, 35, 64, 0.12);
+  }
+
+  .faq-accordion-item {
+    border-bottom: 1px solid rgba(15, 35, 64, 0.12);
+  }
+
+  .faq-summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 22px 0;
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+  }
+
+  .faq-summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq-q-text {
+    font-family: var(--font-family-base);
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #0F2340;
+    line-height: 1.4;
+  }
+
+  .faq-icon {
+    font-size: 1.35rem;
+    font-weight: 400;
+    color: #0F2340;
+    margin-left: 16px;
+    flex-shrink: 0;
+  }
+
+  [dir="rtl"] .faq-icon {
+    margin-left: 0;
+    margin-right: 16px;
+  }
+
+  .faq-icon::before {
+    content: '+';
+  }
+
+  .faq-accordion-item[open] .faq-icon::before {
+    content: '−';
+  }
+
+  .faq-body {
+    padding-bottom: 22px;
+  }
+
+  .faq-body p {
+    font-size: 0.9375rem;
+    color: #4B5563;
+    line-height: 1.65;
+    margin: 0;
+  }
+</style>

@@ -1,11 +1,12 @@
 ---
 /**
  * src/components/home/CostBreakdown.astro
- * Homepage: "What goes into the cost of treatment"
- * Reference: Page 9 & 35 of Nuhavi Health Look and Feel PDF.
- * Localized for English (/en/), Russian (/ru/), and Arabic (/ar/ RTL).
+ * Approved Cost Clarity Section — 12-Page PDF (Page 4)
+ *
+ * Background: Ivory (#F6F2EA)
+ * Left column: Heading, copy, 3 check bullets, "See treatment costs" & "How Nuhavi is paid" buttons.
+ * Right column: Estimate comparison table for Total knee replacement.
  */
-import { homeTranslations } from '../../i18n/homeTranslations';
 import type { SupportedLang } from '../../i18n/translations';
 
 interface Props {
@@ -17,71 +18,150 @@ const detectedLang: SupportedLang = currentPath.startsWith('/ar')
   ? 'ar'
   : currentPath.startsWith('/ru')
   ? 'ru'
+  : currentPath.startsWith('/fr')
+  ? 'fr'
   : 'en';
 
 const lang: SupportedLang = Astro.props.lang || detectedLang;
-const content = homeTranslations[lang].costBreakdown;
-const costCategories = content.categories;
+const isArabic = lang === 'ar';
+const isRussian = lang === 'ru';
+const isFrench = lang === 'fr';
+
+const prefix = `/${lang}`;
+const costsPageHref = `${prefix}/how-it-works/costs-and-fees/`;
+const commercialHref = `${prefix}/about/commercial-relationships/`;
+
+const t = {
+  eyebrow: isArabic ? 'شفافية التكلفة' : isRussian ? 'ПРОЗРАЧНОСТЬ СТОИМОСТИ' : 'COST CLARITY',
+  heading: isArabic
+    ? 'اعرف التكلفة قبل أن تسافر'
+    : isRussian
+    ? 'Знайте стоимость до поездки'
+    : isFrench
+    ? 'Connaissez le coût avant de voyager'
+    : 'Know the cost before you travel',
+  deck: isArabic
+    ? 'لا نعد بأقل الأسعار. نحن نحصل لك على تقديرات مكتوبة من مستشفيين أو ثلاثة مستشفيات معتمدة، ونوضح ما هو مشمول وما هو غير مشمول، ونشرح لك بدقة كيف تدفع أتعاب نوهـافي.'
+    : isRussian
+    ? 'Мы не обещаем самую низкую цену. Мы получаем для вас письменные сметы из двух-трех аккредитованных клиник, объясняем, что включено, а что нет, и открыто говорим, как оплачивается работа Nuhavi.'
+    : isFrench
+    ? 'Nous ne promettons pas le prix le plus bas. Nous vous obtenons des devis écrits de deux ou trois hôpitaux accrédités, expliquons ce qui est inclus et ce qui ne l\'est pas, et vous expliquons exactement comment Nuhavi est rémunéré.'
+    : 'We don\'t promise the lowest price. We get you written estimates from two or three accredited hospitals, explain what is and isn\'t included, and tell you exactly how Nuhavi is paid.',
+  bullets: [
+    isArabic ? 'مفصل: الجراحة، الإقامة، الأدوية، الفحوصات' : isRussian ? 'Постатейно: операция, пребывание, лекарства, анализы' : 'Itemised: surgery, stay, medicines, tests',
+    isArabic ? 'تاريخ الصلاحية والعملة محددين بدقة' : isRussian ? 'Срок действия и валюта указаны явно' : 'Validity date and currency stated',
+    isArabic ? 'مقارنة جنباً إلى جنب بواسطة منسقك' : isRussian ? 'Сравнение бок о бок вашим координатором' : 'Compared side by side by your coordinator',
+  ],
+  seeCostsBtn: isArabic ? 'عرض تكاليف العلاج' : isRussian ? 'Посмотреть стоимость лечения' : 'See treatment costs',
+  howNuhaviPaidBtn: isArabic ? 'كيف تدفع أتعاب نوهـافي' : isRussian ? 'Как оплачиваются услуги Nuhavi' : 'How Nuhavi is paid',
+  sampleHeader: isArabic ? 'مقارنة تقديرية · نموذج توضيحي' : isRussian ? 'СРАВНЕНИЕ СМЕТ · ПРИМЕР' : 'ESTIMATE COMPARISON · SAMPLE LAYOUT',
+  validity: isArabic ? 'صالح لمدة 30 يوماً' : isRussian ? 'Действительно 30 дней' : 'Valid 30 days',
+  procedureTitle: isArabic ? 'استبدال كامل لمفصل الركبة' : isRussian ? 'Полная замена коленного сустава' : 'Total knee replacement',
+  itemLabel: isArabic ? 'البند' : isRussian ? 'Статья' : 'Item',
+  hospA: isArabic ? 'المستشفى أ' : isRussian ? 'Клиника A' : 'Hospital A',
+  hospB: isArabic ? 'المستشفى ب' : isRussian ? 'Клиника B' : 'Hospital B',
+  hospC: isArabic ? 'المستشفى ج' : isRussian ? 'Клиника C' : 'Hospital C',
+  rowSurgery: isArabic ? 'الجراحة وأتعاب الجراح' : isRussian ? 'Операция и хирург' : 'Surgery & surgeon',
+  rowImplant: isArabic ? 'المفصل الصناعي' : isRussian ? 'Имплантат' : 'Implant',
+  rowRoom: isArabic ? 'الغرفة والتمريض (5 أيام)' : isRussian ? 'Палата и уход (5 дней)' : 'Room & nursing (5 days)',
+  rowPhysio: isArabic ? 'العلاج الطبيعي' : isRussian ? 'Физиотерапия' : 'Physiotherapy',
+  rowTotal: isArabic ? 'الإجمالي (دولار)' : isRussian ? 'Итого (USD)' : 'Total (USD)',
+  footnote: isArabic
+    ? 'الأرقام مستمدة من التقدير المكتوب لكل مستشفى لحالتك.'
+    : isRussian
+    ? 'Цифры взяты из письменных смет каждой клиники для вашего случая.'
+    : 'Figures come from each hospital\'s written estimate for your case.',
+};
 ---
 
-<section class="cost-breakdown-section" aria-labelledby="cost-breakdown-heading">
+<section class="cost-clarity-section" id="costs" aria-labelledby="cost-heading" dir={isArabic ? 'rtl' : 'ltr'}>
   <div class="container cost-container">
-    <div class="cost-grid">
-      <!-- Left Column: Title, Deck, CTA Link -->
+    <div class="cost-two-col-grid">
+      <!-- Left Column: Copy, Bullets & Action Buttons -->
       <div class="cost-left-col">
-        <h2 id="cost-breakdown-heading" class="cost-title">
-          {content.title}
+        <span class="cost-eyebrow">{t.eyebrow}</span>
+        <h2 id="cost-heading" class="cost-title">
+          {t.heading}
         </h2>
         <p class="cost-deck">
-          {content.deck}
+          {t.deck}
         </p>
 
-        <div class="cost-cta-wrap">
-          <a href="/en/how-it-works/costs-and-fees/" class="btn-pill-primary">
-            {content.feesCta}
+        <ul class="cost-bullets-list">
+          {t.bullets.map((b) => (
+            <li>
+              <span class="check-icon" aria-hidden="true">✓</span>
+              <span>{b}</span>
+            </li>
+          ))}
+        </ul>
+
+        <div class="cost-buttons-row">
+          <a href={costsPageHref} class="btn-navy-cost">
+            {t.seeCostsBtn}
+          </a>
+          <a href={commercialHref} class="btn-outline-cost">
+            {t.howNuhaviPaidBtn}
           </a>
         </div>
       </div>
 
-      <!-- Right Column: Interactive Segmented Bar + Legend -->
+      <!-- Right Column: Estimate Comparison Table Card (PDF Page 4) -->
       <div class="cost-right-col">
-        <div class="cost-interactive-card">
-          <span class="illustrative-label">
-            {content.illustrativeNote}
-          </span>
-
-          <!-- 7-Color Segmented Horizontal Bar -->
-          <div class="segmented-bar" role="img" aria-label="Cost breakdown percentage bar">
-            <div class="segment seg-1" style="width: 45%;" title="Surgery & Surgeon Fees: 45%"></div>
-            <div class="segment seg-2" style="width: 20%;" title="Hospital Stay & Nursing: 20%"></div>
-            <div class="segment seg-3" style="width: 10%;" title="Diagnostic Tests: 10%"></div>
-            <div class="segment seg-4" style="width: 10%;" title="Implants & Consumables: 10%"></div>
-            <div class="segment seg-5" style="width: 7%;" title="Local Accommodation: 7%"></div>
-            <div class="segment seg-6" style="width: 5%;" title="Flight & Medical Visa: 5%"></div>
-            <div class="segment seg-7" style="width: 3%;" title="Nuhavi Coordination Fee: 3%"></div>
+        <div class="estimate-table-card">
+          <div class="table-card-header">
+            <span class="meta-tag">{t.sampleHeader}</span>
+            <span class="validity-tag">{t.validity}</span>
           </div>
 
-          <!-- Category Legend Grid -->
-          <div class="categories-legend-grid">
-            {costCategories.map((cat, idx) => (
-              <button
-                type="button"
-                class={`category-item cat-item-${idx + 1} ${idx === 0 ? 'active' : ''}`}
-                data-cat-idx={idx}
-                aria-pressed={idx === 0 ? 'true' : 'false'}
-              >
-                <span class={`cat-dot dot-${idx + 1}`}></span>
-                <span class="cat-name">{cat.name}</span>
-                <span class="cat-pct">{cat.percent}</span>
-              </button>
-            ))}
+          <h3 class="procedure-heading">{t.procedureTitle}</h3>
+
+          <div class="table-wrap">
+            <table class="comparison-table">
+              <thead>
+                <tr>
+                  <th scope="col" class="th-item">{t.itemLabel}</th>
+                  <th scope="col" class="th-hosp">{t.hospA}</th>
+                  <th scope="col" class="th-hosp">{t.hospB}</th>
+                  <th scope="col" class="th-hosp">{t.hospC}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row" class="td-item">{t.rowSurgery}</th>
+                  <td class="td-val">[ ]</td>
+                  <td class="td-val">[ ]</td>
+                  <td class="td-val">[ ]</td>
+                </tr>
+                <tr>
+                  <th scope="row" class="td-item">{t.rowImplant}</th>
+                  <td class="td-val">[ ]</td>
+                  <td class="td-val">[ ]</td>
+                  <td class="td-val">[ ]</td>
+                </tr>
+                <tr>
+                  <th scope="row" class="td-item">{t.rowRoom}</th>
+                  <td class="td-val">[ ]</td>
+                  <td class="td-val">[ ]</td>
+                  <td class="td-val">[ ]</td>
+                </tr>
+                <tr>
+                  <th scope="row" class="td-item">{t.rowPhysio}</th>
+                  <td class="td-val">[ ]</td>
+                  <td class="td-val">[ ]</td>
+                  <td class="td-val">[ ]</td>
+                </tr>
+                <tr class="row-total">
+                  <th scope="row" class="td-item td-total-label">{t.rowTotal}</th>
+                  <td class="td-val td-total-val">[ ]</td>
+                  <td class="td-val td-total-val">[ ]</td>
+                  <td class="td-val td-total-val">[ ]</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
 
-          <!-- Selected Category Detail Box -->
-          <div class="selected-cat-box" id="selected-cat-box">
-            <h4 class="cat-box-title" id="cat-box-title">{costCategories[0].name} ({costCategories[0].percent})</h4>
-            <p class="cat-box-desc" id="cat-box-desc">{costCategories[0].desc}</p>
-          </div>
+          <p class="table-footnote">{t.footnote}</p>
         </div>
       </div>
     </div>
@@ -89,247 +169,226 @@ const costCategories = content.categories;
 </section>
 
 <style>
-  .cost-breakdown-section {
+  .cost-clarity-section {
     width: 100%;
-    background-color: var(--color-mist);
-    padding: var(--space-12) 0;
-    border-bottom: 1px solid rgba(20, 41, 75, 0.08);
+    background-color: #F6F2EA;
+    padding: clamp(64px, 8vw, 92px) 0;
   }
 
   .cost-container {
-    width: 100%;
-    max-width: 1200px;
+    max-width: 1280px;
     margin: 0 auto;
-    padding: 0 var(--space-4);
+    padding: 0 clamp(20px, 4vw, 40px);
     box-sizing: border-box;
   }
 
-  .cost-grid {
+  .cost-two-col-grid {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--space-8);
+    grid-template-columns: 1fr 1.15fr;
+    gap: 48px;
+    align-items: center;
   }
 
-  @media (min-width: 960px) {
-    .cost-grid {
-      grid-template-columns: 5fr 7fr;
-      gap: var(--space-10);
-      align-items: center;
-    }
-  }
-
-  /* Left Column */
   .cost-left-col {
     display: flex;
     flex-direction: column;
-    gap: var(--space-4);
+    gap: 16px;
+  }
+
+  .cost-eyebrow {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    color: #A88B5A;
+    text-transform: uppercase;
   }
 
   .cost-title {
-    font-size: clamp(1.875rem, 3.5vw, 2.5rem);
-    font-weight: 800;
-    color: var(--color-navy);
-    line-height: 1.2;
+    font-family: var(--font-family-heading);
+    font-size: clamp(2.1rem, 3.2vw, 2.85rem);
+    color: #0F2340;
+    font-weight: 600;
     margin: 0;
+    line-height: 1.15;
   }
 
   .cost-deck {
     font-size: 1rem;
+    color: #4B5563;
     line-height: 1.6;
-    color: var(--color-slate);
     margin: 0;
   }
 
-  .cost-cta-wrap {
-    margin-top: var(--space-2);
-  }
-
-  .btn-pill-primary {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 12px 24px;
-    background-color: var(--color-navy);
-    color: var(--color-paper);
-    border-radius: var(--radius-pill);
-    font-weight: 700;
-    font-size: 0.875rem;
-    text-decoration: none;
-    transition: background-color 0.2s ease, transform 0.15s ease;
-  }
-
-  .btn-pill-primary:hover {
-    background-color: var(--color-deep-navy);
-    transform: translateY(-1px);
-  }
-
-  /* Right Column: Card */
-  .cost-interactive-card {
-    background-color: #FFFFFF;
-    border: 1px solid rgba(20, 41, 75, 0.08);
-    border-radius: var(--radius-card);
-    padding: var(--space-6);
-    box-shadow: 0 4px 20px rgba(20, 41, 75, 0.04);
-  }
-
-  .illustrative-label {
-    display: block;
-    font-size: 0.75rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--color-slate);
-    margin-bottom: 12px;
-  }
-
-  /* Segmented Bar */
-  .segmented-bar {
-    display: flex;
-    height: 16px;
-    border-radius: 8px;
-    overflow: hidden;
-    margin-bottom: var(--space-5);
-    background-color: var(--color-mist);
-  }
-
-  .segment {
-    height: 100%;
-    transition: opacity 0.2s ease;
-  }
-
-  .seg-1 { background-color: var(--color-navy); }
-  .seg-2 { background-color: var(--color-deep-navy); }
-  .seg-3 { background-color: var(--color-gold); }
-  .seg-4 { background-color: var(--color-success); }
-  .seg-5 { background-color: #24A1DE; }
-  .seg-6 { background-color: #5B6A80; }
-  .seg-7 { background-color: #E65100; }
-
-  /* Legend */
-  .categories-legend-grid {
+  .cost-bullets-list {
+    list-style: none;
+    padding: 0;
+    margin: 8px 0 16px 0;
     display: flex;
     flex-direction: column;
-    gap: 6px;
-    margin-bottom: var(--space-5);
+    gap: 10px;
   }
 
-  .category-item {
+  .cost-bullets-list li {
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 8px 10px;
-    background: transparent;
-    border: 1px solid transparent;
-    border-radius: 8px;
-    cursor: pointer;
-    font-family: var(--font-family-base);
-    text-align: left;
-    transition: background-color 0.15s ease, border-color 0.15s ease;
-  }
-
-  :global([dir="rtl"]) .category-item {
-    text-align: right;
-  }
-
-  .category-item:hover {
-    background-color: var(--color-mist);
-  }
-
-  .category-item.active {
-    background-color: var(--color-mist);
-    border-color: rgba(20, 41, 75, 0.15);
-  }
-
-  .cat-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-
-  .dot-1 { background-color: var(--color-navy); }
-  .dot-2 { background-color: var(--color-deep-navy); }
-  .dot-3 { background-color: var(--color-gold); }
-  .dot-4 { background-color: var(--color-success); }
-  .dot-5 { background-color: #24A1DE; }
-  .dot-6 { background-color: #5B6A80; }
-  .dot-7 { background-color: #E65100; }
-
-  .cat-name {
-    font-size: 0.8125rem;
-    font-weight: 600;
-    color: var(--color-navy);
-    flex-grow: 1;
-  }
-
-  .cat-pct {
-    font-size: 0.8125rem;
-    font-weight: 800;
-    color: var(--color-slate);
-  }
-
-  /* Selected Box */
-  .selected-cat-box {
-    padding: var(--space-4);
-    background-color: var(--color-mist);
-    border-radius: 8px;
-    border-left: 3px solid var(--color-gold);
-  }
-
-  :global([dir="rtl"]) .selected-cat-box {
-    border-left: none;
-    border-right: 3px solid var(--color-gold);
-    text-align: right;
-  }
-
-  .cat-box-title {
     font-size: 0.9375rem;
-    font-weight: 800;
-    color: var(--color-navy);
-    margin: 0 0 4px;
+    color: #0F2340;
+    font-weight: 500;
   }
 
-  .cat-box-desc {
-    font-size: 0.8125rem;
-    line-height: 1.45;
-    color: var(--color-slate);
-    margin: 0;
+  .check-icon {
+    color: #A88B5A;
+    font-weight: 700;
   }
 
-  /* RTL Support */
-  :global([dir="rtl"]) .cost-title,
-  :global([dir="rtl"]) .cost-deck {
+  .cost-buttons-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+  }
+
+  .btn-navy-cost {
+    background-color: #0F2340;
+    color: #FFFFFF;
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.15s ease;
+  }
+
+  .btn-navy-cost:hover {
+    background-color: #1A365D;
+  }
+
+  .btn-outline-cost {
+    background-color: #FFFFFF;
+    color: #0F2340;
+    border: 1px solid rgba(15, 35, 64, 0.25);
+    padding: 11px 22px;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+  }
+
+  .btn-outline-cost:hover {
+    border-color: #0F2340;
+    background-color: #FAF8F5;
+  }
+
+  /* Right Card */
+  .estimate-table-card {
+    background-color: #FFFFFF;
+    border: 1px solid rgba(15, 35, 64, 0.12);
+    border-radius: 10px;
+    padding: 28px 24px;
+    box-shadow: 0 4px 16px rgba(15, 35, 64, 0.04);
+  }
+
+  .table-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: #64748B;
+    text-transform: uppercase;
+  }
+
+  .procedure-heading {
+    font-family: var(--font-family-heading);
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #0F2340;
+    margin: 0 0 20px 0;
+  }
+
+  .table-wrap {
+    overflow-x: auto;
+  }
+
+  .comparison-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+  }
+
+  .comparison-table th,
+  .comparison-table td {
+    padding: 10px 12px;
+    text-align: left;
+    border-bottom: 1px solid #E2E8F0;
+  }
+
+  [dir="rtl"] .comparison-table th,
+  [dir="rtl"] .comparison-table td {
     text-align: right;
+  }
+
+  .th-item {
+    font-weight: 600;
+    color: #64748B;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+  }
+
+  .th-hosp {
+    font-weight: 600;
+    color: #0F2340;
+    text-align: right;
+    font-size: 0.8125rem;
+  }
+
+  [dir="rtl"] .th-hosp {
+    text-align: left;
+  }
+
+  .td-item {
+    font-weight: 500;
+    color: #374151;
+  }
+
+  .td-val {
+    text-align: right;
+    color: #64748B;
+    font-family: monospace;
+  }
+
+  [dir="rtl"] .td-val {
+    text-align: left;
+  }
+
+  .row-total {
+    border-top: 2px solid #0F2340;
+    font-weight: 700;
+  }
+
+  .row-total th,
+  .row-total td {
+    color: #0F2340;
+    border-bottom: none;
+    padding-top: 14px;
+  }
+
+  .table-footnote {
+    font-size: 0.75rem;
+    color: #64748B;
+    margin: 18px 0 0 0;
+    font-style: italic;
+  }
+
+  @media (max-width: 900px) {
+    .cost-two-col-grid {
+      grid-template-columns: 1fr;
+      gap: 36px;
+    }
   }
 </style>
-
-<script define:vars={{ costCategories }}>
-  function setupCostInteractivity() {
-    const buttons = document.querySelectorAll('.category-item');
-    const titleEl = document.getElementById('cat-box-title');
-    const descEl = document.getElementById('cat-box-desc');
-
-    if (!buttons.length || !titleEl || !descEl) return;
-
-    buttons.forEach((btn) => {
-      btn.addEventListener('click', () => {
-        buttons.forEach((b) => {
-          b.classList.remove('active');
-          b.setAttribute('aria-pressed', 'false');
-        });
-        btn.classList.add('active');
-        btn.setAttribute('aria-pressed', 'true');
-
-        const idx = parseInt(btn.getAttribute('data-cat-idx') || '0', 10);
-        const data = costCategories[idx];
-        if (data) {
-          titleEl.textContent = `${data.name} (${data.percent})`;
-          descEl.textContent = data.desc;
-        }
-      });
-    });
-  }
-
-  document.addEventListener('DOMContentLoaded', setupCostInteractivity);
-  setupCostInteractivity();
-</script>

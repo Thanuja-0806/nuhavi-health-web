@@ -1,0 +1,64 @@
+---
+/**
+ * src/pages/en/medical-camps/index.astro
+ * Dedicated page for International Medical Outreach & Africa Camps
+ * SOURCE OF TRUTH: Nuhavi Knowledge Centre website - Claude.pdf (Pages 3–6)
+ */
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import AfricaMedicalCamps from '../../../components/home/AfricaMedicalCamps.astro';
+---
+
+<BaseLayout
+  title="Upcoming Medical Camps in Africa | Nuhavi Health"
+  description="Connect with experienced specialists from India through Nuhavi's international medical outreach programmes in Kenya, Uganda, and Tanzania."
+  lang="en"
+>
+  <!-- Breadcrumb -->
+  <nav class="breadcrumb-nav" aria-label="Breadcrumb">
+    <div class="container breadcrumb-container">
+      <a href="/en/" class="bc-link">Home</a>
+      <span class="bc-sep" aria-hidden="true">›</span>
+      <span class="bc-current" aria-current="page">Medical Camps in Africa</span>
+    </div>
+  </nav>
+
+  <AfricaMedicalCamps lang="en" />
+</BaseLayout>
+
+<style>
+  .breadcrumb-nav {
+    background-color: #FAF8F5;
+    padding: 14px 0;
+    border-bottom: 1px solid #DCE3EC;
+  }
+
+  .breadcrumb-container {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 0 clamp(16px, 3vw, 32px);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8125rem;
+  }
+
+  .bc-link {
+    color: #5A6E85;
+    text-decoration: none;
+  }
+
+  .bc-link:hover {
+    color: #0F2340;
+    text-decoration: underline;
+  }
+
+  .bc-sep {
+    color: #94A3B8;
+  }
+
+  .bc-current {
+    color: #0F2340;
+    font-weight: 600;
+  }
+</style>
+

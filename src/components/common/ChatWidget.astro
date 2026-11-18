@@ -5,6 +5,7 @@
  * Reference: Nuhavi Health Look and Feel PDF Page 38.
  *
  * Fully localized for English (/en/), Russian (/ru/), and Arabic (/ar/ RTL).
+ * Preserves all existing IDs, event handlers, and contact URLs.
  */
 import { translations, type SupportedLang } from '../../i18n/translations';
 
@@ -24,6 +25,12 @@ const t = translations[currentLang].chatWidget;
 
 const isUzbekistan = currentPath.includes('/uzbekistan') || currentLang === 'ru';
 const contactHref = `/${currentLang}/contact/`;
+
+const coordinatorLabel: Record<SupportedLang, string> = {
+  en: 'Care Coordinator',
+  ru: 'Медицинский координатор',
+  ar: 'منسق الرعاية الطبية',
+};
 ---
 
 <div class="chat-widget-root" id="chat-widget-root" data-lang={currentLang} data-uzbekistan={isUzbekistan ? "true" : "false"}>
@@ -36,6 +43,9 @@ const contactHref = `/${currentLang}/contact/`;
     aria-hidden="true"
   >
     <div class="chat-panel-header">
+      <div class="header-status-indicator">
+        <span class="status-text">{coordinatorLabel[currentLang]}</span>
+      </div>
       <h3 id="chat-panel-title" class="chat-title">{t.title}</h3>
       <p class="chat-hours">{t.subtitle}</p>
     </div>
@@ -55,6 +65,9 @@ const contactHref = `/${currentLang}/contact/`;
               <span class="channel-name">Telegram</span>
               <span class="channel-status">{t.telegramStatus}</span>
             </div>
+            <svg class="channel-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
           </a>
 
           <!-- 2. WhatsApp -->
@@ -68,6 +81,9 @@ const contactHref = `/${currentLang}/contact/`;
               <span class="channel-name">WhatsApp</span>
               <span class="channel-status">{t.whatsappStatus}</span>
             </div>
+            <svg class="channel-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
           </a>
 
           <!-- 3. Email -->
@@ -82,6 +98,9 @@ const contactHref = `/${currentLang}/contact/`;
               <span class="channel-name">{t.emailTitle}</span>
               <span class="channel-status">{t.emailStatus}</span>
             </div>
+            <svg class="channel-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
           </a>
         </>
       ) : (
@@ -97,6 +116,9 @@ const contactHref = `/${currentLang}/contact/`;
               <span class="channel-name">WhatsApp</span>
               <span class="channel-status">{t.whatsappStatus}</span>
             </div>
+            <svg class="channel-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
           </a>
 
           <!-- 2. Telegram -->
@@ -110,6 +132,9 @@ const contactHref = `/${currentLang}/contact/`;
               <span class="channel-name">Telegram</span>
               <span class="channel-status">{t.telegramStatus}</span>
             </div>
+            <svg class="channel-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
           </a>
 
           <!-- 3. Email -->
@@ -124,6 +149,9 @@ const contactHref = `/${currentLang}/contact/`;
               <span class="channel-name">{t.emailTitle}</span>
               <span class="channel-status">{t.emailStatus}</span>
             </div>
+            <svg class="channel-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
           </a>
         </>
       )}
@@ -131,6 +159,13 @@ const contactHref = `/${currentLang}/contact/`;
 
     <!-- Warning / Privacy Note (PDF Page 38) -->
     <div class="chat-warning-box">
+      <span class="warning-icon" aria-hidden="true">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+      </span>
       <p>
         {t.warningNote}
       </p>
@@ -172,7 +207,7 @@ const contactHref = `/${currentLang}/contact/`;
     bottom: 24px;
     right: 24px;
     z-index: 999;
-    font-family: var(--font-family-base, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+    font-family: var(--font-family-base, 'Manrope', system-ui, sans-serif);
   }
 
   /* RTL Support for Chat Widget */
@@ -192,7 +227,7 @@ const contactHref = `/${currentLang}/contact/`;
     padding: 12px 22px;
     border-radius: var(--radius-pill, 9999px);
     border: 2px solid var(--color-gold, #C49A3C);
-    box-shadow: 0 4px 18px rgba(13, 27, 51, 0.28);
+    box-shadow: 0 6px 20px rgba(13, 27, 51, 0.32);
     font-size: 0.9375rem;
     font-weight: 700;
     cursor: pointer;
@@ -201,9 +236,9 @@ const contactHref = `/${currentLang}/contact/`;
   }
 
   .floating-chat-btn:hover {
-    background-color: #14294B;
+    background-color: var(--color-navy, #14294B);
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(13, 27, 51, 0.38);
+    box-shadow: 0 10px 28px rgba(13, 27, 51, 0.42);
   }
 
   .floating-chat-btn:focus-visible {
@@ -241,8 +276,8 @@ const contactHref = `/${currentLang}/contact/`;
     width: 350px;
     background-color: #FFFFFF;
     border-radius: 18px;
-    border: 1px solid rgba(20, 41, 75, 0.12);
-    box-shadow: 0 16px 40px rgba(13, 27, 51, 0.18);
+    border: 1px solid var(--color-border, rgba(20, 41, 75, 0.12));
+    box-shadow: 0 18px 48px rgba(13, 27, 51, 0.22);
     padding: 22px 20px 20px;
     box-sizing: border-box;
     animation: chatFlyoutFade 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -257,7 +292,7 @@ const contactHref = `/${currentLang}/contact/`;
   @keyframes chatFlyoutFade {
     from {
       opacity: 0;
-      transform: translateY(10px) scale(0.98);
+      transform: translateY(8px) scale(0.98);
     }
     to {
       opacity: 1;
@@ -273,12 +308,29 @@ const contactHref = `/${currentLang}/contact/`;
     margin-bottom: 16px;
   }
 
+  .header-status-indicator {
+    display: inline-flex;
+    align-items: center;
+    margin-bottom: 6px;
+  }
+
+  .status-text {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-slate, #5B6A80);
+    background-color: rgba(20, 41, 75, 0.06);
+    padding: 2px 8px;
+    border-radius: var(--radius-pill, 9999px);
+  }
+
   .chat-title {
     font-size: 1.125rem;
     font-weight: 800;
-    color: var(--color-navy, #14294B);
+    color: var(--color-deep-navy, #0D1B33);
     line-height: 1.25;
-    margin: 0 0 6px;
+    margin: 0 0 4px;
     letter-spacing: -0.01em;
   }
 
@@ -293,27 +345,28 @@ const contactHref = `/${currentLang}/contact/`;
   .chat-channels-list {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 9px;
     margin-bottom: 14px;
   }
 
   .channel-card {
     display: flex;
     align-items: center;
-    gap: 14px;
-    padding: 12px 14px;
-    border-radius: 14px;
+    gap: 12px;
+    padding: 11px 14px;
+    border-radius: 12px;
     border: 1px solid rgba(20, 41, 75, 0.12);
     background-color: #FFFFFF;
     text-decoration: none;
-    transition: border-color 0.15s ease, background-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+    box-shadow: 0 1px 3px rgba(13, 27, 51, 0.03);
+    transition: border-color 0.16s ease, background-color 0.16s ease, transform 0.16s ease, box-shadow 0.16s ease;
   }
 
   .channel-card:hover {
     background-color: #F8FAFD;
-    border-color: rgba(20, 41, 75, 0.25);
+    border-color: rgba(20, 41, 75, 0.24);
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(13, 27, 51, 0.06);
+    box-shadow: 0 4px 12px rgba(13, 27, 51, 0.07);
   }
 
   .channel-card:focus-visible {
@@ -322,8 +375,8 @@ const contactHref = `/${currentLang}/contact/`;
   }
 
   .channel-icon-wrap {
-    width: 40px;
-    height: 40px;
+    width: 38px;
+    height: 38px;
     border-radius: 10px;
     display: flex;
     align-items: center;
@@ -348,6 +401,7 @@ const contactHref = `/${currentLang}/contact/`;
     display: flex;
     flex-direction: column;
     min-width: 0;
+    flex: 1 1 auto;
   }
 
   .channel-name {
@@ -364,17 +418,47 @@ const contactHref = `/${currentLang}/contact/`;
     margin-top: 2px;
   }
 
+  .channel-arrow {
+    color: var(--color-slate);
+    opacity: 0.5;
+    flex-shrink: 0;
+    transition: transform 0.16s ease, opacity 0.16s ease;
+  }
+
+  .channel-card:hover .channel-arrow {
+    opacity: 0.9;
+    transform: translateX(2px);
+  }
+
+  :global([dir="rtl"]) .channel-arrow {
+    transform: rotate(180deg);
+  }
+
+  :global([dir="rtl"]) .channel-card:hover .channel-arrow {
+    transform: rotate(180deg) translateX(2px);
+  }
+
   /* Warning Box */
   .chat-warning-box {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
     background-color: #FFF8EB;
-    border: 1px solid rgba(196, 154, 60, 0.22);
-    border-radius: 12px;
-    padding: 12px 14px;
+    border: 1px solid rgba(196, 154, 60, 0.25);
+    border-radius: 10px;
+    padding: 10px 12px;
+  }
+
+  .warning-icon {
+    color: var(--color-gold-text, #8A6726);
+    flex-shrink: 0;
+    margin-top: 2px;
+    display: inline-flex;
   }
 
   .chat-warning-box p {
-    font-size: 0.8125rem;
-    line-height: 1.5;
+    font-size: 0.785rem;
+    line-height: 1.45;
     color: #8A6726;
     margin: 0;
     font-weight: 500;

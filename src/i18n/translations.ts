@@ -12,22 +12,31 @@
  * - Brand name "Nuhavi Health" and certified abbreviations (NABH, JCI) preserved.
  */
 
-export type SupportedLang = 'en' | 'ru' | 'ar';
+export type SupportedLang = 'en' | 'ru' | 'ar' | 'fr';
 
 export interface SiteTranslations {
   nav: {
     treatments: string;
+    specialties: string;
     hospitals: string;
+    doctors: string;
+    cost: string;
     howItWorks: string;
     countries: string;
     stories: string;
     resources: string;
+    videos: string;
     about: string;
     contact: string;
     requestOpinion: string;
     menu: string;
     close: string;
     language: string;
+    treatmentsMenuAria: string;
+    specialtiesMenuAria: string;
+    acceptingGroupLabel: string;
+    onRequestGroupLabel: string;
+    viewAllTreatments: string;
   };
   footer: {
     roleDescription: string;
@@ -57,17 +66,26 @@ export const translations: Record<SupportedLang, SiteTranslations> = {
   en: {
     nav: {
       treatments: 'Treatments',
+      specialties: 'Specialties',
       hospitals: 'Hospitals',
+      doctors: 'Doctors',
+      cost: 'Cost',
       howItWorks: 'How it works',
       countries: 'Countries',
       stories: 'Stories',
-      resources: 'Resources',
+      resources: 'Knowledge Centre',
+      videos: 'Videos',
       about: 'About',
       contact: 'Contact',
       requestOpinion: 'Request a medical opinion',
       menu: 'Menu',
       close: 'Close',
       language: 'Language',
+      treatmentsMenuAria: 'Treatments and specialties menu',
+      specialtiesMenuAria: 'Specialties menu',
+      acceptingGroupLabel: 'Accepting enquiries (2)',
+      onRequestGroupLabel: 'Available on request (8)',
+      viewAllTreatments: 'View all treatments overview',
     },
     footer: {
       roleDescription:
@@ -99,17 +117,26 @@ export const translations: Record<SupportedLang, SiteTranslations> = {
   ru: {
     nav: {
       treatments: 'Лечение',
+      specialties: 'Специальности',
       hospitals: 'Больницы',
+      doctors: 'Врачи',
+      cost: 'Стоимость',
       howItWorks: 'Как это работает',
       countries: 'Страны',
       stories: 'Истории пациентов',
-      resources: 'Руководства',
+      resources: 'База знаний',
+      videos: 'Видео',
       about: 'О нас',
       contact: 'Контакты',
       requestOpinion: 'Запросить медицинское заключение',
       menu: 'Меню',
       close: 'Закрыть',
       language: 'Язык',
+      treatmentsMenuAria: 'Меню медицинских направлений',
+      specialtiesMenuAria: 'Меню медицинских специальностей',
+      acceptingGroupLabel: 'Прием обращений открыт (2)',
+      onRequestGroupLabel: 'Доступно по запросу (8)',
+      viewAllTreatments: 'Все направления лечения',
     },
     footer: {
       roleDescription:
@@ -141,17 +168,26 @@ export const translations: Record<SupportedLang, SiteTranslations> = {
   ar: {
     nav: {
       treatments: 'العلاجات',
+      specialties: 'التخصصات',
       hospitals: 'المستشفيات',
+      doctors: 'الأطباء',
+      cost: 'التكلفة',
       howItWorks: 'كيف نعمل',
       countries: 'الدول',
       stories: 'تجارب المرضى',
-      resources: 'المصادر',
+      resources: 'مركز المعرفة',
+      videos: 'فيديوهات',
       about: 'عن نوهـافي',
       contact: 'اتصل بنا',
       requestOpinion: 'طلب رأي طبي',
       menu: 'القائمة',
       close: 'إغلاق',
       language: 'اللغة',
+      treatmentsMenuAria: 'قائمة التخصصات الطبية والعلاجات',
+      specialtiesMenuAria: 'قائمة التخصصات الطبية',
+      acceptingGroupLabel: 'استقبال الطلبات متاح (2)',
+      onRequestGroupLabel: 'متاح حسب الطلب (8)',
+      viewAllTreatments: 'عرض جميع التخصصات الطبية',
     },
     footer: {
       roleDescription:
@@ -179,12 +215,64 @@ export const translations: Record<SupportedLang, SiteTranslations> = {
       buttonAriaLabel: 'تحدث مع منسق الرعاية الطبية',
     },
   },
+
+  fr: {
+    nav: {
+      treatments: 'Traitements',
+      specialties: 'Spécialités',
+      hospitals: 'Hôpitaux',
+      doctors: 'Médecins',
+      cost: 'Coûts',
+      howItWorks: 'Comment ça marche',
+      countries: 'Pays',
+      stories: 'Témoignages',
+      resources: 'Centre de connaissances',
+      videos: 'Vidéos',
+      about: 'À propos',
+      contact: 'Contact',
+      requestOpinion: 'Demander un avis médical',
+      menu: 'Menu',
+      close: 'Fermer',
+      language: 'Langue',
+      treatmentsMenuAria: 'Menu des traitements et spécialités',
+      specialtiesMenuAria: 'Menu des spécialités médicales',
+      acceptingGroupLabel: 'Demandes acceptées (2)',
+      onRequestGroupLabel: 'Disponible sur demande (8)',
+      viewAllTreatments: 'Voir tous les traitements',
+    },
+    footer: {
+      roleDescription:
+        'Nuhavi Health est un service indépendant de coordination de voyages médicaux. Nous accompagnons les patients internationaux en coordonnant les demandes, la logistique de voyage et la communication avec des prestataires de santé indépendants.',
+      disclaimerCallout:
+        'Avis : Nuhavi Health facilite la coordination et la communication entre patients et prestataires de santé. Nous ne sommes pas un hôpital, une clinique ou un établissement médical et ne fournissons aucun diagnostic, traitement ou évaluation clinique.',
+      coordinationHeading: 'Coordination',
+      aboutHeading: 'À propos de Nuhavi Health',
+      legalHeading: 'Mentions légales',
+      privacyPolicy: 'Politique de confidentialité',
+      termsConditions: 'Conditions générales',
+      disclaimer: 'Avertissement',
+      copyright: (year: number) => `© ${year} Nuhavi Health. Tous droits réservés.`,
+    },
+    chatWidget: {
+      title: 'Parler à un coordinateur de soins',
+      subtitle: 'Un coordinateur répond pendant les heures de bureau — du lundi au samedi.',
+      telegramStatus: 'Numéro bientôt disponible — utilisez la page de contact',
+      whatsappStatus: 'Numéro bientôt disponible — utilisez la page de contact',
+      emailTitle: 'E-mail',
+      emailStatus: 'Demande générale — utilisez la page de contact',
+      warningNote:
+        'Veuillez ne pas envoyer de dossiers médicaux par chat ou e-mail. Après votre demande, nous vous envoyons un lien de téléversement privé et sécurisé.',
+      buttonLabel: 'Discuter avec nous',
+      buttonAriaLabel: 'Parler à un coordinateur de soins',
+    },
+  },
 };
 
 export function getLangFromUrl(url: URL): SupportedLang {
   const pathname = url.pathname;
   if (pathname.startsWith('/ar')) return 'ar';
   if (pathname.startsWith('/ru')) return 'ru';
+  if (pathname.startsWith('/fr')) return 'fr';
   return 'en';
 }
 

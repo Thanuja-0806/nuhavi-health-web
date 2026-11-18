@@ -139,20 +139,38 @@ const journeySteps = [
         </ol>
       </nav>
 
-      <!-- Signature 72 × 3 px Gold Rule -->
-      <div class="gold-rule" aria-hidden="true"></div>
+      <div class="oncology-hero-grid">
+        <div class="oncology-hero-content">
+          <!-- Signature 72 × 3 px Gold Rule -->
+          <div class="gold-rule" aria-hidden="true"></div>
 
-      <!-- H1 Page Title -->
-      <h1 class="oncology-title">Cancer care (oncology)</h1>
+          <!-- H1 Page Title -->
+          <h1 class="oncology-title">Cancer care (oncology)</h1>
 
-      <!-- Supporting Deck Text -->
-      <p class="oncology-deck">
-        Cancer treatment depends on the exact type of cancer, its stage and your overall health. Before you travel, your records are reviewed by a hospital oncology team so that you know what is being offered, why, and what it is likely to involve.
-      </p>
+          <!-- Supporting Deck Text -->
+          <p class="oncology-deck">
+            Cancer treatment depends on the exact type of cancer, its stage and your overall health. Before you travel, your records are reviewed by a hospital oncology team so that you know what is being offered, why, and what it is likely to involve.
+          </p>
 
-      <!-- Green Status Badge directly below introduction -->
-      <div class="oncology-status-wrap">
-        <span class="badge-status-accepting">Accepting enquiries</span>
+          <!-- Green Status Badge directly below introduction -->
+          <div class="oncology-status-wrap">
+            <span class="badge-status-accepting">Accepting enquiries</span>
+          </div>
+        </div>
+
+        <div class="oncology-hero-media">
+          <div class="specialty-image-card">
+            <img
+              src="/images/treatment-oncology.jpg"
+              alt="Advanced radiation oncology linear accelerator and precision cancer therapy suite"
+              class="specialty-hero-img"
+              width="720"
+              height="450"
+              loading="eager"
+            />
+            <div class="image-card-border" aria-hidden="true"></div>
+          </div>
+        </div>
       </div>
     </div>
   </header>
@@ -417,10 +435,72 @@ const journeySteps = [
      -------------------------------------------------------------------------- */
   .oncology-hero {
     width: 100%;
-    background-color: var(--color-paper);
+    background: linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%);
     padding-top: var(--space-6);
-    padding-bottom: var(--space-6);
+    padding-bottom: var(--space-8);
+    border-bottom: 1px solid var(--color-border);
     box-sizing: border-box;
+  }
+
+  /* Two-column hero grid */
+  .oncology-hero-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 32px;
+    align-items: center;
+  }
+
+  @media (min-width: 1024px) {
+    .oncology-hero-grid {
+      grid-template-columns: 1.18fr 0.82fr;
+      gap: 48px;
+    }
+  }
+
+  .oncology-hero-content {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Right column: Image Card */
+  .oncology-hero-media {
+    width: 100%;
+  }
+
+  .specialty-image-card {
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    background-color: #EBF2FA;
+    box-shadow: 0 16px 40px rgba(13, 27, 51, 0.08), 0 2px 8px rgba(13, 27, 51, 0.04);
+    border: 1px solid rgba(196, 154, 60, 0.25);
+    aspect-ratio: 16 / 10;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .specialty-image-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 20px 48px rgba(13, 27, 51, 0.12);
+  }
+
+  .specialty-hero-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .specialty-image-card:hover .specialty-hero-img {
+    transform: scale(1.02);
+  }
+
+  .image-card-border {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    border-radius: 20px;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.6);
   }
 
   .breadcrumb-nav {

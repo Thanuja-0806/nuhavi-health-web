@@ -1,10 +1,26 @@
 ---
 /**
- * SpecialtyExplorer.astro
- * Shared specialty explorer component for Homepage and Treatments page.
- * Localized for English (/en/), Russian (/ru/), and Arabic (/ar/ RTL).
+ * src/components/home/SpecialtyExplorer.astro
+ * Approved 8-Specialty Explorer — 12-Page PDF (Pages 2–3 & 11)
+ *
+ * Heading: What we can help with.
+ * Copy: Cancer care and joint replacement are our focus. Other specialties are arranged case by case with our partner hospitals.
+ *
+ * Filters:
+ * - All treatments (8)
+ * - Accepting enquiries (2)
+ * - Arranged on request (6)
+ *
+ * Exactly Eight Treatment Cards:
+ * 1. Oncology — Accepting enquiries (Cancer care: Diagnosis review, surgery, chemotherapy and radiotherapy.)
+ * 2. Orthopaedics — Accepting enquiries (Joint replacement: Knee and hip replacement, selected spine procedures.)
+ * 3. Nephrology — Arranged on request (Kidney & transplant: Renal care, dialysis planning and transplant evaluation.)
+ * 4. Cardiology — Arranged on request (Cardiac sciences: Cardiac evaluation, bypass and valve surgery.)
+ * 5. Neurosciences — Arranged on request (Brain & spine: Neurosurgical and spine opinions and treatment.)
+ * 6. Gastro — Arranged on request (Liver & digestive: Gastroenterology, liver care and GI surgery.)
+ * 7. Surgery — Arranged on request (General surgery: Planned general and laparoscopic surgery.)
+ * 8. Fertility — Arranged on request (Fertility & IVF: Evaluation and treatment at partner fertility centres.)
  */
-import { homeTranslations } from '../../i18n/homeTranslations';
 import type { SupportedLang } from '../../i18n/translations';
 
 interface Props {
@@ -21,358 +37,647 @@ const detectedLang: SupportedLang = currentPath.startsWith('/ar')
   ? 'ar'
   : currentPath.startsWith('/ru')
   ? 'ru'
+  : currentPath.startsWith('/fr')
+  ? 'fr'
   : 'en';
 
 const lang: SupportedLang = Astro.props.lang || detectedLang;
-const content = homeTranslations[lang].specialties;
+const isArabic = lang === 'ar';
+const isRussian = lang === 'ru';
+const isFrench = lang === 'fr';
 
 const {
-  eyebrow = content.eyebrow,
-  heading = content.title,
-  headingLevel = 'h2',
-  supportingText = content.deck,
   variant = 'home',
+  headingLevel = 'h2',
 } = Astro.props;
 
 const HeadingTag = headingLevel;
-const CardTitleTag = headingLevel === 'h1' ? 'h2' : 'h3';
+const prefix = `/${lang}`;
 
-const specialties = content.items;
+// Localized strings
+const t = {
+  eyebrow: isArabic ? 'التخصصات الطبية' : isRussian ? 'МЕДИЦИНСКИЕ НАПРАВЛЕНИЯ' : isFrench ? 'SPÉCIALITÉS MÉDICALES' : 'MEDICAL SPECIALTIES',
+  heading: isArabic ? 'ما يمكننا المساعدة فيه' : isRussian ? 'Чем мы можем помочь' : isFrench ? 'Ce que nous pouvons prendre en charge' : 'What we can help with.',
+  supporting: isArabic
+    ? 'علاج الأورام واستبدال المفاصل هما تركيزنا الأساسي. التخصصات الأخرى يتم ترتيبها حسب كل حالة مع مستشفياتنا الشريكة.'
+    : isRussian
+    ? 'Лечение онкологии и замена суставов — наш основной фокус. Другие направления организуются индивидуально с нашими клиниками-партнерами.'
+    : isFrench
+    ? 'L\'oncologie et le remplacement articulaire sont notre priorité. Les autres spécialités sont organisées au cas par cas avec nos hôpitaux partenaires.'
+    : 'Cancer care and joint replacement are our focus. Other specialties are arranged case by case with our partner hospitals.',
+  filterAll: isArabic ? 'جميع العلاجات (8)' : isRussian ? 'Все направления (8)' : isFrench ? 'Tous les traitements (8)' : 'All treatments (8)',
+  filterAccepting: isArabic ? 'استقبال الطلبات متاح (2)' : isRussian ? 'Прием открыт (2)' : isFrench ? 'Demandes acceptées (2)' : 'Accepting enquiries (2)',
+  filterOnRequest: isArabic ? 'متاح حسب الطلب (6)' : isRussian ? 'По запросу (6)' : isFrench ? 'Sur demande (6)' : 'Arranged on request (6)',
+  acceptingBadge: isArabic ? 'استقبال الطلبات متاح' : isRussian ? 'Прием открыт' : isFrench ? 'Demandes acceptées' : 'Accepting enquiries',
+  onRequestBadge: isArabic ? 'متاح حسب الطلب' : isRussian ? 'По запросу' : isFrench ? 'Sur demande' : 'Arranged on request',
+  exploreLink: isArabic ? 'تفاصيل التخصص' : isRussian ? 'Подробнее' : isFrench ? 'En savoir plus' : 'Explore specialty',
+  requestOpinionBtn: isArabic ? 'طلب رأي طبي' : isRussian ? 'Запросить заключение' : isFrench ? 'Demander un avis' : 'Request opinion',
+  footnote: isArabic
+    ? 'متاح حسب الطلب يعني أننا سنبحث عن مستشفى معتمد ومناسب لحالتك في حيدر آباد ونستشير أطباءنا قبل سفرك.'
+    : isRussian
+    ? '«По запросу» означает, что мы подберем проверенную аккредитованную клинику в Хайдарабаде под ваш диагноз и проведем врачебный анализ до поездки.'
+    : isFrench
+    ? '« Sur demande » signifie que nous trouverons un hôpital accrédité adapté à votre cas à Hyderabad et consulterons nos médecins avant votre voyage.'
+    : 'Arranged on request means our doctor team will identify a suitable accredited partner hospital in Hyderabad and coordinate an independent review for your case.',
+};
 
-const acceptingSpecialties = specialties.filter((s) => s.status === 'accepting');
-const onRequestSpecialties = specialties.filter((s) => s.status === 'on-request');
+const finalHeading = Astro.props.heading || t.heading;
+const finalSupportingText = Astro.props.supportingText || t.supporting;
+
+// Exactly 8 specialties from PDF
+const specialties = [
+  // 1. Oncology — Accepting enquiries
+  {
+    id: 'oncology',
+    slug: 'oncology',
+    status: 'accepting' as const,
+    title: isArabic ? 'طب الأورام' : isRussian ? 'Онкология' : 'Oncology',
+    subTitle: isArabic ? 'علاج السرطان' : isRussian ? 'Лечение рака' : 'Cancer care',
+    description: isArabic
+      ? 'مراجعة التشخيص، الجراحة، العلاج الكيميائي والعلاج الإشعاعي.'
+      : isRussian
+      ? 'Пересмотр диагноза, хирургия, химиотерапия и лучевая терапия.'
+      : 'Diagnosis review, surgery, chemotherapy and radiotherapy.',
+  },
+  // 2. Orthopaedics — Accepting enquiries
+  {
+    id: 'orthopaedics',
+    slug: 'orthopaedics',
+    status: 'accepting' as const,
+    title: isArabic ? 'جراحة العظام' : isRussian ? 'Ортопедия' : 'Orthopaedics',
+    subTitle: isArabic ? 'استبدال المفاصل' : isRussian ? 'Эндопротезирование суставов' : 'Joint replacement',
+    description: isArabic
+      ? 'استبدال مفصل الركبة والورك، وجراحات مختارة للعمود الفقري.'
+      : isRussian
+      ? 'Замена коленного и тазобедренного суставов, отдельные операции на позвоночнике.'
+      : 'Knee and hip replacement, selected spine procedures.',
+  },
+  // 3. Nephrology — Arranged on request
+  {
+    id: 'nephrology',
+    slug: 'nephrology-urology',
+    status: 'on-request' as const,
+    title: isArabic ? 'أمراض الكلى' : isRussian ? 'Нефрология' : 'Nephrology',
+    subTitle: isArabic ? 'الكلى والزراعة' : isRussian ? 'Почки и трансплантация' : 'Kidney & transplant',
+    description: isArabic
+      ? 'رعاية الكلى وتخطيط الغسيل الكلوي وتقييم زراعة الكلى.'
+      : isRussian
+      ? 'Лечение почек, планирование диализа и оценка перед трансплантацией.'
+      : 'Renal care, dialysis planning and transplant evaluation.',
+  },
+  // 4. Cardiology — Arranged on request
+  {
+    id: 'cardiology',
+    slug: 'cardiac-sciences',
+    status: 'on-request' as const,
+    title: isArabic ? 'أمراض القلب' : isRussian ? 'Кардиология' : 'Cardiology',
+    subTitle: isArabic ? 'علوم القلب' : isRussian ? 'Кардиологические науки' : 'Cardiac sciences',
+    description: isArabic
+      ? 'التقييم القلبي وجراحة المجازة وجراحة الصمامات.'
+      : isRussian
+      ? 'Кардиологическое обследование, шунтирование и операции на клапанах.'
+      : 'Cardiac evaluation, bypass and valve surgery.',
+  },
+  // 5. Neurosciences — Arranged on request
+  {
+    id: 'neurosciences',
+    slug: 'neurosciences',
+    status: 'on-request' as const,
+    title: isArabic ? 'علوم الأعصاب' : isRussian ? 'Неврология' : 'Neurosciences',
+    subTitle: isArabic ? 'المخ والعمود الفقري' : isRussian ? 'Головной и спинной мозг' : 'Brain & spine',
+    description: isArabic
+      ? 'استشارات وعلاج جراحة المخ والأعصاب والعمود الفقري.'
+      : isRussian
+      ? 'Нейрохирургические консультации, операции на мозге и позвоночнике.'
+      : 'Neurosurgical and spine opinions and treatment.',
+  },
+  // 6. Gastro — Arranged on request
+  {
+    id: 'gastro',
+    slug: 'gastroenterology',
+    status: 'on-request' as const,
+    title: isArabic ? 'الجهاز الهضمي' : isRussian ? 'Гастроэнтерология' : 'Gastro',
+    subTitle: isArabic ? 'الكبد والجهاز الهضمي' : isRussian ? 'Печень и пищеварение' : 'Liver & digestive',
+    description: isArabic
+      ? 'أمراض الجهاز الهضمي، رعاية الكبد وجراحة الجهاز الهضمي.'
+      : isRussian
+      ? 'Гастроэнтерология, заболевания печени и абдоминальная хирургия.'
+      : 'Gastroenterology, liver care and GI surgery.',
+  },
+  // 7. Surgery — Arranged on request
+  {
+    id: 'surgery',
+    slug: 'organ-transplants',
+    status: 'on-request' as const,
+    title: isArabic ? 'الجراحة العامة' : isRussian ? 'Хирургия' : 'Surgery',
+    subTitle: isArabic ? 'جراحة عامة وتنظيرية' : isRussian ? 'Общая хирургия' : 'General surgery',
+    description: isArabic
+      ? 'الجراحة العامة المخطط لها والجراحة بالمنظار.'
+      : isRussian
+      ? 'Плановая общая и лапароскопическая хирургия.'
+      : 'Planned general and laparoscopic surgery.',
+  },
+  // 8. Fertility — Arranged on request
+  {
+    id: 'fertility',
+    slug: 'fertility',
+    status: 'on-request' as const,
+    title: isArabic ? 'الخصوبة' : isRussian ? 'Репродуктология' : 'Fertility',
+    subTitle: isArabic ? 'الخصوبة وأطفال الأنابيب' : isRussian ? 'ЭКО и фертильность' : 'Fertility & IVF',
+    description: isArabic
+      ? 'التقييم والعلاج في مراكز الخصوبة الشريكة.'
+      : isRussian
+      ? 'Обследование и лечение в партнерских центрах репродукции.'
+      : 'Evaluation and treatment at partner fertility centres.',
+  },
+];
 ---
 
-<section
-  class={`specialty-explorer-section variant-${variant}`}
-  aria-labelledby="specialty-section-heading"
->
+<section class="specialty-explorer-section" id="treatments" aria-labelledby="specialty-heading">
   <div class="container specialty-container">
-    <header class="specialty-header">
-      <div class="header-content">
-        <span class="section-eyebrow">{eyebrow}</span>
-        <HeadingTag id="specialty-section-heading" class="section-title">
-          {heading}
-        </HeadingTag>
-        <p class="section-supporting-text">
-          {supportingText}
-        </p>
+    <!-- Header Block -->
+    <div class="specialty-header">
+      <div class="specialty-eyebrow-pill">
+        <span class="eyebrow-dot"></span>
+        <span>{t.eyebrow}</span>
       </div>
+      <HeadingTag id="specialty-heading" class="specialty-title">
+        {finalHeading}
+      </HeadingTag>
+      <p class="specialty-deck">
+        {finalSupportingText}
+      </p>
 
-      <!-- Filter Controls -->
-      <div
-        class="filter-controls"
-        role="group"
-        aria-label="Filter medical specialties"
-      >
+      <!-- 3 Filter Buttons (All 8, Accepting 2, On Request 6) -->
+      <div class="filter-tabs-bar" role="tablist" aria-label="Treatment specialty filters">
         <button
           type="button"
-          class="filter-btn active"
+          role="tab"
+          class="filter-tab is-active"
+          id="tab-all"
+          aria-selected="true"
+          aria-controls="specialties-grid"
           data-filter="all"
-          aria-pressed="true"
         >
-          {lang === 'ru' ? 'Все 10' : lang === 'ar' ? 'الكل (10)' : 'All 10'}
+          {t.filterAll}
         </button>
         <button
           type="button"
-          class="filter-btn"
+          role="tab"
+          class="filter-tab"
+          id="tab-accepting"
+          aria-selected="false"
+          aria-controls="specialties-grid"
           data-filter="accepting"
-          aria-pressed="false"
         >
-          {content.acceptingLabel} ({acceptingSpecialties.length})
+          <span class="tab-indicator accepting-dot">●</span>
+          {t.filterAccepting}
         </button>
         <button
           type="button"
-          class="filter-btn"
+          role="tab"
+          class="filter-tab"
+          id="tab-on-request"
+          aria-selected="false"
+          aria-controls="specialties-grid"
           data-filter="on-request"
-          aria-pressed="false"
         >
-          {content.onRequestLabel} ({onRequestSpecialties.length})
+          <span class="tab-indicator on-request-dot">○</span>
+          {t.filterOnRequest}
         </button>
       </div>
-    </header>
+    </div>
 
-    <!-- Specialties Grid -->
-    <div class="specialties-grid" id="specialties-grid">
-      {specialties.map((specialty) => {
-        const isFeatured = specialty.status === 'accepting';
-        const cardClass = `specialty-card ${specialty.status} ${isFeatured ? 'featured' : ''}`;
-        const isCancerCare = specialty.id === 'cancer-care';
+    <!-- 8 Treatment Cards Grid -->
+    <div class="specialties-cards-grid" id="specialties-grid">
+      {specialties.map((spec, index) => {
+        const isAccepting = spec.status === 'accepting';
+        const cardHref = `${prefix}/treatments/${spec.slug}/`;
+        return (
+          <article
+            class="treatment-card"
+            data-status={spec.status}
+          >
+            <!-- Navy Top Visual Panel with Subtle Waves -->
+            <div class="card-navy-panel">
+              <svg class="subtle-wave-bg" viewBox="0 0 320 140" fill="none" preserveAspectRatio="none" aria-hidden="true">
+                <path d="M0 60 C 80 40, 160 80, 240 50 C 280 35, 300 45, 320 40 L 320 0 L 0 0 Z" fill="rgba(168, 139, 90, 0.08)" />
+                <path d="M0 90 C 70 70, 150 110, 230 80 C 270 65, 300 75, 320 70 L 320 0 L 0 0 Z" fill="rgba(255, 255, 255, 0.03)" />
+                <path d="M0 120 C 90 100, 180 135, 260 115 C 290 105, 310 112, 320 110" stroke="rgba(168, 139, 90, 0.22)" stroke-width="1.2" stroke-dasharray="3 4" fill="none" />
+              </svg>
 
-        return isCancerCare ? (
-          <a
-            href="/en/treatments/oncology/"
-            class={`${cardClass} is-link`}
-            data-status={specialty.status}
-            aria-label={`${specialty.title} - ${specialty.statusLabel}`}
-          >
-            <div class="card-inner">
-              <div class="card-status-header">
-                <span class={`status-badge ${specialty.status}`}>
-                  {specialty.statusLabel}
-                </span>
-                <span class="card-arrow" aria-hidden="true">&rarr;</span>
-              </div>
-              <CardTitleTag class="card-title">
-                {specialty.title}
-              </CardTitleTag>
-              <p class="card-description">
-                {specialty.description}
-              </p>
-            </div>
-          </a>
-        ) : (
-          <div
-            class={cardClass}
-            data-status={specialty.status}
-          >
-            <div class="card-inner">
-              <div class="card-status-header">
-                <span class={`status-badge ${specialty.status}`}>
-                  {specialty.statusLabel}
+              <div class="panel-header-row">
+                <span class="card-number">0{index + 1}</span>
+                <span class={`status-tag ${isAccepting ? 'tag-accepting' : 'tag-on-request'}`}>
+                  <span class="status-dot" aria-hidden="true">{isAccepting ? '●' : '○'}</span>
+                  {isAccepting ? t.acceptingBadge : t.onRequestBadge}
                 </span>
               </div>
-              <CardTitleTag class="card-title">
-                {specialty.title}
-              </CardTitleTag>
-              <p class="card-description">
-                {specialty.description}
-              </p>
+
+              <div class="panel-titles">
+                <h3 class="card-title">
+                  <a href={cardHref} class="card-title-link">
+                    {spec.title}
+                  </a>
+                </h3>
+                <span class="card-subtitle">{spec.subTitle}</span>
+              </div>
             </div>
-          </div>
+
+            <!-- Lower Ivory/White Content Panel -->
+            <div class="card-content-panel">
+              <p class="card-description">{spec.description}</p>
+
+              <div class="card-footer-row">
+                <a href={cardHref} class="card-link-action">
+                  <span>{t.exploreLink}</span>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                  </svg>
+                </a>
+                {isAccepting && (
+                  <a href={`${prefix}/request-opinion/`} class="card-opinion-btn">
+                    <span>{t.requestOpinionBtn}</span>
+                  </a>
+                )}
+              </div>
+            </div>
+          </article>
         );
       })}
     </div>
 
-    <!-- Footnote below grid -->
-    <div class="specialty-footnote">
-      <p>
-        <strong>{lang === 'ru' ? 'Обратите внимание:' : lang === 'ar' ? 'ملاحظة:' : 'Note:'}</strong> {lang === 'ru' ? 'По направлениям «По запросу» мы рассматриваем каждый случай индивидуально с профильными клиниками.' : lang === 'ar' ? 'بالنسبة للتخصصات المصنفة «حسب الطلب»، نراجع كل حالة بشكل منفرد مع المستشفيات التخصصية.' : 'For specialties listed as "On request", we coordinate directly with accredited partner hospitals on a case-by-case basis.'}
-      </p>
+    <!-- Footnote note on Arranged on request -->
+    <div class="specialty-footnote" role="note">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="16" x2="12" y2="12"></line>
+        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+      </svg>
+      <span>{t.footnote}</span>
     </div>
   </div>
 </section>
 
+<script>
+  // Simple, accessible client-side filter for the 3 tabs
+  const tabButtons = document.querySelectorAll<HTMLButtonElement>('.filter-tab');
+  const cards = document.querySelectorAll<HTMLElement>('.treatment-card');
+
+  tabButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const filter = btn.dataset.filter;
+
+      // Update tab active states
+      tabButtons.forEach((b) => {
+        b.classList.remove('is-active');
+        b.setAttribute('aria-selected', 'false');
+      });
+      btn.classList.add('is-active');
+      btn.setAttribute('aria-selected', 'true');
+
+      // Filter cards
+      cards.forEach((card) => {
+        const cardStatus = card.dataset.status;
+        if (filter === 'all' || cardStatus === filter) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+  });
+</script>
+
 <style>
   .specialty-explorer-section {
     width: 100%;
-    padding: var(--space-10) 0 var(--space-12);
-  }
-
-  .variant-home {
-    background-color: var(--color-mist);
-  }
-
-  .variant-page {
-    background-color: var(--color-paper);
+    background-color: #FFFFFF;
+    padding: clamp(48px, 6vw, 72px) 0;
+    border-bottom: 1px solid rgba(15, 35, 64, 0.08);
   }
 
   .specialty-container {
-    width: 100%;
-    max-width: 1200px;
+    max-width: 1366px;
     margin: 0 auto;
-    padding: 0 var(--space-3);
+    padding-left: clamp(16px, 3vw, 40px);
+    padding-right: clamp(16px, 3vw, 40px);
     box-sizing: border-box;
   }
 
   .specialty-header {
+    text-align: center;
+    max-width: 760px;
+    margin: 0 auto 36px;
     display: flex;
     flex-direction: column;
-    gap: var(--space-4);
-    margin-bottom: var(--space-8);
+    align-items: center;
   }
 
-  @media (min-width: 900px) {
-    .specialty-header {
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: flex-end;
-      gap: var(--space-6);
-    }
-  }
-
-  .header-content {
-    max-width: 640px;
-  }
-
-  .section-eyebrow {
-    font-size: 0.8125rem;
-    font-weight: var(--font-weight-subheading);
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--color-gold);
-    line-height: 1.2;
-    display: block;
-    margin-bottom: var(--space-1);
-  }
-
-  .section-title {
-    font-size: clamp(1.75rem, 3.5vw, 2.5rem);
-    font-weight: var(--font-weight-heading);
-    color: var(--color-deep-navy);
-    line-height: var(--line-height-heading);
-    letter-spacing: -0.02em;
-    margin: 0 0 var(--space-2);
-  }
-
-  .section-supporting-text {
-    font-size: 1rem;
-    font-weight: var(--font-weight-body);
-    line-height: var(--line-height-body);
-    color: var(--color-slate);
-    margin: 0;
-  }
-
-  /* Filter Controls */
-  .filter-controls {
+  .specialty-eyebrow-pill {
     display: inline-flex;
-    flex-wrap: wrap;
-    gap: var(--space-1);
-    background-color: var(--color-paper);
-    padding: 4px;
-    border-radius: var(--radius-pill);
-    border: 1px solid rgba(20, 41, 75, 0.1);
+    align-items: center;
+    gap: 8px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: #A88B5A;
+    background-color: rgba(168, 139, 90, 0.1);
+    border: 1px solid rgba(168, 139, 90, 0.3);
+    padding: 4px 14px;
+    border-radius: 9999px;
+    margin-bottom: 14px;
   }
 
-  .filter-btn {
+  .eyebrow-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: #A88B5A;
+  }
+
+  .specialty-title {
+    font-family: var(--font-family-heading);
+    font-size: clamp(2rem, 3.6vw, 2.75rem);
+    color: #0F2340;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    margin: 0 0 12px 0;
+    line-height: 1.18;
+  }
+
+  .specialty-deck {
+    font-size: clamp(1rem, 1.3vw, 1.125rem);
+    color: #4B5563;
+    line-height: 1.6;
+    margin: 0 0 24px 0;
+  }
+
+  /* Filter Tabs */
+  .filter-tabs-bar {
+    display: inline-flex;
+    align-items: center;
+    background-color: #F6F2EA;
+    border: 1px solid rgba(15, 35, 64, 0.12);
+    border-radius: 9999px;
+    padding: 4px;
+    gap: 4px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .filter-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
     background: transparent;
     border: none;
-    border-radius: var(--radius-pill);
-    padding: 6px 14px;
+    padding: 8px 18px;
+    border-radius: 9999px;
     font-family: var(--font-family-base);
-    font-size: 0.8125rem;
-    font-weight: var(--font-weight-subheading);
-    color: var(--color-slate);
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #4B5563;
     cursor: pointer;
-    transition: all 0.15s ease;
+    transition: all 0.18s ease;
   }
 
-  .filter-btn:hover {
-    color: var(--color-navy);
+  .filter-tab:hover {
+    color: #0F2340;
   }
 
-  .filter-btn.active {
-    background-color: var(--color-deep-navy);
-    color: var(--color-paper);
+  .filter-tab.is-active {
+    background-color: #0F2340;
+    color: #FFFFFF;
+    box-shadow: 0 2px 8px rgba(15, 35, 64, 0.15);
   }
 
-  /* Specialties Grid */
-  .specialties-grid {
+  .accepting-dot {
+    color: #A88B5A;
+  }
+
+  .on-request-dot {
+    color: #6B7280;
+  }
+
+  /* Cards Grid: Exactly 8 Cards in 4 columns x 2 rows */
+  .specialties-cards-grid {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--space-4);
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-bottom: 28px;
   }
 
-  @media (min-width: 640px) {
-    .specialties-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .specialties-grid {
-      grid-template-columns: repeat(4, 1fr);
-    }
-
-    .specialty-card.featured {
-      grid-column: span 2;
-    }
-  }
-
-  .specialty-card {
-    background-color: var(--color-paper);
-    border: 1px solid rgba(20, 41, 75, 0.08);
-    border-radius: var(--radius-card);
-    padding: var(--space-5);
+  .treatment-card {
+    background-color: #FFFFFF;
+    border: 1px solid rgba(15, 35, 64, 0.12);
+    border-radius: 14px;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
-    text-decoration: none;
+    box-shadow: 0 2px 8px rgba(15, 35, 64, 0.05);
     transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
   }
 
-  .specialty-card.is-link:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(20, 41, 75, 0.08);
-    border-color: rgba(196, 154, 60, 0.5);
+  .treatment-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 24px -4px rgba(15, 35, 64, 0.12);
+    border-color: #A88B5A;
   }
 
-  .card-inner {
-    display: flex;
-    flex-direction: column;
+  /* Navy Top Visual Panel with Subtle Waves on ALL 8 cards */
+  .card-navy-panel {
+    background-color: #0F2340;
+    position: relative;
+    padding: 20px 20px 18px;
+    overflow: hidden;
+    border-bottom: 2px solid #A88B5A;
+    color: #FFFFFF;
+  }
+
+  .subtle-wave-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
     height: 100%;
+    pointer-events: none;
+    opacity: 0.9;
   }
 
-  .card-status-header {
+  .panel-header-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: var(--space-3);
+    gap: 12px;
+    position: relative;
+    z-index: 1;
+    margin-bottom: 14px;
   }
 
-  .status-badge {
-    font-size: 0.6875rem;
-    font-weight: var(--font-weight-subheading);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    padding: 3px 8px;
-    border-radius: var(--radius-pill);
+  .card-number {
+    font-family: var(--font-family-base);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: #A88B5A;
+    letter-spacing: 0.06em;
   }
 
-  .status-badge.accepting {
-    background-color: rgba(38, 115, 77, 0.1);
-    color: var(--color-success);
-    border: 1px solid rgba(38, 115, 77, 0.25);
+  .status-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 2.5px 8.5px;
+    border-radius: 9999px;
+    position: relative;
+    z-index: 1;
   }
 
-  .status-badge.on-request {
-    background-color: rgba(91, 106, 128, 0.1);
-    color: var(--color-slate);
-    border: 1px solid rgba(91, 106, 128, 0.2);
+  .tag-accepting {
+    background-color: rgba(38, 115, 77, 0.3);
+    color: #E3EBE3;
+    border: 1px solid rgba(74, 222, 128, 0.45);
   }
 
-  .card-arrow {
-    color: var(--color-gold);
-    font-size: 1.125rem;
-    transition: transform 0.2s ease;
+  .tag-on-request {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #DCE3EC;
+    border: 1px solid rgba(255, 255, 255, 0.22);
   }
 
-  .specialty-card.is-link:hover .card-arrow {
-    transform: translateX(4px);
+  .status-dot {
+    font-size: 0.7rem;
   }
 
-  :global([dir="rtl"]) .specialty-card.is-link:hover .card-arrow {
-    transform: translateX(-4px);
+  .panel-titles {
+    position: relative;
+    z-index: 1;
   }
 
   .card-title {
-    font-size: 1.125rem;
-    font-weight: 800;
-    color: var(--color-deep-navy);
-    line-height: 1.3;
-    margin: 0 0 var(--space-2);
+    font-family: var(--font-family-heading);
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #FFFFFF;
+    margin: 0 0 3px 0;
+    line-height: 1.22;
+  }
+
+  .card-title-link {
+    color: #FFFFFF;
+    text-decoration: none;
+    transition: color 0.15s ease;
+  }
+
+  .card-title-link:hover {
+    color: #A88B5A;
+  }
+
+  .card-subtitle {
+    display: block;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #A88B5A;
+    letter-spacing: 0.02em;
+  }
+
+  /* Lower Ivory/White Content Panel */
+  .card-content-panel {
+    background-color: #FAF8F5;
+    padding: 18px 20px 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex: 1;
+    min-height: 135px;
   }
 
   .card-description {
-    font-size: 0.875rem;
+    font-size: 0.85rem;
+    color: #4B5563;
     line-height: 1.5;
-    color: var(--color-slate);
-    margin: 0;
+    margin: 0 0 16px 0;
+  }
+
+  .card-footer-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    border-top: 1px solid rgba(15, 35, 64, 0.08);
+    padding-top: 12px;
+    margin-top: auto;
+  }
+
+  .card-link-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #0F2340;
+    text-decoration: none;
+    transition: color 0.15s ease, gap 0.15s ease;
+  }
+
+  .card-link-action:hover {
+    color: #A88B5A;
+    gap: 8px;
+  }
+
+  .card-opinion-btn {
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #FFFFFF;
+    background-color: #A88B5A;
+    padding: 4px 11px;
+    border-radius: 9999px;
+    text-decoration: none;
+    transition: background-color 0.15s ease;
+  }
+
+  .card-opinion-btn:hover {
+    background-color: #967949;
   }
 
   .specialty-footnote {
-    margin-top: var(--space-6);
-    padding: var(--space-3) var(--space-4);
-    background-color: rgba(20, 41, 75, 0.03);
-    border-radius: var(--radius-card);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
     font-size: 0.8125rem;
-    color: var(--color-slate);
+    color: #6B7280;
+    background-color: #F8FAFD;
+    border: 1px solid rgba(15, 35, 64, 0.08);
+    border-radius: 8px;
+    padding: 12px 18px;
+    max-width: 880px;
+    margin: 0 auto;
+    text-align: center;
+    line-height: 1.4;
   }
 
-  /* RTL Support */
-  :global([dir="rtl"]) .header-content,
-  :global([dir="rtl"]) .card-title,
-  :global([dir="rtl"]) .card-description,
-  :global([dir="rtl"]) .specialty-footnote {
-    text-align: right;
+  .specialty-footnote svg {
+    color: #A88B5A;
+    flex-shrink: 0;
+  }
+
+  @media (max-width: 1024px) {
+    .specialties-cards-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .specialties-cards-grid {
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
   }
 </style>

@@ -1,0 +1,818 @@
+---
+/**
+ * src/pages/en/resources/[specialty]/index.astro
+ * Dedicated specialty landing page for Nuhavi Health Knowledge Centre (Resources route).
+ * Generates pages for all 15 medical specialties and their aliases.
+ */
+import BaseLayout from '../../../../layouts/BaseLayout.astro';
+import SpecialtyIcon from '../../../../components/common/SpecialtyIcon.astro';
+import { specialtyCategories, knowledgeArticles, type SpecialtyCategory, type KnowledgeArticle } from '../../../../data/knowledgeData';
+import { getSpecialtyMeta } from '../../../../data/unifiedSpecialties';
+import { explainerScriptsList } from '../../../../data/explainerScripts';
+import { getSpecialtyPopularAndLatest } from '../../../../data/specialtyArticlesData';
+import SpecialtyHeroBanner from '../../../../components/knowledge-centre/SpecialtyHeroBanner.astro';
+
+export function getStaticPaths() {
+  const paths: { params: { specialty: string }; props: { category: SpecialtyCategory; articles: KnowledgeArticle[] } }[] = [];
+
+  for (const cat of specialtyCategories) {
+    const matchingArticles = knowledgeArticles.filter(
+      (a) => a.specialtySlug === cat.slug || (cat.aliases && cat.aliases.includes(a.specialtySlug))
+    );
+
+    // Canonical route
+    paths.push({
+      params: { specialty: cat.slug },
+      props: { category: cat, articles: matchingArticles },
+    });
+
+    // Alias routes
+    if (cat.aliases) {
+      for (const alias of cat.aliases) {
+        paths.push({
+          params: { specialty: alias },
+          props: { category: cat, articles: matchingArticles },
+        });
+      }
+    }
+  }
+
+  return paths;
+}
+
+interface Props {
+  category: SpecialtyCategory;
+  articles: KnowledgeArticle[];
+}
+
+const { category, articles } = Astro.props;
+const meta = getSpecialtyMeta(category.slug);
+
+// Split articles: First 3 as "Start here", rest for all articles
+const featuredArticles = articles.slice(0, 3);
+const remainingArticles = articles.length > 3 ? articles.slice(3) : articles;
+
+// 5 Popular + 5 Latest articles for this specialty (matching user reference)
+const popLatest = getSpecialtyPopularAndLatest(category.slug);
+const specialtyHeadingTitle = category.slug === 'ivf' ? 'IVF' : category.title;
+
+// Exclude Popular and Latest for 5 specific specialties per user requirement:
+// 1. Liver Transplant, 2. Dental Care, 3. Cosmetic & Plastic Surgery, 4. AYUSH Wellness, 5. General Surgery
+const excludedPopLatestSpecialties = [
+  'liver-transplant',
+  'dental-care',
+  'cosmetic-surgery',
+  'ayush-wellness',
+  'general-surgery'
+];
+const showPopularAndLatest = !excludedPopLatestSpecialties.includes(category.slug);
+
+// Find any matching explainer videos
+const relatedVideos = explainerScriptsList.filter(
+  (v) => v.specialtySlug === category.slug || (category.aliases && category.aliases.includes(v.specialtySlug))
+);
+
+// Sample treatments map
+const specialtyTreatmentsMap: Record<string, string[]> = {
+  'cardiology': ['Coronary angioplasty', 'CABG (heart bypass)', 'Heart valve repair and replacement', 'TAVI', 'Pacemaker and AICD implantation', 'Heart failure care'],
+  'oncology': ['Chemotherapy', 'Radiation therapy', 'Immunotherapy & targeted therapy', 'CyberKnife radiosurgery', 'CAR-T cell therapy', 'Surgical oncology'],
+  'neurology': ['Deep Brain Stimulation (DBS)', 'Stroke intervention', 'Epilepsy surgery', 'Brain tumour microsurgery', 'Neuro-rehabilitation'],
+  'orthopedics': ['Total knee replacement', 'Robotic joint surgery', 'Total hip replacement', 'Arthroscopic ACL reconstruction', 'Complex trauma care'],
+  'spine-surgery': ['Minimally invasive discectomy', 'Spinal fusion', 'Artificial disc replacement', 'Endoscopic spine surgery', 'Scoliosis correction'],
+  'hair-transplantation': ['FUE hair transplant', 'FUT strip harvesting', 'Direct Hair Implantation (DHI)', 'PRP scalp therapy', 'Beard & eyebrow transplant'],
+  'weight-loss-surgery': ['Laparoscopic gastric sleeve', 'Roux-en-Y gastric bypass', 'Mini gastric bypass', 'Bariatric revision surgery'],
+  'ivf': ['IVF-ICSI treatment', 'Blastocyst culture', 'Egg freezing', 'Frozen embryo transfer (FET)', 'Pre-implantation genetic testing (PGT)'],
+  'bone-marrow-transplant': ['Autologous stem cell transplant', 'Allogeneic BMT', 'Haploidentical transplant', 'CAR-T cell therapy', 'Post-transplant isolation'],
+  'kidney-transplant': ['Living donor kidney transplant', 'ABO-incompatible transplant', 'Pre-transplant evaluation', 'Post-transplant immunosuppression'],
+  'liver-transplant': ['Living donor liver transplant', 'Deceased donor evaluation', 'Pediatric liver transplant', 'Hepatobiliary critical care'],
+  'dental-care': ['All-on-4 dental implants', 'Full mouth rehabilitation', 'Zygomatic implants', 'Maxillofacial reconstruction'],
+  'ayush-wellness': ['Panchakarma detoxification', 'Authentic Ayurveda rejuvenation', 'Integrative post-operative recovery', 'Herbal therapies'],
+  'general-surgery': ['Laparoscopic cholecystectomy', 'Minimally invasive hernia repair', 'Appendectomy', 'Advanced GI laparoscopy'],
+  'cosmetic-surgery': ['Rhinoplasty', 'Facelift & neck lift', 'Post-bariatric body contouring', 'Breast aesthetics & reconstruction']
+};
+
+const relatedTreatments = specialtyTreatmentsMap[meta.slug] || [
+  'Specialist consultation', 'Second opinion review', 'Diagnostic evaluation', 'Treatment planning'
+];
+---
+
+<BaseLayout
+  title={`${category.title} Guides & Articles | Nuhavi Health Knowledge Centre`}
+  description={category.description}
+  lang="en"
+>
+  <main class="specialty-hub-page" id="main-content" style={`--spec-color: ${meta.color}; --spec-bg: ${meta.bgColor}; --spec-border: ${meta.borderColor};`}>
+    <!-- SPECIALTY HERO BANNER WITH BRAND GRADIENT & WATERMARK RINGS -->
+    <!-- WIDE PREMIUM MEDICAL HERO BANNER (RENOVA CARDIOLOGY STYLE) -->
+    <SpecialtyHeroBanner
+      slug={category.slug}
+      title={category.title}
+      description={category.description}
+      breadcrumbHref="/en/knowledge-centre/"
+    />
+
+    <div class="specialty-container main-content-wrap">
+      <!-- SECTION 1: START HERE (FEATURED ARTICLES) -->
+      {featuredArticles.length > 0 && (
+        <section class="hub-section start-here-section" aria-label="Start here articles">
+          <div class="section-header-row">
+            <h2 class="section-title">Start here</h2>
+            <span class="section-articles-count">{articles.length} {articles.length === 1 ? 'article' : 'articles'}</span>
+          </div>
+
+          <div class="cards-grid cards-grid-featured">
+            {featuredArticles.map((article) => (
+              <article class="spec-article-card">
+                <a href={`/en/knowledge-centre/${category.slug}/${article.slug}/`} class="card-clickable-wrap">
+                  <!-- Gradient Header with Specialty Image in Top-Right -->
+                  <div class="card-visual-top" style={`background: ${meta.gradient};`}>
+                    <div class="card-visual-icon-box" aria-hidden="true">
+                      <img src={meta.image} alt={category.title} class="card-spec-photo-thumb" width="36" height="36" loading="lazy" />
+                    </div>
+                  </div>
+
+                  <!-- Card Body -->
+                  <div class="card-body">
+                    <div class="card-spec-meta-row">
+                      <span class="card-meta-spec" style={`color: ${meta.color};`}>
+                        <img src={meta.image} alt="" class="meta-inline-photo" width="16" height="16" loading="lazy" />
+                        <span>{category.title}</span>
+                      </span>
+                      <span class="card-meta-dot">•</span>
+                      <span class="card-meta-time">{article.readingTime}</span>
+                    </div>
+
+                    <h3 class="card-title">{article.title}</h3>
+                    <p class="card-overview">{article.overview.substring(0, 140)}...</p>
+                  </div>
+                </a>
+              </article>
+            ))}
+          </div>
+        </section>
+      )}
+
+      <!-- SECTION 2: POPULAR & LATEST ARTICLES (ONLY FOR 10 CORE SPECIALTIES) -->
+      {showPopularAndLatest && popLatest && (
+        <section class="hub-section pop-latest-section" aria-label={`Popular and latest articles in ${specialtyHeadingTitle}`}>
+          <div class="pop-latest-grid-2col">
+            <!-- Column 1: Popular in [Specialty] -->
+            <div class="pop-latest-col">
+              <h2 class="pop-latest-heading">Popular in {specialtyHeadingTitle}</h2>
+              <div class="pop-latest-card-box">
+                {popLatest.popular.map((item) => (
+                  <a href={item.href} class="pop-latest-item-row">
+                    <span class="item-rank">{item.num}</span>
+                    <div class="item-body">
+                      <span class="item-title">{item.title}</span>
+                      <span class="item-spec-label">
+                        <img src={meta.image} alt="" class="row-spec-photo" width="14" height="14" loading="lazy" />
+                        <span>{item.specialtyLabel}</span>
+                      </span>
+                    </div>
+                    <span class="item-time">{item.readingTime}</span>
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            <!-- Column 2: Latest -->
+            <div class="pop-latest-col">
+              <h2 class="pop-latest-heading">Latest</h2>
+              <div class="pop-latest-card-box">
+                {popLatest.latest.map((item) => (
+                  <a href={item.href} class="pop-latest-item-row">
+                    <span class="item-rank">{item.num}</span>
+                    <div class="item-body">
+                      <span class="item-title">{item.title}</span>
+                      <span class="item-spec-label">
+                        <img src={meta.image} alt="" class="row-spec-photo" width="14" height="14" loading="lazy" />
+                        <span>{item.specialtyLabel}</span>
+                      </span>
+                    </div>
+                    <span class="item-time">{item.readingTime}</span>
+                  </a>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      <!-- SECTION 3: ALL ARTICLES IN THIS SPECIALTY -->
+      <section class="hub-section all-articles-section" aria-label={`All ${specialtyHeadingTitle} articles`}>
+        <div class="section-header-row">
+          <h2 class="section-title">All {specialtyHeadingTitle} articles</h2>
+        </div>
+
+        {articles.length > 0 ? (
+          <div class="cards-grid cards-grid-all" id="articles-grid">
+            {remainingArticles.map((article) => (
+              <article class="spec-article-card">
+                <a href={`/en/knowledge-centre/${category.slug}/${article.slug}/`} class="card-clickable-wrap">
+                  <!-- Gradient Header with Specialty Image in Top-Right -->
+                  <div class="card-visual-top" style={`background: ${meta.gradient};`}>
+                    <div class="card-visual-icon-box" aria-hidden="true">
+                      <img src={meta.image} alt={category.title} class="card-spec-photo-thumb" width="36" height="36" loading="lazy" />
+                    </div>
+                  </div>
+
+                  <!-- Card Body -->
+                  <div class="card-body">
+                    <div class="card-spec-meta-row">
+                      <span class="card-meta-spec" style={`color: ${meta.color};`}>
+                        <img src={meta.image} alt="" class="meta-inline-photo" width="16" height="16" loading="lazy" />
+                        <span>{category.title}</span>
+                      </span>
+                      <span class="card-meta-dot">•</span>
+                      <span class="card-meta-time">{article.readingTime}</span>
+                    </div>
+
+                    <h3 class="card-title">{article.title}</h3>
+                    <p class="card-overview">{article.overview.substring(0, 140)}...</p>
+                  </div>
+                </a>
+              </article>
+            ))}
+          </div>
+        ) : (
+          <div class="empty-specialty-card">
+            <div class="empty-icon-wrap">
+              <img src={meta.image} alt={category.title} class="empty-spec-photo" width="64" height="64" loading="lazy" />
+            </div>
+            <h3>Specialist Guides in Clinical Preparation</h3>
+            <p>Educational articles for <strong>{category.title}</strong> are currently under specialist review.</p>
+            <a href="/en/request-opinion/" class="btn-request-opinion">Request a Medical Opinion for {category.title}</a>
+          </div>
+        )}
+      </section>
+
+      <!-- SECTION 4: RELATED EXPLAINER VIDEOS (MATCHING SCREENSHOT) -->
+      {relatedVideos.length > 0 && (
+        <section class="hub-section related-videos-section">
+          <div class="section-header-row">
+            <h2 class="section-title">Related videos</h2>
+          </div>
+          <div class="related-videos-grid">
+            {relatedVideos.map((vid) => (
+              <a href={`/en/videos/#${vid.id}`} class="related-video-card">
+                <div class="rel-video-play-circle" aria-hidden="true">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="#92400E">
+                    <polygon points="6 4 20 12 6 20 6 4"></polygon>
+                  </svg>
+                </div>
+                <h3 class="rel-video-title">{vid.title}</h3>
+                <span class="rel-video-meta">{vid.duration} · animated explainer</span>
+                <span class="rel-video-status-tag">Script ready, to be produced</span>
+              </a>
+            ))}
+          </div>
+        </section>
+      )}
+
+      <!-- SECTION 5: RELATED TREATMENTS (PILL CHIPS) -->
+      <section class="hub-section related-treatments-section">
+        <div class="section-header-row">
+          <h2 class="section-title">Related treatments</h2>
+        </div>
+        <div class="treatments-pills-wrap">
+          {relatedTreatments.map((treat) => (
+            <span class="treatment-pill">{treat}</span>
+          ))}
+        </div>
+      </section>
+
+      <!-- SECTION 6: QUESTIONS ABOUT TREATMENT CTA BANNER -->
+      <section class="hub-consultation-banner">
+        <div class="banner-inner-box">
+          <div class="banner-copy">
+            <h3 class="banner-heading">Questions about {category.title.toLowerCase()} treatment?</h3>
+            <p class="banner-sub">
+              Share your reports with a Nuhavi doctor. We will help you understand your options and connect you with the right specialist.
+            </p>
+          </div>
+          <div class="banner-cta">
+            <a href="/en/request-opinion/" class="banner-btn-gold">Talk to a doctor</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 7: CLINICAL GOVERNANCE DISCLAIMER FOOTER -->
+      <footer class="hub-footer-disclaimer">
+        <h4 class="hub-disclaimer-title">Nuhavi Health Knowledge Centre</h4>
+        <p class="hub-disclaimer-p">
+          Written for patient education, from medical literature in plain language and reviewed by a specialist before publication.
+        </p>
+        <p class="hub-disclaimer-p sub-disclaimer">
+          The information on this site is not given as medical advice and cannot replace a consultation with a qualified doctor. If you are experiencing a medical emergency, call 108 or 112 in India, or your local emergency number.
+        </p>
+      </footer>
+    </div>
+  </main>
+</BaseLayout>
+
+<style>
+  .specialty-hub-page {
+    background: linear-gradient(180deg, var(--spec-bg, #FAFCFF) 0%, #FFFFFF 280px, #FAFCFF 100%);
+    color: #0F2340;
+    min-height: 100vh;
+    font-family: var(--font-family-base, 'Inter', sans-serif);
+    padding-bottom: 5rem;
+  }
+
+  .specialty-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+
+  /* --------------------------------------------------------------------------
+     MAIN CONTENT & SECTIONS
+     -------------------------------------------------------------------------- */
+  .main-content-wrap {
+    padding-top: 2.5rem;
+  }
+
+  .hub-section {
+    margin-bottom: 3.75rem;
+  }
+
+  .section-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid var(--spec-border, #E2E8F0);
+    padding-bottom: 0.75rem;
+  }
+
+  .section-title {
+    font-family: var(--font-family-heading, 'Playfair Display', Georgia, serif);
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #0F2340;
+    margin: 0;
+  }
+
+  .section-articles-count {
+    font-size: 0.875rem;
+    color: #64748B;
+  }
+
+  /* --------------------------------------------------------------------------
+     CARDS GRID & CARDS
+     -------------------------------------------------------------------------- */
+  .cards-grid {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .cards-grid-featured,
+  .cards-grid-all {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media (max-width: 992px) {
+    .cards-grid-featured,
+    .cards-grid-all {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 640px) {
+    .cards-grid-featured,
+    .cards-grid-all {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .spec-article-card {
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+  }
+
+  .spec-article-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 24px rgba(15, 35, 64, 0.08);
+    border-color: var(--spec-border, #CBD5E1);
+  }
+
+  .spec-article-card:hover .card-title {
+    color: var(--spec-color, #0F2340);
+  }
+
+  .card-clickable-wrap {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .card-visual-top {
+    height: 105px;
+    padding: 1rem 1.15rem;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card-visual-icon-box {
+    opacity: 0.95;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+  }
+
+  .card-spec-photo-thumb {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    object-fit: cover;
+    display: block;
+    border: 1.5px solid rgba(255, 255, 255, 0.85);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  }
+
+  .meta-inline-photo {
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    object-fit: cover;
+    display: inline-block;
+    vertical-align: middle;
+    flex-shrink: 0;
+  }
+
+  .row-spec-photo {
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    object-fit: cover;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 4px;
+    flex-shrink: 0;
+  }
+
+  .card-body {
+    padding: 1.25rem 1.25rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+
+  .card-spec-meta-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.78rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .card-meta-spec {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-weight: 600;
+  }
+
+  .card-meta-dot {
+    color: #CBD5E1;
+  }
+
+  .card-meta-time {
+    color: #64748B;
+  }
+
+  .card-title {
+    font-family: var(--font-family-base, 'Inter', sans-serif);
+    font-size: 1.05rem;
+    font-weight: 600;
+    line-height: 1.35;
+    color: #0F2340;
+    margin: 0 0 0.65rem;
+  }
+
+  .card-overview {
+    font-size: 0.88rem;
+    line-height: 1.55;
+    color: #475569;
+    margin: 0;
+    flex-grow: 1;
+  }
+
+  /* --------------------------------------------------------------------------
+     POPULAR & LATEST 2-COLUMN SECTION (EXACT MATCH TO CLAUDE SCREENSHOT)
+     -------------------------------------------------------------------------- */
+  .pop-latest-section {
+    margin-bottom: 3.5rem;
+  }
+
+  .pop-latest-grid-2col {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    align-items: start;
+  }
+
+  @media (max-width: 860px) {
+    .pop-latest-grid-2col {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+  }
+
+  .pop-latest-col {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .pop-latest-heading {
+    font-family: var(--font-family-heading, 'Playfair Display', Georgia, serif);
+    font-size: 1.75rem;
+    font-weight: 500;
+    color: #0F2340;
+    margin: 0 0 1.25rem;
+    line-height: 1.25;
+  }
+
+  .pop-latest-card-box {
+    background: #FFFFFF;
+    border: 1px solid var(--spec-border, #E2E8F0);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  }
+
+  .pop-latest-item-row {
+    display: grid;
+    grid-template-columns: 36px 1fr auto;
+    gap: 14px;
+    align-items: baseline;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--spec-border, #E2E8F0);
+    text-decoration: none;
+    color: inherit;
+    transition: background-color 0.15s ease;
+  }
+
+  .pop-latest-item-row:last-child {
+    border-bottom: none;
+  }
+
+  .pop-latest-item-row:hover {
+    background-color: var(--spec-bg, #F8FAFC);
+  }
+
+  .pop-latest-item-row:hover .item-title {
+    color: var(--spec-color, #0F2340);
+  }
+
+  .item-rank {
+    font-family: var(--font-family-heading, 'Playfair Display', Georgia, serif);
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--spec-color, #0284C7);
+    line-height: 1;
+  }
+
+  .item-body {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .item-title {
+    font-family: var(--font-family-base, 'Inter', sans-serif);
+    font-size: 0.95rem;
+    font-weight: 600;
+    line-height: 1.4;
+    color: #0F2340;
+  }
+
+  .item-spec-label {
+    font-size: 0.78rem;
+    color: #64748B;
+    margin-top: 3px;
+  }
+
+  .item-time {
+    font-size: 0.82rem;
+    color: #64748B;
+    white-space: nowrap;
+    padding-left: 8px;
+  }
+
+  /* --------------------------------------------------------------------------
+     RELATED VIDEOS SECTION
+     -------------------------------------------------------------------------- */
+  .related-videos-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+  }
+
+  @media (max-width: 768px) {
+    .related-videos-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .related-video-card {
+    background: #FFFFFF;
+    border: 1px solid #EFEAE3;
+    border-radius: 12px;
+    padding: 1.35rem;
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: inherit;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  }
+
+  .related-video-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(15, 35, 64, 0.06);
+    border-color: #CBD5E1;
+  }
+
+  .rel-video-play-circle {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background-color: #F6EFE5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.15rem;
+  }
+
+  .rel-video-title {
+    font-size: 0.98rem;
+    font-weight: 600;
+    color: #0F2340;
+    margin: 0 0 0.4rem;
+    line-height: 1.35;
+  }
+
+  .rel-video-meta {
+    font-size: 0.82rem;
+    color: #64748B;
+    margin-bottom: 1.15rem;
+  }
+
+  .rel-video-status-tag {
+    display: inline-block;
+    align-self: flex-start;
+    background-color: #FEF3C7;
+    color: #92400E;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 0.35rem 0.7rem;
+    border-radius: 9999px;
+  }
+
+  /* --------------------------------------------------------------------------
+     RELATED TREATMENTS PILLS
+     -------------------------------------------------------------------------- */
+  .treatments-pills-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+  }
+
+  .treatment-pill {
+    background-color: #FFFFFF;
+    border: 1px solid var(--spec-border, #E2E8F0);
+    border-radius: 9999px;
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+    color: #334155;
+    font-weight: 500;
+    transition: all 0.15s ease;
+  }
+
+  .treatment-pill:hover {
+    border-color: var(--spec-color, #CBD5E1);
+    background-color: var(--spec-bg, #F8FAFC);
+    color: var(--spec-color, #0F2340);
+  }
+
+  /* --------------------------------------------------------------------------
+     CONSULTATION CTA BANNER
+     -------------------------------------------------------------------------- */
+  .hub-consultation-banner {
+    margin-bottom: 4rem;
+  }
+
+  .banner-inner-box {
+    background-color: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 12px;
+    padding: 1.75rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+  }
+
+  @media (max-width: 768px) {
+    .banner-inner-box {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1.25rem;
+    }
+  }
+
+  .banner-heading {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #0F2340;
+    margin: 0 0 0.4rem;
+  }
+
+  .banner-sub {
+    font-size: 0.92rem;
+    line-height: 1.5;
+    color: #475569;
+    margin: 0;
+  }
+
+  .banner-btn-gold {
+    background-color: #C5A880;
+    color: #0F2340;
+    font-weight: 600;
+    font-size: 0.88rem;
+    padding: 0.65rem 1.35rem;
+    border-radius: 8px;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background-color 0.15s ease;
+  }
+
+  .banner-btn-gold:hover {
+    background-color: #B5956A;
+  }
+
+  /* --------------------------------------------------------------------------
+     DISCLAIMER FOOTER
+     -------------------------------------------------------------------------- */
+  .hub-footer-disclaimer {
+    border-top: 1px solid #E2E8F0;
+    padding-top: 2rem;
+    color: #64748B;
+  }
+
+  .hub-disclaimer-title {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #475569;
+    margin: 0 0 0.5rem;
+  }
+
+  .hub-disclaimer-p {
+    font-size: 0.82rem;
+    line-height: 1.55;
+    margin: 0 0 0.5rem;
+  }
+
+  .sub-disclaimer {
+    color: #94A3B8;
+  }
+
+  .empty-specialty-card {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    border-radius: 12px;
+  }
+
+  .empty-spec-photo {
+    width: 64px;
+    height: 64px;
+    border-radius: 12px;
+    object-fit: cover;
+    box-shadow: 0 4px 14px rgba(15, 35, 64, 0.1);
+    margin-bottom: 1rem;
+    display: inline-block;
+  }
+
+  .btn-request-opinion {
+    display: inline-block;
+    margin-top: 1rem;
+    background: #0F2340;
+    color: #FFFFFF;
+    padding: 0.65rem 1.25rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.88rem;
+  }
+</style>

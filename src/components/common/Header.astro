@@ -2,12 +2,20 @@
 /**
  * Header.astro
  * Global navigation header for Nuhavi Health.
- * Includes text wordmark logo, desktop navigation, language switcher,
- * prominent "Request a medical opinion" pill CTA, and an accessible mobile navigation drawer.
+ * PRIMARY SOURCE OF TRUTH: Nuhavi Health — Website Look & Feel — 30 October 2026.pdf (Pages 4, 5, 11, etc.)
  *
- * Implements full localization for English (/en/), Russian (/ru/), and Arabic (/ar/ RTL).
+ * Features:
+ * - Professional clean white header with Nuhavi crest logo and wordmark.
+ * - Navigation links (Manrope 600, #14294B): Treatments, Hospitals, How it works, Countries, Stories, Resources, About, Contact.
+ * - Active state: subtle 2px gold underline (#C49A3C).
+ * - Language switcher dropdown (English, Russian, Arabic, French) with globe icon.
+ * - Navy primary CTA pill button (#14294B): "Request a medical opinion" (radius 999px, no arrows).
+ * - Responsive menu toggle below 1200px with full mobile drawer.
+ * - Preserves working language routes, dropdown behavior, and WAI-ARIA accessibility.
  */
 import { translations, type SupportedLang } from '../../i18n/translations';
+import { specialtiesList } from '../../data/specialtyData';
+import SpecialtyIcon from './SpecialtyIcon.astro';
 
 interface Props {
   currentLang?: SupportedLang;
@@ -18,6 +26,8 @@ const detectedLang: SupportedLang = currentPath.startsWith('/ar')
   ? 'ar'
   : currentPath.startsWith('/ru')
   ? 'ru'
+  : currentPath.startsWith('/fr')
+  ? 'fr'
   : 'en';
 
 const currentLang: SupportedLang = Astro.props.currentLang || detectedLang;
@@ -27,121 +37,434 @@ const prefix = `/${currentLang}`;
 const homeHref = `${prefix}/`;
 const requestOpinionHref = `${prefix}/request-opinion/`;
 const contactHref = `${prefix}/contact/`;
+const treatmentsIndexHref = `${prefix}/treatments/`;
+const storiesHref = `${prefix}/stories/`;
+const aboutHref = `${prefix}/about/`;
+
+const isArabic = currentLang === 'ar';
+const isRussian = currentLang === 'ru';
+const isFrench = currentLang === 'fr';
+
+const isHomePage =
+  currentPath === '/' ||
+  currentPath === '/en/' ||
+  currentPath === '/ru/' ||
+  currentPath === '/ar/' ||
+  currentPath === '/fr/' ||
+  currentPath === '/en' ||
+  currentPath === '/ru' ||
+  currentPath === '/ar' ||
+  currentPath === '/fr';
+
+const targetSpecialtySlugs = [
+  'oncology',
+  'orthopaedics',
+  'nephrology-urology',
+  'cardiac-sciences',
+  'neurosciences',
+  'gastroenterology',
+  'organ-transplants',
+  'fertility',
+];
+
+const acceptingSpecialties = specialtiesList.filter(
+  (s) => s.status === 'accepting' && targetSpecialtySlugs.includes(s.slug)
+);
+const onRequestSpecialties = specialtiesList.filter(
+  (s) => s.status === 'on-request' && targetSpecialtySlugs.includes(s.slug)
+);
+const isTreatmentsActive = currentPath.includes('/treatments');
+const isSpecialtiesActive = currentPath.includes('/knowledge-centre/') && currentPath !== '/en/knowledge-centre/';
+
+const headerSpecialties = [
+  // Left Column (1-8) matching approved mockup
+  { slug: 'cardiology', name: 'Cardiology', image: '/images/specialties/cardiology.jpg', hubHref: '/en/knowledge-centre/cardiology/' },
+  { slug: 'oncology', name: 'Oncology', image: '/images/specialties/oncology.jpg', hubHref: '/en/knowledge-centre/oncology/' },
+  { slug: 'neurology', name: 'Neurology', image: '/images/specialties/neurology.jpg', hubHref: '/en/knowledge-centre/neurology/' },
+  { slug: 'orthopedics', name: 'Orthopedics', image: '/images/specialties/orthopedics.jpg', hubHref: '/en/knowledge-centre/orthopedics/' },
+  { slug: 'spine-surgery', name: 'Spine Surgery', image: '/images/specialties/spine-surgery.jpg', hubHref: '/en/knowledge-centre/spine-surgery/' },
+  { slug: 'hair-transplantation', name: 'Hair Transplantation', image: '/images/specialties/hair-transplantation.jpg', hubHref: '/en/knowledge-centre/hair-transplantation/' },
+  { slug: 'weight-loss-surgery', name: 'Weight Loss Surgery', image: '/images/specialties/weight-loss-surgery.jpg', hubHref: '/en/knowledge-centre/weight-loss-surgery/' },
+  { slug: 'ivf', name: 'IVF & Reproductive Medicine', image: '/images/specialties/ivf.jpg', hubHref: '/en/knowledge-centre/ivf/' },
+  // Right Column (9-15) matching approved mockup
+  { slug: 'bone-marrow-transplant', name: 'Bone Marrow Transplant', image: '/images/specialties/bone-marrow-transplant.jpg', hubHref: '/en/knowledge-centre/bone-marrow-transplant/' },
+  { slug: 'kidney-transplant', name: 'Kidney Transplant', image: '/images/specialties/kidney-transplant.jpg', hubHref: '/en/knowledge-centre/kidney-transplant/' },
+  { slug: 'liver-transplant', name: 'Liver Transplant', image: '/images/specialties/liver-transplant.jpg', hubHref: '/en/knowledge-centre/liver-transplant/' },
+  { slug: 'dental-care', name: 'Dental Care', image: '/images/specialties/dental-care.jpg', hubHref: '/en/knowledge-centre/dental-care/' },
+  { slug: 'ayush-wellness', name: 'AYUSH Wellness', image: '/images/specialties/ayush-wellness.jpg', hubHref: '/en/knowledge-centre/ayush-wellness/' },
+  { slug: 'general-surgery', name: 'General Surgery', image: '/images/specialties/general-surgery.jpg', hubHref: '/en/knowledge-centre/general-surgery/' },
+  { slug: 'cosmetic-surgery', name: 'Cosmetic & Plastic Surgery', image: '/images/specialties/cosmetic-surgery.jpg', hubHref: '/en/knowledge-centre/cosmetic-surgery/' },
+];
+
+const videosHref = currentLang === 'en' ? '/en/videos/' : `${prefix}/videos/`;
 
 const navLinks = [
-  { label: t.treatments, href: '/en/treatments' },
-  { label: t.hospitals, href: '/en/hospitals' },
-  { label: t.howItWorks, href: '/en/how-it-works' },
-  { label: t.countries, href: '/en/countries' },
-  { label: t.stories, href: '/en/stories' },
-  { label: t.resources, href: '/en/resources' },
-  { label: t.about, href: '/en/about' },
-  { label: t.contact, href: contactHref },
+  { label: t.specialties, href: '/en/knowledge-centre/', isSpecialtiesDropdown: true },
+  { label: t.hospitals, href: '/en/hospitals/' },
+  { label: t.doctors, href: '/en/doctors/' },
+  { label: t.cost, href: currentLang === 'en' ? '/en/cost/' : `${prefix}/how-it-works/costs-and-fees/` },
+  { label: isArabic ? 'القوافل الطبية' : isRussian ? 'Медицинские миссии' : 'Medical camps', href: '/en/medical-camps/' },
+  { label: t.stories, href: storiesHref },
+  { label: t.resources, href: '/en/knowledge-centre/' },
+  { label: t.videos, href: videosHref },
+  { label: t.about, href: aboutHref },
 ];
 
+/**
+ * Resolves the equivalent page URL in targetLang for the current route.
+ */
+function getEquivalentRoute(targetLang: SupportedLang, path: string): string {
+  const normalized = path.replace(/^\/(en|ru|ar|fr)(\/|$)/, '').replace(/^\/+|\/+$/g, '');
+
+  if (targetLang === 'en') {
+    return normalized ? `/en/${normalized}/` : '/en/';
+  }
+
+  const sharedRoutes = [
+    '',
+    'about',
+    'contact',
+    'how-it-works/costs-and-fees',
+    'medical-camps',
+    'request-opinion',
+    'resources',
+    'stories',
+    'treatments',
+    'videos',
+  ];
+
+  if (sharedRoutes.includes(normalized)) {
+    return normalized ? `/${targetLang}/${normalized}/` : `/${targetLang}/`;
+  }
+
+  const specialtySlugs = [
+    'oncology',
+    'orthopaedics',
+    'cardiac-sciences',
+    'neurosciences',
+    'organ-transplants',
+    'spine-surgery',
+    'gastroenterology',
+    'nephrology-urology',
+    'fertility',
+    'ophthalmology',
+  ];
+
+  for (const slug of specialtySlugs) {
+    if (normalized === `treatments/${slug}`) {
+      return `/${targetLang}/treatments/${slug}/`;
+    }
+  }
+
+  if (normalized.startsWith('treatments/oncology/')) {
+    return `/${targetLang}/treatments/oncology/`;
+  }
+
+  if (normalized === 'request-opinion') {
+    if (targetLang === 'ru') {
+      return '/ru/request-opinion/';
+    }
+    return `/${targetLang}/`;
+  }
+
+  return `/${targetLang}/`;
+}
+
 const languages = [
-  { code: 'en', name: 'English', status: 'Live', isLive: true, href: '/en/' },
-  { code: 'ru', name: 'Русский', status: 'Live', isLive: true, href: '/ru/' },
-  { code: 'ar', name: 'العربية', status: 'Live', isLive: true, href: '/ar/' },
+  {
+    code: 'en' as SupportedLang,
+    name: 'English',
+    nativeName: 'English',
+    shortLabel: 'EN',
+    href: getEquivalentRoute('en', currentPath),
+  },
+  {
+    code: 'ru' as SupportedLang,
+    name: 'Russian',
+    nativeName: 'Русский',
+    shortLabel: 'RU',
+    href: getEquivalentRoute('ru', currentPath),
+  },
+  {
+    code: 'ar' as SupportedLang,
+    name: 'Arabic',
+    nativeName: 'العربية',
+    shortLabel: 'AR',
+    href: getEquivalentRoute('ar', currentPath),
+  },
+  {
+    code: 'fr' as SupportedLang,
+    name: 'French',
+    nativeName: 'Français',
+    shortLabel: 'FR',
+    href: getEquivalentRoute('fr', currentPath),
+  },
 ];
+
+const currentLangItem = languages.find((l) => l.code === currentLang) || languages[0];
 
 const langLabels: Record<SupportedLang, string> = {
   en: 'English',
   ru: 'Русский',
   ar: 'العربية',
+  fr: 'Français',
 };
 ---
 
 <header class="site-header">
-  <div class="container header-container">
-    <!-- Brand Text Logo (Moves to right on RTL) -->
-    <a href={homeHref} class="header-logo" aria-label={`Nuhavi Health - Home (${langLabels[currentLang]})`}>
-      <span class="logo-text">Nuhavi Health</span>
-    </a>
-
-    <!-- Desktop Navigation Links (Mirrors to right-to-left on RTL) -->
-    <nav class="desktop-nav" aria-label={t.menu}>
-      <ul class="nav-list">
-        {navLinks.map((link) => (
-          <li class="nav-item">
-            <a href={link.href} class="nav-link">
-              {link.label}
-            </a>
-          </li>
-        ))}
-      </ul>
-    </nav>
-
-    <!-- Header Actions (Language Selector & CTA - On left on RTL) -->
-    <div class="header-actions">
-      <!-- Language Selector -->
-      <div class="lang-selector" id="lang-selector-container">
-        <button
-          type="button"
-          class="lang-btn"
-          id="lang-btn"
-          aria-expanded="false"
-          aria-haspopup="true"
-          aria-label={`${t.language} (Current: ${langLabels[currentLang]})`}
-        >
-          <!-- Globe SVG Icon -->
-          <svg class="icon-globe" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <circle cx="12" cy="12" r="10"></circle>
-            <line x1="2" y1="12" x2="22" y2="12"></line>
-            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
-          </svg>
-          <span class="lang-current">{currentLang.toUpperCase()}</span>
-          <!-- Chevron Down SVG -->
-          <svg class="icon-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <polyline points="6 9 12 15 18 9"></polyline>
-          </svg>
-        </button>
-
-        <!-- Dropdown Menu -->
-        <div class="lang-dropdown" id="lang-dropdown" role="menu" aria-label={t.language}>
-          <ul class="lang-list">
-            {languages.map((lang) => {
-              const isCurrent = lang.code === currentLang;
-              return (
-                <li role="none">
-                  <a
-                    href={lang.href}
-                    class={`lang-option ${isCurrent ? 'active' : ''}`}
-                    role="menuitem"
-                    aria-current={isCurrent ? "true" : undefined}
-                  >
-                    <span class="lang-name">{lang.name}</span>
-                    <span class={`lang-badge ${lang.isLive ? 'live' : 'preview'}`}>
-                      {lang.status}
-                    </span>
-                  </a>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
+  <!-- Top Utility Bar (12-Page Approved PDF Page 2) -->
+  <div class="header-top-bar">
+    <div class="container top-bar-container">
+      <div class="top-bar-left">
+        <nav class="top-languages" aria-label={t.language}>
+          {languages.map((l, index) => (
+            <span class="top-lang-entry">
+              <a
+                href={l.href}
+                class={`top-lang-link ${l.code === currentLang ? 'is-active' : ''}`}
+                lang={l.code}
+                dir={l.code === 'ar' ? 'rtl' : 'ltr'}
+              >
+                {l.nativeName}
+              </a>
+              {index < languages.length - 1 && <span class="lang-divider" aria-hidden="true">|</span>}
+            </span>
+          ))}
+        </nav>
       </div>
+      <div class="top-bar-right">
+        <a href="/en/doctors/" class="top-bar-link">
+          {isArabic ? 'للأطباء المحولين' : isRussian ? 'Для направляющих врачей' : isFrench ? 'Pour les médecins référents' : 'For referring doctors'}
+        </a>
+        <span class="top-bar-divider" aria-hidden="true">·</span>
+        <a href="/en/hospitals/" class="top-bar-link">
+          {isArabic ? 'للمستشفيات' : isRussian ? 'Для больниц' : isFrench ? 'Pour les hôpitaux' : 'For hospitals'}
+        </a>
+        <span class="top-bar-divider" aria-hidden="true">·</span>
+        <a href="https://wa.me/919999999999" class="top-bar-whatsapp" target="_blank" rel="noopener noreferrer">
+          <svg class="whatsapp-icon" width="13" height="13" viewBox="0 0 24 24" fill="#25D366" aria-hidden="true">
+            <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.312.045-.694.06-2.146-.541-1.859-.77-3.053-2.659-3.146-2.783-.092-.124-.755-1.004-.755-1.916 0-.912.478-1.36.648-1.533.17-.173.371-.217.495-.217.124 0 .248 0 .356.006.114.006.265-.043.414.316.155.372.531 1.298.577 1.392.046.093.078.202.016.326-.062.124-.093.202-.186.31-.093.109-.196.243-.28.326-.093.093-.19.195-.082.381.109.186.483.796 1.037 1.289.713.636 1.314.833 1.5.925.186.093.295.078.404-.047.109-.124.465-.541.59-.727.124-.186.248-.155.418-.093.17.062 1.083.511 1.269.604.186.093.31.14.356.217.046.077.046.45-.098.855z"/>
+          </svg>
+          <span>WhatsApp [WhatsApp number]</span>
+        </a>
+        <span class="top-bar-divider" aria-hidden="true">·</span>
+        <span class="top-bar-note">
+          {isArabic ? 'الرد خلال يوم عمل واحد' : isRussian ? 'Ответ в течение 1 рабочего дня' : isFrench ? 'Réponse sous 1 jour ouvré' : 'Coordinators reply within 1 working day'}
+        </span>
+      </div>
+    </div>
+  </div>
 
-      <!-- Prominent Pill CTA -->
-      <a href={requestOpinionHref} class="btn-primary header-cta">
-        {t.requestOpinion}
+  <div class="header-main-row">
+    <div class="container header-container">
+      <!-- Brand Logo (12-Page Approved PDF Page 1) -->
+      <a href={homeHref} class="header-logo" aria-label={`Nuhavi Health - Home (${langLabels[currentLang]})`}>
+        <div class="brand-crest" aria-hidden="true">
+          <svg class="crest-svg" width="36" height="36" viewBox="0 0 36 36" fill="none">
+            <rect width="36" height="36" rx="6" fill="#0F2340" />
+            <path d="M10 26V10L26 26V10" stroke="#A88B5A" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </div>
+        <div class="brand-wordmark">
+          <div class="brand-name-row">
+            <span class="logo-name">NUHAVI</span>
+            <span class="logo-suffix">HEALTH</span>
+          </div>
+          <span class="brand-tagline">Clarity before you travel. Care until you're home.</span>
+        </div>
       </a>
 
-      <!-- Mobile Hamburger / Close Toggle Button -->
-      <button
-        type="button"
-        id="mobile-nav-toggle"
-        class="mobile-nav-toggle"
-        aria-expanded="false"
-        aria-controls="mobile-nav-drawer"
-        aria-label={t.menu}
-      >
-        <span class="hamburger-box">
-          <span class="hamburger-line"></span>
-          <span class="hamburger-line"></span>
-          <span class="hamburger-line"></span>
-        </span>
-      </button>
+      <!-- Desktop Navigation Links (Visible >= 1200px) -->
+      <nav class="desktop-nav" aria-label={t.menu}>
+        <ul class="nav-list">
+          {navLinks.map((link) => {
+            if (link.isDropdown) {
+              return (
+                <li class="nav-item has-dropdown" id="treatments-nav-item">
+                  <button
+                    type="button"
+                    class={`nav-link treatments-trigger ${isTreatmentsActive ? 'is-active' : ''}`}
+                    id="treatments-menu-btn"
+                    aria-expanded="false"
+                    aria-haspopup="true"
+                    aria-controls="treatments-dropdown-panel"
+                    aria-label={t.treatmentsMenuAria}
+                  >
+                    <span>{link.label}</span>
+                    <svg class="icon-chevron treatments-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                  </button>
+
+                  <!-- Desktop Treatments Dropdown Menu -->
+                  <div
+                    class="treatments-dropdown"
+                    id="treatments-dropdown-panel"
+                    role="region"
+                    aria-label={t.treatmentsMenuAria}
+                  >
+                    <div class="treatments-dropdown-inner">
+                      <div class="dropdown-columns-wrap">
+                        <!-- Column 1: Accepting Enquiries (2) -->
+                        <div class="dropdown-col col-accepting">
+                          <div class="group-header">
+                            <span class="group-badge badge-accepting">
+                              <span class="badge-dot" aria-hidden="true">●</span>
+                              {t.acceptingGroupLabel}
+                            </span>
+                          </div>
+                          <div class="group-cards">
+                            {acceptingSpecialties.map((spec) => {
+                              const item = spec.content[currentLang];
+                              const href = `${prefix}/treatments/${spec.slug}/`;
+                              const isActive = currentPath === href || currentPath.startsWith(href);
+                              return (
+                                <a href={href} class={`specialty-dropdown-card ${isActive ? 'is-active' : ''}`}>
+                                  <span class="card-spec-title">{item.title}</span>
+                                  <span class="card-spec-desc">{item.description}</span>
+                                </a>
+                              );
+                            })}
+                          </div>
+                        </div>
+
+                        <!-- Column 2: On Request (8) -->
+                        <div class="dropdown-col col-on-request">
+                          <div class="group-header">
+                            <span class="group-badge badge-on-request">
+                              <span class="badge-dot" aria-hidden="true">○</span>
+                              {t.onRequestGroupLabel}
+                            </span>
+                          </div>
+                          <div class="group-grid">
+                            {onRequestSpecialties.map((spec) => {
+                              const item = spec.content[currentLang];
+                              const href = `${prefix}/treatments/${spec.slug}/`;
+                              const isActive = currentPath === href || currentPath.startsWith(href);
+                              return (
+                                <a href={href} class={`specialty-dropdown-link ${isActive ? 'is-active' : ''}`}>
+                                  <span class="link-spec-bullet" aria-hidden="true">•</span>
+                                  <span class="link-spec-text">{item.title}</span>
+                                </a>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- Bottom Bar: View all treatments overview -->
+                      <div class="dropdown-footer-bar">
+                        <a href={treatmentsIndexHref} class="view-all-treatments-link">
+                          <span>{t.viewAllTreatments}</span>
+                          <span aria-hidden="true">&rarr;</span>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+              );
+            }
+
+            if (link.isSpecialtiesDropdown) {
+              return (
+                <li class="nav-item has-dropdown" id="specialties-nav-item">
+                  <button
+                    type="button"
+                    class={`nav-link specialties-trigger ${isSpecialtiesActive ? 'is-active' : ''}`}
+                    id="specialties-menu-btn"
+                    aria-expanded="false"
+                    aria-haspopup="true"
+                    aria-controls="specialties-dropdown-panel"
+                    aria-label={t.specialtiesMenuAria}
+                  >
+                    <span>{link.label}</span>
+                    <svg class="icon-chevron specialties-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                  </button>
+
+                  <!-- Desktop Specialties Mega Dropdown Panel (2-Column Layout matching visual reference) -->
+                  <div
+                    class="specialties-dropdown"
+                    id="specialties-dropdown-panel"
+                    role="region"
+                    aria-label={t.specialtiesMenuAria}
+                  >
+                    <div class="specialties-dropdown-inner">
+                      <ul class="specialties-grid-list">
+                        {headerSpecialties.map((spec) => {
+                          const isActive = currentPath === spec.hubHref || currentPath.startsWith(spec.hubHref);
+                          return (
+                            <li>
+                              <a href={spec.hubHref} class={`specialty-dropdown-link ${isActive ? 'is-active' : ''}`}>
+                                <span class="spec-thumb-box">
+                                  <img
+                                    src={spec.image}
+                                    alt={spec.name}
+                                    class="spec-thumb-img"
+                                    width="36"
+                                    height="36"
+                                    loading="lazy"
+                                  />
+                                </span>
+                                <span class="spec-label">{spec.name}</span>
+                              </a>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    </div>
+                  </div>
+                </li>
+              );
+            }
+
+            const isActive = currentPath === link.href || (link.href !== '/en/' && currentPath.startsWith(link.href));
+            return (
+              <li class="nav-item">
+                <a href={link.href} class={`nav-link ${isActive ? 'is-active' : ''}`}>
+                  {link.label}
+                </a>
+              </li>
+            );
+          })}
+        </ul>
+      </nav>
+
+      <!-- Header Actions: Search & CTA Button -->
+      <div class="header-actions">
+        <!-- Search Trigger Icon (PDF Page 2) -->
+        <a href={treatmentsIndexHref} class="header-search-btn" aria-label="Search treatments or conditions">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </a>
+
+        <!-- Prominent Navy CTA (Desktop >= 1200px, hidden on homepage per request) -->
+        {!isHomePage && (
+          <a href={requestOpinionHref} class="header-opinion-btn">
+            {t.requestOpinion}
+          </a>
+        )}
+
+        <!-- Mobile / Tablet Menu Button (Visible < 1200px) -->
+        <button
+          type="button"
+          id="mobile-nav-toggle"
+          class="mobile-nav-toggle"
+          aria-expanded="false"
+          aria-controls="mobile-nav-drawer"
+          aria-label={t.menu}
+        >
+          <svg class="menu-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+          <span class="menu-label">{t.menu}</span>
+        </button>
+      </div>
     </div>
   </div>
 
@@ -154,33 +477,182 @@ const langLabels: Record<SupportedLang, string> = {
     <div class="mobile-nav-backdrop" id="mobile-nav-backdrop"></div>
     <div class="mobile-nav-panel">
       <div class="mobile-nav-header">
-        <span class="mobile-logo">Nuhavi Health</span>
+        <a href={homeHref} class="header-logo" aria-label="Nuhavi Health - Home">
+          <div class="brand-crest" aria-hidden="true">
+            <svg class="crest-svg" width="30" height="30" viewBox="0 0 36 36" fill="none">
+              <rect width="36" height="36" rx="6" fill="#0F2340" />
+              <path d="M10 26V10L26 26V10" stroke="#A88B5A" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </div>
+          <div class="brand-wordmark">
+            <div class="brand-name-row">
+              <span class="logo-name">NUHAVI</span>
+              <span class="logo-suffix">HEALTH</span>
+            </div>
+          </div>
+        </a>
         <button
           type="button"
           id="mobile-nav-close"
           class="mobile-close-btn"
           aria-label={t.close}
         >
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <line x1="18" y1="6" x2="6" y2="18"></line>
             <line x1="6" y1="6" x2="18" y2="18"></line>
           </svg>
+          <span>{t.close}</span>
         </button>
       </div>
 
       <nav class="mobile-nav-links" aria-label="Mobile navigation">
         <ul class="mobile-links-list">
-          {navLinks.map((link) => (
-            <li>
-              <a href={link.href} class="mobile-link">
-                {link.label}
-              </a>
-            </li>
-          ))}
+          <li>
+            <a href={homeHref} class={`mobile-link ${currentPath === homeHref ? 'active' : ''}`}>
+              <span>{currentLang === 'ru' ? 'Главная' : currentLang === 'ar' ? 'الرئيسية' : 'Home'}</span>
+            </a>
+          </li>
+
+          {navLinks.map((link) => {
+            if (link.isDropdown) {
+              return (
+                <li class="mobile-accordion-item">
+                  <button
+                    type="button"
+                    class={`mobile-link mobile-accordion-toggle ${isTreatmentsActive ? 'active' : ''}`}
+                    id="mobile-treatments-toggle"
+                    aria-expanded="false"
+                    aria-controls="mobile-treatments-submenu"
+                  >
+                    <span>{link.label}</span>
+                    <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                  </button>
+
+                  <div
+                    id="mobile-treatments-submenu"
+                    class="mobile-accordion-submenu"
+                    aria-hidden="true"
+                  >
+                    <div class="mobile-subgroup">
+                      <div class="mobile-subgroup-label">
+                        <span class="group-badge badge-accepting">
+                          <span class="badge-dot" aria-hidden="true">●</span>
+                          {t.acceptingGroupLabel}
+                        </span>
+                      </div>
+                      <ul class="mobile-subgroup-list">
+                        {acceptingSpecialties.map((spec) => {
+                          const item = spec.content[currentLang];
+                          const href = `${prefix}/treatments/${spec.slug}/`;
+                          const isActive = currentPath === href || currentPath.startsWith(href);
+                          return (
+                            <li>
+                              <a href={href} class={`mobile-sublink ${isActive ? 'active' : ''}`}>
+                                <span class="mobile-sublink-title">{item.title}</span>
+                              </a>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    </div>
+
+                    <div class="mobile-subgroup">
+                      <div class="mobile-subgroup-label">
+                        <span class="group-badge badge-on-request">
+                          <span class="badge-dot" aria-hidden="true">○</span>
+                          {t.onRequestGroupLabel}
+                        </span>
+                      </div>
+                      <ul class="mobile-subgroup-list">
+                        {onRequestSpecialties.map((spec) => {
+                          const item = spec.content[currentLang];
+                          const href = `${prefix}/treatments/${spec.slug}/`;
+                          const isActive = currentPath === href || currentPath.startsWith(href);
+                          return (
+                            <li>
+                              <a href={href} class={`mobile-sublink ${isActive ? 'active' : ''}`}>
+                                <span class="mobile-sublink-title">{item.title}</span>
+                              </a>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    </div>
+
+                    <div class="mobile-view-all-wrap">
+                      <a href={treatmentsIndexHref} class="mobile-view-all-link">
+                        <span>{t.viewAllTreatments}</span>
+                        <span aria-hidden="true">&rarr;</span>
+                      </a>
+                    </div>
+                  </div>
+                </li>
+              );
+            }
+
+            if (link.isSpecialtiesDropdown) {
+              return (
+                <li class="mobile-accordion-item">
+                  <button
+                    type="button"
+                    class={`mobile-link mobile-accordion-toggle ${isSpecialtiesActive ? 'active' : ''}`}
+                    id="mobile-specialties-toggle"
+                    aria-expanded="false"
+                    aria-controls="mobile-specialties-submenu"
+                  >
+                    <span>{link.label}</span>
+                    <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                  </button>
+
+                  <div
+                    id="mobile-specialties-submenu"
+                    class="mobile-accordion-submenu"
+                    aria-hidden="true"
+                  >
+                    <ul class="mobile-specialties-list">
+                      {headerSpecialties.map((spec) => {
+                        const isActive = currentPath === spec.hubHref || currentPath.startsWith(spec.hubHref);
+                        return (
+                          <li>
+                            <a href={spec.hubHref} class={`mobile-specialty-link ${isActive ? 'active' : ''}`}>
+                              <span class="mobile-spec-thumb-box">
+                                <img
+                                  src={spec.image}
+                                  alt={spec.name}
+                                  class="mobile-spec-thumb-img"
+                                  width="32"
+                                  height="32"
+                                  loading="lazy"
+                                />
+                              </span>
+                              <span class="mobile-sublink-title">{spec.name}</span>
+                            </a>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </div>
+                </li>
+              );
+            }
+
+            const isActive = currentPath === link.href || (link.href !== '/en/' && currentPath.startsWith(link.href));
+            return (
+              <li>
+                <a href={link.href} class={`mobile-link ${isActive ? 'active' : ''}`}>
+                  <span>{link.label}</span>
+                </a>
+              </li>
+            );
+          })}
         </ul>
       </nav>
 
-      <!-- Mobile Language Section -->
+      <!-- Mobile Language Options -->
       <div class="mobile-lang-section">
         <span class="mobile-section-label">{t.language}</span>
         <div class="mobile-lang-options">
@@ -191,20 +663,32 @@ const langLabels: Record<SupportedLang, string> = {
                 href={lang.href}
                 class={`mobile-lang-item ${isCurrent ? 'active' : ''}`}
                 aria-current={isCurrent ? "true" : undefined}
+                data-lang={lang.code}
               >
-                <span class="lang-text">{lang.name}</span>
-                <span class={`lang-badge ${lang.isLive ? 'live' : 'preview'}`}>
-                  {lang.status}
-                </span>
+                <div class="mobile-lang-left">
+                  <svg class="mobile-globe-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="2" y1="12" x2="22" y2="12"></line>
+                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                  </svg>
+                  <span class="mobile-lang-name">{lang.nativeName}</span>
+                </div>
+                {isCurrent && (
+                  <span class="mobile-lang-check" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  </span>
+                )}
               </a>
             );
           })}
         </div>
       </div>
 
-      <!-- Mobile CTA -->
+      <!-- Mobile CTA Pill Button -->
       <div class="mobile-cta-container">
-        <a href={requestOpinionHref} class="btn-primary mobile-cta">
+        <a href={requestOpinionHref} class="btn-navy-pill mobile-cta">
           {t.requestOpinion}
         </a>
       </div>
@@ -214,67 +698,268 @@ const langLabels: Record<SupportedLang, string> = {
 
 <style>
   /* --------------------------------------------------------------------------
-     HEADER CONTAINER & BASE
+     TOP UTILITY BAR (Approved 12-Page PDF Page 2)
+     -------------------------------------------------------------------------- */
+  .header-top-bar {
+    width: 100%;
+    background-color: #0F2340;
+    color: #F6F2EA;
+    font-size: 0.8125rem;
+    line-height: 1.4;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .top-bar-container {
+    max-width: 1366px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 7px clamp(16px, 2.5vw, 32px);
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .top-bar-left,
+  .top-bar-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .top-languages {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .top-lang-entry {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .top-lang-link {
+    color: rgba(246, 242, 234, 0.82) !important;
+    text-decoration: none !important;
+    font-weight: 500;
+    font-size: 0.8125rem;
+    transition: color 0.15s ease;
+  }
+
+  .top-lang-link:hover {
+    color: #FFFFFF !important;
+    text-decoration: none !important;
+  }
+
+  .top-lang-link.is-active {
+    color: #A88B5A !important;
+    font-weight: 600;
+    text-decoration: none !important;
+  }
+
+  .lang-divider,
+  .top-bar-divider {
+    color: rgba(255, 255, 255, 0.25);
+    font-size: 0.75rem;
+    user-select: none;
+  }
+
+  .top-bar-link {
+    color: rgba(246, 242, 234, 0.85) !important;
+    text-decoration: none !important;
+    font-size: 0.8125rem;
+    transition: color 0.15s ease;
+  }
+
+  .top-bar-link:hover {
+    color: #FFFFFF !important;
+    text-decoration: underline !important;
+  }
+
+  .top-bar-whatsapp {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: #FFFFFF !important;
+    text-decoration: none !important;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    transition: color 0.15s ease;
+  }
+
+  .top-bar-whatsapp:hover {
+    color: #25D366 !important;
+    text-decoration: none !important;
+  }
+
+  .top-bar-whatsapp svg {
+    flex-shrink: 0;
+  }
+
+  .top-bar-note {
+    color: #DCE3EC;
+    font-size: 0.78rem;
+    opacity: 0.9;
+  }
+
+  .header-search-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    color: #0F2340;
+    background: transparent;
+    border: 1px solid rgba(15, 35, 64, 0.15);
+    text-decoration: none;
+    transition: all 0.18s ease;
+  }
+
+  .header-search-btn:hover {
+    background-color: #F6F2EA;
+    border-color: #A88B5A;
+    color: #0F2340;
+  }
+
+  .btn-brass.header-cta,
+  .btn-navy-pill.header-cta,
+  .btn-navy-pill.mobile-cta {
+    background-color: #A88B5A !important;
+    color: #FFFFFF !important;
+    border: 2px solid #A88B5A !important;
+    border-radius: 9999px !important;
+    padding: 0 24px;
+    height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    text-decoration: none !important;
+    box-shadow: 0 1px 3px rgba(15, 35, 64, 0.08);
+    transition: background-color 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
+  }
+
+  .btn-brass.header-cta:hover,
+  .btn-navy-pill.header-cta:hover,
+  .btn-navy-pill.mobile-cta:hover {
+    background-color: #967949 !important;
+    border-color: #967949 !important;
+    color: #FFFFFF !important;
+    transform: translateY(-1px);
+  }
+
+  @media (max-width: 960px) {
+    .header-top-bar {
+      display: none;
+    }
+  }
+
+  /* --------------------------------------------------------------------------
+     HEADER BASE & LAYOUT (Page 2 Visual Standard)
      -------------------------------------------------------------------------- */
   .site-header {
     position: sticky;
     top: 0;
     z-index: 1000;
-    background-color: var(--color-paper);
-    border-bottom: 1px solid rgba(20, 41, 75, 0.08);
-    transition: background-color 0.2s ease;
+    background-color: #FFFFFF;
+    border-bottom: 1px solid #E2E8F0;
+    box-shadow: 0 1px 3px rgba(13, 27, 51, 0.04);
+  }
+
+  .header-main-row {
+    width: 100%;
+    background-color: #FFFFFF;
   }
 
   .header-container {
+    max-width: 1366px;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: clamp(16px, 2.5vw, 32px);
+    padding-right: clamp(16px, 2.5vw, 32px);
+    box-sizing: border-box;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 80px;
-    gap: var(--space-3);
-    max-width: 1360px;
-  }
-
-  @media (max-width: 480px) {
-    .header-container {
-      height: 72px;
-    }
-
-    .logo-text {
-      font-size: 1.2rem;
-    }
-  }
-
-  /* Logo (Default Left in LTR) */
-  .header-logo {
-    display: flex;
-    align-items: center;
-    text-decoration: none;
-    color: var(--color-deep-navy);
-    flex-shrink: 0;
-  }
-
-  .logo-text {
-    font-size: 1.375rem;
-    font-weight: var(--font-weight-heading);
-    letter-spacing: -0.02em;
-    color: var(--color-deep-navy);
-    white-space: nowrap;
-  }
-
-  .header-logo:hover .logo-text {
-    color: var(--color-navy);
+    height: 72px;
+    gap: 16px;
   }
 
   /* --------------------------------------------------------------------------
-     DESKTOP NAVIGATION
+     BRAND CREST & WORDMARK
+     -------------------------------------------------------------------------- */
+  .header-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    flex-shrink: 0;
+  }
+
+  .brand-crest {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .crest-svg {
+    border-radius: 9px;
+    box-shadow: 0 2px 6px rgba(13, 27, 51, 0.12);
+  }
+
+  .brand-wordmark {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    flex-shrink: 0;
+  }
+
+  .brand-name-row {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    line-height: 1;
+  }
+
+  .logo-name {
+    font-size: 1.25rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: #14294B;
+  }
+
+  .logo-suffix {
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    color: #C49A3C;
+    text-transform: uppercase;
+  }
+
+  .brand-tagline {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: #64748B;
+    letter-spacing: 0.02em;
+  }
+
+  /* --------------------------------------------------------------------------
+     DESKTOP NAVIGATION (Visible >= 1200px)
      -------------------------------------------------------------------------- */
   .desktop-nav {
     display: none;
-    flex: 1 1 auto;
-    margin: 0 var(--space-3);
+    flex: 0 1 auto;
+    margin: 0 8px;
   }
 
-  @media (min-width: 1240px) {
+  @media (min-width: 1200px) {
     .desktop-nav {
       display: block;
     }
@@ -284,7 +969,7 @@ const langLabels: Record<SupportedLang, string> = {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: var(--space-3);
+    gap: 4px;
     list-style: none;
     margin: 0;
     padding: 0;
@@ -292,35 +977,417 @@ const langLabels: Record<SupportedLang, string> = {
 
   .nav-item {
     display: inline-flex;
+    flex-shrink: 0;
   }
 
   .nav-link {
     font-family: var(--font-family-base);
     font-size: 0.9375rem;
-    font-weight: var(--font-weight-subheading);
-    color: var(--color-navy);
+    font-weight: 600;
+    color: #14294B;
     text-decoration: none;
-    padding: var(--space-1) var(--space-1);
+    padding: 8px 12px;
+    border-radius: var(--radius-sm);
     position: relative;
-    transition: color 0.15s ease;
+    transition: color 0.15s ease, background-color 0.15s ease;
     white-space: nowrap;
+    letter-spacing: -0.01em;
   }
 
   .nav-link:hover {
-    color: var(--color-gold-text);
+    color: #0D1B33;
+    background-color: #F8FAFC;
+  }
+
+  .nav-link.is-active {
+    color: #14294B;
+    font-weight: 700;
+  }
+
+  .nav-link.is-active::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 12px;
+    right: 12px;
+    height: 2px;
+    background-color: #C49A3C;
+    border-radius: 2px;
   }
 
   /* --------------------------------------------------------------------------
-     HEADER ACTIONS (Language & CTA)
+     TREATMENTS DROPDOWN (DESKTOP)
+     -------------------------------------------------------------------------- */
+  .nav-item.has-dropdown {
+    position: relative;
+  }
+
+  .treatments-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+  }
+
+  .treatments-chevron {
+    transition: transform 0.2s ease;
+  }
+
+  .nav-item.has-dropdown.is-open .treatments-chevron,
+  .treatments-trigger[aria-expanded="true"] .treatments-chevron {
+    transform: rotate(180deg);
+  }
+
+  .treatments-dropdown {
+    display: none;
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    width: 660px;
+    background-color: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    border-radius: 14px;
+    box-shadow: 0 16px 36px -4px rgba(13, 27, 51, 0.12), 0 2px 8px rgba(13, 27, 51, 0.04);
+    z-index: 1050;
+    opacity: 0;
+    transform: translateY(-6px);
+    transition: opacity 0.18s ease, transform 0.18s ease;
+    pointer-events: none;
+  }
+
+  .treatments-dropdown.open {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  .treatments-dropdown-inner {
+    padding: 20px;
+  }
+
+  .dropdown-columns-wrap {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 20px;
+    align-items: start;
+  }
+
+  .group-header {
+    margin-bottom: 10px;
+  }
+
+  .group-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+
+  .group-badge.badge-accepting {
+    background-color: rgba(38, 115, 77, 0.1);
+    color: #26734D;
+    border: 1px solid rgba(38, 115, 77, 0.2);
+  }
+
+  .group-badge.badge-on-request {
+    background-color: #F1F5F9;
+    color: #5B6A80;
+    border: 1px solid #E2E8F0;
+  }
+
+  .badge-dot {
+    font-size: 0.625rem;
+  }
+
+  .group-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .specialty-dropdown-card {
+    display: flex;
+    flex-direction: column;
+    padding: 10px 14px;
+    background-color: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+  }
+
+  .specialty-dropdown-card:hover,
+  .specialty-dropdown-card:focus-visible {
+    background-color: #FFFFFF;
+    border-color: #C49A3C;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(13, 27, 51, 0.08);
+  }
+
+  .card-spec-title {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #14294B;
+    line-height: 1.35;
+    margin-bottom: 3px;
+  }
+
+  .card-spec-desc {
+    font-size: 0.75rem;
+    color: #5B6A80;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .group-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px 12px;
+  }
+
+  .specialty-dropdown-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 8px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #263449;
+    transition: color 0.15s ease, background-color 0.15s ease;
+  }
+
+  .specialty-dropdown-link:hover,
+  .specialty-dropdown-link:focus-visible {
+    color: #14294B;
+    background-color: #F1F5F9;
+  }
+
+  .link-spec-bullet {
+    color: #C49A3C;
+    font-size: 1rem;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  .link-spec-text {
+    line-height: 1.35;
+  }
+
+  .dropdown-footer-bar {
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid #E2E8F0;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .view-all-treatments-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #14294B;
+    text-decoration: none;
+    transition: color 0.15s ease;
+  }
+
+  .view-all-treatments-link:hover {
+    color: #8A6726;
+  }
+
+  /* --------------------------------------------------------------------------
+     SPECIALTIES DROPDOWN (DESKTOP 2-COLUMN MEGA DROPDOWN)
+     -------------------------------------------------------------------------- */
+  .specialties-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+  }
+
+  .specialties-chevron {
+    transition: transform 0.2s ease;
+  }
+
+  .nav-item.has-dropdown.is-open .specialties-chevron,
+  .specialties-trigger[aria-expanded="true"] .specialties-chevron {
+    transform: rotate(180deg);
+  }
+
+  .specialties-dropdown {
+    display: none;
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    width: 520px;
+    max-width: 92vw;
+    background-color: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    border-radius: 16px;
+    box-shadow: 0 16px 40px -4px rgba(13, 27, 51, 0.14), 0 4px 12px rgba(13, 27, 51, 0.05);
+    z-index: 1050;
+    opacity: 0;
+    transform: translateY(-6px);
+    transition: opacity 0.18s ease, transform 0.18s ease;
+    pointer-events: none;
+  }
+
+  .specialties-dropdown.open {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  .specialties-dropdown-inner {
+    padding: 14px 16px;
+  }
+
+  .specialties-grid-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-flow: column;
+    grid-template-rows: repeat(8, auto);
+    gap: 4px 14px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .specialty-dropdown-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 4px 8px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background-color 0.15s ease, color 0.15s ease;
+  }
+
+  .specialty-dropdown-link:hover,
+  .specialty-dropdown-link:focus-visible {
+    background-color: #F8FAFC;
+  }
+
+  .specialty-dropdown-link.is-active {
+    background-color: #F1F5F9;
+  }
+
+  .spec-thumb-box {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #F1F5F9;
+  }
+
+  .spec-thumb-img {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    object-fit: cover;
+    display: block;
+  }
+
+  .spec-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #14294B;
+    line-height: 1.35;
+    white-space: nowrap;
+  }
+
+  .specialty-dropdown-link:hover .spec-label {
+    color: #0D1B33;
+  }
+
+  @media (min-width: 1200px) and (max-width: 1360px) {
+    .nav-list {
+      gap: 2px;
+    }
+    .nav-link {
+      padding: 8px 7px;
+      font-size: 0.84rem;
+    }
+  }
+
+  .mobile-specialties-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .mobile-specialty-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 10px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #263449;
+    transition: background-color 0.15s ease;
+  }
+
+  .mobile-specialty-link:hover,
+  .mobile-specialty-link.active {
+    background-color: #EDF2F7;
+    color: #14294B;
+    font-weight: 700;
+  }
+
+  .mobile-spec-thumb-box {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #F1F5F9;
+  }
+
+  .mobile-spec-thumb-img {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* --------------------------------------------------------------------------
+     HEADER ACTIONS (Language Selector & Navy Pill Button)
      -------------------------------------------------------------------------- */
   .header-actions {
     display: flex;
     align-items: center;
-    gap: var(--space-2);
+    gap: 12px;
     flex-shrink: 0;
   }
 
-  /* Language Selector */
   .lang-selector {
     position: relative;
   }
@@ -329,197 +1396,193 @@ const langLabels: Record<SupportedLang, string> = {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    height: 40px;
-    padding: 0 var(--space-2);
-    background-color: transparent;
-    border: 1px solid rgba(20, 41, 75, 0.15);
-    border-radius: var(--radius-pill);
-    color: var(--color-deep-navy);
+    padding: 8px 14px;
+    background: #FFFFFF;
+    border: 1px solid #CBD5E1;
+    border-radius: 999px;
     font-family: var(--font-family-base);
-    font-size: 0.875rem;
-    font-weight: var(--font-weight-subheading);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: #14294B;
     cursor: pointer;
-    transition: border-color 0.15s ease, background-color 0.15s ease;
+    transition: all 0.15s ease;
   }
 
   .lang-btn:hover {
-    border-color: var(--color-navy);
-    background-color: var(--color-mist);
+    border-color: #14294B;
+    background-color: #F8FAFC;
   }
 
   .icon-globe {
-    color: var(--color-gold);
-    flex-shrink: 0;
-    pointer-events: none;
+    color: #5B6A80;
   }
 
-  .icon-chevron {
-    color: var(--color-slate);
+  .lang-current-label {
+    letter-spacing: 0.04em;
+  }
+
+  .lang-chevron {
+    color: #5B6A80;
     transition: transform 0.2s ease;
-    pointer-events: none;
   }
 
-  .lang-current {
-    pointer-events: none;
-  }
-
-  .lang-btn[aria-expanded="true"] .icon-chevron,
-  .lang-selector.is-open .icon-chevron {
+  .lang-selector.is-open .lang-chevron {
     transform: rotate(180deg);
   }
 
-  /* Language Dropdown */
   .lang-dropdown {
     display: none;
     position: absolute;
-    top: calc(100% + 8px);
+    top: calc(100% + 6px);
     right: 0;
-    width: 200px;
-    background-color: var(--color-paper);
-    border-radius: var(--radius-card);
-    border: 1px solid rgba(20, 41, 75, 0.12);
-    box-shadow: 0 10px 25px -5px rgba(20, 41, 75, 0.15);
-    z-index: 1010;
-    padding: var(--space-1);
-    pointer-events: auto;
+    min-width: 150px;
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    border-radius: 12px;
+    box-shadow: 0 10px 24px rgba(13, 27, 51, 0.12);
+    padding: 6px;
+    z-index: 1100;
   }
 
-  .lang-dropdown.open,
-  .lang-selector.is-open .lang-dropdown,
-  .lang-btn[aria-expanded="true"] + .lang-dropdown {
-    display: block !important;
+  .lang-dropdown.open {
+    display: block;
   }
 
   .lang-list {
     list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    margin: 0;
     padding: 0;
+    margin: 0;
   }
 
   .lang-option {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: var(--space-1) var(--space-2);
-    border-radius: calc(var(--radius-card) - 4px);
-    font-size: 0.875rem;
-    color: var(--color-ink);
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #263449;
     text-decoration: none;
-    cursor: pointer;
-    transition: background-color 0.15s ease, color 0.15s ease;
-  }
-
-  .lang-name,
-  .lang-badge {
-    pointer-events: none;
+    transition: background-color 0.15s ease;
   }
 
   .lang-option:hover {
-    background-color: var(--color-mist);
-    color: var(--color-deep-navy);
+    background-color: #F1F5F9;
+    color: #14294B;
   }
 
   .lang-option.active {
-    font-weight: var(--font-weight-subheading);
-    color: var(--color-deep-navy);
-    background-color: rgba(20, 41, 75, 0.05);
+    font-weight: 700;
+    color: #14294B;
+    background-color: #F8FAFC;
   }
 
-  .lang-badge {
-    font-size: 0.6875rem;
-    font-weight: var(--font-weight-subheading);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    padding: 2px 6px;
-    border-radius: var(--radius-pill);
-    line-height: 1.2;
+  .lang-check-icon {
+    color: #C49A3C;
   }
 
-  .lang-badge.live {
-    background-color: rgba(38, 115, 77, 0.1);
-    color: var(--color-success);
-    border: 1px solid rgba(38, 115, 77, 0.3);
-  }
-
-  .lang-badge.preview {
-    background-color: var(--color-confirmation);
-    color: var(--color-gold-text);
-    border: 1px solid rgba(196, 154, 60, 0.3);
-  }
-
-  /* Desktop Header CTA */
-  .header-cta {
-    display: none;
+  /* Navy Primary Pill CTA (Rules: radius 999px, >=48px tall, says exactly what happens, no arrows) */
+  .btn-navy-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 22px;
+    min-height: 48px;
+    background-color: #14294B;
+    color: #FFFFFF;
+    font-family: var(--font-family-base);
+    font-size: 0.875rem;
+    font-weight: 700;
+    line-height: 1;
+    border-radius: 999px;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.15s ease, transform 0.15s ease;
     white-space: nowrap;
-    flex-shrink: 0;
+    box-shadow: 0 2px 6px rgba(20, 41, 75, 0.15);
   }
 
-  @media (min-width: 1240px) {
+  .btn-navy-pill:hover {
+    background-color: #0D1B33;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(20, 41, 75, 0.22);
+  }
+
+  .header-cta,
+  .header-opinion-btn {
+    display: none;
+  }
+
+  @media (min-width: 1200px) {
     .header-cta {
       display: inline-flex;
-      font-size: 0.9375rem;
-      padding: 0 var(--space-3);
+    }
+
+    .header-opinion-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 9px 18px;
+      min-height: 42px;
+      background-color: #0F2340;
+      color: #FFFFFF;
+      border: 1px solid #0F2340;
+      border-radius: 6px;
+      font-family: var(--font-family-base, 'Inter', sans-serif);
+      font-size: 0.875rem;
+      font-weight: 600;
+      line-height: 1.25;
+      text-decoration: none;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background-color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .header-opinion-btn:hover {
+      background-color: #1a365d;
+      color: #FFFFFF;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(15, 35, 64, 0.2);
     }
   }
 
   /* --------------------------------------------------------------------------
-     MOBILE NAVIGATION TOGGLE
+     MOBILE MENU BUTTON (Visible < 1200px)
      -------------------------------------------------------------------------- */
   .mobile-nav-toggle {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    justify-content: center;
-    width: 48px;
-    height: 48px;
+    gap: 6px;
+    padding: 8px 14px;
+    min-height: 44px;
     background: transparent;
-    border: 1px solid rgba(20, 41, 75, 0.12);
-    border-radius: var(--radius-pill);
+    border: 1px solid #CBD5E1;
+    border-radius: 999px;
+    font-family: var(--font-family-base);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: #14294B;
     cursor: pointer;
-    padding: 0;
-    color: var(--color-deep-navy);
-    flex-shrink: 0;
   }
 
-  .mobile-nav-toggle:hover {
-    background-color: var(--color-mist);
-  }
-
-  @media (min-width: 1240px) {
+  @media (min-width: 1200px) {
     .mobile-nav-toggle {
       display: none;
     }
   }
 
-  .hamburger-box {
-    width: 22px;
-    height: 16px;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-
-  .hamburger-line {
-    width: 100%;
-    height: 2px;
-    background-color: var(--color-deep-navy);
-    border-radius: 2px;
-    transition: transform 0.2s ease, opacity 0.2s ease;
-  }
-
   /* --------------------------------------------------------------------------
-     MOBILE NAVIGATION DRAWER
+     MOBILE DRAWER
      -------------------------------------------------------------------------- */
   .mobile-nav-drawer {
     display: none;
     position: fixed;
     top: 0;
     left: 0;
-    width: 100vw;
-    height: 100vh;
+    right: 0;
+    bottom: 0;
     z-index: 2000;
   }
 
@@ -538,128 +1601,177 @@ const langLabels: Record<SupportedLang, string> = {
     position: absolute;
     top: 0;
     right: 0;
+    bottom: 0;
     width: 100%;
-    max-width: min(340px, 88vw);
-    height: 100%;
-    background-color: var(--color-paper);
+    max-width: 380px;
+    background-color: #FFFFFF;
+    box-shadow: -8px 0 32px rgba(13, 27, 51, 0.2);
     display: flex;
     flex-direction: column;
-    padding: var(--space-4) var(--space-3);
+    padding: 20px;
     overflow-y: auto;
-    box-shadow: -5px 0 25px rgba(20, 41, 75, 0.15);
-    animation: slideInRight 0.25s ease-out;
-  }
-
-  @keyframes slideInRight {
-    from {
-      transform: translateX(100%);
-    }
-    to {
-      transform: translateX(0);
-    }
+    box-sizing: border-box;
   }
 
   .mobile-nav-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: var(--space-4);
-    padding-bottom: var(--space-2);
-    border-bottom: 1px solid rgba(20, 41, 75, 0.08);
-  }
-
-  .mobile-logo {
-    font-size: 1.25rem;
-    font-weight: var(--font-weight-heading);
-    color: var(--color-deep-navy);
+    padding-bottom: 16px;
+    border-bottom: 1px solid #E2E8F0;
+    margin-bottom: 16px;
   }
 
   .mobile-close-btn {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
+    gap: 4px;
     background: transparent;
     border: none;
-    border-radius: var(--radius-pill);
-    color: var(--color-slate);
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #14294B;
     cursor: pointer;
-  }
-
-  .mobile-close-btn:hover {
-    color: var(--color-navy);
-    background-color: var(--color-mist);
-  }
-
-  .mobile-nav-links {
-    margin-bottom: var(--space-4);
+    padding: 8px;
   }
 
   .mobile-links-list {
     list-style: none;
+    padding: 0;
+    margin: 0;
     display: flex;
     flex-direction: column;
-    gap: var(--space-1);
-    margin: 0;
-    padding: 0;
+    gap: 4px;
   }
 
   .mobile-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 48px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #14294B;
+    text-decoration: none;
+    transition: background-color 0.15s ease;
+  }
+
+  .mobile-link:hover,
+  .mobile-link.active {
+    background-color: #F8FAFC;
+    color: #0D1B33;
+    font-weight: 700;
+  }
+
+  .mobile-accordion-submenu {
+    display: none;
+    padding: 10px 14px 14px;
+    background-color: #F8FAFC;
+    border-radius: 8px;
+    margin-bottom: 8px;
+  }
+
+  .mobile-accordion-submenu.open {
     display: block;
-    padding: var(--space-1) 0;
-    font-size: 1.0625rem;
-    font-weight: var(--font-weight-subheading);
-    color: var(--color-navy);
+  }
+
+  .mobile-subgroup {
+    margin-bottom: 12px;
+  }
+
+  .mobile-subgroup-label {
+    margin-bottom: 8px;
+  }
+
+  .mobile-subgroup-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .mobile-sublink {
+    display: block;
+    padding: 6px 8px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #263449;
     text-decoration: none;
   }
 
-  .mobile-link:hover {
-    color: var(--color-gold-text);
+  .mobile-sublink.active {
+    color: #14294B;
+    font-weight: 700;
   }
 
-  /* Mobile Language Section */
+  .mobile-view-all-wrap {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid #E2E8F0;
+  }
+
+  .mobile-view-all-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: #14294B;
+    text-decoration: none;
+  }
+
   .mobile-lang-section {
-    padding-top: var(--space-3);
-    border-top: 1px solid rgba(20, 41, 75, 0.08);
-    margin-bottom: var(--space-4);
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid #E2E8F0;
   }
 
   .mobile-section-label {
-    display: block;
     font-size: 0.75rem;
-    font-weight: var(--font-weight-subheading);
+    font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    color: var(--color-slate);
-    margin-bottom: var(--space-2);
+    color: #64748B;
+    display: block;
+    margin-bottom: 10px;
   }
 
   .mobile-lang-options {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-1);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
   }
 
   .mobile-lang-item {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: var(--space-1) 0;
-    font-size: 0.9375rem;
-    color: var(--color-ink);
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 1px solid #E2E8F0;
     text-decoration: none;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #263449;
   }
 
   .mobile-lang-item.active {
-    font-weight: var(--font-weight-subheading);
-    color: var(--color-deep-navy);
+    border-color: #14294B;
+    background-color: #F8FAFC;
+    color: #14294B;
+    font-weight: 700;
   }
 
-  /* Mobile CTA */
+  .mobile-lang-left {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
   .mobile-cta-container {
-    margin-top: auto;
-    padding-top: var(--space-4);
+    margin-top: 24px;
+    padding-top: 12px;
   }
 
   .mobile-cta {
@@ -668,22 +1780,22 @@ const langLabels: Record<SupportedLang, string> = {
   }
 
   /* --------------------------------------------------------------------------
-     RTL (RIGHT-TO-LEFT) ARABIC MIRRORING SUPPORT (PDF Page 40)
+     RTL (RIGHT-TO-LEFT) ARABIC MIRRORING SUPPORT (Page 40)
      -------------------------------------------------------------------------- */
   :global([dir="rtl"]) .header-container {
     flex-direction: row;
   }
 
   :global([dir="rtl"]) .header-logo {
-    order: 1; /* First in RTL -> positioned on Right */
+    order: 1;
   }
 
   :global([dir="rtl"]) .desktop-nav {
-    order: 2; /* Center in RTL */
+    order: 2;
   }
 
   :global([dir="rtl"]) .header-actions {
-    order: 3; /* Last in RTL -> positioned on Left */
+    order: 3;
   }
 
   :global([dir="rtl"]) .lang-dropdown {
@@ -691,114 +1803,206 @@ const langLabels: Record<SupportedLang, string> = {
     left: 0;
   }
 
+  :global([dir="rtl"]) .specialties-dropdown {
+    right: 0;
+    left: auto;
+  }
+
   :global([dir="rtl"]) .mobile-nav-panel {
     right: auto;
     left: 0;
-    box-shadow: 5px 0 25px rgba(20, 41, 75, 0.15);
-    animation-name: slideInLeft;
-  }
-
-  @keyframes slideInLeft {
-    from {
-      transform: translateX(-100%);
-    }
-    to {
-      transform: translateX(0);
-    }
   }
 </style>
 
 <script>
   function setupHeader() {
-    // --- Language Dropdown ---
-    const langBtn = document.getElementById('lang-btn');
-    const langDropdown = document.getElementById('lang-dropdown');
-    const langContainer = document.getElementById('lang-selector-container');
+    // Treatments dropdown desktop
+    const treatmentsNavItem = document.getElementById('treatments-nav-item');
+    const treatmentsBtn = document.getElementById('treatments-menu-btn');
+    const treatmentsPanel = document.getElementById('treatments-dropdown-panel');
 
-    if (langBtn && langDropdown && !(langBtn as any).__langInitialized) {
-      (langBtn as any).__langInitialized = true;
+    if (treatmentsNavItem && treatmentsBtn && treatmentsPanel && !(treatmentsBtn as any).__treatmentsInitialized) {
+      (treatmentsBtn as any).__treatmentsInitialized = true;
+      let hoverTimeout: any = null;
 
-      function openLangDropdown() {
-        langDropdown?.classList.add('open');
-        langContainer?.classList.add('is-open');
-        langBtn?.setAttribute('aria-expanded', 'true');
+      function openTreatmentsDropdown() {
+        if (hoverTimeout) clearTimeout(hoverTimeout);
+        const specialtiesPanel = document.getElementById('specialties-dropdown-panel');
+        const specialtiesNavItem = document.getElementById('specialties-nav-item');
+        const specialtiesBtn = document.getElementById('specialties-menu-btn');
+        specialtiesPanel?.classList.remove('open');
+        specialtiesNavItem?.classList.remove('is-open');
+        specialtiesBtn?.setAttribute('aria-expanded', 'false');
+
+        treatmentsPanel?.classList.add('open');
+        treatmentsNavItem?.classList.add('is-open');
+        treatmentsBtn?.setAttribute('aria-expanded', 'true');
       }
 
-      function closeLangDropdown() {
-        langDropdown?.classList.remove('open');
-        langContainer?.classList.remove('is-open');
-        langBtn?.setAttribute('aria-expanded', 'false');
+      function closeTreatmentsDropdown() {
+        if (hoverTimeout) clearTimeout(hoverTimeout);
+        treatmentsPanel?.classList.remove('open');
+        treatmentsNavItem?.classList.remove('is-open');
+        treatmentsBtn?.setAttribute('aria-expanded', 'false');
       }
 
-      function toggleLangDropdown(e: Event) {
+      treatmentsBtn.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
-        const isOpen = langDropdown?.classList.contains('open') || langBtn?.getAttribute('aria-expanded') === 'true';
-        if (isOpen) {
-          closeLangDropdown();
+        if (treatmentsPanel?.classList.contains('open')) {
+          closeTreatmentsDropdown();
         } else {
-          openLangDropdown();
-        }
-      }
-
-      langBtn.addEventListener('click', toggleLangDropdown);
-
-      // Close when clicking outside
-      document.addEventListener('click', (e) => {
-        if (langContainer && !langContainer.contains(e.target as Node)) {
-          closeLangDropdown();
+          openTreatmentsDropdown();
         }
       });
 
-      // Close on Escape key
+      treatmentsNavItem.addEventListener('mouseenter', () => {
+        if (window.innerWidth >= 1200) openTreatmentsDropdown();
+      });
+
+      treatmentsNavItem.addEventListener('mouseleave', () => {
+        if (window.innerWidth >= 1200) hoverTimeout = setTimeout(closeTreatmentsDropdown, 180);
+      });
+
+      document.addEventListener('click', (e) => {
+        if (treatmentsNavItem && !treatmentsNavItem.contains(e.target as Node)) {
+          closeTreatmentsDropdown();
+        }
+      });
+
       document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-          closeLangDropdown();
+        if (e.key === 'Escape') closeTreatmentsDropdown();
+      });
+    }
+
+    // Specialties dropdown desktop
+    const specialtiesNavItem = document.getElementById('specialties-nav-item');
+    const specialtiesBtn = document.getElementById('specialties-menu-btn');
+    const specialtiesPanel = document.getElementById('specialties-dropdown-panel');
+
+    if (specialtiesNavItem && specialtiesBtn && specialtiesPanel && !(specialtiesBtn as any).__specialtiesInitialized) {
+      (specialtiesBtn as any).__specialtiesInitialized = true;
+      let hoverTimeout: any = null;
+
+      function openSpecialtiesDropdown() {
+        if (hoverTimeout) clearTimeout(hoverTimeout);
+        // Close treatments dropdown if open
+        const treatmentsNavItem = document.getElementById('treatments-nav-item');
+        const treatmentsBtn = document.getElementById('treatments-menu-btn');
+        const treatmentsPanel = document.getElementById('treatments-dropdown-panel');
+        treatmentsPanel?.classList.remove('open');
+        treatmentsNavItem?.classList.remove('is-open');
+        treatmentsBtn?.setAttribute('aria-expanded', 'false');
+
+        specialtiesPanel?.classList.add('open');
+        specialtiesNavItem?.classList.add('is-open');
+        specialtiesBtn?.setAttribute('aria-expanded', 'true');
+      }
+
+      function closeSpecialtiesDropdown() {
+        if (hoverTimeout) clearTimeout(hoverTimeout);
+        specialtiesPanel?.classList.remove('open');
+        specialtiesNavItem?.classList.remove('is-open');
+        specialtiesBtn?.setAttribute('aria-expanded', 'false');
+      }
+
+      specialtiesBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (specialtiesPanel?.classList.contains('open')) {
+          closeSpecialtiesDropdown();
+        } else {
+          openSpecialtiesDropdown();
+        }
+      });
+
+      specialtiesNavItem.addEventListener('mouseenter', () => {
+        if (window.innerWidth >= 1200) openSpecialtiesDropdown();
+      });
+
+      specialtiesNavItem.addEventListener('mouseleave', () => {
+        if (window.innerWidth >= 1200) hoverTimeout = setTimeout(closeSpecialtiesDropdown, 180);
+      });
+
+      document.addEventListener('click', (e) => {
+        if (specialtiesNavItem && !specialtiesNavItem.contains(e.target as Node)) {
+          closeSpecialtiesDropdown();
+        }
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeSpecialtiesDropdown();
+      });
+    }
+
+    // Mobile treatments accordion
+    const mobileTreatmentsToggle = document.getElementById('mobile-treatments-toggle');
+    const mobileTreatmentsSubmenu = document.getElementById('mobile-treatments-submenu');
+
+    if (mobileTreatmentsToggle && mobileTreatmentsSubmenu && !(mobileTreatmentsToggle as any).__accInit) {
+      (mobileTreatmentsToggle as any).__accInit = true;
+      mobileTreatmentsToggle.addEventListener('click', (e) => {
+        e.preventDefault();
+        const isOpen = mobileTreatmentsSubmenu.classList.contains('open');
+        if (isOpen) {
+          mobileTreatmentsSubmenu.classList.remove('open');
+          mobileTreatmentsToggle.setAttribute('aria-expanded', 'false');
+        } else {
+          mobileTreatmentsSubmenu.classList.add('open');
+          mobileTreatmentsToggle.setAttribute('aria-expanded', 'true');
         }
       });
     }
 
-    // --- Mobile Drawer ---
+    // Mobile specialties accordion
+    const mobileSpecialtiesToggle = document.getElementById('mobile-specialties-toggle');
+    const mobileSpecialtiesSubmenu = document.getElementById('mobile-specialties-submenu');
+
+    if (mobileSpecialtiesToggle && mobileSpecialtiesSubmenu && !(mobileSpecialtiesToggle as any).__accInit) {
+      (mobileSpecialtiesToggle as any).__accInit = true;
+      mobileSpecialtiesToggle.addEventListener('click', (e) => {
+        e.preventDefault();
+        const isOpen = mobileSpecialtiesSubmenu.classList.contains('open');
+        if (isOpen) {
+          mobileSpecialtiesSubmenu.classList.remove('open');
+          mobileSpecialtiesToggle.setAttribute('aria-expanded', 'false');
+        } else {
+          mobileSpecialtiesSubmenu.classList.add('open');
+          mobileSpecialtiesToggle.setAttribute('aria-expanded', 'true');
+        }
+      });
+    }
+
+    // Mobile nav toggle
     const mobileToggle = document.getElementById('mobile-nav-toggle');
     const mobileDrawer = document.getElementById('mobile-nav-drawer');
     const mobileClose = document.getElementById('mobile-nav-close');
     const mobileBackdrop = document.getElementById('mobile-nav-backdrop');
-    const mobileLinks = document.querySelectorAll('.mobile-link, .mobile-cta');
 
-    if (mobileToggle && !(mobileToggle as any).__drawerInitialized) {
-      (mobileToggle as any).__drawerInitialized = true;
+    if (mobileToggle && !(mobileToggle as any).__drawerInit) {
+      (mobileToggle as any).__drawerInit = true;
 
-      function openMobileDrawer() {
-        if (!mobileDrawer) return;
-        mobileDrawer.classList.add('open');
-        mobileDrawer.setAttribute('aria-hidden', 'false');
+      function openDrawer() {
+        mobileDrawer?.classList.add('open');
+        mobileDrawer?.setAttribute('aria-hidden', 'false');
         mobileToggle?.setAttribute('aria-expanded', 'true');
         document.body.style.overflow = 'hidden';
-        mobileClose?.focus();
       }
 
-      function closeMobileDrawer() {
-        if (!mobileDrawer) return;
-        mobileDrawer.classList.remove('open');
-        mobileDrawer.setAttribute('aria-hidden', 'true');
+      function closeDrawer() {
+        mobileDrawer?.classList.remove('open');
+        mobileDrawer?.setAttribute('aria-hidden', 'true');
         mobileToggle?.setAttribute('aria-expanded', 'false');
         document.body.style.overflow = '';
-        mobileToggle?.focus();
       }
 
-      mobileToggle.addEventListener('click', openMobileDrawer);
-      mobileClose?.addEventListener('click', closeMobileDrawer);
-      mobileBackdrop?.addEventListener('click', closeMobileDrawer);
+      mobileToggle.addEventListener('click', openDrawer);
+      mobileClose?.addEventListener('click', closeDrawer);
+      mobileBackdrop?.addEventListener('click', closeDrawer);
 
-      // Close when navigating via a link in the mobile drawer
-      mobileLinks.forEach((link) => {
-        link.addEventListener('click', closeMobileDrawer);
-      });
-
-      // Close on Escape key
       document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && mobileDrawer?.classList.contains('open')) {
-          closeMobileDrawer();
+          closeDrawer();
         }
       });
     }

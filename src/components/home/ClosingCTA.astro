@@ -1,11 +1,18 @@
 ---
 /**
  * src/components/home/ClosingCTA.astro
- * Homepage: "Your treatment journey starts with clarity"
- * Reference: Page 10 of Nuhavi Health Look and Feel PDF.
- * Localized for English (/en/), Russian (/ru/), and Arabic (/ar/ RTL).
+ * Homepage: "Your treatment journey starts with clarity" — 12-Page PDF (Page 6)
+ *
+ * Left:
+ * Headline: Your treatment journey starts with clarity.
+ * 1 Send a short enquiry — no reports needed yet
+ * 2 Your coordinator replies within 1 working day
+ * 3 Doctor review, opinions and written estimates follow
+ *
+ * Right:
+ * [Request a medical opinion] (Brass button)
+ * [Chat on WhatsApp] (Navy button with white border)
  */
-import { homeTranslations } from '../../i18n/homeTranslations';
 import type { SupportedLang } from '../../i18n/translations';
 
 interface Props {
@@ -17,29 +24,76 @@ const detectedLang: SupportedLang = currentPath.startsWith('/ar')
   ? 'ar'
   : currentPath.startsWith('/ru')
   ? 'ru'
+  : currentPath.startsWith('/fr')
+  ? 'fr'
   : 'en';
 
 const lang: SupportedLang = Astro.props.lang || detectedLang;
-const content = homeTranslations[lang].closingCta;
+const isArabic = lang === 'ar';
+const isRussian = lang === 'ru';
+const isFrench = lang === 'fr';
+
 const prefix = `/${lang}`;
+const requestOpinionHref = `${prefix}/request-opinion/`;
+
+const t = {
+  title: isArabic
+    ? 'رحلتك العلاجية تبدأ بالوضوح التام.'
+    : isRussian
+    ? 'Ваш путь к лечению начинается с ясности.'
+    : 'Your treatment journey starts with clarity.',
+  step1: isArabic
+    ? 'أرسل استفساراً قصيراً — لا حاجة لتقارير في هذه المرحلة'
+    : isRussian
+    ? 'Отправьте короткий запрос — выписки пока не требуются'
+    : 'Send a short enquiry — no reports needed yet',
+  step2: isArabic
+    ? 'يرد منسقك الشخصي خلال يوم عمل واحد'
+    : isRussian
+    ? 'Ваш координатор ответит в течение 1 рабочего дня'
+    : 'Your coordinator replies within 1 working day',
+  step3: isArabic
+    ? 'مراجعة أطبائنا، والآراء الطبية والتقديرات المكتوبة تتبع ذلك'
+    : isRussian
+    ? 'Врачебный анализ, заключения и письменные расчеты следуют далее'
+    : 'Doctor review, opinions and written estimates follow',
+  primaryCta: isArabic ? 'اطلب رأياً طبياً' : isRussian ? 'Запросить медицинское заключение' : 'Request a medical opinion',
+  whatsappCta: isArabic ? 'محادثة عبر واتساب' : isRussian ? 'Чат в WhatsApp' : 'Chat on WhatsApp',
+};
 ---
 
-<section class="closing-cta-section" aria-labelledby="closing-cta-heading">
-  <div class="container closing-cta-container">
-    <div class="closing-cta-content">
-      <h2 id="closing-cta-heading" class="closing-title">
-        {content.title}
-      </h2>
-      <p class="closing-deck">
-        {content.deck}
-      </p>
+<section class="closing-cta-section" aria-labelledby="closing-cta-heading" dir={isArabic ? 'rtl' : 'ltr'}>
+  <div class="container closing-container">
+    <div class="closing-two-col-grid">
+      <!-- Left: Heading & 3 Steps -->
+      <div class="closing-left-col">
+        <h2 id="closing-cta-heading" class="closing-title">
+          {t.title}
+        </h2>
 
-      <div class="closing-btn-group">
-        <a href={`${prefix}/request-opinion/`} class="btn-pill-gold">
-          {content.primaryCta}
+        <div class="steps-row">
+          <div class="step-item">
+            <span class="step-num">1</span>
+            <p class="step-text">{t.step1}</p>
+          </div>
+          <div class="step-item">
+            <span class="step-num">2</span>
+            <p class="step-text">{t.step2}</p>
+          </div>
+          <div class="step-item">
+            <span class="step-num">3</span>
+            <p class="step-text">{t.step3}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Action Buttons -->
+      <div class="closing-right-col">
+        <a href={requestOpinionHref} class="btn-brass-cta">
+          {t.primaryCta}
         </a>
-        <a href={`${prefix}/contact/`} class="btn-pill-outline-white">
-          {content.secondaryCta}
+        <a href="https://wa.me/919999999999" class="btn-wa-cta" target="_blank" rel="noopener noreferrer">
+          {t.whatsappCta}
         </a>
       </div>
     </div>
@@ -49,91 +103,137 @@ const prefix = `/${lang}`;
 <style>
   .closing-cta-section {
     width: 100%;
-    background-color: var(--color-deep-navy);
-    color: var(--color-paper);
-    padding: var(--space-12) 0;
-    text-align: center;
+    background-color: #0F2340;
+    color: #FFFFFF;
+    padding: clamp(60px, 7vw, 84px) 0;
   }
 
-  .closing-cta-container {
-    width: 100%;
-    max-width: 860px;
+  .closing-container {
+    max-width: 1280px;
     margin: 0 auto;
-    padding: 0 var(--space-4);
+    padding: 0 clamp(20px, 4vw, 40px);
     box-sizing: border-box;
   }
 
-  .closing-cta-content {
+  .closing-two-col-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 48px;
+    align-items: center;
+  }
+
+  .closing-left-col {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: var(--space-4);
+    gap: 24px;
   }
 
   .closing-title {
-    font-size: clamp(2rem, 4vw, 2.75rem);
-    font-weight: 800;
-    color: var(--color-paper);
-    line-height: 1.2;
+    font-family: var(--font-family-heading);
+    font-size: clamp(2.1rem, 3.2vw, 2.85rem);
+    color: #FFFFFF;
+    font-weight: 600;
     margin: 0;
+    line-height: 1.15;
   }
 
-  .closing-deck {
-    font-size: 1.0625rem;
-    line-height: 1.6;
-    color: rgba(244, 247, 251, 0.75);
-    max-width: 680px;
-    margin: 0;
+  .steps-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
   }
 
-  .closing-btn-group {
+  .step-item {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: var(--space-3);
-    flex-wrap: wrap;
-    margin-top: var(--space-2);
+    gap: 10px;
+    align-items: flex-start;
   }
 
-  .btn-pill-gold {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 14px 28px;
-    background-color: var(--color-gold);
-    color: var(--color-deep-navy);
-    border-radius: var(--radius-pill);
-    font-weight: 800;
-    font-size: 0.9375rem;
-    text-decoration: none;
-    transition: transform 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
-    box-shadow: 0 4px 16px rgba(196, 154, 60, 0.25);
-  }
-
-  .btn-pill-gold:hover {
-    background-color: #D4AF37;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(196, 154, 60, 0.35);
-  }
-
-  .btn-pill-outline-white {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 14px 28px;
-    background-color: transparent;
-    color: var(--color-paper);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: var(--radius-pill);
+  .step-num {
+    font-size: 0.875rem;
     font-weight: 700;
-    font-size: 0.9375rem;
-    text-decoration: none;
-    transition: transform 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
+    color: #A88B5A;
+    line-height: 1.4;
   }
 
-  .btn-pill-outline-white:hover {
+  .step-text {
+    font-size: 0.8125rem;
+    color: #CBD5E1;
+    line-height: 1.45;
+    margin: 0;
+  }
+
+  /* Right Action Buttons */
+  .closing-right-col {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+    justify-content: center;
+  }
+
+  .btn-brass-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #A88B5A;
+    color: #FFFFFF;
+    padding: 14px 28px;
+    border-radius: 6px;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.15s ease;
+    width: 260px;
+    box-sizing: border-box;
+    text-align: center;
+  }
+
+  .btn-brass-cta:hover {
+    background-color: #967949;
+  }
+
+  .btn-wa-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    color: #FFFFFF;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    padding: 13px 28px;
+    border-radius: 6px;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+    width: 260px;
+    box-sizing: border-box;
+    text-align: center;
+  }
+
+  .btn-wa-cta:hover {
+    border-color: #FFFFFF;
     background-color: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255, 255, 255, 0.6);
-    transform: translateY(-2px);
+  }
+
+  @media (max-width: 960px) {
+    .closing-two-col-grid {
+      grid-template-columns: 1fr;
+      gap: 36px;
+    }
+    .closing-right-col {
+      align-items: stretch;
+    }
+    .btn-brass-cta,
+    .btn-wa-cta {
+      width: 100%;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .steps-row {
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
   }
 </style>

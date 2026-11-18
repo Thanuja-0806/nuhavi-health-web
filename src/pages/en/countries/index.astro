@@ -1,201 +1,1219 @@
 ---
 /**
  * src/pages/en/countries/index.astro
- * Countries we serve (Page 21 of Nuhavi Health Look and Feel PDF)
+ * Countries We Serve — Nuhavi Health
+ *
+ * Implements:
+ * - Premium international medical-travel design inspired by Vaidam / Jus' Onco and the approved reference "Global Medical Access".
+ * - Clean white background with deep navy blue (#0D1B33), soft medical mist, and restrained gold (#C49A3C) accents.
+ * - Hero section:
+ *   - Left side: small gold-tinted badge "Global Medical Access" with airplane icon, bold heading, deck, and gold rounded "Explore Countries" button.
+ *   - Right side: large light-blue world map visual with India highlighted in gold, curved flight paths, and airplane visual.
+ * - "Our International Support" section:
+ *   - Four equal-width responsive country cards in one desktop row (tablet: 2 cols, mobile: 1 col).
+ *   - 1. Uzbekistan (Tashkent / Samarkand) with Russian, Uzbek, English support, linking to /en/countries/uzbekistan/.
+ *   - 2. Kenya with English, Swahili (planned) support, linking to /en/request-opinion/.
+ *   - 3. Tanzania (Dar es Salaam) with English, Swahili (planned) support, linking to /en/request-opinion/.
+ *   - 4. Nigeria, Uganda, Ghana & Rwanda with 4 accurate flags, English support, linking to /en/request-opinion/.
+ *   - Equal card heights, white content areas, rounded corners, subtle shadows, and gold circular arrow buttons.
+ * - Preserved full clinical transparency and operating presence disclaimer note.
+ * - Wide dark navy bottom CTA banner with gold globe illustration on the left, dotted flight path and airplane visual, and gold rounded "Contact Us" button.
+ * - Zero unverified medical claims or invented statistics.
  */
+
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 ---
 
 <BaseLayout
-  title="Countries we serve | Nuhavi Health"
-  description="Wherever you start, the route ends at a hospital in Hyderabad and back home again. These are the countries we currently accept enquiries from."
+  title="Medical Treatment Across the World | Nuhavi Health"
+  description="Explore treatment options in India, with dedicated support for patients from around the globe. Multilingual coordination for cancer care and joint replacement."
 >
-  <div class="page-container">
-    <div class="container main-content">
-      <!-- Gold 72x3 px rule above page title -->
-      <div class="gold-rule" aria-hidden="true"></div>
+  <div class="countries-page">
+    <!-- Breadcrumb Bar -->
+    <div class="breadcrumb-bar">
+      <div class="container">
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <ol>
+            <li><a href="/en/">Home</a></li>
+            <li aria-hidden="true"><span class="sep">/</span></li>
+            <li aria-current="page">Countries we serve</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
 
-      <header class="page-header">
-        <h1 class="page-title">Countries we serve</h1>
-        <p class="page-deck">
-          Wherever you start, the route ends at a hospital in Hyderabad and back home again. These are the countries we currently accept enquiries from.
-        </p>
-      </header>
+    <!-- 1. HERO SECTION: Medical Treatment Across the World -->
+    <section class="countries-hero-section" aria-labelledby="hero-heading">
+      <div class="container hero-container">
+        <!-- Hero Text Column -->
+        <div class="hero-content">
+          <!-- Small gold-tinted badge "Global Medical Access" with airplane icon -->
+          <div class="hero-badge" aria-label="Global Medical Access">
+            <svg class="badge-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.3c.4-.2.6-.6.5-1.1z"/>
+            </svg>
+            <span>Global Medical Access</span>
+          </div>
 
-      <div class="countries-grid">
-        <!-- Uzbekistan leads as large navy card -->
-        <a href="/en/countries/uzbekistan/" class="country-card-featured">
-          <h2 class="featured-title">Uzbekistan</h2>
-          <span class="featured-languages">Support in Russian, Uzbek, English</span>
-          <p class="featured-text">
-            We help patients and families from Tashkent, Samarkand and across Uzbekistan plan cancer and joint-replacement care in Hyderabad, with coordinators who speak Russian.
+          <h1 id="hero-heading" class="hero-title">
+            Medical Treatment Across the World
+          </h1>
+
+          <p class="hero-deck">
+            Explore treatment options in India, with dedicated support for patients from around the globe.
           </p>
-        </a>
 
-        <!-- Equal cards below -->
-        <div class="sub-countries-row">
-          <div class="country-card">
-            <h3 class="card-title">Kenya</h3>
-            <span class="card-languages">Support in English, Swahili (planned)</span>
-            <p class="card-text">
-              We accept enquiries from Kenya for cancer care and joint replacement in Hyderabad. Swahili support is planned.
-            </p>
+          <div class="hero-actions">
+            <a href="#international-support" class="btn btn-gold btn-rounded explore-btn">
+              <span>Explore Countries</span>
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <polyline points="19 12 12 19 5 12"></polyline>
+              </svg>
+            </a>
+            <a href="/en/request-opinion/" class="btn btn-outline-navy btn-rounded">
+              Request a Medical Opinion
+            </a>
           </div>
 
-          <div class="country-card">
-            <h3 class="card-title">Tanzania</h3>
-            <span class="card-languages">Support in English, Swahili (planned)</span>
-            <p class="card-text">
-              We accept enquiries from Tanzania, including Dar es Salaam, for cancer care and joint replacement in Hyderabad.
-            </p>
+          <!-- Trust highlights row -->
+          <div class="hero-trust-row">
+            <div class="trust-item">
+              <span class="trust-icon" aria-hidden="true">&#10003;</span>
+              <span>Multilingual Case Coordination</span>
+            </div>
+            <div class="trust-item">
+              <span class="trust-icon" aria-hidden="true">&#10003;</span>
+              <span>Guidance Before You Travel</span>
+            </div>
+            <div class="trust-item">
+              <span class="trust-icon" aria-hidden="true">&#10003;</span>
+              <span>Dedicated International Patient Support</span>
+            </div>
           </div>
+        </div>
 
-          <div class="country-card">
-            <h3 class="card-title">Nigeria, Uganda, Ghana and Rwanda</h3>
-            <span class="card-languages">Support in English</span>
-            <p class="card-text">
-              We accept enquiries from Nigeria, Uganda, Ghana and Rwanda. Dedicated country pages will follow as we add local language support.
+        <!-- Hero Visual: Premium World Map Visual with India in Gold, Curved Flight Paths & Realistic Airplane -->
+        <div class="hero-visual-wrapper">
+          <div class="world-map-visual-card" role="img" aria-label="World map showing international flight paths converging toward India for medical travel coordination">
+            <div class="map-image-container">
+              <img
+                src="/images/world-travel-map.jpg"
+                alt="World map visual with India highlighted in gold and elegant curved flight paths converging towards India"
+                class="world-map-img"
+                width="1200"
+                height="675"
+                loading="eager"
+              />
+              <div class="map-soft-vignette" aria-hidden="true"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. OUR INTERNATIONAL SUPPORT: Four Responsive Country Cards -->
+    <section id="international-support" class="support-section" aria-labelledby="support-heading">
+      <div class="container">
+        <!-- Section Header -->
+        <div class="support-section-header">
+          <span class="section-eyebrow">DEDICATED COUNTRY DESKS</span>
+          <h2 id="support-heading" class="section-title">Our International Support</h2>
+          <p class="section-deck">
+            Dedicated support for patients from select countries, with multilingual assistance.
+          </p>
+        </div>
+
+        <!-- 4-Column Responsive Country Cards Grid -->
+        <div class="country-cards-grid">
+          <!-- CARD 1: UZBEKISTAN -->
+          <article class="country-card">
+            <div class="card-image-wrap">
+              <img
+                src="/images/country-uzbekistan.jpg"
+                alt="Modern city architectural skyline of Tashkent, Uzbekistan"
+                class="card-img"
+                loading="lazy"
+                width="600"
+                height="375"
+              />
+              <div class="card-image-overlay"></div>
+              <div class="card-flag-badge" aria-label="Flag of Uzbekistan">
+                <!-- Uzbekistan Flag SVG Badge -->
+                <svg width="28" height="18" viewBox="0 0 28 18" fill="none" class="flag-svg" aria-hidden="true">
+                  <rect width="28" height="18" rx="2" fill="#FFFFFF" />
+                  <rect width="28" height="5.5" fill="#0099B5" />
+                  <rect y="12.5" width="28" height="5.5" fill="#1EB53A" />
+                  <rect y="5.5" width="28" height="0.8" fill="#CE1126" />
+                  <rect y="11.7" width="28" height="0.8" fill="#CE1126" />
+                  <circle cx="5" cy="2.8" r="1.6" fill="#FFFFFF" />
+                  <circle cx="5.6" cy="2.8" r="1.3" fill="#0099B5" />
+                </svg>
+                <span class="flag-country-name">Uzbekistan</span>
+              </div>
+            </div>
+
+            <div class="card-body">
+              <div class="card-support-pill">
+                <span class="pill-dot" aria-hidden="true"></span>
+                <span>Support in Russian, Uzbek, English</span>
+              </div>
+
+              <h3 class="card-country-title">Uzbekistan</h3>
+
+              <p class="card-description">
+                We help patients and families from Tashkent, Samarkand and across Uzbekistan plan cancer and joint-replacement care in Hyderabad, with coordinators who speak Russian.
+              </p>
+
+              <div class="card-footer-action">
+                <a
+                  href="/en/countries/uzbekistan/"
+                  class="btn-learn-more"
+                  aria-label="Learn more about patient coordination for Uzbekistan"
+                >
+                  <span class="learn-more-text">Learn More</span>
+                  <span class="gold-circle-arrow" aria-hidden="true">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                      <line x1="5" y1="12" x2="19" y2="12"></line>
+                      <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                  </span>
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- CARD 2: KENYA -->
+          <article class="country-card">
+            <div class="card-image-wrap">
+              <img
+                src="/images/country-kenya.jpg"
+                alt="Modern city skyline of Nairobi, Kenya"
+                class="card-img"
+                loading="lazy"
+                width="600"
+                height="375"
+              />
+              <div class="card-image-overlay"></div>
+              <div class="card-flag-badge" aria-label="Flag of Kenya">
+                <!-- Kenya Flag SVG Badge -->
+                <svg width="28" height="18" viewBox="0 0 28 18" fill="none" class="flag-svg" aria-hidden="true">
+                  <rect width="28" height="18" rx="2" fill="#FFFFFF" />
+                  <rect width="28" height="5" fill="#000000" />
+                  <rect y="5" width="28" height="1" fill="#FFFFFF" />
+                  <rect y="6" width="28" height="6" fill="#BB0000" />
+                  <rect y="12" width="28" height="1" fill="#FFFFFF" />
+                  <rect y="13" width="28" height="5" fill="#006600" />
+                  <ellipse cx="14" cy="9" rx="2.5" ry="4" fill="#BB0000" stroke="#FFFFFF" stroke-width="0.6" />
+                </svg>
+                <span class="flag-country-name">Kenya</span>
+              </div>
+            </div>
+
+            <div class="card-body">
+              <div class="card-support-pill">
+                <span class="pill-dot" aria-hidden="true"></span>
+                <span>Support in English, Swahili (planned)</span>
+              </div>
+
+              <h3 class="card-country-title">Kenya</h3>
+
+              <p class="card-description">
+                We accept enquiries from Kenya for cancer care and joint replacement in Hyderabad. Swahili support is planned.
+              </p>
+
+              <div class="card-footer-action">
+                <a
+                  href="/en/request-opinion/"
+                  class="btn-learn-more"
+                  aria-label="Submit medical enquiry from Kenya"
+                >
+                  <span class="learn-more-text">Send an Enquiry</span>
+                  <span class="gold-circle-arrow" aria-hidden="true">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                      <line x1="5" y1="12" x2="19" y2="12"></line>
+                      <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                  </span>
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- CARD 3: TANZANIA -->
+          <article class="country-card">
+            <div class="card-image-wrap">
+              <img
+                src="/images/country-tanzania.jpg"
+                alt="Modern coastal city waterfront of Dar es Salaam, Tanzania"
+                class="card-img"
+                loading="lazy"
+                width="600"
+                height="375"
+              />
+              <div class="card-image-overlay"></div>
+              <div class="card-flag-badge" aria-label="Flag of Tanzania">
+                <!-- Tanzania Flag SVG Badge -->
+                <svg width="28" height="18" viewBox="0 0 28 18" fill="none" class="flag-svg" aria-hidden="true">
+                  <rect width="28" height="18" rx="2" fill="#1EB53A" />
+                  <polygon points="0,18 28,0 28,18" fill="#00A3DD" />
+                  <polygon points="0,18 28,0 28,4 4,18" fill="#FCD116" />
+                  <polygon points="0,14 24,0 28,0 0,18" fill="#FCD116" />
+                  <polygon points="0,16 26,0 28,0 28,1 2,18 0,18" fill="#000000" />
+                </svg>
+                <span class="flag-country-name">Tanzania</span>
+              </div>
+            </div>
+
+            <div class="card-body">
+              <div class="card-support-pill">
+                <span class="pill-dot" aria-hidden="true"></span>
+                <span>Support in English, Swahili (planned)</span>
+              </div>
+
+              <h3 class="card-country-title">Tanzania</h3>
+
+              <p class="card-description">
+                We accept enquiries from Tanzania, including Dar es Salaam, for cancer care and joint replacement in Hyderabad.
+              </p>
+
+              <div class="card-footer-action">
+                <a
+                  href="/en/request-opinion/"
+                  class="btn-learn-more"
+                  aria-label="Submit medical enquiry from Tanzania"
+                >
+                  <span class="learn-more-text">Send an Enquiry</span>
+                  <span class="gold-circle-arrow" aria-hidden="true">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                      <line x1="5" y1="12" x2="19" y2="12"></line>
+                      <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                  </span>
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- CARD 4: NIGERIA, UGANDA, GHANA AND RWANDA -->
+          <article class="country-card">
+            <div class="card-image-wrap">
+              <img
+                src="/images/country-africa-regional.jpg"
+                alt="Modern metropolitan business district skyline in West Africa"
+                class="card-img"
+                loading="lazy"
+                width="600"
+                height="375"
+              />
+              <div class="card-image-overlay"></div>
+              <div class="card-flag-badge multi-flag-badge" aria-label="Flags of Nigeria, Uganda, Ghana, and Rwanda">
+                <!-- Multi-Flag SVG Cluster for Nigeria, Uganda, Ghana, Rwanda -->
+                <div class="flags-cluster" aria-hidden="true">
+                  <!-- Nigeria Flag: Green / White / Green -->
+                  <svg width="18" height="12" viewBox="0 0 18 12" fill="none" class="mini-flag" title="Nigeria">
+                    <rect width="18" height="12" rx="1.5" fill="#FFFFFF" />
+                    <rect width="6" height="12" fill="#008751" />
+                    <rect x="12" width="6" height="12" fill="#008751" />
+                  </svg>
+                  <!-- Ghana Flag: Red / Yellow / Green + Black Star -->
+                  <svg width="18" height="12" viewBox="0 0 18 12" fill="none" class="mini-flag" title="Ghana">
+                    <rect width="18" height="4" fill="#CE1126" />
+                    <rect y="4" width="18" height="4" fill="#FCD116" />
+                    <rect y="8" width="18" height="4" fill="#006B3F" />
+                    <polygon points="9,4.8 9.5,6.4 11,6.4 9.8,7.3 10.2,8.8 9,7.9 7.8,8.8 8.2,7.3 7,6.4 8.5,6.4" fill="#000000" />
+                  </svg>
+                  <!-- Uganda Flag: Black / Yellow / Red x2 -->
+                  <svg width="18" height="12" viewBox="0 0 18 12" fill="none" class="mini-flag" title="Uganda">
+                    <rect width="18" height="2" fill="#000000" />
+                    <rect y="2" width="18" height="2" fill="#FCDC00" />
+                    <rect y="4" width="18" height="2" fill="#D90000" />
+                    <rect y="6" width="18" height="2" fill="#000000" />
+                    <rect y="8" width="18" height="2" fill="#FCDC00" />
+                    <rect y="10" width="18" height="2" fill="#D90000" />
+                  </svg>
+                  <!-- Rwanda Flag: Sky Blue / Yellow / Green with Sun -->
+                  <svg width="18" height="12" viewBox="0 0 18 12" fill="none" class="mini-flag" title="Rwanda">
+                    <rect width="18" height="6" fill="#00A1DE" />
+                    <rect y="6" width="18" height="3" fill="#FAD201" />
+                    <rect y="9" width="18" height="3" fill="#20603D" />
+                    <circle cx="14" cy="3" r="1.2" fill="#E5BE01" />
+                  </svg>
+                </div>
+                <span class="flag-country-name">West &amp; East Africa</span>
+              </div>
+            </div>
+
+            <div class="card-body">
+              <div class="card-support-pill">
+                <span class="pill-dot" aria-hidden="true"></span>
+                <span>Support in English</span>
+              </div>
+
+              <h3 class="card-country-title">Nigeria, Uganda, Ghana &amp; Rwanda</h3>
+
+              <p class="card-description">
+                We accept enquiries from Nigeria, Uganda, Ghana and Rwanda. Dedicated country pages will follow as we add local language support.
+              </p>
+
+              <div class="card-footer-action">
+                <a
+                  href="/en/request-opinion/"
+                  class="btn-learn-more"
+                  aria-label="Submit medical enquiry from Nigeria, Uganda, Ghana or Rwanda"
+                >
+                  <span class="learn-more-text">Send an Enquiry</span>
+                  <span class="gold-circle-arrow" aria-hidden="true">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                      <line x1="5" y1="12" x2="19" y2="12"></line>
+                      <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                  </span>
+                </a>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <!-- Geographic & Clinical Notice Box (Preserved for clinical governance) -->
+        <div class="country-disclaimer-card">
+          <div class="disclaimer-icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="16" x2="12" y2="12"></line>
+              <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
+          </div>
+          <div class="disclaimer-body">
+            <strong>Operating Presence &amp; Coordination Note:</strong>
+            <p>
+              Nuhavi Health does not maintain physical branch offices in these countries. Listing a country confirms that our coordination team accepts enquiries from residents of that country and can support you in the stated languages. All clinical evaluations, consultations, and surgical care take place at accredited hospital partner facilities in Hyderabad, India.
             </p>
           </div>
         </div>
       </div>
+    </section>
 
-      <p class="disclaimer-note">
-        We do not have offices in these countries. Listing a country means we accept enquiries from it and can support you in the languages shown.
-      </p>
-    </div>
+    <!-- 3. BOTTOM CTA SECTION: Wide Dark Navy Banner with Gold Globe, Dotted Flight Path & Airplane -->
+    <section class="countries-cta-section" aria-labelledby="cta-heading">
+      <div class="container">
+        <div class="countries-cta-banner">
+          <!-- Subtle Dotted Flight Path & Airplane Illustration -->
+          <div class="cta-flight-visual" aria-hidden="true">
+            <svg class="flight-path-svg" viewBox="0 0 1000 240" fill="none" preserveAspectRatio="none">
+              <path d="M 60 190 Q 320 30 640 120 T 960 70" stroke="rgba(196, 154, 60, 0.32)" stroke-width="2" stroke-dasharray="7 7" fill="none" />
+              <!-- Small Airplane along curved flight path -->
+              <g transform="translate(680, 102) rotate(-14) scale(0.95)">
+                <path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.3c.4-.2.6-.6.5-1.1z" fill="#C49A3C" opacity="0.95" />
+              </g>
+            </svg>
+          </div>
+
+          <div class="cta-banner-inner">
+            <!-- Gold Globe Illustration on the Left -->
+            <div class="cta-globe-wrapper" aria-hidden="true">
+              <div class="cta-globe-glow"></div>
+              <svg class="cta-globe-svg" width="130" height="130" viewBox="0 0 130 130" fill="none">
+                <!-- Globe outer sphere -->
+                <circle cx="65" cy="65" r="58" stroke="rgba(196, 154, 60, 0.45)" stroke-width="1.8" />
+                <!-- Latitude ellipses -->
+                <ellipse cx="65" cy="65" rx="58" ry="22" stroke="rgba(196, 154, 60, 0.35)" stroke-width="1.4" stroke-dasharray="3 3" />
+                <ellipse cx="65" cy="65" rx="58" ry="42" stroke="rgba(196, 154, 60, 0.35)" stroke-width="1.4" stroke-dasharray="3 3" />
+                <line x1="7" y1="65" x2="123" y2="65" stroke="rgba(196, 154, 60, 0.5)" stroke-width="1.6" />
+                <!-- Longitude ellipses -->
+                <ellipse cx="65" cy="65" rx="22" ry="58" stroke="rgba(196, 154, 60, 0.35)" stroke-width="1.4" stroke-dasharray="3 3" />
+                <ellipse cx="65" cy="65" rx="42" ry="58" stroke="rgba(196, 154, 60, 0.35)" stroke-width="1.4" stroke-dasharray="3 3" />
+                <line x1="65" y1="7" x2="65" y2="123" stroke="rgba(196, 154, 60, 0.5)" stroke-width="1.6" />
+                <!-- India coordinate gold beacon -->
+                <circle cx="78" cy="58" r="4.5" fill="#C49A3C" />
+                <circle cx="78" cy="58" r="8.5" stroke="#C49A3C" stroke-width="1.2" opacity="0.6" />
+              </svg>
+            </div>
+
+            <!-- CTA Content Column -->
+            <div class="cta-content-column">
+              <div class="cta-badge">DIRECT PATIENT ASSISTANCE</div>
+              <h2 id="cta-heading" class="cta-title">
+                Need Help from Your Country?
+              </h2>
+              <p class="cta-text">
+                Our team is here to guide you through your medical journey to India.
+              </p>
+              <div class="cta-actions">
+                <a href="/en/contact/" class="btn btn-gold btn-rounded cta-btn">
+                  <span>Contact Us</span>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                  </svg>
+                </a>
+                <a href="/en/request-opinion/" class="btn btn-outline-white btn-rounded">
+                  Request a Medical Opinion
+                </a>
+              </div>
+              <div class="cta-trust-strip">
+                <span>Independent care coordination</span>
+                <span class="bullet" aria-hidden="true">&bull;</span>
+                <span>Multilingual patient support</span>
+                <span class="bullet" aria-hidden="true">&bull;</span>
+                <span>Guidance throughout your medical journey</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   </div>
 </BaseLayout>
 
 <style>
-  .page-container {
-    background-color: var(--color-paper);
-    color: var(--color-ink);
-    padding: var(--space-8) 0 var(--space-12);
+  /* ==========================================================================
+     GLOBAL PAGE WRAPPER & BREADCRUMBS
+     ========================================================================== */
+  .countries-page {
+    background-color: var(--color-paper, #FFFFFF);
+    color: var(--color-ink, #0D1B33);
+    min-height: 100vh;
   }
 
-  .gold-rule {
-    width: 72px;
-    height: 3px;
-    background-color: var(--color-gold);
-    margin-bottom: var(--space-3);
+  .breadcrumb-bar {
+    padding: 18px 0 0;
+    background-color: var(--color-paper, #FFFFFF);
   }
 
-  .page-header {
-    margin-bottom: var(--space-8);
-  }
-
-  .page-title {
-    font-size: clamp(2.25rem, 4vw, 3.25rem);
-    font-weight: 800;
-    color: var(--color-navy);
-    line-height: 1.15;
-    margin: 0 0 var(--space-2);
-  }
-
-  .page-deck {
-    font-size: 1.125rem;
-    font-weight: 300;
-    line-height: 1.5;
-    color: var(--color-slate);
-    max-width: 680px;
-    margin: 0;
-  }
-
-  .countries-grid {
+  .breadcrumb ol {
     display: flex;
-    flex-direction: column;
-    gap: var(--space-6);
-  }
-
-  /* Uzbekistan Large Navy Card */
-  .country-card-featured {
-    display: block;
-    background-color: var(--color-deep-navy);
-    color: var(--color-paper);
-    padding: var(--space-6) var(--space-8);
-    border-radius: 14px;
-    text-decoration: none;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    transition: transform 0.15s ease, filter 0.15s ease;
-  }
-
-  .country-card-featured:hover {
-    filter: brightness(1.05);
-    transform: translateY(-2px);
-  }
-
-  .featured-title {
-    font-size: 1.875rem;
-    font-weight: 800;
-    color: var(--color-paper);
-    margin: 0 0 6px;
-  }
-
-  .featured-languages {
-    display: block;
-    font-size: 0.8125rem;
-    font-weight: 600;
-    color: var(--color-gold);
-    margin-bottom: var(--space-3);
-  }
-
-  .featured-text {
-    font-size: 0.9375rem;
-    line-height: 1.6;
-    color: rgba(255, 255, 255, 0.85);
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    list-style: none;
+    padding: 0;
     margin: 0;
-    max-width: 720px;
+    font-size: 0.875rem;
   }
 
-  /* 3 Equal Cards */
-  .sub-countries-row {
+  .breadcrumb a {
+    color: var(--color-slate, #475569);
+    text-decoration: none;
+    transition: color 0.15s ease;
+  }
+
+  .breadcrumb a:hover {
+    color: var(--color-navy, #0D1B33);
+  }
+
+  .breadcrumb .sep {
+    color: #94A3B8;
+  }
+
+  .breadcrumb [aria-current="page"] {
+    color: var(--color-navy, #0D1B33);
+    font-weight: 600;
+  }
+
+  /* ==========================================================================
+     1. HERO SECTION: Medical Treatment Across the World
+     ========================================================================== */
+  .countries-hero-section {
+    padding: 24px 0 56px;
+    background: linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%);
+    border-bottom: 1px solid #E2E8F0;
+  }
+
+  .hero-container {
     display: grid;
     grid-template-columns: 1fr;
-    gap: var(--space-4);
+    gap: 36px;
+    align-items: center;
   }
 
-  @media (min-width: 768px) {
-    .sub-countries-row {
-      grid-template-columns: repeat(3, 1fr);
+  @media (min-width: 1024px) {
+    .hero-container {
+      grid-template-columns: 1fr 1.28fr;
+      gap: 48px;
     }
   }
 
-  .country-card {
-    background-color: var(--color-mist);
-    border: 1px solid rgba(20, 41, 75, 0.12);
-    border-radius: 14px;
-    padding: var(--space-6);
+  .hero-content {
+    max-width: 580px;
+  }
+
+  /* Small gold-tinted badge "Global Medical Access" with airplane icon */
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: #8A6726;
+    background-color: rgba(196, 154, 60, 0.12);
+    border: 1px solid rgba(196, 154, 60, 0.35);
+    padding: 6px 14px;
+    border-radius: 9999px;
+    margin-bottom: 18px;
+  }
+
+  .hero-badge .badge-icon {
+    color: var(--color-gold, #C49A3C);
+    flex-shrink: 0;
+  }
+
+  .hero-title {
+    font-size: clamp(2.25rem, 3.8vw, 3.25rem);
+    font-weight: 800;
+    line-height: 1.15;
+    color: var(--color-navy, #0D1B33);
+    letter-spacing: -0.02em;
+    margin: 0 0 18px;
+  }
+
+  .hero-deck {
+    font-size: 1.125rem;
+    line-height: 1.6;
+    color: var(--color-slate, #475569);
+    margin: 0 0 28px;
+  }
+
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 32px;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 13px 26px;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    cursor: pointer;
+  }
+
+  .btn-rounded {
+    border-radius: 9999px;
+  }
+
+  .btn-gold {
+    background-color: var(--color-gold, #C49A3C);
+    color: #FFFFFF;
+    border: 1px solid var(--color-gold, #C49A3C);
+    box-shadow: 0 4px 14px rgba(196, 154, 60, 0.28);
+  }
+
+  .btn-gold:hover {
+    background-color: #B08528;
+    border-color: #B08528;
+    box-shadow: 0 6px 20px rgba(196, 154, 60, 0.4);
+    transform: translateY(-2px);
+  }
+
+  .btn-outline-navy {
+    background-color: transparent;
+    color: var(--color-navy, #0D1B33);
+    border: 1.5px solid var(--color-navy, #0D1B33);
+  }
+
+  .btn-outline-navy:hover {
+    background-color: rgba(13, 27, 51, 0.05);
+    color: var(--color-navy, #0D1B33);
+    transform: translateY(-2px);
+  }
+
+  .hero-trust-row {
     display: flex;
     flex-direction: column;
+    gap: 10px;
+    padding-top: 20px;
+    border-top: 1px solid #E2E8F0;
   }
 
-  .card-title {
-    font-size: 1.125rem;
-    font-weight: 700;
-    color: var(--color-navy);
-    margin: 0 0 4px;
-    line-height: 1.35;
+  @media (min-width: 640px) {
+    .hero-trust-row {
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 18px;
+    }
   }
 
-  .card-languages {
-    font-size: 0.75rem;
+  .trust-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8125rem;
     font-weight: 600;
-    color: var(--color-slate);
-    margin-bottom: var(--space-3);
+    color: var(--color-slate, #475569);
   }
 
-  .card-text {
-    font-size: 0.875rem;
-    line-height: 1.5;
-    color: var(--color-ink);
+  .trust-icon {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background-color: rgba(196, 154, 60, 0.15);
+    color: var(--color-gold, #C49A3C);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.6875rem;
+    font-weight: 800;
+    flex-shrink: 0;
+  }
+
+  /* World Map Visual Container */
+  .hero-visual-wrapper {
+    position: relative;
+    width: 100%;
+  }
+
+  .world-map-visual-card {
+    position: relative;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #EBF3FA 0%, #FFFFFF 100%);
+    border: 1px solid rgba(196, 154, 60, 0.28);
+    box-shadow: 0 16px 44px rgba(13, 27, 51, 0.08), 0 2px 8px rgba(13, 27, 51, 0.04);
+    overflow: hidden;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .world-map-visual-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 20px 52px rgba(13, 27, 51, 0.12), 0 4px 12px rgba(196, 154, 60, 0.15);
+  }
+
+  .map-image-container {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(180deg, #EAF2F9 0%, #F5F9FD 100%);
+  }
+
+  .world-map-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .world-map-visual-card:hover .world-map-img {
+    transform: scale(1.02);
+  }
+
+  .map-soft-vignette {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    border-radius: 20px;
+    box-shadow: inset 0 0 40px rgba(13, 27, 51, 0.05), inset 0 0 0 1px rgba(255, 255, 255, 0.6);
+  }
+
+  /* ==========================================================================
+     2. OUR INTERNATIONAL SUPPORT: Country Cards Section
+     ========================================================================== */
+  .support-section {
+    padding: 72px 0 64px;
+    background-color: #FFFFFF;
+  }
+
+  .support-section-header {
+    text-align: center;
+    max-width: 680px;
+    margin: 0 auto 48px;
+  }
+
+  .section-eyebrow {
+    display: inline-block;
+    font-size: 0.6875rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    color: var(--color-gold, #C49A3C);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .section-title {
+    font-size: clamp(1.875rem, 3vw, 2.5rem);
+    font-weight: 800;
+    color: var(--color-navy, #0D1B33);
+    line-height: 1.2;
+    margin: 0 0 14px;
+  }
+
+  .section-deck {
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    color: var(--color-slate, #475569);
     margin: 0;
   }
 
-  .disclaimer-note {
+  /* 4-Column Responsive Grid */
+  .country-cards-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+    margin-bottom: 40px;
+  }
+
+  @media (min-width: 640px) {
+    .country-cards-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1080px) {
+    .country-cards-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  /* Individual Country Card (Equal-Height Flex Column) */
+  .country-card {
+    background-color: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    border-radius: 16px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 16px rgba(13, 27, 51, 0.04);
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                border-color 0.25s ease;
+  }
+
+  .country-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(13, 27, 51, 0.1);
+    border-color: rgba(196, 154, 60, 0.5);
+  }
+
+  /* Top Image Area */
+  .card-image-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background-color: #E2E8F0;
+  }
+
+  .card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .country-card:hover .card-img {
+    transform: scale(1.05);
+  }
+
+  .card-image-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(13, 27, 51, 0.05) 0%, rgba(13, 27, 51, 0.35) 100%);
+    pointer-events: none;
+  }
+
+  .card-flag-badge {
+    position: absolute;
+    bottom: 12px;
+    left: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background-color: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(6px);
+    padding: 5px 10px;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(13, 27, 51, 0.16);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+  }
+
+  .flag-svg {
+    border-radius: 2px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+    flex-shrink: 0;
+  }
+
+  .flag-country-name {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--color-navy, #0D1B33);
+  }
+
+  .multi-flag-badge .flags-cluster {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .mini-flag {
+    border-radius: 1px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
+    display: block;
+  }
+
+  /* Card Body (Equal-Height Spacing) */
+  .card-body {
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+
+  .card-support-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    align-self: flex-start;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--color-navy, #0D1B33);
+    background-color: #F1F5F9;
+    border: 1px solid #E2E8F0;
+    padding: 4px 10px;
+    border-radius: 6px;
+    margin-bottom: 14px;
+    line-height: 1.3;
+  }
+
+  .pill-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: var(--color-gold, #C49A3C);
+    flex-shrink: 0;
+  }
+
+  .card-country-title {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--color-navy, #0D1B33);
+    line-height: 1.25;
+    margin: 0 0 10px;
+  }
+
+  .card-description {
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: var(--color-slate, #475569);
+    margin: 0 0 20px;
+  }
+
+  /* Footer Action with Gold Circular Arrow Button */
+  .card-footer-action {
+    margin-top: auto;
+    padding-top: 14px;
+    border-top: 1px solid #F1F5F9;
+  }
+
+  .btn-learn-more {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    text-decoration: none;
+    padding: 2px 0;
+  }
+
+  .learn-more-text {
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: var(--color-navy, #0D1B33);
+    transition: color 0.2s ease;
+  }
+
+  .gold-circle-arrow {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: var(--color-gold, #C49A3C);
+    color: #FFFFFF;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 3px 10px rgba(196, 154, 60, 0.32);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    flex-shrink: 0;
+  }
+
+  .country-card:hover .learn-more-text {
+    color: var(--color-gold, #C49A3C);
+  }
+
+  .country-card:hover .gold-circle-arrow {
+    background-color: #B08528;
+    transform: translateX(3px) scale(1.05);
+    box-shadow: 0 6px 16px rgba(196, 154, 60, 0.45);
+  }
+
+  /* Geographic & Clinical Governance Disclaimer Card */
+  .country-disclaimer-card {
+    background-color: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 12px;
+    padding: 20px 24px;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .disclaimer-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 8px;
+    background-color: #FFFFFF;
+    color: var(--color-navy, #0D1B33);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 2px 6px rgba(13, 27, 51, 0.06);
+    border: 1px solid #E2E8F0;
+  }
+
+  .disclaimer-body strong {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--color-navy, #0D1B33);
+    margin-bottom: 4px;
+  }
+
+  .disclaimer-body p {
     font-size: 0.8125rem;
-    color: var(--color-slate);
-    line-height: 1.5;
-    margin-top: var(--space-6);
+    line-height: 1.55;
+    color: var(--color-slate, #475569);
+    margin: 0;
+  }
+
+  /* ==========================================================================
+     3. BOTTOM CTA SECTION: Wide Dark Navy Banner with Gold Globe & Flight Path
+     ========================================================================== */
+  .countries-cta-section {
+    padding: 32px 0 72px;
+    background-color: #FFFFFF;
+  }
+
+  .countries-cta-banner {
+    background: linear-gradient(135deg, #091322 0%, #0D1B33 55%, #152C4E 100%);
+    border: 1px solid rgba(196, 154, 60, 0.35);
+    border-radius: 24px;
+    padding: 56px 40px;
+    box-shadow: 0 16px 44px rgba(13, 27, 51, 0.22);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-flight-visual {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    opacity: 0.65;
+  }
+
+  .flight-path-svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .cta-banner-inner {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 32px;
+  }
+
+  @media (min-width: 900px) {
+    .cta-banner-inner {
+      flex-direction: row;
+      align-items: center;
+      text-align: left;
+      gap: 48px;
+    }
+
+    .cta-content-column {
+      flex: 1;
+    }
+
+    .cta-actions {
+      justify-content: flex-start;
+    }
+
+    .cta-trust-strip {
+      justify-content: flex-start;
+    }
+  }
+
+  .cta-globe-wrapper {
+    position: relative;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 150px;
+    height: 150px;
+  }
+
+  .cta-globe-glow {
+    position: absolute;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(196, 154, 60, 0.25) 0%, transparent 70%);
+    filter: blur(12px);
+  }
+
+  .cta-globe-svg {
+    position: relative;
+    filter: drop-shadow(0 4px 16px rgba(196, 154, 60, 0.25));
+    animation: globe-subtle-float 6s ease-in-out infinite alternate;
+  }
+
+  @keyframes globe-subtle-float {
+    0% { transform: translateY(0px) rotate(0deg); }
+    100% { transform: translateY(-4px) rotate(2deg); }
+  }
+
+  .cta-content-column {
+    position: relative;
+    max-width: 680px;
+  }
+
+  .cta-badge {
+    display: inline-block;
+    font-size: 0.6875rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    color: var(--color-gold, #C49A3C);
+    background-color: rgba(196, 154, 60, 0.14);
+    border: 1px solid rgba(196, 154, 60, 0.4);
+    padding: 4px 12px;
+    border-radius: 999px;
+    margin-bottom: 16px;
+  }
+
+  .cta-title {
+    font-size: clamp(2rem, 3.5vw, 2.75rem);
+    font-weight: 800;
+    color: #FFFFFF;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    margin: 0 0 14px;
+  }
+
+  .cta-text {
+    font-size: 1.125rem;
+    line-height: 1.6;
+    color: rgba(241, 245, 249, 0.88);
+    margin: 0 0 32px;
+  }
+
+  .cta-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+
+  @media (max-width: 899px) {
+    .cta-actions {
+      justify-content: center;
+    }
+  }
+
+  .cta-btn {
+    padding: 14px 30px;
+    font-size: 0.9375rem;
+  }
+
+  .btn-outline-white {
+    background-color: transparent;
+    color: #FFFFFF;
+    border: 1.5px solid rgba(255, 255, 255, 0.6);
+  }
+
+  .btn-outline-white:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: #FFFFFF;
+    color: #FFFFFF;
+    transform: translateY(-2px);
+  }
+
+  .cta-trust-strip {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: rgba(241, 245, 249, 0.7);
+  }
+
+  @media (max-width: 899px) {
+    .cta-trust-strip {
+      justify-content: center;
+    }
+  }
+
+  .cta-trust-strip .bullet {
+    color: var(--color-gold, #C49A3C);
+  }
+
+  /* ==========================================================================
+     RESPONSIVE TUNING
+     ========================================================================== */
+  @media (max-width: 639px) {
+    .countries-hero-section {
+      padding: 16px 0 40px;
+    }
+
+    .hero-actions {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .hero-actions .btn {
+      width: 100%;
+    }
+
+    .cta-actions {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .cta-actions .btn {
+      width: 100%;
+    }
+
+    .countries-cta-banner {
+      padding: 36px 20px;
+      border-radius: 18px;
+    }
+
+    .cta-globe-wrapper {
+      width: 110px;
+      height: 110px;
+    }
+
+    .cta-globe-svg {
+      width: 100px;
+      height: 100px;
+    }
   }
 </style>

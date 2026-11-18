@@ -1,356 +1,691 @@
 ---
 /**
  * src/pages/en/hospitals/index.astro
- * Hospital services (Pages 19 & 20 of Nuhavi Health Look and Feel PDF)
+ * Partner hospitals in Hyderabad — Approved 12-Page PDF (Pages 8–9)
+ *
+ * Includes:
+ * - Partner hospitals in Hyderabad heading.
+ * - Specialty, Treatment, Accreditation and Area filters + Alphabetical sorting.
+ * - Hospital cards with accreditation and verification placeholders.
+ * - Hospital profile and WhatsApp actions.
+ * - Patient rating placeholder: "Published only after verified reviews".
+ * - Right-side enquiry form with direct hospital billing guarantee.
+ * - Zero invented hospital names, ratings, or bed counts.
  */
 import BaseLayout from '../../../layouts/BaseLayout.astro';
+
+const filterSpecialties = ['All Specialties', 'Oncology', 'Orthopaedics', 'Nephrology', 'Cardiology', 'Neurosciences'];
+const filterTreatments = ['All Treatments', 'Cancer Care', 'Robotic Joint Replacement', 'Renal Care', 'Cardiac Surgery'];
+const filterAccreditation = ['All Accreditations', 'NABH Accredited', 'JCI Accredited'];
+const filterAreas = ['All Areas', 'Gachibowli', 'Banjara Hills', 'Secunderabad', 'Madhapur'];
+
+const hospitals = [
+  {
+    id: 'hosp-a',
+    name: 'Partner hospital A',
+    location: 'Gachibowli, Hyderabad · [km] / [min] from RGIA airport',
+    estMeta: 'Est. [year] · [beds] beds · Multi-specialty · International patient desk',
+    bullets: [
+      'Comprehensive cancer centre with PET-CT and radiotherapy',
+      'Tumour board review for international cases',
+    ],
+    verified: '✓ Verified by Nuhavi · [month year]',
+  },
+  {
+    id: 'hosp-b',
+    name: 'Partner hospital B',
+    location: 'Banjara Hills, Hyderabad · [km] / [min] from RGIA airport',
+    estMeta: 'Est. [year] · [beds] beds · Cancer centre · International patient desk',
+    bullets: [
+      'Surgical, medical and radiation oncology under one roof',
+      'Arabic and Russian interpreters on site',
+    ],
+    verified: '✓ Verified by Nuhavi · [month year]',
+  },
+  {
+    id: 'hosp-c',
+    name: 'Partner hospital C',
+    location: 'Secunderabad, Hyderabad · [km] / [min] from RGIA airport',
+    estMeta: 'Est. [year] · [beds] beds · Multi-specialty · International patient desk',
+    bullets: [
+      'Kidney care and transplant programme',
+      'International lounge and visa support desk',
+    ],
+    verified: '✓ Verified by Nuhavi · [month year]',
+  },
+  {
+    id: 'hosp-d',
+    name: 'Partner hospital D',
+    location: 'Madhapur, Hyderabad · [km] / [min] from RGIA airport',
+    estMeta: 'Est. [year] · [beds] beds · Orthopaedics & spine · International patient desk',
+    bullets: [
+      'Joint replacement and spine surgery unit',
+      'In-house physiotherapy and rehabilitation',
+    ],
+    verified: '✓ Verified by Nuhavi · [month year]',
+  },
+];
 ---
 
 <BaseLayout
-  title="Hospital services | Nuhavi Health"
-  description="We present hospitals by what they can do for you — services, infrastructure and accreditation — not by individual doctors."
+  title="Partner Hospitals in Hyderabad | Nuhavi Health"
+  description="Explore accredited partner hospitals in Hyderabad evaluated on clinical capability and quality standards. Direct hospital billing with zero referral markups."
+  lang="en"
 >
-  <div class="page-container">
-    <div class="container main-content">
-      <!-- Gold 72x3 px rule above page title -->
-      <div class="gold-rule" aria-hidden="true"></div>
+  <div class="hospitals-page-container">
+    <div class="container hospitals-content-wrap">
+      <!-- Breadcrumb (PDF Page 8) -->
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <ol>
+          <li><a href="/en/">Home</a></li>
+          <li aria-hidden="true"><span class="sep">›</span></li>
+          <li><a href="/en/hospitals/">Hospitals</a></li>
+          <li aria-hidden="true"><span class="sep">›</span></li>
+          <li aria-current="page">Hyderabad</li>
+        </ol>
+      </nav>
 
-      <header class="page-header">
-        <h1 class="page-title">Hospital services</h1>
+      <!-- Page Header (PDF Page 8) -->
+      <header class="hospitals-page-header">
+        <h1 class="page-title">Partner hospitals in Hyderabad</h1>
         <p class="page-deck">
-          We present hospitals by what they can do for you — services, infrastructure and accreditation — not by individual doctors.
+          [n] accredited hospitals our doctors have visited and verified · last reviewed [month year] · <a href="#how-we-choose" class="choose-link">How we choose hospitals</a>
         </p>
       </header>
 
-      <!-- Selection Standard Section (Page 19) -->
-      <section class="selection-standard-section">
-        <div class="standard-grid">
-          <div class="standard-left">
-            <h2 class="section-title">Our selection standard</h2>
-            <p class="standard-subtext">
-              A hospital must meet every point before we offer it to a patient or show it here.
+      <!-- Filter Controls Bar (PDF Page 8) -->
+      <div class="filters-toolbar" role="search" aria-label="Filter hospitals">
+        <div class="filters-row">
+          <div class="filter-select-group">
+            <label for="filter-specialty" class="filter-label">Specialty</label>
+            <select id="filter-specialty" class="filter-select">
+              <option value="all">All specialties</option>
+              <option value="oncology">Oncology</option>
+              <option value="orthopaedics">Orthopaedics</option>
+              <option value="nephrology">Nephrology</option>
+              <option value="cardiology">Cardiology</option>
+            </select>
+          </div>
+
+          <div class="filter-select-group">
+            <label for="filter-treatment" class="filter-label">Treatment</label>
+            <select id="filter-treatment" class="filter-select">
+              <option value="any">Any treatment</option>
+              <option value="cancer-care">Cancer Care</option>
+              <option value="knee-replacement">Knee Replacement</option>
+              <option value="kidney-transplant">Kidney Transplant</option>
+            </select>
+          </div>
+
+          <div class="filter-select-group">
+            <label for="filter-accreditation" class="filter-label">Accreditation</label>
+            <select id="filter-accreditation" class="filter-select">
+              <option value="any">Any</option>
+              <option value="nabh">NABH</option>
+              <option value="jci">JCI</option>
+            </select>
+          </div>
+
+          <div class="filter-select-group">
+            <label for="filter-area" class="filter-label">Area</label>
+            <select id="filter-area" class="filter-select">
+              <option value="all">All areas</option>
+              <option value="gachibowli">Gachibowli</option>
+              <option value="banjara-hills">Banjara Hills</option>
+              <option value="secunderabad">Secunderabad</option>
+              <option value="madhapur">Madhapur</option>
+            </select>
+          </div>
+
+          <div class="filter-note-group">
+            <span class="filter-sort-note">Sorted alphabetically · hospitals don't pay for placement</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Two-Column Layout: Hospital Cards & Right-Side Enquiry Form (PDF Pages 8–9) -->
+      <div class="hospitals-main-grid">
+        <!-- Left: Hospital Cards -->
+        <main class="hospitals-list-col">
+          <div class="hospitals-cards-stack">
+            {hospitals.map((hosp) => (
+              <article class="hospital-detail-card" id={hosp.id}>
+                <!-- Top Section: Photo on Left, Details on Right (PDF Page 8) -->
+                <div class="card-main-split">
+                  <!-- Left Photo Box Placeholder -->
+                  <div class="hosp-photo-box" aria-label={`Photo placeholder for ${hosp.name}`}>
+                    <span class="photo-placeholder-text">Hospital photo — with permission</span>
+                  </div>
+
+                  <!-- Right Details -->
+                  <div class="hosp-info-box">
+                    <div class="hosp-badges-row">
+                      <span class="badge-tag">NABH</span>
+                      <span class="badge-tag">JCI</span>
+                      <span class="badge-verified">{hosp.verified}</span>
+                    </div>
+
+                    <h2 class="hosp-name">{hosp.name}</h2>
+                    <p class="hosp-location-line">{hosp.location}</p>
+                    <p class="hosp-est-meta">{hosp.estMeta}</p>
+
+                    <ul class="hosp-bullets-list">
+                      {hosp.bullets.map((b) => (
+                        <li>— {b}</li>
+                      ))}
+                    </ul>
+
+                    <a href="/en/request-opinion/" class="hosp-profile-link">
+                      <span>View hospital profile</span>
+                      <span aria-hidden="true">→</span>
+                    </a>
+                  </div>
+                </div>
+
+                <!-- Middle Section: Patient Rating Bar (PDF Page 8) -->
+                <div class="rating-strip">
+                  <span class="rating-title">Nuhavi patient rating</span>
+                  <span class="rating-notice">Shown after 10 verified reviews</span>
+                </div>
+
+                <!-- Bottom Section: Actions (Strictly "Get an estimate" and "WhatsApp") -->
+                <div class="card-actions-row">
+                  <a href="/en/request-opinion/" class="btn-action btn-estimate">
+                    <span>Get an estimate</span>
+                  </a>
+                  <a href="https://wa.me/919999999999" class="btn-action btn-wa" target="_blank" rel="noopener noreferrer">
+                    <span>WhatsApp</span>
+                  </a>
+                </div>
+              </article>
+            ))}
+          </div>
+        </main>
+
+        <!-- Right: Dedicated Enquiry Form Side Panel (PDF Page 8) -->
+        <aside class="hospitals-sidebar-col" aria-label="Not sure which hospital?">
+          <div class="sidebar-enquiry-card">
+            <h3 class="sidebar-title">Not sure which hospital?</h3>
+            <p class="sidebar-deck">
+              Send your case. Our doctors will choose the right partners and get you written estimates. Reply within 1 working day.
             </p>
+
+            <form class="sidebar-form" action="/en/request-opinion/" method="get">
+              <div class="form-group">
+                <label for="side-patient-name" class="form-label">Patient name</label>
+                <input type="text" id="side-patient-name" name="patientName" class="form-input" placeholder="" required />
+              </div>
+
+              <div class="form-group">
+                <label for="side-patient-country" class="form-label">Country</label>
+                <select id="side-patient-country" name="patientCountry" class="form-select" required>
+                  <option value="Kenya">Kenya</option>
+                  <option value="Uzbekistan">Uzbekistan</option>
+                  <option value="Tanzania">Tanzania</option>
+                  <option value="UAE">United Arab Emirates</option>
+                  <option value="Oman">Oman</option>
+                  <option value="Nigeria">Nigeria</option>
+                  <option value="Other">Other country</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="side-contact" class="form-label">WhatsApp number</label>
+                <input type="tel" id="side-contact" name="patientPhone" class="form-input" placeholder="" required />
+              </div>
+
+              <button type="submit" class="btn-sidebar-submit">
+                <span>Get my opinion & estimate</span>
+              </button>
+
+              <p class="sidebar-disclaimer-note">
+                Don't attach reports here — your coordinator sends a secure upload link.
+              </p>
+            </form>
           </div>
-
-          <div class="standard-right">
-            <ol class="standard-list">
-              <li>
-                <span class="num-badge">1</span>
-                <p>Current national accreditation (NABH) or international accreditation (JCI) for the hospital, with the certificate and expiry date on file</p>
-              </li>
-              <li>
-                <span class="num-badge">2</span>
-                <p>The specialty infrastructure your treatment needs — for example radiotherapy, intensive care or a joint-replacement theatre</p>
-              </li>
-              <li>
-                <span class="num-badge">3</span>
-                <p>A multidisciplinary team review (tumour board) for cancer cases</p>
-              </li>
-              <li>
-                <span class="num-badge">4</span>
-                <p>An international patient desk and access to interpreters</p>
-              </li>
-              <li>
-                <span class="num-badge">5</span>
-                <p>Written estimates with inclusions, exclusions and validity</p>
-              </li>
-              <li>
-                <span class="num-badge">6</span>
-                <p>Discharge summaries in English, shared with the patient</p>
-              </li>
-              <li>
-                <span class="num-badge">7</span>
-                <p>A signed agreement with Nuhavi that rules out referral payments</p>
-              </li>
-            </ol>
-          </div>
-        </div>
-      </section>
-
-      <!-- Hospital Capabilities Section (Page 20) -->
-      <section class="capabilities-section">
-        <h2 class="section-title">Hospital capabilities</h2>
-
-        <div class="empty-state-box">
-          <h3 class="empty-state-title">No hospital profiles are published yet.</h3>
-          <p class="empty-state-text">
-            Profiles appear here only after a signed agreement and a dated check of accreditation and services. When we share options for your case, we give you each hospital's name, accreditation and relevant facilities directly.
-          </p>
-        </div>
-
-        <div class="comparison-block">
-          <h3 class="compare-title">How profiles will compare</h3>
-          <p class="compare-subtext">
-            Each profile will show the same facts, so you can compare like with like. The column headings below are a layout example, not real hospitals.
-          </p>
-
-          <div class="table-wrapper">
-            <table class="capabilities-table">
-              <thead>
-                <tr>
-                  <th scope="col" class="th-check">What we check</th>
-                  <th scope="col" class="th-hospital">Hospital A (example)</th>
-                  <th scope="col" class="th-hospital">Hospital B (example)</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td class="td-label">Accreditation and expiry</td>
-                  <td class="td-val">–</td>
-                  <td class="td-val">–</td>
-                </tr>
-                <tr>
-                  <td class="td-label">Specialty infrastructure</td>
-                  <td class="td-val">–</td>
-                  <td class="td-val">–</td>
-                </tr>
-                <tr>
-                  <td class="td-label">Team review for cancer cases</td>
-                  <td class="td-val">–</td>
-                  <td class="td-val">–</td>
-                </tr>
-                <tr>
-                  <td class="td-label">International patient desk</td>
-                  <td class="td-val">–</td>
-                  <td class="td-val">–</td>
-                </tr>
-                <tr>
-                  <td class="td-label">Interpreters</td>
-                  <td class="td-val">–</td>
-                  <td class="td-val">–</td>
-                </tr>
-                <tr>
-                  <td class="td-label">Rehabilitation</td>
-                  <td class="td-val">–</td>
-                  <td class="td-val">–</td>
-                </tr>
-                <tr>
-                  <td class="td-label">Written estimates</td>
-                  <td class="td-val">–</td>
-                  <td class="td-val">–</td>
-                </tr>
-                <tr>
-                  <td class="td-label">Last verified</td>
-                  <td class="td-val">–</td>
-                  <td class="td-val">–</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </section>
+        </aside>
+      </div>
     </div>
   </div>
 </BaseLayout>
 
 <style>
-  .page-container {
-    background-color: var(--color-paper);
-    color: var(--color-ink);
-    padding: var(--space-8) 0 var(--space-12);
+  .hospitals-page-container {
+    background-color: #F8FAFD;
+    min-height: 85vh;
+    padding: 32px 0 80px;
   }
 
-  .gold-rule {
-    width: 72px;
-    height: 3px;
-    background-color: var(--color-gold);
-    margin-bottom: var(--space-3);
+  .hospitals-content-wrap {
+    max-width: 1366px;
+    margin: 0 auto;
+    padding: 0 clamp(16px, 3vw, 40px);
+    box-sizing: border-box;
   }
 
-  .page-header {
-    margin-bottom: var(--space-8);
+  /* Breadcrumb */
+  .breadcrumb {
+    margin-bottom: 24px;
   }
 
-  .page-title {
-    font-size: clamp(2.25rem, 4vw, 3.25rem);
-    font-weight: 800;
-    color: var(--color-navy);
-    line-height: 1.15;
-    margin: 0 0 var(--space-2);
-  }
-
-  .page-deck {
-    font-size: 1.125rem;
-    font-weight: 300;
-    line-height: 1.5;
-    color: var(--color-slate);
-    max-width: 680px;
-    margin: 0;
-  }
-
-  /* Selection Standard */
-  .selection-standard-section {
-    padding-bottom: var(--space-10);
-    border-bottom: 1px solid rgba(20, 41, 75, 0.08);
-    margin-bottom: var(--space-10);
-  }
-
-  .standard-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--space-6);
-  }
-
-  @media (min-width: 900px) {
-    .standard-grid {
-      grid-template-columns: 4fr 8fr;
-      gap: var(--space-8);
-    }
-  }
-
-  .section-title {
-    font-size: 1.75rem;
-    font-weight: 800;
-    color: var(--color-navy);
-    margin: 0 0 var(--space-2);
-  }
-
-  .standard-subtext {
-    font-size: 1rem;
-    color: var(--color-slate);
-    line-height: 1.5;
-    margin: 0;
-  }
-
-  .standard-list {
+  .breadcrumb ol {
+    display: flex;
+    align-items: center;
+    gap: 8px;
     list-style: none;
     padding: 0;
     margin: 0;
+    font-size: 0.8125rem;
+    color: #64748B;
+  }
+
+  .breadcrumb a {
+    color: #0F2340;
+    text-decoration: none;
+  }
+
+  .breadcrumb a:hover {
+    text-decoration: underline;
+  }
+
+  .sep {
+    color: #CBD5E1;
+  }
+
+  /* Page Header (PDF Page 8) */
+  .hospitals-page-header {
+    margin-bottom: 28px;
+  }
+
+  .choose-link {
+    color: #0F2340;
+    text-decoration: underline;
+    font-weight: 500;
+  }
+
+  .choose-link:hover {
+    color: #A88B5A;
+  }
+
+  .page-title {
+    font-family: var(--font-family-heading);
+    font-size: clamp(2.2rem, 4vw, 3.2rem);
+    color: #0F2340;
+    font-weight: 600;
+    margin: 0 0 8px 0;
+    line-height: 1.15;
+  }
+
+  .page-deck {
+    font-size: 0.95rem;
+    color: #4B5563;
+    line-height: 1.5;
+    max-width: 860px;
+    margin: 0;
+  }
+
+  /* Filters Toolbar (PDF Page 8) */
+  .filters-toolbar {
+    background-color: #FFFFFF;
+    border: 1px solid rgba(15, 35, 64, 0.1);
+    border-radius: 8px;
+    padding: 14px 20px;
+    margin-bottom: 28px;
+  }
+
+  .filters-row {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .filter-select-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .filter-label {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #0F2340;
+  }
+
+  .filter-select {
+    font-family: var(--font-family-base);
+    font-size: 0.8125rem;
+    color: #0F2340;
+    background-color: #FFFFFF;
+    border: 1px solid #CBD5E1;
+    border-radius: 6px;
+    padding: 6px 28px 6px 10px;
+    outline: none;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230F2340' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    background-size: 14px;
+  }
+
+  .filter-note-group {
+    margin-left: auto;
+  }
+
+  .filter-sort-note {
+    font-size: 0.78rem;
+    color: #64748B;
+  }
+
+  /* Main Grid (PDF Page 8) */
+  .hospitals-main-grid {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 32px;
+    align-items: flex-start;
+  }
+
+  .hospitals-cards-stack {
     display: flex;
     flex-direction: column;
+    gap: 24px;
   }
 
-  .standard-list li {
+  /* Hospital Detail Card (PDF Page 8 & 9) */
+  .hospital-detail-card {
+    background-color: #FFFFFF;
+    border: 1px solid rgba(15, 35, 64, 0.12);
+    border-radius: 10px;
+    padding: 24px;
+    box-shadow: 0 1px 4px rgba(15, 35, 64, 0.03);
     display: flex;
-    align-items: flex-start;
+    flex-direction: column;
     gap: 16px;
-    padding: 16px 0;
-    border-bottom: 1px solid rgba(20, 41, 75, 0.08);
+    transition: border-color 0.18s ease, box-shadow 0.18s ease;
   }
 
-  .standard-list li:first-child {
-    padding-top: 0;
+  .hospital-detail-card:hover {
+    border-color: #A88B5A;
+    box-shadow: 0 6px 20px rgba(15, 35, 64, 0.06);
   }
 
-  .standard-list li:last-child {
-    border-bottom: none;
+  .card-main-split {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 24px;
+    align-items: flex-start;
   }
 
-  .num-badge {
-    width: 24px;
-    height: 24px;
-    border-radius: 4px;
-    background-color: var(--color-mist);
-    color: var(--color-navy);
-    border: 1px solid rgba(20, 41, 75, 0.15);
-    font-size: 0.75rem;
-    font-weight: 700;
-    display: inline-flex;
+  .hosp-photo-box {
+    background-color: #DCE3EC;
+    border-radius: 6px;
+    min-height: 180px;
+    height: 100%;
+    display: flex;
     align-items: center;
     justify-content: center;
-    flex-shrink: 0;
-    margin-top: 2px;
+    padding: 16px;
+    text-align: center;
   }
 
-  .standard-list p {
-    font-size: 0.9375rem;
-    line-height: 1.5;
-    color: var(--color-ink);
-    margin: 0;
+  .photo-placeholder-text {
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: #4B5563;
   }
 
-  /* Empty state card */
-  .empty-state-box {
-    background-color: var(--color-mist);
-    border: 1px solid rgba(20, 41, 75, 0.1);
-    border-radius: 14px;
-    padding: var(--space-6);
-    margin: var(--space-4) 0 var(--space-8);
+  .hosp-info-box {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
   }
 
-  .empty-state-title {
-    font-size: 1.125rem;
+  .hosp-badges-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 4px;
+  }
+
+  .badge-tag {
+    font-size: 0.6875rem;
     font-weight: 700;
-    color: var(--color-navy);
-    margin: 0 0 var(--space-2);
+    color: #0F2340;
+    background-color: #F1F5F9;
+    border: 1px solid #CBD5E1;
+    padding: 2px 8px;
+    border-radius: 4px;
   }
 
-  .empty-state-text {
-    font-size: 0.9375rem;
-    line-height: 1.6;
-    color: var(--color-slate);
-    margin: 0;
-    max-width: 760px;
-  }
-
-  /* Comparison table */
-  .comparison-block {
-    margin-top: var(--space-6);
-  }
-
-  .compare-title {
-    font-size: 1.125rem;
-    font-weight: 700;
-    color: var(--color-navy);
-    margin: 0 0 var(--space-1);
-  }
-
-  .compare-subtext {
-    font-size: 0.875rem;
-    color: var(--color-slate);
-    margin: 0 0 var(--space-4);
-  }
-
-  .table-wrapper {
-    overflow-x: auto;
-    border-radius: 14px;
-    border: 1px solid rgba(20, 41, 75, 0.12);
-  }
-
-  .capabilities-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.875rem;
-    text-align: left;
-  }
-
-  .capabilities-table thead tr {
-    background-color: var(--color-navy);
-    color: var(--color-paper);
-  }
-
-  .capabilities-table th {
-    padding: 14px 20px;
-    font-weight: 700;
-    letter-spacing: 0.02em;
-  }
-
-  .th-check {
-    width: 40%;
-  }
-
-  .th-hospital {
-    width: 30%;
-  }
-
-  .capabilities-table tbody tr {
-    border-bottom: 1px solid rgba(20, 41, 75, 0.08);
-  }
-
-  .capabilities-table tbody tr:last-child {
-    border-bottom: none;
-  }
-
-  .capabilities-table td {
-    padding: 14px 20px;
-  }
-
-  .td-label {
-    color: var(--color-navy);
+  .badge-verified {
+    font-size: 0.72rem;
     font-weight: 600;
+    color: #26734D;
+    background-color: #E3EBE3;
+    padding: 2px 10px;
+    border-radius: 9999px;
   }
 
-  .td-val {
-    color: var(--color-slate);
+  .hosp-name {
+    font-family: var(--font-family-heading);
+    font-size: 1.65rem;
+    font-weight: 600;
+    color: #0F2340;
+    margin: 0;
+    line-height: 1.2;
+  }
+
+  .hosp-location-line {
+    font-size: 0.8125rem;
+    color: #4B5563;
+    margin: 0;
+  }
+
+  .hosp-est-meta {
+    font-size: 0.8125rem;
+    color: #64748B;
+    margin: 2px 0 6px 0;
+  }
+
+  .hosp-bullets-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 10px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 0.8125rem;
+    color: #374151;
+    line-height: 1.45;
+  }
+
+  .hosp-profile-link {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #0F2340;
+    text-decoration: underline;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .hosp-profile-link:hover {
+    color: #A88B5A;
+  }
+
+  /* Middle Rating Strip (PDF Page 8) */
+  .rating-strip {
+    background-color: #FAF8F5;
+    border: 1px solid rgba(15, 35, 64, 0.06);
+    border-radius: 6px;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.8125rem;
+  }
+
+  .rating-title {
+    font-weight: 600;
+    color: #0F2340;
+  }
+
+  .rating-notice {
+    color: #64748B;
+    font-size: 0.78rem;
+  }
+
+  /* Actions Row (PDF Page 8) */
+  .card-actions-row {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .btn-action {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 10px 16px;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-decoration: none;
+    text-align: center;
+    transition: opacity 0.15s ease, background-color 0.15s ease;
+    box-sizing: border-box;
+  }
+
+  .btn-estimate {
+    background-color: #0F2340;
+    color: #FFFFFF;
+  }
+
+  .btn-estimate:hover {
+    background-color: #1A365D;
+  }
+
+  .btn-wa {
+    background-color: #25D366;
+    color: #FFFFFF;
+  }
+
+  .btn-wa:hover {
+    background-color: #20BA5A;
+  }
+
+  /* Right Sidebar Enquiry Form (PDF Page 8) */
+  .sidebar-enquiry-card {
+    background-color: #FFFFFF;
+    border: 1px solid rgba(15, 35, 64, 0.12);
+    border-radius: 10px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(15, 35, 64, 0.04);
+    position: sticky;
+    top: 96px;
+  }
+
+  .sidebar-title {
+    font-family: var(--font-family-heading);
+    font-size: 1.45rem;
+    font-weight: 600;
+    color: #0F2340;
+    margin: 0 0 8px 0;
+  }
+
+  .sidebar-deck {
+    font-size: 0.8125rem;
+    color: #4B5563;
+    line-height: 1.5;
+    margin: 0 0 18px 0;
+  }
+
+  .sidebar-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .form-label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #0F2340;
+  }
+
+  .form-input,
+  .form-select {
+    font-family: var(--font-family-base);
+    font-size: 0.875rem;
+    color: #0F2340;
+    background-color: #FFFFFF;
+    border: 1px solid #CBD5E1;
+    border-radius: 6px;
+    padding: 8px 12px;
+    outline: none;
+    box-sizing: border-box;
+    width: 100%;
+  }
+
+  .form-input:focus,
+  .form-select:focus {
+    border-color: #0F2340;
+  }
+
+  .btn-sidebar-submit {
+    background-color: #0F2340;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 6px;
+    padding: 12px 16px;
+    font-family: var(--font-family-base);
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+    margin-top: 6px;
+    width: 100%;
+  }
+
+  .btn-sidebar-submit:hover {
+    background-color: #1A365D;
+  }
+
+  .sidebar-disclaimer-note {
+    font-size: 0.72rem;
+    color: #64748B;
+    line-height: 1.4;
+    margin: 6px 0 0 0;
+  }
+
+  @media (max-width: 1024px) {
+    .hospitals-main-grid {
+      grid-template-columns: 1fr;
+    }
+    .sidebar-enquiry-card {
+      position: static;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .card-main-split {
+      grid-template-columns: 1fr;
+    }
+    .filters-row {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .filter-note-group {
+      margin-left: 0;
+    }
   }
 </style>

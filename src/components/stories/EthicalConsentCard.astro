@@ -1,0 +1,236 @@
+---
+/**
+ * src/components/stories/EthicalConsentCard.astro
+ * Prominent Ethical Storytelling & Informed Consent Notice component for Nuhavi Health.
+ *
+ * Requirements:
+ * - Clear notice that patient stories will only be published with written informed consent.
+ * - Zero fictional stories, zero paid reviews, and absolute respect for patient privacy.
+ * - Strict non-clinical disclaimer emphasizing coordination boundary.
+ * - Localized for EN, RU, and AR (RTL).
+ */
+
+import type { EthicalPolicyRule } from '../../data/storiesData';
+
+interface Props {
+  badge: string;
+  title: string;
+  lead: string;
+  rules: EthicalPolicyRule[];
+  legalDisclaimer: string;
+  lang?: 'en' | 'ru' | 'ar';
+}
+
+const { badge, title, lead, rules, legalDisclaimer, lang = 'en' } = Astro.props;
+---
+
+<section class={`ethical-consent-section lang-${lang}`} aria-labelledby="consent-policy-heading">
+  <div class="consent-card-wrapper">
+    <!-- Signature Gold Accent Top Bar -->
+    <div class="card-gold-bar" aria-hidden="true"></div>
+
+    <div class="card-inner-content">
+      <div class="card-header-group">
+        <span class="policy-badge">{badge}</span>
+        <h2 id="consent-policy-heading" class="policy-title">{title}</h2>
+        <p class="policy-lead">{lead}</p>
+      </div>
+
+      <!-- 6 Ethical Rules Grid -->
+      <div class="rules-grid" role="list">
+        {rules.map((rule) => (
+          <div class="rule-card" role="listitem">
+            <div class="rule-header">
+              <span class="rule-number" aria-hidden="true">{rule.number}</span>
+              <h3 class="rule-title">{rule.title}</h3>
+            </div>
+            <p class="rule-desc">{rule.description}</p>
+          </div>
+        ))}
+      </div>
+
+      <!-- Mandatory Medical & Coordination Notice -->
+      <div class="consent-disclaimer-box" role="note">
+        <div class="disclaimer-icon-wrap" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+          </svg>
+        </div>
+        <p class="disclaimer-text">{legalDisclaimer}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .ethical-consent-section {
+    width: 100%;
+    margin-bottom: var(--space-12, 3rem);
+  }
+
+  .consent-card-wrapper {
+    background-color: #FFFFFF;
+    border: 1px solid var(--color-border, #E2E8F0);
+    border-radius: 14px;
+    box-shadow: 0 4px 20px rgba(20, 41, 75, 0.05);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card-gold-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background-color: var(--color-gold, #C49A3C);
+  }
+
+  .card-inner-content {
+    padding: var(--space-8, 2rem) var(--space-6, 1.5rem);
+  }
+
+  @media (min-width: 768px) {
+    .card-inner-content {
+      padding: var(--space-10, 2.5rem);
+    }
+  }
+
+  .card-header-group {
+    max-width: 800px;
+    margin-bottom: var(--space-8, 2rem);
+  }
+
+  .policy-badge {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-gold-text, #967119);
+    background-color: rgba(196, 154, 60, 0.1);
+    padding: 4px 10px;
+    border-radius: 4px;
+    margin-bottom: var(--space-3, 0.75rem);
+  }
+
+  .policy-title {
+    font-family: var(--font-serif, "Playfair Display", Georgia, serif);
+    font-size: clamp(1.625rem, 3vw, 2.125rem);
+    font-weight: 700;
+    line-height: 1.25;
+    color: var(--color-navy, #14294B);
+    margin: 0 0 var(--space-3, 0.75rem) 0;
+  }
+
+  .policy-lead {
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    color: var(--color-slate, #5B6A80);
+    margin: 0;
+  }
+
+  /* 6 Rules Grid */
+  .rules-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-5, 1.25rem);
+    margin-bottom: var(--space-8, 2rem);
+  }
+
+  @media (min-width: 640px) {
+    .rules-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .rules-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .rule-card {
+    background-color: var(--color-mist, #F4F7FB);
+    border: 1px solid rgba(20, 41, 75, 0.07);
+    border-radius: 10px;
+    padding: var(--space-5, 1.25rem);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2, 0.5rem);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .rule-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(20, 41, 75, 0.06);
+  }
+
+  .rule-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .rule-number {
+    font-size: 0.8125rem;
+    font-weight: 800;
+    color: var(--color-gold, #C49A3C);
+    background-color: #FFFFFF;
+    border: 1px solid rgba(196, 154, 60, 0.35);
+    border-radius: 6px;
+    padding: 2px 7px;
+    flex-shrink: 0;
+  }
+
+  .rule-title {
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: var(--color-navy, #14294B);
+    margin: 0;
+    line-height: 1.35;
+  }
+
+  .rule-desc {
+    font-size: 0.875rem;
+    line-height: 1.55;
+    color: var(--color-slate, #5B6A80);
+    margin: 0;
+  }
+
+  /* Disclaimer Box */
+  .consent-disclaimer-box {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background-color: #F8FAFD;
+    border: 1px solid rgba(20, 41, 75, 0.12);
+    border-radius: 8px;
+    padding: var(--space-4, 1rem) var(--space-5, 1.25rem);
+  }
+
+  .disclaimer-icon-wrap {
+    color: var(--color-navy, #14294B);
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .disclaimer-text {
+    font-size: 0.8125rem;
+    line-height: 1.55;
+    color: var(--color-slate, #5B6A80);
+    margin: 0;
+  }
+
+  /* RTL Support */
+  :global([dir="rtl"]) .rule-header {
+    flex-direction: row-reverse;
+  }
+
+  :global([dir="rtl"]) .consent-disclaimer-box {
+    flex-direction: row-reverse;
+  }
+</style>
+

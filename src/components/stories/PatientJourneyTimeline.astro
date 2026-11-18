@@ -1,0 +1,347 @@
+---
+/**
+ * src/components/stories/PatientJourneyTimeline.astro
+ * Detailed 5-Step Patient Coordination Journey component for Nuhavi Health.
+ *
+ * Requirements:
+ * - Clear patient journey section explaining the coordination process.
+ * - Highlights the two responsibilities: Nuhavi coordinates non-clinical logistics, treating hospital oversees medical care.
+ * - Responsive desktop & mobile layouts with step badges and deliverable lists.
+ * - Localized for EN, RU, and AR (RTL).
+ */
+
+import type { PatientJourneyStep } from '../../data/storiesData';
+
+interface Props {
+  eyebrow: string;
+  title: string;
+  deck: string;
+  coordinationRole: {
+    label: string;
+    text: string;
+  };
+  clinicalRole: {
+    label: string;
+    text: string;
+  };
+  steps: PatientJourneyStep[];
+  lang?: 'en' | 'ru' | 'ar';
+}
+
+const { eyebrow, title, deck, coordinationRole, clinicalRole, steps, lang = 'en' } = Astro.props;
+---
+
+<section class={`patient-journey-section lang-${lang}`} aria-labelledby="patient-journey-heading">
+  <div class="journey-header">
+    <span class="journey-eyebrow">{eyebrow}</span>
+    <h2 id="patient-journey-heading" class="journey-title">{title}</h2>
+    <p class="journey-deck">{deck}</p>
+  </div>
+
+  <!-- Two Kinds of Responsibility Banner -->
+  <div class="responsibilities-banner" role="region" aria-label="Division of Responsibilities">
+    <div class="resp-card resp-coordination">
+      <div class="resp-header">
+        <span class="resp-icon" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+            <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+          </svg>
+        </span>
+        <h3 class="resp-title">{coordinationRole.label}</h3>
+      </div>
+      <p class="resp-text">{coordinationRole.text}</p>
+    </div>
+
+    <div class="resp-card resp-clinical">
+      <div class="resp-header">
+        <span class="resp-icon" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+          </svg>
+        </span>
+        <h3 class="resp-title">{clinicalRole.label}</h3>
+      </div>
+      <p class="resp-text">{clinicalRole.text}</p>
+    </div>
+  </div>
+
+  <!-- 5-Step Journey Timeline Grid -->
+  <div class="timeline-steps-list" role="list">
+    {steps.map((s, idx) => (
+      <div class="step-card" role="listitem">
+        <div class="step-sidebar">
+          <span class="step-number-pill" aria-hidden="true">{s.step}</span>
+          {idx < steps.length - 1 && <span class="step-connector-line" aria-hidden="true"></span>}
+        </div>
+
+        <div class="step-main-content">
+          <div class="step-title-row">
+            <h3 class="step-title">{s.title}</h3>
+            <span class="step-stage-badge">{s.role}</span>
+          </div>
+
+          <p class="step-description">{s.description}</p>
+
+          <div class="step-deliverables-wrap">
+            <ul class="deliverables-list">
+              {s.deliverables.map((item) => (
+                <li class="deliverable-item">
+                  <span class="check-icon" aria-hidden="true">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  </span>
+                  <span class="item-text">{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+    ))}
+  </div>
+</section>
+
+<style>
+  .patient-journey-section {
+    width: 100%;
+    margin-bottom: var(--space-12, 3rem);
+  }
+
+  .journey-header {
+    margin-bottom: var(--space-8, 2rem);
+  }
+
+  .journey-eyebrow {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-gold-text, #967119);
+    background-color: rgba(196, 154, 60, 0.1);
+    padding: 4px 10px;
+    border-radius: 4px;
+    margin-bottom: var(--space-3, 0.75rem);
+  }
+
+  .journey-title {
+    font-family: var(--font-serif, "Playfair Display", Georgia, serif);
+    font-size: clamp(1.75rem, 3.5vw, 2.25rem);
+    font-weight: 700;
+    line-height: 1.25;
+    color: var(--color-navy, #14294B);
+    margin: 0 0 var(--space-3, 0.75rem) 0;
+  }
+
+  .journey-deck {
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    color: var(--color-slate, #5B6A80);
+    max-width: 780px;
+    margin: 0;
+  }
+
+  /* Two Responsibilities Banner */
+  .responsibilities-banner {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-4, 1rem);
+    margin-bottom: var(--space-8, 2rem);
+  }
+
+  @media (min-width: 768px) {
+    .responsibilities-banner {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-6, 1.5rem);
+    }
+  }
+
+  .resp-card {
+    border-radius: 12px;
+    padding: var(--space-5, 1.25rem) var(--space-6, 1.5rem);
+    border: 1px solid var(--color-border, #E2E8F0);
+  }
+
+  .resp-coordination {
+    background-color: #FFFFFF;
+    border-left: 4px solid var(--color-navy, #14294B);
+  }
+
+  .resp-clinical {
+    background-color: #FFFFFF;
+    border-left: 4px solid var(--color-gold, #C49A3C);
+  }
+
+  .resp-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: var(--space-2, 0.5rem);
+  }
+
+  .resp-coordination .resp-icon {
+    color: var(--color-navy, #14294B);
+  }
+
+  .resp-clinical .resp-icon {
+    color: var(--color-gold, #C49A3C);
+  }
+
+  .resp-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--color-navy, #14294B);
+    margin: 0;
+  }
+
+  .resp-text {
+    font-size: 0.875rem;
+    line-height: 1.55;
+    color: var(--color-slate, #5B6A80);
+    margin: 0;
+  }
+
+  /* 5-Step Timeline Cards */
+  .timeline-steps-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5, 1.25rem);
+  }
+
+  .step-card {
+    background-color: #FFFFFF;
+    border: 1px solid var(--color-border, #E2E8F0);
+    border-radius: 12px;
+    padding: var(--space-6, 1.5rem);
+    display: flex;
+    gap: var(--space-5, 1.25rem);
+    position: relative;
+    box-shadow: 0 2px 10px rgba(20, 41, 75, 0.04);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .step-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(20, 41, 75, 0.07);
+  }
+
+  .step-sidebar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .step-number-pill {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: var(--color-navy, #14294B);
+    color: #FFFFFF;
+    font-size: 0.875rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 6px rgba(20, 41, 75, 0.2);
+  }
+
+  .step-connector-line {
+    display: none;
+  }
+
+  .step-main-content {
+    flex-grow: 1;
+  }
+
+  .step-title-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2, 0.5rem);
+    margin-bottom: var(--space-2, 0.5rem);
+  }
+
+  .step-title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--color-navy, #14294B);
+    margin: 0;
+    line-height: 1.35;
+  }
+
+  .step-stage-badge {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-gold-text, #967119);
+    background-color: rgba(196, 154, 60, 0.12);
+    padding: 3px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+
+  .step-description {
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--color-slate, #5B6A80);
+    margin: 0 0 var(--space-4, 1rem) 0;
+  }
+
+  .step-deliverables-wrap {
+    background-color: var(--color-mist, #F4F7FB);
+    border-radius: 8px;
+    padding: var(--space-3, 0.75rem) var(--space-4, 1rem);
+  }
+
+  .deliverables-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .deliverable-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 0.8125rem;
+    line-height: 1.45;
+    color: var(--color-ink, #0D1B33);
+  }
+
+  .check-icon {
+    color: var(--color-gold, #C49A3C);
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  /* RTL Support */
+  :global([dir="rtl"]) .resp-coordination {
+    border-left: none;
+    border-right: 4px solid var(--color-navy, #14294B);
+  }
+
+  :global([dir="rtl"]) .resp-clinical {
+    border-left: none;
+    border-right: 4px solid var(--color-gold, #C49A3C);
+  }
+
+  :global([dir="rtl"]) .resp-header {
+    flex-direction: row-reverse;
+  }
+
+  :global([dir="rtl"]) .step-title-row {
+    flex-direction: row-reverse;
+  }
+
+  :global([dir="rtl"]) .deliverable-item {
+    flex-direction: row-reverse;
+    text-align: right;
+  }
+</style>
+

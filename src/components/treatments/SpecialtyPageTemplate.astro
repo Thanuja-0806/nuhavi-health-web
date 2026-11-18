@@ -1,0 +1,891 @@
+---
+/**
+ * src/components/treatments/SpecialtyPageTemplate.astro
+ * Master reusable template for Nuhavi Health's individual specialty detail pages.
+ *
+ * Implements:
+ * 1. Breadcrumbs: Home / Treatments / Specialty Name
+ * 2. Signature 72x3 px gold rule, H1, deck, and enquiry status badge (Accepting / On request).
+ * 3. Two-column clinical overview:
+ *    - Left: "What this covers", clinical scope disclaimer, and enquiry action CTA.
+ *    - Right: "Conditions and procedures" with structured articles.
+ * 4. Diagnostic Records Guidance panel with clear non-mandatory disclaimer.
+ * 5. Nuhavi coordination role callout (Nuhavi coordinates; hospitals independently diagnose and treat).
+ * 6. Amber Clinical Review Pending notice.
+ * 7. Verified Enquiry CTA behavior:
+ *    - English & Russian: Prominent CTA linking to /<lang>/request-opinion/?specialty=<id>.
+ *    - Arabic: Safe suppression with informative advisory (no broken links).
+ * 8. Full English, Russian, and Arabic RTL support.
+ */
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import type { SupportedLang } from '../../i18n/translations';
+import type { SpecialtyDefinition } from '../../data/specialtyData';
+
+interface Props {
+  specialty: SpecialtyDefinition;
+  lang: SupportedLang;
+}
+
+const { specialty, lang } = Astro.props;
+const data = specialty.content[lang];
+const isAccepting = specialty.status === 'accepting';
+const isArabic = lang === 'ar';
+const isRussian = lang === 'ru';
+const dir: 'ltr' | 'rtl' = isArabic ? 'rtl' : 'ltr';
+
+const prefix = `/${lang}`;
+const homeHref = `${prefix}/`;
+const treatmentsIndexHref = `${prefix}/treatments/`;
+const enquiryHref = `${prefix}/request-opinion/?specialty=${specialty.id}`;
+
+// Arabic has neither /ar/request-opinion/ nor /ar/contact/ currently
+const hasEnquiryAction = !isArabic;
+
+// UI localized labels
+const ui = {
+  en: {
+    home: 'Home',
+    treatments: 'Treatments',
+    whatThisCovers: 'What this covers',
+    conditionsHeading: 'Conditions and procedures',
+    recordsHeading: 'Records guidance',
+    clinicalReviewPrefix: 'Needs confirmation:',
+    clinicalReviewText: 'Clinical review pending — a qualified clinician must review and sign off this page’s medical content before launch.',
+    coordinationRoleTitle: 'Nuhavi Coordination Role',
+    coordinationRoleText: 'Nuhavi Health coordinates medical travel logistics, communication, and records transfer. Independent clinical teams at accredited hospitals examine, diagnose, determine suitability, and carry out treatment.',
+    enquiryAcceptingCta: 'Request a medical opinion',
+    enquiryOnRequestCta: 'Enquire about coordination on request',
+    arabicAdvisory: '',
+  },
+  ru: {
+    home: 'Главная',
+    treatments: 'Направления',
+    whatThisCovers: 'Что включает направление',
+    conditionsHeading: 'Заболевания и медицинские процедуры',
+    recordsHeading: 'Подготовка медицинских документов',
+    clinicalReviewPrefix: 'Требуется подтверждение:',
+    clinicalReviewText: 'Ожидается клиническая экспертиза — квалифицированный врач должен проверить и утвердить медицинское содержание страницы перед запуском.',
+    coordinationRoleTitle: 'Роль Nuhavi Health в координации',
+    coordinationRoleText: 'Nuhavi Health организует логистику поездки, коммуникацию и передачу медицинских выписок. Независимые врачебные команды аккредитованных клиник самостоятельно проводят осмотр, устанавливают диагноз и назначают лечение.',
+    enquiryAcceptingCta: 'Запросить медицинское заключение',
+    enquiryOnRequestCta: 'Запросить координацию по направлению',
+    arabicAdvisory: '',
+  },
+  ar: {
+    home: 'الرئيسية',
+    treatments: 'التخصصات الطبية',
+    whatThisCovers: 'ما يشمله التخصص',
+    conditionsHeading: 'الحالات والإجراءات الطبية',
+    recordsHeading: 'إرشادات تجهيز التقارير الطبية',
+    clinicalReviewPrefix: 'قيد الاعتماد:',
+    clinicalReviewText: 'المراجعة الطبية قيد الاعتماد — يجب تدقيق ومصادقة المحتوى الطبي لهذه الصفحة من قِبل طبيب مؤهل قبل الإطلاق الرسمي.',
+    coordinationRoleTitle: 'دور نوهـافي هيلث في التنسيق الطبي',
+    coordinationRoleText: 'تقتصر خدمات نوهـافي هيلث على تنسيق إجراءات السفر ونقل التقارير والتواصل الإداري. بينما تتولى الفرق الطبية المستقلة في المستشفيات المعتمدة الفحص الطبي والتشخيص واتخاذ القرارات العلاجية وتنفيذها.',
+    enquiryAcceptingCta: 'طلب تقييم طبي',
+    enquiryOnRequestCta: 'طلب تنسيق حسب الطلب',
+    arabicAdvisory: 'خدمة طلب الرأي الطبي الإلكتروني باللغة العربية قيد التجهيز حالياً. للبدء في تنسيق حالتك الطبية، يرجى الاستعانة بمركز الاتصال المعتمد أو استخدام النسخة الإنجليزية.',
+  },
+}[lang];
+---
+
+<BaseLayout
+  title={data.metaTitle}
+  description={data.metaDescription}
+  lang={lang}
+  dir={dir}
+>
+  <div class={`specialty-page-root lang-${lang}`} dir={dir}>
+    <!-- --------------------------------------------------------------------------
+         1. HERO HEADER & BREADCRUMBS
+         -------------------------------------------------------------------------- -->
+    <header class="specialty-hero">
+      <div class="container specialty-hero-container">
+        <!-- Breadcrumb Navigation -->
+        <nav class="breadcrumb-nav" aria-label="Breadcrumb">
+          <ol class="breadcrumb-list">
+            <li class="breadcrumb-item">
+              <a href={homeHref} class="breadcrumb-link">{ui.home}</a>
+              <span class="breadcrumb-separator" aria-hidden="true">/</span>
+            </li>
+            <li class="breadcrumb-item">
+              <a href={treatmentsIndexHref} class="breadcrumb-link">{ui.treatments}</a>
+              <span class="breadcrumb-separator" aria-hidden="true">/</span>
+            </li>
+            <li class="breadcrumb-item" aria-current="page">
+              <span class="breadcrumb-current">{data.title}</span>
+            </li>
+          </ol>
+        </nav>
+
+        <div class="specialty-hero-grid">
+          <!-- Left Column: Specialty Details -->
+          <div class="specialty-hero-content">
+            <!-- Signature 72 × 3 px Gold Rule -->
+            <div class="gold-rule" aria-hidden="true"></div>
+
+            <!-- H1 Specialty Heading -->
+            <h1 class="specialty-title">{data.title}</h1>
+
+            <!-- Deck Text -->
+            <p class="specialty-deck">{data.description}</p>
+
+            <!-- Status Badge -->
+            <div class="specialty-status-wrap">
+              <span class={`badge-status ${isAccepting ? 'status-accepting' : 'status-on-request'}`}>
+                <span class="status-indicator" aria-hidden="true">{isAccepting ? '●' : '○'}</span>
+                {data.statusLabel}
+              </span>
+              {data.secondaryLabel && (
+                <span class="badge-dept-secondary">
+                  {data.secondaryLabel}
+                </span>
+              )}
+            </div>
+          </div>
+
+          <!-- Right Column: Medical Hero Image -->
+          {specialty.image && (
+            <div class="specialty-hero-media">
+              <div class="specialty-image-card">
+                <img
+                  src={specialty.image.src}
+                  alt={specialty.image.alt[lang] || specialty.image.alt.en}
+                  class="specialty-hero-img"
+                  width="720"
+                  height="450"
+                  loading="eager"
+                />
+                <div class="image-card-border" aria-hidden="true"></div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </header>
+
+    <!-- --------------------------------------------------------------------------
+         2. TWO-COLUMN MAIN CONTENT (Scope + Conditions)
+         -------------------------------------------------------------------------- -->
+    <section class="specialty-main-section" aria-label={data.title}>
+      <div class="container specialty-main-container">
+        <div class="specialty-columns-grid">
+          <!-- Left Column: What this covers & Action CTA -->
+          <div class="column-covers">
+            <h2 class="column-heading">{ui.whatThisCovers}</h2>
+
+            <!-- Checklist with gold checkmarks -->
+            <ul class="covers-list" role="list">
+              {data.whatThisCovers.map((item) => (
+                <li class="covers-item">
+                  <svg class="check-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <path d="M3 8.5L6.5 12L13 4" stroke="var(--color-gold)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+
+            <!-- Scope Disclaimer if present -->
+            {data.scopeDisclaimer && (
+              <p class="covers-disclaimer">
+                {data.scopeDisclaimer}
+              </p>
+            )}
+
+            <!-- Amber Clinical Review Notice -->
+            <div class="clinical-review-notice" role="note">
+              <p class="notice-text">
+                <strong class="notice-prefix">{ui.clinicalReviewPrefix}</strong> {ui.clinicalReviewText}
+              </p>
+            </div>
+
+            <!-- Primary Action CTA Wrap -->
+            <div class="covers-cta-wrap">
+              {hasEnquiryAction ? (
+                <a href={enquiryHref} class="btn-primary-opinion">
+                  <span>{isAccepting ? ui.enquiryAcceptingCta : ui.enquiryOnRequestCta}</span>
+                  <svg class="cta-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                  </svg>
+                </a>
+              ) : (
+                <div class="arabic-cta-advisory" role="status">
+                  <span class="advisory-icon" aria-hidden="true">ℹ</span>
+                  <p class="advisory-text">{ui.arabicAdvisory}</p>
+                </div>
+              )}
+            </div>
+          </div>
+
+          <!-- Right Column: Conditions and Procedures -->
+          <div class="column-conditions">
+            <h2 class="column-heading">{ui.conditionsHeading}</h2>
+
+            <div class="conditions-list" role="feed" aria-label={ui.conditionsHeading}>
+              {data.conditions.map((item) => (
+                <article class="condition-row">
+                  <h3 class="condition-title">{item.title}</h3>
+                  <p class="condition-desc">{item.description}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- --------------------------------------------------------------------------
+         3. RECORDS GUIDANCE SECTION
+         -------------------------------------------------------------------------- -->
+    <section class="records-guidance-section" aria-labelledby="records-guidance-heading">
+      <div class="container records-guidance-container">
+        <div class="records-guidance-card">
+          <div class="records-header">
+            <div class="records-header-icon" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--color-navy)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+                <polyline points="10 9 9 9 8 9"></polyline>
+              </svg>
+            </div>
+            <div>
+              <h2 id="records-guidance-heading" class="records-title">{ui.recordsHeading}</h2>
+              <p class="records-intro">{data.recordsGuidance.intro}</p>
+            </div>
+          </div>
+
+          <ul class="records-items-list" role="list">
+            {data.recordsGuidance.items.map((recordItem, idx) => (
+              <li class="record-item">
+                <span class="record-item-num" aria-hidden="true">{idx + 1}</span>
+                <span class="record-item-text">{recordItem}</span>
+              </li>
+            ))}
+          </ul>
+
+          <div class="records-disclaimer-box">
+            <p class="records-disclaimer-text">
+              <strong>{lang === 'ru' ? 'Примечание:' : lang === 'ar' ? 'تنويه مهم:' : 'Important note:'}</strong> {data.recordsGuidance.disclaimer}
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- --------------------------------------------------------------------------
+         4. NUHAVI COORDINATION VS HOSPITAL CLINICAL ROLE
+         -------------------------------------------------------------------------- -->
+    <section class="coordination-boundary-section" aria-labelledby="coordination-role-heading">
+      <div class="container coordination-container">
+        <div class="coordination-card">
+          <div class="coordination-badge-pill" aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            </svg>
+            <span>{lang === 'ru' ? 'Координация' : lang === 'ar' ? 'تنسيق فقط' : 'Independent Coordination'}</span>
+          </div>
+          <h2 id="coordination-role-heading" class="coordination-title">{ui.coordinationRoleTitle}</h2>
+          <p class="coordination-text">{ui.coordinationRoleText}</p>
+        </div>
+      </div>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  /* --------------------------------------------------------------------------
+     ROOT & HERO STYLING
+     -------------------------------------------------------------------------- */
+  .specialty-page-root {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    min-height: 100vh;
+  }
+
+  .specialty-hero {
+    background: linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%);
+    padding-top: var(--space-6);
+    padding-bottom: var(--space-8);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .specialty-hero-container {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding-left: var(--space-4);
+    padding-right: var(--space-4);
+  }
+
+  /* Two-column hero grid */
+  .specialty-hero-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 32px;
+    align-items: center;
+  }
+
+  @media (min-width: 1024px) {
+    .specialty-hero-grid {
+      grid-template-columns: 1.18fr 0.82fr;
+      gap: 48px;
+    }
+  }
+
+  .specialty-hero-content {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Right column: Image Card */
+  .specialty-hero-media {
+    width: 100%;
+  }
+
+  .specialty-image-card {
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    background-color: #EBF2FA;
+    box-shadow: 0 16px 40px rgba(13, 27, 51, 0.08), 0 2px 8px rgba(13, 27, 51, 0.04);
+    border: 1px solid rgba(196, 154, 60, 0.25);
+    aspect-ratio: 16 / 10;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .specialty-image-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 20px 48px rgba(13, 27, 51, 0.12);
+  }
+
+  .specialty-hero-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .specialty-image-card:hover .specialty-hero-img {
+    transform: scale(1.02);
+  }
+
+  .image-card-border {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    border-radius: 20px;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.6);
+  }
+
+  /* Breadcrumb */
+  .breadcrumb-nav {
+    margin-bottom: var(--space-3);
+  }
+
+  .breadcrumb-list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    gap: var(--space-1);
+    font-size: 0.875rem;
+  }
+
+  .breadcrumb-link {
+    color: var(--color-slate);
+    text-decoration: none;
+    transition: color 0.15s ease;
+  }
+
+  .breadcrumb-link:hover,
+  .breadcrumb-link:focus-visible {
+    color: var(--color-navy);
+    text-decoration: underline;
+  }
+
+  .breadcrumb-separator {
+    color: var(--color-border);
+    user-select: none;
+  }
+
+  .breadcrumb-current {
+    color: var(--color-ink);
+    font-weight: 600;
+  }
+
+  /* Signature 72 × 3 px Gold Rule */
+  .gold-rule {
+    width: 72px;
+    height: 3px;
+    background-color: var(--color-gold);
+    margin-bottom: var(--space-3);
+  }
+
+  /* H1 & Deck */
+  .specialty-title {
+    font-size: clamp(2rem, 3.5vw, 2.75rem);
+    font-weight: 800;
+    line-height: 1.15;
+    color: var(--color-navy);
+    letter-spacing: -0.02em;
+    margin: 0 0 var(--space-2) 0;
+  }
+
+  .specialty-deck {
+    font-size: 1.125rem;
+    line-height: 1.6;
+    color: var(--color-slate);
+    max-width: 800px;
+    margin: 0 0 var(--space-4) 0;
+  }
+
+  /* Status Badges */
+  .specialty-status-wrap {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    flex-wrap: wrap;
+  }
+
+  .badge-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: 9999px;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    line-height: 1.4;
+  }
+
+  .badge-status.status-accepting {
+    background-color: rgba(38, 115, 77, 0.12);
+    color: var(--color-success);
+    border: 1px solid rgba(38, 115, 77, 0.25);
+  }
+
+  .badge-status.status-on-request {
+    background-color: rgba(91, 106, 128, 0.12);
+    color: var(--color-slate);
+    border: 1px solid rgba(91, 106, 128, 0.22);
+  }
+
+  .status-indicator {
+    font-size: 0.625rem;
+  }
+
+  .badge-dept-secondary {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 12px;
+    border-radius: 9999px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    background-color: rgba(20, 41, 75, 0.06);
+    color: var(--color-navy);
+  }
+
+  /* --------------------------------------------------------------------------
+     TWO-COLUMN SECTION
+     -------------------------------------------------------------------------- */
+  .specialty-main-section {
+    padding-top: var(--space-8);
+    padding-bottom: var(--space-8);
+  }
+
+  .specialty-main-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-left: var(--space-4);
+    padding-right: var(--space-4);
+  }
+
+  .specialty-columns-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-8);
+    align-items: start;
+  }
+
+  @media (max-width: 900px) {
+    .specialty-columns-grid {
+      grid-template-columns: 1fr;
+      gap: var(--space-6);
+    }
+  }
+
+  .column-heading {
+    font-size: 1.375rem;
+    font-weight: 800;
+    color: var(--color-navy);
+    margin: 0 0 var(--space-4) 0;
+    letter-spacing: -0.01em;
+  }
+
+  /* Covers List */
+  .covers-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 var(--space-4) 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .covers-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: var(--color-ink);
+  }
+
+  .check-icon {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .covers-disclaimer {
+    font-size: 0.875rem;
+    color: var(--color-slate);
+    line-height: 1.55;
+    background-color: var(--color-mist);
+    padding: var(--space-3);
+    border-radius: 6px;
+    border-left: 3px solid var(--color-border);
+    margin-bottom: var(--space-4);
+  }
+
+  /* Amber Clinical Review Notice */
+  .clinical-review-notice {
+    background-color: #FFF9EE;
+    border: 1px solid #F2C94C;
+    border-radius: 6px;
+    padding: var(--space-3);
+    margin-bottom: var(--space-5);
+  }
+
+  .notice-text {
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: #8A6726;
+    margin: 0;
+  }
+
+  .notice-prefix {
+    color: #704F18;
+    font-weight: 800;
+  }
+
+  /* CTA Button */
+  .covers-cta-wrap {
+    margin-top: var(--space-4);
+  }
+
+  .btn-primary-opinion {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background-color: var(--color-navy);
+    color: #FFFFFF;
+    font-weight: 700;
+    font-size: 0.95rem;
+    padding: 14px 28px;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: background-color 0.18s ease, transform 0.15s ease, box-shadow 0.18s ease;
+    box-shadow: 0 2px 8px rgba(20, 41, 75, 0.18);
+  }
+
+  .btn-primary-opinion:hover {
+    background-color: var(--color-deep-navy);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(20, 41, 75, 0.24);
+  }
+
+  .btn-primary-opinion:focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 3px;
+  }
+
+  .cta-arrow {
+    transition: transform 0.15s ease;
+  }
+
+  .btn-primary-opinion:hover .cta-arrow {
+    transform: translateX(3px);
+  }
+
+  /* Arabic Advisory */
+  .arabic-cta-advisory {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background-color: #F8FAFD;
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    padding: var(--space-3);
+  }
+
+  .advisory-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    background-color: var(--color-navy);
+    color: #fff;
+    border-radius: 50%;
+    font-weight: 700;
+    font-size: 0.8rem;
+    flex-shrink: 0;
+  }
+
+  .advisory-text {
+    font-size: 0.875rem;
+    color: var(--color-slate);
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  /* Conditions List */
+  .conditions-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .condition-row {
+    background-color: #FFFFFF;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: var(--space-3) var(--space-4);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .condition-row:hover {
+    border-color: rgba(196, 154, 60, 0.4);
+    box-shadow: 0 2px 10px rgba(13, 27, 51, 0.05);
+  }
+
+  .condition-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--color-navy);
+    margin: 0 0 4px 0;
+  }
+
+  .condition-desc {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--color-slate);
+    margin: 0;
+  }
+
+  /* --------------------------------------------------------------------------
+     RECORDS GUIDANCE SECTION
+     -------------------------------------------------------------------------- */
+  .records-guidance-section {
+    background-color: var(--color-mist);
+    padding-top: var(--space-8);
+    padding-bottom: var(--space-8);
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .records-guidance-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-left: var(--space-4);
+    padding-right: var(--space-4);
+  }
+
+  .records-guidance-card {
+    background-color: #FFFFFF;
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    padding: var(--space-6);
+    box-shadow: 0 2px 12px rgba(13, 27, 51, 0.04);
+  }
+
+  .records-header {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    margin-bottom: var(--space-5);
+  }
+
+  .records-header-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    background-color: rgba(20, 41, 75, 0.06);
+    border-radius: 8px;
+    flex-shrink: 0;
+  }
+
+  .records-title {
+    font-size: 1.375rem;
+    font-weight: 800;
+    color: var(--color-navy);
+    margin: 0 0 4px 0;
+    letter-spacing: -0.01em;
+  }
+
+  .records-intro {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: var(--color-slate);
+    margin: 0;
+  }
+
+  .records-items-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 var(--space-5) 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-3);
+  }
+
+  @media (max-width: 768px) {
+    .records-items-list {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .record-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background-color: var(--color-surface-hover);
+    padding: 12px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--color-border-subtle);
+  }
+
+  .record-item-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background-color: var(--color-navy);
+    color: #FFFFFF;
+    font-size: 0.75rem;
+    font-weight: 700;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .record-item-text {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--color-ink);
+  }
+
+  .records-disclaimer-box {
+    background-color: rgba(20, 41, 75, 0.04);
+    border-radius: 6px;
+    padding: var(--space-3) var(--space-4);
+  }
+
+  .records-disclaimer-text {
+    font-size: 0.85rem;
+    line-height: 1.5;
+    color: var(--color-slate);
+    margin: 0;
+  }
+
+  /* --------------------------------------------------------------------------
+     COORDINATION ROLE BOUNDARY SECTION
+     -------------------------------------------------------------------------- */
+  .coordination-boundary-section {
+    padding-top: var(--space-8);
+    padding-bottom: var(--space-8);
+  }
+
+  .coordination-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-left: var(--space-4);
+    padding-right: var(--space-4);
+  }
+
+  .coordination-card {
+    background-color: #F8FAFD;
+    border: 1px solid var(--color-border);
+    border-left: 4px solid var(--color-navy);
+    border-radius: 8px;
+    padding: var(--space-5);
+  }
+
+  .coordination-badge-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background-color: rgba(20, 41, 75, 0.08);
+    color: var(--color-navy);
+    font-size: 0.775rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 9999px;
+    margin-bottom: var(--space-2);
+  }
+
+  .coordination-title {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--color-navy);
+    margin: 0 0 var(--space-2) 0;
+  }
+
+  .coordination-text {
+    font-size: 0.925rem;
+    line-height: 1.6;
+    color: var(--color-slate);
+    margin: 0;
+  }
+
+  /* --------------------------------------------------------------------------
+     RTL (RIGHT-TO-LEFT) ARABIC MIRRORING SUPPORT
+     -------------------------------------------------------------------------- */
+  :global([dir="rtl"]) .specialty-page-root {
+    text-align: right;
+  }
+
+  :global([dir="rtl"]) .gold-rule {
+    margin-left: auto;
+    margin-right: 0;
+  }
+
+  :global([dir="rtl"]) .covers-disclaimer {
+    border-left: none;
+    border-right: 3px solid var(--color-border);
+  }
+
+  :global([dir="rtl"]) .coordination-card {
+    border-left: 1px solid var(--color-border);
+    border-right: 4px solid var(--color-navy);
+  }
+
+  :global([dir="rtl"]) .btn-primary-opinion .cta-arrow {
+    transform: rotate(180deg);
+  }
+
+  :global([dir="rtl"]) .btn-primary-opinion:hover .cta-arrow {
+    transform: rotate(180deg) translateX(3px);
+  }
+</style>
+

@@ -1,0 +1,1102 @@
+---
+/**
+ * src/pages/en/knowledge-centre/search/index.astro
+ * Dedicated Knowledge Centre Search Results Page.
+ *
+ * Implements:
+ * - Direct URL parameter search: /en/knowledge-centre/search/?q=[term]
+ * - Instant clinical search across all 15 specialties and 105 articles
+ * - Highlighting of matched terms
+ * - Clean cards showing specialty image, title, description, reading time
+ * - Entire card clickable linking to exact article or specialty hub
+ * - Search refinement input bar & breadcrumb return to Knowledge Centre
+ * - Full responsive design (desktop, tablet, mobile)
+ */
+import BaseLayout from '../../../../layouts/BaseLayout.astro';
+import { unifiedSpecialties, getSpecialtyImage } from '../../../../data/unifiedSpecialties';
+import { knowledgeArticles } from '../../../../data/knowledgeData';
+
+// Medical synonyms & keywords for Knowledge Centre search
+const specialtySynonyms: Record<string, string[]> = {
+  'cardiology': ['heart', 'heart attack', 'cardiac', 'coronary artery disease', 'cad', 'angioplasty', 'stenting', 'bypass', 'cabg', 'valve replacement', 'pacemaker', 'aicd', 'heart failure', 'chest pain', 'arrhythmia'],
+  'oncology': ['cancer', 'cancer treatment', 'breast cancer', 'lung cancer', 'blood cancer', 'leukemia', 'leukaemia', 'tumor', 'tumour', 'chemotherapy', 'radiation therapy', 'immunotherapy', 'car-t', 'car t', 'cyberknife', 'oncologist', 'biopsy'],
+  'neurology': ['brain', 'stroke', 'stroke warning signs', 'nervous system', 'parkinson', 'dbs', 'deep brain stimulation', 'epilepsy', 'seizure', 'neuro', 'headache', 'aneurysm'],
+  'orthopedics': ['knee', 'knee replacement', 'joint replacement', 'hip replacement', 'bone', 'joint', 'ortho', 'acl', 'acl injury', 'shoulder replacement', 'osteoarthritis', 'arthritis', 'robotic knee replacement', 'physiotherapy'],
+  'spine-surgery': ['spine', 'slip disc', 'slipped disc', 'back pain', 'sciatica', 'scoliosis', 'disc replacement', 'spinal decompression', 'neck pain', 'vertebra'],
+  'hair-transplantation': ['hair', 'hair loss', 'hair transplant', 'fue', 'fut', 'hair grafts', 'alopecia', 'baldness', 'hair restoration', 'follicle'],
+  'weight-loss-surgery': ['weight loss', 'bariatric', 'bariatric surgery', 'obesity', 'gastric sleeve', 'gastric bypass', 'stomach', 'metabolic surgery', 'weight loss surgery'],
+  'ivf': ['ivf', 'fertility', 'infertility', 'reproductive', 'egg retrieval', 'embryo transfer', 'embryo freezing', 'iui', 'pregnancy', 'ivf treatment', 'test tube baby'],
+  'bone-marrow-transplant': ['bone marrow', 'bone marrow transplant', 'bmt', 'stem cell', 'stem cell transplant', 'autologous', 'allogeneic', 'gvhd', 'graft versus host', 'donor matching', 'hla matching'],
+  'kidney-transplant': ['kidney', 'kidney transplant', 'renal', 'renal transplant', 'ckd', 'chronic kidney disease', 'dialysis', 'living donor', 'deceased donor', 'immunosuppression', 'nephrology'],
+  'liver-transplant': ['liver', 'liver transplant', 'cirrhosis', 'hepatobiliary', 'living donor liver', 'hepatitis', 'gastroenterology'],
+  'dental-care': ['dental', 'dental care', 'teeth', 'dental implants', 'dentist', 'oral surgery', 'full mouth rehabilitation', 'orthognathic', 'maxillofacial'],
+  'ayush-wellness': ['ayush', 'ayush wellness', 'ayurveda', 'panchakarma', 'holistic', 'yoga', 'ayush visa', 'wellness therapy'],
+  'general-surgery': ['general surgery', 'surgery', 'laparoscopic', 'hernia', 'hernia repair', 'gallbladder', 'gallstones', 'appendix', 'minimally invasive surgery'],
+  'cosmetic-surgery': ['cosmetic', 'cosmetic surgery', 'plastic surgery', 'rhinoplasty', 'liposuction', 'body contouring', 'facelift', 'botox', 'scar revision', 'aesthetic surgery']
+};
+
+const searchSpecialties = unifiedSpecialties.map(spec => ({
+  type: 'specialty',
+  name: spec.name,
+  slug: spec.slug,
+  url: `/en/knowledge-centre/${spec.slug}/`,
+  desc: spec.shortDesc,
+  image: spec.image,
+  count: spec.articleCount,
+  keywords: (specialtySynonyms[spec.slug] || []).concat([spec.name.toLowerCase(), spec.slug])
+}));
+
+const searchArticles = knowledgeArticles.map(art => ({
+  type: 'article',
+  title: art.title,
+  slug: art.slug,
+  specialtySlug: art.specialtySlug,
+  specialtyTitle: art.specialtyTitle,
+  url: `/en/knowledge-centre/${art.specialtySlug}/${art.slug}/`,
+  readingTime: art.readingTime,
+  overview: art.overview,
+  image: getSpecialtyImage(art.specialtySlug),
+  keywords: [
+    art.title.toLowerCase(),
+    art.specialtyTitle.toLowerCase(),
+    ...(specialtySynonyms[art.specialtySlug] || [])
+  ]
+}));
+
+const searchIndexJson = JSON.stringify({
+  specialties: searchSpecialties,
+  articles: searchArticles
+});
+---
+
+<BaseLayout
+  title="Search Results | Nuhavi Health Knowledge Centre"
+  description="Search patient education articles and clinical guides across all 15 medical specialties at Nuhavi Health."
+  lang="en"
+>
+  <main class="kc-search-page" id="main-content">
+    <!-- HERO HEADER WITH SEARCH BAR -->
+    <header class="search-hero-section">
+      <div class="search-container">
+        <!-- Top Breadcrumbs & Back Nav -->
+        <div class="search-breadcrumbs-bar">
+          <nav class="kc-breadcrumbs" aria-label="Breadcrumb">
+            <a href="/en/knowledge-centre/" class="crumb-link">Knowledge Centre</a>
+            <span class="crumb-sep" aria-hidden="true">/</span>
+            <span class="crumb-current">Search</span>
+          </nav>
+
+          <a href="/en/knowledge-centre/" class="back-to-kc-link">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            <span>Back to Knowledge Centre</span>
+          </a>
+        </div>
+
+        <span class="search-kicker">KNOWLEDGE CENTRE SEARCH</span>
+        <h1 class="search-title" id="page-main-heading">
+          Search results for "<span id="active-query-text" class="query-term-highlight">...</span>"
+        </h1>
+        <p class="search-subtitle">
+          Doctor-reviewed guides and medical specialty information written in plain language.
+        </p>
+
+        <!-- Search Refinement Input Box -->
+        <form class="search-input-box" id="kc-search-refine-form" role="search" aria-label="Search all conditions and treatments">
+          <svg class="search-box-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2.2" aria-hidden="true">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input
+            type="text"
+            id="kc-search-query-input"
+            class="search-box-input"
+            placeholder="Search a condition, treatment or specialty, e.g. cancer, knee replacement, heart attack"
+            aria-label="Search term"
+            autocomplete="off"
+          />
+          <button type="submit" class="search-box-submit-btn">
+            <span>Search</span>
+          </button>
+        </form>
+      </div>
+    </header>
+
+    <!-- RESULTS SUMMARY STATUS BAR -->
+    <section class="results-status-bar" id="results-status-bar" aria-live="polite">
+      <div class="search-container status-bar-container">
+        <div class="status-left">
+          <span class="status-count-badge" id="status-count-badge">Searching...</span>
+          <span class="status-query-text" id="status-query-text"></span>
+        </div>
+        <div class="status-right">
+          <a href="/en/resources/" class="browse-all-link">Browse all 145 articles →</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- MAIN RESULTS CONTENT AREA -->
+    <div class="search-container search-body-container">
+      <!-- 1. MATCHING SPECIALTIES SECTION -->
+      <section class="results-group-section" id="specialties-results-group" style="display: none;">
+        <div class="group-header">
+          <h2 class="group-heading">
+            Matching Specialties <span class="group-count-badge" id="spec-group-count">0</span>
+          </h2>
+          <span class="group-hint">Explore the complete specialty hub for comprehensive guides & videos</span>
+        </div>
+        <div class="specialties-grid" id="specialties-cards-container">
+          <!-- Injected via client script -->
+        </div>
+      </section>
+
+      <!-- 2. MATCHING ARTICLES SECTION -->
+      <section class="results-group-section" id="articles-results-group" style="display: none;">
+        <div class="group-header">
+          <h2 class="group-heading">
+            Matching Articles <span class="group-count-badge" id="art-group-count">0</span>
+          </h2>
+          <span class="group-hint">Doctor-reviewed guides with treatment steps, recovery times & costs</span>
+        </div>
+        <div class="articles-cards-grid" id="articles-cards-container">
+          <!-- Injected via client script -->
+        </div>
+      </section>
+
+      <!-- 3. NO RESULTS STATE -->
+      <section class="no-results-panel" id="no-results-panel" style="display: none;">
+        <div class="no-results-icon-wrap" aria-hidden="true">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#A88B5A" stroke-width="1.8">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            <line x1="8" y1="11" x2="14" y2="11"></line>
+          </svg>
+        </div>
+        <h2 class="no-results-title">No matching articles found for "<span id="no-results-query-term"></span>"</h2>
+        <p class="no-results-desc">
+          We couldn't find an exact match for your search. Try checking your spelling or search using another medical term or condition name.
+        </p>
+
+        <div class="no-results-suggestions-box">
+          <h3 class="suggestions-title">Or explore one of our 15 medical specialties directly:</h3>
+          <div class="specialties-quick-chips">
+            {unifiedSpecialties.map(spec => (
+              <a href={`/en/knowledge-centre/${spec.slug}/`} class="quick-chip-item">
+                <img src={spec.image} alt="" class="chip-thumb" width="22" height="22" loading="lazy" />
+                <span>{spec.name}</span>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- BOTTOM CONSULTATION CTA BANNER -->
+    <section class="kc-bottom-cta-banner">
+      <div class="search-container">
+        <div class="cta-inner-card">
+          <div class="cta-text-col">
+            <h3 class="cta-title">Not sure which specialty or treatment you need?</h3>
+            <p class="cta-desc">
+              Share your diagnosis or reports. A senior doctor reviews your case within 1 working day and connects you with accredited hospitals in Hyderabad.
+            </p>
+          </div>
+          <div class="cta-action-col">
+            <a href="/en/request-opinion/" class="btn-talk-doctor">
+              Talk to a doctor
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- EMBEDDED KNOWLEDGE CENTRE SEARCH DATA -->
+    <script type="application/json" id="kc-search-index-json" set:html={searchIndexJson}></script>
+  </main>
+</BaseLayout>
+
+<style>
+  /* --------------------------------------------------------------------------
+     SEARCH PAGE BASE & PALETTE
+     -------------------------------------------------------------------------- */
+  .kc-search-page {
+    background-color: #F8FAFC;
+    min-height: 80vh;
+    color: #0F2340;
+    font-family: var(--font-family-base, 'Inter', sans-serif);
+  }
+
+  .search-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-left: clamp(16px, 3vw, 32px);
+    padding-right: clamp(16px, 3vw, 32px);
+    box-sizing: border-box;
+  }
+
+  /* --------------------------------------------------------------------------
+     HERO HEADER SECTION (DEEP NAVY #0F2340)
+     -------------------------------------------------------------------------- */
+  .search-hero-section {
+    background: linear-gradient(135deg, #09172A 0%, #0F2340 50%, #162E52 100%);
+    color: #FFFFFF;
+    padding-top: clamp(24px, 4vw, 40px);
+    padding-bottom: clamp(36px, 5vw, 56px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .search-breadcrumbs-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .kc-breadcrumbs {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8125rem;
+    color: #94A3B8;
+  }
+
+  .crumb-link {
+    color: #94A3B8;
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+
+  .crumb-link:hover {
+    color: #FFFFFF;
+  }
+
+  .crumb-sep {
+    color: #64748B;
+  }
+
+  .crumb-current {
+    color: #CBD5E1;
+    font-weight: 500;
+  }
+
+  .back-to-kc-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #A88B5A;
+    text-decoration: none;
+    background-color: rgba(168, 139, 90, 0.12);
+    border: 1px solid rgba(168, 139, 90, 0.3);
+    padding: 6px 14px;
+    border-radius: 9999px;
+    transition: all 0.15s ease;
+  }
+
+  .back-to-kc-link:hover {
+    background-color: #A88B5A;
+    color: #0F2340;
+  }
+
+  .search-kicker {
+    display: inline-block;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: #A88B5A;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .search-title {
+    font-family: var(--font-family-heading, 'Cormorant Garamond', Georgia, serif);
+    font-size: clamp(2rem, 3.8vw, 3rem);
+    line-height: 1.15;
+    font-weight: 700;
+    color: #FFFFFF;
+    margin: 0 0 8px;
+  }
+
+  .query-term-highlight {
+    color: #E2C98E;
+    font-style: italic;
+  }
+
+  .search-subtitle {
+    font-size: clamp(0.9375rem, 1.2vw, 1.05rem);
+    color: #CBD5E1;
+    margin: 0 0 24px;
+    max-width: 680px;
+    line-height: 1.5;
+  }
+
+  /* Search Input Box in Hero */
+  .search-input-box {
+    display: flex;
+    align-items: center;
+    background-color: #FFFFFF;
+    border: 1px solid #DCE3EC;
+    border-radius: 10px;
+    padding: 6px 8px 6px 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    max-width: 720px;
+  }
+
+  .search-box-icon {
+    flex-shrink: 0;
+    margin-right: 12px;
+  }
+
+  .search-box-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 0.95rem;
+    color: #0F2340;
+    font-family: inherit;
+    background: transparent;
+    padding: 6px 0;
+  }
+
+  .search-box-input::placeholder {
+    color: #94A3B8;
+  }
+
+  .search-box-submit-btn {
+    background-color: #A88B5A;
+    color: #FFFFFF;
+    font-weight: 600;
+    font-size: 0.875rem;
+    padding: 10px 22px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.15s ease, transform 0.15s ease;
+    flex-shrink: 0;
+  }
+
+  .search-box-submit-btn:hover {
+    background-color: #927545;
+  }
+
+  /* --------------------------------------------------------------------------
+     STATUS BAR
+     -------------------------------------------------------------------------- */
+  .results-status-bar {
+    background-color: #FFFFFF;
+    border-bottom: 1px solid #E2E8F0;
+    padding: 14px 0;
+  }
+
+  .status-bar-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .status-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.9rem;
+    color: #475569;
+  }
+
+  .status-count-badge {
+    display: inline-block;
+    background-color: #0F2340;
+    color: #FFFFFF;
+    font-size: 0.775rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 9999px;
+  }
+
+  .status-query-text {
+    font-weight: 500;
+    color: #0F2340;
+  }
+
+  .browse-all-link {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #A88B5A;
+    text-decoration: none;
+  }
+
+  .browse-all-link:hover {
+    text-decoration: underline;
+  }
+
+  /* --------------------------------------------------------------------------
+     MAIN RESULTS GROUPS
+     -------------------------------------------------------------------------- */
+  .search-body-container {
+    padding-top: clamp(24px, 4vw, 40px);
+    padding-bottom: clamp(48px, 6vw, 72px);
+  }
+
+  .results-group-section {
+    margin-bottom: 48px;
+  }
+
+  .group-header {
+    margin-bottom: 20px;
+  }
+
+  .group-heading {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-family-heading, 'Cormorant Garamond', Georgia, serif);
+    font-size: 1.65rem;
+    font-weight: 700;
+    color: #0F2340;
+    margin: 0 0 4px;
+  }
+
+  .group-count-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 24px;
+    padding: 0 8px;
+    background-color: rgba(168, 139, 90, 0.15);
+    color: #0F2340;
+    border-radius: 9999px;
+    font-family: var(--font-family-base, 'Inter', sans-serif);
+    font-size: 0.775rem;
+    font-weight: 700;
+  }
+
+  .group-hint {
+    font-size: 0.825rem;
+    color: #64748B;
+  }
+
+  /* Specialties Grid */
+  .specialties-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 18px;
+  }
+
+  :global(.specialty-result-card) {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background-color: #FFFFFF;
+    border: 1px solid #DCE3EC;
+    border-radius: 12px;
+    padding: 16px 20px;
+    text-decoration: none;
+    color: inherit;
+    box-shadow: 0 2px 8px rgba(15, 35, 64, 0.04);
+    transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
+  }
+
+  :global(.specialty-result-card:hover) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(15, 35, 64, 0.08);
+    border-color: #A88B5A;
+  }
+
+  :global(.spec-card-thumb) {
+    width: 52px;
+    height: 52px;
+    border-radius: 10px;
+    object-fit: contain;
+    background-color: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    flex-shrink: 0;
+  }
+
+  :global(.spec-card-info) {
+    flex: 1;
+    min-width: 0;
+  }
+
+  :global(.spec-card-name) {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #0F2340;
+    margin: 0 0 4px;
+  }
+
+  :global(.spec-card-desc) {
+    font-size: 0.785rem;
+    color: #64748B;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  :global(.spec-card-badge) {
+    display: inline-block;
+    background-color: rgba(168, 139, 90, 0.12);
+    color: #0F2340;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 9999px;
+    margin-top: 6px;
+  }
+
+  :global(.spec-card-arrow) {
+    color: #A88B5A;
+    font-weight: 700;
+    font-size: 1.25rem;
+    line-height: 1;
+    flex-shrink: 0;
+    transition: transform 0.16s ease;
+  }
+
+  :global(.specialty-result-card:hover .spec-card-arrow) {
+    transform: translateX(4px);
+  }
+
+  /* Articles Cards Grid */
+  .articles-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 22px;
+  }
+
+  :global(.article-result-card) {
+    display: flex;
+    flex-direction: column;
+    background-color: #FFFFFF;
+    border: 1px solid #DCE3EC;
+    border-radius: 14px;
+    padding: 22px;
+    text-decoration: none;
+    color: inherit;
+    box-shadow: 0 2px 10px rgba(15, 35, 64, 0.04);
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+  }
+
+  :global(.article-result-card:hover) {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 28px rgba(15, 35, 64, 0.1);
+    border-color: #A88B5A;
+  }
+
+  :global(.article-card-top) {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+
+  :global(.article-spec-thumb) {
+    width: 42px;
+    height: 42px;
+    border-radius: 8px;
+    object-fit: contain;
+    background-color: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    flex-shrink: 0;
+  }
+
+  :global(.article-spec-meta) {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  :global(.article-spec-tag) {
+    font-size: 0.725rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #A88B5A;
+  }
+
+  :global(.article-read-time) {
+    font-size: 0.725rem;
+    color: #64748B;
+  }
+
+  :global(.article-card-title) {
+    font-family: var(--font-family-heading, 'Cormorant Garamond', Georgia, serif);
+    font-size: 1.25rem;
+    line-height: 1.3;
+    font-weight: 700;
+    color: #0F2340;
+    margin: 0 0 10px;
+    transition: color 0.15s ease;
+  }
+
+  :global(.article-result-card:hover .article-card-title) {
+    color: #A88B5A;
+  }
+
+  :global(.article-card-overview) {
+    font-size: 0.85rem;
+    line-height: 1.55;
+    color: #475569;
+    margin: 0 0 16px;
+    flex: 1;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  :global(.article-card-footer) {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #A88B5A;
+    margin-top: auto;
+    border-top: 1px solid #F1F5F9;
+    padding-top: 12px;
+  }
+
+  :global(.article-result-card:hover .article-card-footer) {
+    text-decoration: underline;
+  }
+
+  :global(.search-mark-highlight) {
+    background-color: rgba(168, 139, 90, 0.22);
+    color: #0F2340;
+    font-weight: 700;
+    border-radius: 2px;
+    padding: 0 2px;
+  }
+
+  /* --------------------------------------------------------------------------
+     NO RESULTS PANEL
+     -------------------------------------------------------------------------- */
+  .no-results-panel {
+    background-color: #FFFFFF;
+    border: 1px solid #DCE3EC;
+    border-radius: 16px;
+    padding: clamp(32px, 5vw, 56px) clamp(20px, 4vw, 40px);
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(15, 35, 64, 0.05);
+  }
+
+  .no-results-icon-wrap {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 68px;
+    height: 68px;
+    border-radius: 50%;
+    background-color: rgba(168, 139, 90, 0.12);
+    margin-bottom: 20px;
+  }
+
+  .no-results-title {
+    font-family: var(--font-family-heading, 'Cormorant Garamond', Georgia, serif);
+    font-size: clamp(1.4rem, 2.4vw, 1.85rem);
+    font-weight: 700;
+    color: #0F2340;
+    margin: 0 0 10px;
+  }
+
+  .no-results-desc {
+    font-size: 0.95rem;
+    color: #64748B;
+    max-width: 620px;
+    margin: 0 auto 32px;
+    line-height: 1.55;
+  }
+
+  .no-results-suggestions-box {
+    border-top: 1px solid #E2E8F0;
+    padding-top: 28px;
+  }
+
+  .suggestions-title {
+    font-size: 0.875rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #475569;
+    margin: 0 0 16px;
+  }
+
+  .specialties-quick-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .quick-chip-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    background-color: #F8FAFC;
+    border: 1px solid #CBD5E1;
+    border-radius: 9999px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #0F2340;
+    text-decoration: none;
+    transition: all 0.15s ease;
+  }
+
+  .chip-thumb {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    object-fit: contain;
+    background-color: #FFFFFF;
+    border: 1px solid #E2E8F0;
+  }
+
+  .quick-chip-item:hover {
+    background-color: #0F2340;
+    color: #FFFFFF;
+    border-color: #0F2340;
+  }
+
+  /* --------------------------------------------------------------------------
+     BOTTOM CONSULTATION CTA BANNER
+     -------------------------------------------------------------------------- */
+  .kc-bottom-cta-banner {
+    background-color: #FFFFFF;
+    border-top: 1px solid #E2E8F0;
+    padding: clamp(32px, 5vw, 48px) 0;
+  }
+
+  .cta-inner-card {
+    background: linear-gradient(135deg, #09172A 0%, #0F2340 100%);
+    border-radius: 16px;
+    padding: clamp(24px, 4vw, 40px);
+    color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 24px;
+    box-shadow: 0 12px 32px rgba(15, 35, 64, 0.12);
+  }
+
+  .cta-text-col {
+    max-width: 680px;
+  }
+
+  .cta-title {
+    font-family: var(--font-family-heading, 'Cormorant Garamond', Georgia, serif);
+    font-size: clamp(1.4rem, 2.2vw, 1.8rem);
+    font-weight: 700;
+    margin: 0 0 8px;
+    color: #FFFFFF;
+  }
+
+  .cta-desc {
+    font-size: 0.925rem;
+    line-height: 1.55;
+    color: #CBD5E1;
+    margin: 0;
+  }
+
+  .btn-talk-doctor {
+    display: inline-block;
+    background-color: #A88B5A;
+    color: #FFFFFF;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    padding: 12px 28px;
+    border-radius: 8px;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background-color 0.15s ease, transform 0.15s ease;
+  }
+
+  .btn-talk-doctor:hover {
+    background-color: #927545;
+    transform: translateY(-1px);
+  }
+
+  /* --------------------------------------------------------------------------
+     RESPONSIVE BREAKPOINTS
+     -------------------------------------------------------------------------- */
+  @media (max-width: 768px) {
+    .articles-cards-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .specialties-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .search-input-box {
+      flex-direction: column;
+      align-items: stretch;
+      padding: 10px;
+      gap: 10px;
+    }
+
+    .search-box-icon {
+      display: none;
+    }
+
+    .search-box-input {
+      width: 100%;
+      padding: 4px 6px;
+    }
+
+    .search-box-submit-btn {
+      width: 100%;
+    }
+
+    .cta-inner-card {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .btn-talk-doctor {
+      width: 100%;
+      text-align: center;
+      box-sizing: border-box;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const dataEl = document.getElementById('kc-search-index-json');
+    if (!dataEl) return;
+
+    let indexData = { specialties: [], articles: [] };
+    try {
+      indexData = JSON.parse(dataEl.textContent || '{}');
+    } catch (e) {
+      console.error('Failed to parse search index JSON', e);
+      return;
+    }
+
+    const { specialties = [], articles = [] } = indexData;
+
+    const queryInput = document.getElementById('kc-search-query-input') as HTMLInputElement | null;
+    const refineForm = document.getElementById('kc-search-refine-form') as HTMLFormElement | null;
+    const activeQueryText = document.getElementById('active-query-text');
+    const statusCountBadge = document.getElementById('status-count-badge');
+    const statusQueryText = document.getElementById('status-query-text');
+    const specGroup = document.getElementById('specialties-results-group');
+    const artGroup = document.getElementById('articles-results-group');
+    const noResultsPanel = document.getElementById('no-results-panel');
+    const specContainer = document.getElementById('specialties-cards-container');
+    const artContainer = document.getElementById('articles-cards-container');
+    const specGroupCount = document.getElementById('spec-group-count');
+    const artGroupCount = document.getElementById('art-group-count');
+    const noResultsQueryTerm = document.getElementById('no-results-query-term');
+
+    const STOP_WORDS = new Set(['in', 'of', 'and', 'the', 'to', 'for', 'a', 'an', 'is', 'on', 'at', 'by', 'care', 'what', 'how', 'does', 'or']);
+
+    function escapeHtml(str: string): string {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    function highlightMatch(text: string, query: string): string {
+      if (!query) return escapeHtml(text);
+      const safeQuery = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const tokens = safeQuery.split(/\s+/).filter((t: string) => t.length > 1);
+      if (tokens.length === 0) return escapeHtml(text);
+      const pattern = new RegExp(`(${tokens.join('|')})`, 'gi');
+      return escapeHtml(text).replace(pattern, '<mark class="search-mark-highlight">$1</mark>');
+    }
+
+    function executeSearch(rawQuery: string) {
+      const q = rawQuery.trim().toLowerCase();
+      if (!q) return { specialties: [], articles: [], totalCount: 0 };
+
+      const tokens = q.split(/\s+/).filter((t: string) => t.length > 0);
+      const significantTokens = tokens.filter((t: string) => !STOP_WORDS.has(t));
+      const activeTokens = significantTokens.length > 0 ? significantTokens : tokens;
+
+      function scoreItem(item: any): number {
+        const isSpec = item.type === 'specialty';
+        const title = (isSpec ? item.name : item.title).toLowerCase();
+        const desc = (isSpec ? item.desc : item.overview).toLowerCase();
+        const keywords: string[] = item.keywords || [];
+
+        let score = 0;
+
+        if (title === q) score += 200;
+        else if (title.startsWith(q)) score += 120;
+        else if (title.includes(q)) score += 80;
+
+        if (keywords.includes(q)) score += 100;
+        else if (keywords.some((k: string) => k === q)) score += 90;
+        else if (keywords.some((k: string) => k.includes(q))) score += 60;
+        else if (keywords.some((k: string) => q.includes(k) && k.length > 3)) score += 50;
+
+        if (desc.includes(q)) score += 30;
+
+        let matchedSigCount = 0;
+        for (const token of activeTokens) {
+          if (token.length < 2) continue;
+          if (title.includes(token)) {
+            score += 30;
+            matchedSigCount++;
+          } else if (keywords.some((k: string) => k.includes(token))) {
+            score += 20;
+            matchedSigCount++;
+          } else if (desc.includes(token)) {
+            score += 8;
+            matchedSigCount++;
+          }
+        }
+
+        if (activeTokens.length > 1 && matchedSigCount === activeTokens.length) {
+          score += 40;
+        }
+
+        return score;
+      }
+
+      const scoredSpecs = specialties
+        .map((s: any) => ({ item: s, score: scoreItem(s) }))
+        .filter((res: any) => res.score >= 20)
+        .sort((a: any, b: any) => b.score - a.score);
+
+      const topSpecSlug = scoredSpecs.length > 0 ? scoredSpecs[0].item.slug : null;
+
+      const scoredArts = articles
+        .map((a: any) => {
+          let score = scoreItem(a);
+          if (score >= 20 && topSpecSlug && a.specialtySlug === topSpecSlug) {
+            score += 25;
+          }
+          return { item: a, score };
+        })
+        .filter((res: any) => res.score >= 25)
+        .sort((a: any, b: any) => b.score - a.score);
+
+      return {
+        specialties: scoredSpecs.map((r: any) => r.item),
+        articles: scoredArts.map((r: any) => r.item),
+        totalCount: scoredSpecs.length + scoredArts.length
+      };
+    }
+
+    function renderResults(query: string) {
+      const trimmed = query.trim();
+      if (activeQueryText) activeQueryText.textContent = trimmed || 'All';
+      if (queryInput) queryInput.value = trimmed;
+
+      if (!trimmed) {
+        if (statusCountBadge) statusCountBadge.textContent = '0 results';
+        if (statusQueryText) statusQueryText.textContent = 'Please enter a search term';
+        if (specGroup) specGroup.style.display = 'none';
+        if (artGroup) artGroup.style.display = 'none';
+        if (noResultsPanel) {
+          noResultsPanel.style.display = 'block';
+          if (noResultsQueryTerm) noResultsQueryTerm.textContent = '';
+        }
+        return;
+      }
+
+      const res = executeSearch(trimmed);
+      const { specialties: matchedSpecs, articles: matchedArts, totalCount } = res;
+
+      if (statusCountBadge) {
+        statusCountBadge.textContent = `${totalCount} ${totalCount === 1 ? 'result' : 'results'}`;
+      }
+      if (statusQueryText) {
+        statusQueryText.textContent = `for "${trimmed}"`;
+      }
+
+      if (totalCount === 0) {
+        if (specGroup) specGroup.style.display = 'none';
+        if (artGroup) artGroup.style.display = 'none';
+        if (noResultsPanel) {
+          noResultsPanel.style.display = 'block';
+          if (noResultsQueryTerm) noResultsQueryTerm.textContent = trimmed;
+        }
+      } else {
+        if (noResultsPanel) noResultsPanel.style.display = 'none';
+
+        // Render Matching Specialties
+        if (matchedSpecs.length > 0 && specContainer && specGroup) {
+          specGroup.style.display = 'block';
+          if (specGroupCount) specGroupCount.textContent = String(matchedSpecs.length);
+          specContainer.innerHTML = matchedSpecs.map((s: any) => `
+            <a href="${s.url}" class="specialty-result-card" aria-label="${escapeHtml(s.name)} Specialty">
+              <img src="${s.image}" alt="${escapeHtml(s.name)}" class="spec-card-thumb" width="52" height="52" loading="lazy" />
+              <div class="spec-card-info">
+                <h3 class="spec-card-name">${highlightMatch(s.name, trimmed)}</h3>
+                <p class="spec-card-desc">${escapeHtml(s.desc)}</p>
+                <span class="spec-card-badge">${s.count > 0 ? `${s.count} articles` : 'Specialist review'}</span>
+              </div>
+              <span class="spec-card-arrow" aria-hidden="true">→</span>
+            </a>
+          `).join('');
+        } else if (specGroup) {
+          specGroup.style.display = 'none';
+        }
+
+        // Render Matching Articles
+        if (matchedArts.length > 0 && artContainer && artGroup) {
+          artGroup.style.display = 'block';
+          if (artGroupCount) artGroupCount.textContent = String(matchedArts.length);
+          artContainer.innerHTML = matchedArts.map((a: any) => `
+            <a href="${a.url}" class="article-result-card" aria-label="${escapeHtml(a.title)}">
+              <div class="article-card-top">
+                <img src="${a.image}" alt="${escapeHtml(a.specialtyTitle)}" class="article-spec-thumb" width="42" height="42" loading="lazy" />
+                <div class="article-spec-meta">
+                  <span class="article-spec-tag">${escapeHtml(a.specialtyTitle)}</span>
+                  <span class="article-read-time">${escapeHtml(a.readingTime)}</span>
+                </div>
+              </div>
+              <h3 class="article-card-title">${highlightMatch(a.title, trimmed)}</h3>
+              <p class="article-card-overview">${escapeHtml(a.overview || '')}</p>
+              <div class="article-card-footer">
+                <span>Read full guide</span>
+                <span aria-hidden="true">→</span>
+              </div>
+            </a>
+          `).join('');
+        } else if (artGroup) {
+          artGroup.style.display = 'none';
+        }
+      }
+    }
+
+    // Read query from URL: ?q=...
+    const urlParams = new URLSearchParams(window.location.search);
+    const initialQuery = urlParams.get('q') || urlParams.get('treatment') || '';
+    renderResults(initialQuery);
+
+    // Form submission on results page
+    refineForm?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const newQuery = (queryInput?.value || '').trim();
+      const newUrl = `${window.location.pathname}?q=${encodeURIComponent(newQuery)}`;
+      window.history.pushState({ path: newUrl }, '', newUrl);
+      renderResults(newQuery);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // Handle browser back/forward buttons
+    window.addEventListener('popstate', () => {
+      const currentParams = new URLSearchParams(window.location.search);
+      const q = currentParams.get('q') || currentParams.get('treatment') || '';
+      renderResults(q);
+    });
+  });
+</script>
+

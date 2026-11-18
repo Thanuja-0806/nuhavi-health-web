@@ -1,0 +1,361 @@
+---
+/**
+ * src/components/knowledge-centre/SpecialtyHeroBanner.astro
+ * Seamless Medical Specialty Hero Banner for Nuhavi Health Knowledge Centre
+ * 
+ * Visual Reference: Renova Hospitals Cardiology Hero Banner
+ * - Single, continuous, full-width medical hero banner.
+ * - LEFT SIDE:
+ *     - Clean breadcrumb navigation.
+ *     - Specialty clinical kicker.
+ *     - Prominent H1 specialty name.
+ *     - Plain-language specialty description.
+ *     - Zero visual clutter, crystal-clear readability.
+ * - RIGHT SIDE:
+ *     - Specialty-specific medical visual seamlessly integrated into the background.
+ *     - Blended naturally with smooth lighting, radial medical aura, and ECG/waveform pulses.
+ *     - NO separate box, NO floating card, NO border, NO split-screen.
+ * - ECG and decorative medical lines remain on the right half only, never crossing the text.
+ */
+
+export interface SpecialtyThemeData {
+  kicker: string;
+  badge: string;
+  kickerColor: string;
+  bannerImg: string;
+}
+
+const specialtyThemes: Record<string, SpecialtyThemeData> = {
+  'cardiology': {
+    kicker: 'DOCTOR-LED CARDIAC SCIENCES',
+    badge: 'Cardiovascular Care',
+    kickerColor: '#7d1d2d', // Rich burgundy accent
+    bannerImg: '/images/specialties/hero/cardiology-seamless-banner.jpg'
+  },
+  'oncology': {
+    kicker: 'SPECIALIST CANCER CARE & ONCOLOGY',
+    badge: 'Precision Oncology',
+    kickerColor: '#1e5438', // Healing-inspired deep sage accent
+    bannerImg: '/images/specialties/hero/oncology-seamless-banner.jpg'
+  },
+  'neurology': {
+    kicker: 'ADVANCED NEUROSCIENCES & BRAIN HEALTH',
+    badge: 'Brain & Nervous System',
+    kickerColor: '#164069', // Refined deep-blue accent
+    bannerImg: '/images/specialties/hero/neurology-seamless-banner.jpg'
+  },
+  'orthopedics': {
+    kicker: 'ORTHOPEDIC SURGERY & JOINT RECONSTRUCTION',
+    badge: 'Joint & Skeletal Health',
+    kickerColor: '#155658', // Muted teal accent
+    bannerImg: '/images/specialties/hero/orthopedics-seamless-banner.jpg'
+  },
+  'spine-surgery': {
+    kicker: 'MINIMALLY INVASIVE SPINE & NEUROSURGERY',
+    badge: 'Vertebral & Spinal Care',
+    kickerColor: '#1f3a56', // Darker slate-blue accent
+    bannerImg: '/images/specialties/hero/spine-surgery-seamless-banner.jpg'
+  },
+  'hair-transplantation': {
+    kicker: 'CLINICAL TRICHOLOGY & FOLLICULAR RESTORATION',
+    badge: 'FUE & DHI Techniques',
+    kickerColor: '#68482a', // Soft clinical brown accent (avoids pink/salon)
+    bannerImg: '/images/specialties/hero/hair-transplantation-seamless-banner.jpg'
+  },
+  'weight-loss-surgery': {
+    kicker: 'BARIATRIC & METABOLIC SURGICAL SCIENCES',
+    badge: 'Digestive & Metabolic Health',
+    kickerColor: '#23573c', // Natural sage accent (avoids fitness green)
+    bannerImg: '/images/specialties/hero/weight-loss-surgery-seamless-banner.jpg'
+  },
+  'ivf': {
+    kicker: 'REPRODUCTIVE ENDOCRINOLOGY & EMBRYOLOGY',
+    badge: 'Fertility & Reproductive Care',
+    kickerColor: '#543578', // Gentle lavender complementary accent
+    bannerImg: '/images/specialties/hero/ivf-seamless-banner.jpg'
+  },
+  'bone-marrow-transplant': {
+    kicker: 'CELLULAR THERAPY & STEM CELL TRANSPLANTATION',
+    badge: 'Hematopoietic Stem Cells',
+    kickerColor: '#582e60', // Gentle plum accent
+    bannerImg: '/images/specialties/hero/bone-marrow-transplant-seamless-banner.jpg'
+  },
+  'kidney-transplant': {
+    kicker: 'RENAL SCIENCES & TRANSPLANT SURGERY',
+    badge: 'Nephrology & Renal Care',
+    kickerColor: '#1e5641', // Clean pale green / muted green accent
+    bannerImg: '/images/specialties/hero/kidney-transplant-seamless-banner.jpg'
+  },
+  'liver-transplant': {
+    kicker: 'HEPATOBILIARY SURGERY & LIVER TRANSPLANTATION',
+    badge: 'Hepatic Sciences',
+    kickerColor: '#873b20', // Warm peach & soft terracotta accent
+    bannerImg: '/images/specialties/hero/liver-transplant-seamless-banner.jpg'
+  },
+  'dental-care': {
+    kicker: 'MAXILLOFACIAL & ADVANCED DENTAL SURGERY',
+    badge: 'Dental & Oral Health',
+    kickerColor: '#155e54', // Fresh mint & subtle teal accent
+    bannerImg: '/images/specialties/hero/dental-care-seamless-banner.jpg'
+  },
+  'ayush-wellness': {
+    kicker: 'INTEGRATIVE AYURVEDA & HOLISTIC HEALTH',
+    badge: 'Herbal Wellness & Rejuvenation',
+    kickerColor: '#3b5b24', // Deep botanical olive accent
+    bannerImg: '/images/specialties/hero/ayush-wellness-seamless-banner.jpg'
+  },
+  'general-surgery': {
+    kicker: 'MINIMALLY INVASIVE & LAPAROSCOPIC SURGERY',
+    badge: 'Advanced Surgical Theater',
+    kickerColor: '#224063', // Deep clinical navy slate accent
+    bannerImg: '/images/specialties/hero/general-surgery-seamless-banner.jpg'
+  },
+  'cosmetic-surgery': {
+    kicker: 'AESTHETIC & RECONSTRUCTIVE PLASTIC SURGERY',
+    badge: 'Facial Aesthetics & Dermal Care',
+    kickerColor: '#634f3a', // Elegant champagne & muted taupe accent
+    bannerImg: '/images/specialties/hero/cosmetic-surgery-seamless-banner.jpg'
+  }
+};
+
+// Fix orthopedics banner image if needed
+if (specialtyThemes['orthopedics']) {
+  specialtyThemes['orthopedics'].bannerImg = '/images/specialties/hero/orthopedics-seamless-banner.jpg';
+}
+
+interface Props {
+  slug: string;
+  title: string;
+  description: string;
+  breadcrumbHref?: string;
+}
+
+const { slug, title, description, breadcrumbHref = '/en/knowledge-centre/' } = Astro.props;
+
+const theme = specialtyThemes[slug] || specialtyThemes['cardiology'];
+---
+
+<header
+  class="seamless-specialty-hero"
+  style={`--banner-bg: url('${theme.bannerImg}'); --kicker-color: ${theme.kickerColor};`}
+>
+  <div class="hero-inner-container">
+    <!-- Breadcrumbs -->
+    <nav class="seamless-breadcrumbs" aria-label="Breadcrumb">
+      <a href={breadcrumbHref} class="s-bc-link">Knowledge Centre</a>
+      <span class="s-bc-sep" aria-hidden="true">/</span>
+      <span class="s-bc-active" aria-current="page">{title}</span>
+    </nav>
+
+    <!-- Left-Aligned Content Box (Overlaying the clean left half of the seamless panoramic canvas) -->
+    <div class="seamless-text-panel">
+      <div class="s-kicker-row">
+        <span class="s-kicker-text">{theme.kicker}</span>
+        <span class="s-badge-tag">{theme.badge}</span>
+      </div>
+
+      <h1 class="s-title-h1">{title}</h1>
+      <p class="s-desc-body">{description}</p>
+
+      <div class="s-trust-row">
+        <div class="s-trust-item">
+          <svg class="s-trust-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+          </svg>
+          <span>Doctor-reviewed guides</span>
+        </div>
+        <div class="s-trust-item">
+          <svg class="s-trust-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+          </svg>
+          <span>Evidence-based clinical care</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<style>
+  /* SINGLE FULL-WIDTH SEAMLESS HERO BANNER */
+  .seamless-specialty-hero {
+    position: relative;
+    width: 100%;
+    min-height: 480px;
+    background-color: #f8fafc;
+    background-image: var(--banner-bg);
+    background-repeat: no-repeat;
+    background-position: right center;
+    background-size: cover;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+    box-shadow: 0 4px 20px -5px rgba(0, 0, 0, 0.04);
+    overflow: hidden;
+  }
+
+  .hero-inner-container {
+    width: 100%;
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 3.25rem 1.5rem;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Breadcrumb Navigation */
+  .seamless-breadcrumbs {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin-bottom: 1.5rem;
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    padding: 0.35rem 0.85rem;
+    border-radius: 9999px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+  }
+
+  .s-bc-link {
+    color: #475569;
+    text-decoration: none;
+    transition: color 0.15s ease;
+  }
+
+  .s-bc-link:hover {
+    color: #0f172a;
+    text-decoration: underline;
+  }
+
+  .s-bc-sep {
+    color: #94a3b8;
+  }
+
+  .s-bc-active {
+    color: #0f172a;
+    font-weight: 600;
+  }
+
+  /* Left-Side Typography Panel */
+  .seamless-text-panel {
+    max-width: 620px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+  }
+
+  .s-kicker-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .s-kicker-text {
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--kicker-color);
+  }
+
+  .s-badge-tag {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 0.2rem 0.55rem;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(15, 23, 42, 0.1);
+    color: #1e293b;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  }
+
+  .s-title-h1 {
+    font-size: clamp(2.35rem, 4.2vw, 3.4rem);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.028em;
+    color: #0a2540;
+    margin: 0;
+  }
+
+  .s-desc-body {
+    font-size: clamp(1.02rem, 1.3vw, 1.15rem);
+    line-height: 1.65;
+    color: #334155;
+    margin: 0.25rem 0 0.5rem 0;
+    max-width: 580px;
+    font-weight: 400;
+  }
+
+  .s-trust-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    margin-top: 0.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(15, 23, 42, 0.1);
+  }
+
+  .s-trust-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: 0.88rem;
+    color: #475569;
+    font-weight: 500;
+  }
+
+  .s-trust-icon {
+    width: 17px;
+    height: 17px;
+    color: var(--kicker-color);
+    flex-shrink: 0;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 900px) {
+    .seamless-specialty-hero {
+      min-height: auto;
+      background-position: 85% center;
+    }
+
+    .hero-inner-container {
+      padding: 2.5rem 1.25rem;
+    }
+
+    .seamless-text-panel {
+      max-width: 100%;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 1.75rem;
+      border-radius: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    }
+  }
+
+  @media (max-width: 640px) {
+    .hero-inner-container {
+      padding: 1.75rem 1rem;
+    }
+
+    .seamless-text-panel {
+      padding: 1.25rem;
+    }
+
+    .s-trust-row {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.65rem;
+    }
+  }
+</style>

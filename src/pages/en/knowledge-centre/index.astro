@@ -1,0 +1,1143 @@
+---
+/**
+ * src/pages/en/knowledge-centre/index.astro
+ * Nuhavi Health Knowledge Centre — Landing Page
+ * Visually matching the Claude reference screenshots exactly:
+ * - Deep navy Hero with search bar, 145 articles / 14 specialties deck, and 3 trust bullets
+ * - Browse by specialty: 14 responsive specialty cards with colored top accents and icons
+ * - Featured guides: 3 illustrated article cards (CAR-T, Stroke, Knee Replacement)
+ * - Most read and Latest articles: 2-column layout with 01-10 numbered rows
+ * - Explainer videos: 4 video preview cards matching reference layout
+ * - "Not sure which specialist you need?" CTA banner with Talk to a doctor button
+ * - Clean bottom Introduction & Medical Disclaimer
+ */
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import SpecialtyIcon from '../../../components/common/SpecialtyIcon.astro';
+import { getSpecialtyImage } from '../../../data/unifiedSpecialties';
+
+// 15 Specialties matching approved real medical photography and doctor-directed complementary palette
+const displaySpecialties = [
+  {
+    slug: 'cardiology',
+    title: 'Cardiology',
+    count: '10 articles',
+    border: '#E4CED1',
+    iconColor: '#7D1D2D', // Doctor burgundy accent
+    icon: 'cardiology',
+    image: '/images/specialties/cardiology.jpg'
+  },
+  {
+    slug: 'oncology',
+    title: 'Oncology',
+    count: '15 articles',
+    border: '#CCE0D3',
+    iconColor: '#1E5438', // Healing-inspired sage accent
+    icon: 'oncology',
+    image: '/images/specialties/oncology.jpg'
+  },
+  {
+    slug: 'neurology',
+    title: 'Neurology',
+    count: '10 articles',
+    border: '#CCDEED',
+    iconColor: '#164069', // Refined deep-blue accent
+    icon: 'neurology',
+    image: '/images/specialties/neurology.jpg'
+  },
+  {
+    slug: 'orthopedics',
+    title: 'Orthopedics',
+    count: '10 articles',
+    border: '#C6E2E2',
+    iconColor: '#155658', // Muted teal accent
+    icon: 'orthopedics',
+    image: '/images/specialties/orthopedics.jpg'
+  },
+  {
+    slug: 'spine-surgery',
+    title: 'Spine Surgery',
+    count: '10 articles',
+    border: '#CFDAE6',
+    iconColor: '#1F3A56', // Darker slate-blue accent
+    icon: 'spine-surgery',
+    image: '/images/specialties/spine-surgery.jpg'
+  },
+  {
+    slug: 'hair-transplantation',
+    title: 'Hair Transplantation',
+    count: '10 articles',
+    border: '#E5D8C1',
+    iconColor: '#68482A', // Soft clinical brown accent (avoids pink/salon)
+    icon: 'hair-transplantation',
+    image: '/images/specialties/hair-transplantation.jpg'
+  },
+  {
+    slug: 'weight-loss-surgery',
+    title: 'Weight Loss Surgery',
+    count: '10 articles',
+    border: '#CCE3D5',
+    iconColor: '#23573C', // Natural sage accent (avoids fitness green)
+    icon: 'weight-loss-surgery',
+    image: '/images/specialties/weight-loss-surgery.jpg'
+  },
+  {
+    slug: 'ivf',
+    title: 'IVF & Reproductive Medicine',
+    count: '10 articles',
+    border: '#DCD2E8',
+    iconColor: '#543578', // Gentle lavender complementary accent
+    icon: 'ivf',
+    image: '/images/specialties/ivf.jpg'
+  },
+  {
+    slug: 'bone-marrow-transplant',
+    title: 'Bone Marrow Transplant',
+    count: '10 articles',
+    border: '#DFD1E4',
+    iconColor: '#582E60', // Gentle plum accent
+    icon: 'bone-marrow-transplant',
+    image: '/images/specialties/bone-marrow-transplant.jpg'
+  },
+  {
+    slug: 'kidney-transplant',
+    title: 'Kidney Transplant',
+    count: '10 articles',
+    border: '#CCE3D8',
+    iconColor: '#1E5641', // Clean pale green & muted green accent
+    icon: 'kidney-transplant',
+    image: '/images/specialties/kidney-transplant.jpg'
+  },
+  {
+    slug: 'liver-transplant',
+    title: 'Liver Transplant',
+    count: '10 articles',
+    border: '#EED4C4',
+    iconColor: '#873B20', // Warm peach & soft terracotta accent
+    icon: 'liver-transplant',
+    image: '/images/specialties/liver-transplant.jpg'
+  },
+  {
+    slug: 'dental-care',
+    title: 'Dental Care',
+    count: '10 articles',
+    border: '#C6E6DF',
+    iconColor: '#155E54', // Fresh mint & subtle teal accent
+    icon: 'dental-care',
+    image: '/images/specialties/dental-care.jpg'
+  },
+  {
+    slug: 'ayush-wellness',
+    title: 'AYUSH Wellness',
+    count: '10 articles',
+    border: '#DCE7CB',
+    iconColor: '#3B5B24', // Deep botanical olive accent
+    icon: 'ayush-wellness',
+    image: '/images/specialties/ayush-wellness.jpg'
+  },
+  {
+    slug: 'general-surgery',
+    title: 'General Surgery',
+    count: '10 articles',
+    border: '#D2DEEC',
+    iconColor: '#224063', // Deep clinical navy slate accent
+    icon: 'general-surgery',
+    image: '/images/specialties/general-surgery.jpg'
+  },
+  {
+    slug: 'cosmetic-surgery',
+    title: 'Cosmetic & Plastic Surgery',
+    count: '10 articles',
+    border: '#E3D8C2',
+    iconColor: '#634F3A', // Elegant champagne & muted taupe accent
+    icon: 'cosmetic-surgery',
+    image: '/images/specialties/cosmetic-surgery.jpg'
+  }
+];
+
+// 3 Featured Guides from real data
+const featuredGuides = [
+  {
+    tag: 'ONCOLOGY',
+    specialtySlug: 'oncology',
+    specialtyTitle: 'Oncology',
+    readingTime: '2 min read',
+    title: 'CAR-T Cell Therapy: A New Approach to Treating Certain Blood Cancers',
+    slug: 'car-t-cell-therapy-a-new-approach-to-treating-certain-blood-cancers',
+    overview: 'An overview of CAR-T cell therapy: what it is, which blood cancers it is approved for, its availability in India and why it is not for every patient.',
+    gradient: 'linear-gradient(135deg, #F3F8F5 0%, #E5F0E9 50%, #D4E6DB 100%)',
+    iconColor: '#1E5438',
+    illustration: 'ribbon'
+  },
+  {
+    tag: 'NEUROLOGY',
+    specialtySlug: 'neurology',
+    specialtyTitle: 'Neurology',
+    readingTime: '2 min read',
+    title: 'Understanding Stroke and Its Early Warning Signs',
+    slug: 'understanding-stroke-and-its-early-warning-signs',
+    overview: 'Learn the BE FAST warning signs of stroke, why every minute counts, how clot-busting treatment and thrombectomy work, and how to lower your risk.',
+    gradient: 'linear-gradient(135deg, #F3F7FB 0%, #E7EFF7 50%, #D4E3F0 100%)',
+    iconColor: '#164069',
+    illustration: 'brain'
+  },
+  {
+    tag: 'ORTHOPEDICS',
+    specialtySlug: 'orthopedics',
+    specialtyTitle: 'Orthopedics',
+    readingTime: '2 min read',
+    title: 'When Do You Need a Knee Replacement?',
+    slug: 'when-do-you-need-a-knee-replacement',
+    overview: 'Signs that it may be time to consider knee replacement, the treatments to try first, total vs partial and robotic options, and how surgeons decide.',
+    gradient: 'linear-gradient(135deg, #F1F8F8 0%, #E3F0F0 50%, #D0E6E6 100%)',
+    iconColor: '#155658',
+    illustration: 'bone'
+  }
+];
+
+// Most read articles (10 items matching reference screenshot)
+const mostReadArticles = [
+  { num: '01', specialtySlug: 'cardiology', specialtyTitle: 'Cardiology', href: '/en/knowledge-centre/cardiology/heart-attack-early-warning-signs-you-should-never-ignore/', title: 'Heart Attack: Early Warning Signs You Should Never Ignore', readingTime: '2 min' },
+  { num: '02', specialtySlug: 'oncology', specialtyTitle: 'Oncology', href: '/en/knowledge-centre/oncology/car-t-cell-therapy-a-new-approach-to-treating-certain-blood-cancers/', title: 'CAR-T Cell Therapy: A New Approach to Treating Certain Blood Cancers', readingTime: '2 min' },
+  { num: '03', specialtySlug: 'orthopedics', specialtyTitle: 'Orthopedics', href: '/en/knowledge-centre/orthopedics/when-do-you-need-a-knee-replacement/', title: 'When Do You Need a Knee Replacement?', readingTime: '2 min' },
+  { num: '04', specialtySlug: 'neurology', specialtyTitle: 'Neurology', href: '/en/knowledge-centre/neurology/understanding-stroke-and-its-early-warning-signs/', title: 'Understanding Stroke and Its Early Warning Signs', readingTime: '2 min' },
+  { num: '05', specialtySlug: 'spine-surgery', specialtyTitle: 'Spine Surgery', href: '/en/knowledge-centre/spine-surgery/understanding-slip-disc-and-its-symptoms/', title: 'Understanding Slip Disc and Its Symptoms', readingTime: '2 min' },
+  { num: '06', specialtySlug: 'ivf', specialtyTitle: 'IVF', href: '/en/knowledge-centre/ivf/what-is-ivf-and-how-does-it-work/', title: 'What Is IVF and How Does It Work?', readingTime: '2 min' },
+  { num: '07', specialtySlug: 'weight-loss-surgery', specialtyTitle: 'Weight Loss Surgery', href: '/en/knowledge-centre/weight-loss-surgery/gastric-sleeve-surgery-explained/', title: 'Gastric Sleeve Surgery Explained', readingTime: '2 min' },
+  { num: '08', specialtySlug: 'hair-transplantation', specialtyTitle: 'Hair Transplantation', href: '/en/knowledge-centre/hair-transplantation/fue-versus-fut-hair-transplantation/', title: 'FUE Versus FUT Hair Transplantation', readingTime: '2 min' },
+  { num: '09', specialtySlug: 'bone-marrow-transplant', specialtyTitle: 'Bone Marrow Transplant', href: '/en/knowledge-centre/bone-marrow-transplant/what-is-a-bone-marrow-transplant/', title: 'What Is a Bone Marrow Transplant?', readingTime: '2 min' },
+  { num: '10', specialtySlug: 'kidney-transplant', specialtyTitle: 'Kidney Transplant', href: '/en/knowledge-centre/kidney-transplant/living-donor-versus-deceased-donor-transplantation/', title: 'Living Donor Versus Deceased Donor Transplantation', readingTime: '2 min' }
+];
+
+// Latest articles (6 items matching reference screenshot)
+const latestArticles = [
+  { num: '01', specialtySlug: 'ayush-wellness', specialtyTitle: 'AYUSH Wellness', href: '/en/knowledge-centre/ayush-wellness/', title: 'Travelling to India for AYUSH Treatment: The AYUSH Visa', readingTime: '2 min' },
+  { num: '02', specialtySlug: 'dental-care', specialtyTitle: 'Dental Care', href: '/en/knowledge-centre/dental-care/', title: 'Caring for Your Teeth and Dental Work', readingTime: '2 min' },
+  { num: '03', specialtySlug: 'liver-transplant', specialtyTitle: 'Liver Transplant', href: '/en/knowledge-centre/liver-transplant/', title: 'Life After Liver Transplantation', readingTime: '2 min' },
+  { num: '04', specialtySlug: 'kidney-transplant', specialtyTitle: 'Kidney Transplant', href: '/en/knowledge-centre/kidney-transplant/life-after-kidney-transplantation/', title: 'Life After Kidney Transplantation', readingTime: '2 min' },
+  { num: '05', specialtySlug: 'bone-marrow-transplant', specialtyTitle: 'Bone Marrow Transplant', href: '/en/knowledge-centre/bone-marrow-transplant/life-after-bone-marrow-transplantation/', title: 'Life After Bone Marrow Transplantation', readingTime: '2 min' },
+  { num: '06', specialtySlug: 'ivf', specialtyTitle: 'IVF', href: '/en/knowledge-centre/ivf/emotional-and-physical-preparation-for-ivf/', title: 'Emotional and Physical Preparation for IVF', readingTime: '2 min' }
+];
+
+// 4 Video preview cards matching reference screenshot
+const videoCards = [
+  {
+    title: 'How Heart Bypass Surgery (CABG) Works',
+    duration: '60 seconds • animated explainer',
+    badge: 'Script ready, to be produced'
+  },
+  {
+    title: 'How Angioplasty and Stenting Are Performed',
+    duration: '75 seconds • animated explainer',
+    badge: 'Script ready, to be produced'
+  },
+  {
+    title: 'How CAR-T Cell Therapy Works',
+    duration: '120 seconds • animated explainer',
+    badge: 'Script ready, to be produced'
+  },
+  {
+    title: 'How Chemotherapy and Radiation Therapy Work',
+    duration: '110 seconds • animated explainer',
+    badge: 'Script ready, to be produced'
+  }
+];
+---
+
+<BaseLayout
+  title="Nuhavi Health Knowledge Centre"
+  description="Clear, doctor-led clinical guides to 145 conditions, treatments and procedures across 14 specialties. Written in plain language for patients and families."
+  lang="en"
+>
+  <main class="kc-page-wrap" id="main-content">
+    <!-- SECTION A: HERO SECTION (NAVY BACKGROUND) -->
+    <section class="kc-hero-section">
+      <div class="kc-container">
+        <span class="kc-hero-kicker">NUHAVI HEALTH KNOWLEDGE CENTRE</span>
+        <h1 class="kc-hero-title">Understand your condition before you decide on treatment</h1>
+        <p class="kc-hero-deck">
+          Clear, doctor-led guides to 145 conditions, treatments and procedures across 14 specialties. Written in plain language for patients and families.
+        </p>
+
+        <!-- Prominent Search Bar -->
+        <div class="kc-hero-search-box">
+          <svg class="kc-search-svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2" aria-hidden="true">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input
+            type="text"
+            id="kc-search-input"
+            class="kc-hero-search-input"
+            placeholder="Search a condition, symptom or treatment, e.g. knee pain, CAR-T, IVF"
+            aria-label="Search all conditions, symptoms and treatments"
+          />
+          <button type="button" id="kc-search-clear" class="kc-search-clear-btn" style="display: none;" aria-label="Clear search">×</button>
+        </div>
+
+        <!-- 3 Trust Bullets -->
+        <div class="kc-hero-bullets">
+          <span class="kc-bullet-item"><span class="kc-bullet-dot">•</span> Reviewed by specialists before publication</span>
+          <span class="kc-bullet-item"><span class="kc-bullet-dot">•</span> About 2 to 3 minutes per article</span>
+          <span class="kc-bullet-item"><span class="kc-bullet-dot">•</span> Education first, never a sales pitch</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION B: BROWSE BY SPECIALTY (14 SPECIALTIES) -->
+    <section class="kc-section kc-browse-section" id="specialties">
+      <div class="kc-container">
+        <div class="kc-section-header-row">
+          <h2 class="kc-section-heading">Browse by specialty</h2>
+          <a href="/en/resources/" class="kc-header-link">See all 145 articles</a>
+        </div>
+
+        <div class="kc-specialties-grid">
+          {displaySpecialties.map((spec) => (
+            <a href={`/en/knowledge-centre/${spec.slug}/`} class="kc-spec-card" style={`--spec-accent: ${spec.border}`}>
+              <div class="kc-spec-icon-wrap">
+                <img src={spec.image} alt={spec.title} class="kc-spec-thumb-img" width="36" height="36" loading="lazy" />
+              </div>
+              <h3 class="kc-spec-name">{spec.title}</h3>
+              <span class="kc-spec-count">{spec.count}</span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION C: FEATURED GUIDES (3 ILLUSTRATED CARDS) -->
+    <section class="kc-section kc-featured-section" id="featured-guides">
+      <div class="kc-container">
+        <h2 class="kc-section-heading">Featured guides</h2>
+
+        <div class="kc-featured-grid">
+          {featuredGuides.map((guide) => (
+            <a href={`/en/knowledge-centre/${guide.specialtySlug}/${guide.slug}/`} class="kc-feat-card">
+              <!-- Visual Header with gradient & illustration -->
+              <div class="kc-feat-visual" style={`background: ${guide.gradient}`}>
+                <div class="kc-feat-illustration-wrap">
+                  <img src={getSpecialtyImage(guide.specialtySlug)} alt={guide.specialtyTitle} class="kc-feat-spec-img" width="56" height="56" loading="lazy" />
+                </div>
+                <span class="kc-feat-tag">{guide.tag}</span>
+              </div>
+
+              <!-- Card Content -->
+              <div class="kc-feat-content">
+                <div class="kc-feat-meta">
+                  <span class="kc-feat-spec-name" style={`color: ${guide.iconColor}`}>
+                    {guide.specialtyTitle}
+                  </span>
+                  <span class="kc-meta-dot">•</span>
+                  <span class="kc-feat-time">{guide.readingTime}</span>
+                </div>
+                <h3 class="kc-feat-title">{guide.title}</h3>
+                <p class="kc-feat-overview">{guide.overview}</p>
+              </div>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION D: MOST READ & LATEST ARTICLES (TWO-COLUMN SPLIT) -->
+    <section class="kc-section kc-split-section">
+      <div class="kc-container">
+        <div class="kc-split-grid">
+          <!-- Col 1: Most Read (10 items) -->
+          <div class="kc-split-col">
+            <h2 class="kc-section-heading">Most read</h2>
+            <div class="kc-articles-card-box">
+              {mostReadArticles.map((art) => (
+                <a href={art.href} class="kc-num-row">
+                  <span class="kc-row-num">{art.num}</span>
+                  <div class="kc-row-body">
+                    <h3 class="kc-row-title">{art.title}</h3>
+                    <span class="kc-row-spec">{art.specialtyTitle}</span>
+                  </div>
+                  <span class="kc-row-time">{art.readingTime}</span>
+                </a>
+              ))}
+            </div>
+          </div>
+
+          <!-- Col 2: Latest Articles (6 items) -->
+          <div class="kc-split-col">
+            <h2 class="kc-section-heading">Latest articles</h2>
+            <div class="kc-articles-card-box">
+              {latestArticles.map((art) => (
+                <a href={art.href} class="kc-num-row">
+                  <span class="kc-row-num">{art.num}</span>
+                  <div class="kc-row-body">
+                    <h3 class="kc-row-title">{art.title}</h3>
+                    <span class="kc-row-spec">{art.specialtyTitle}</span>
+                  </div>
+                  <span class="kc-row-time">{art.readingTime}</span>
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION E: EXPLAINER VIDEOS (4 PREVIEW CARDS) & DOCTOR CTA BANNER -->
+    <section class="kc-section kc-videos-section" id="videos">
+      <div class="kc-container">
+        <div class="kc-section-header-row">
+          <h2 class="kc-section-heading">Explainer videos</h2>
+          <span class="kc-header-link">All videos</span>
+        </div>
+
+        <!-- 4 Top Video Preview Cards matching Claude reference -->
+        <div class="kc-video-cards-grid">
+          {videoCards.map((video) => (
+            <div class="kc-video-card">
+              <div class="kc-video-play-circle" aria-hidden="true">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="#92400E">
+                  <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                </svg>
+              </div>
+              <h3 class="kc-video-title">{video.title}</h3>
+              <span class="kc-video-meta">{video.duration}</span>
+              <div class="kc-video-badge-wrap">
+                <span class="kc-video-status-badge">{video.badge}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <!-- SPECIALIST CONSULTATION CALLOUT BANNER -->
+        <div class="kc-doctor-cta-banner">
+          <div class="kc-cta-banner-text">
+            <h3 class="kc-cta-banner-title">Not sure which specialist you need?</h3>
+            <p class="kc-cta-banner-deck">
+              Share your reports with a Nuhavi doctor. We will help you understand your options and connect you with the right specialist.
+            </p>
+          </div>
+          <a href="/en/request-opinion/" class="kc-cta-banner-btn">Talk to a doctor</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION F: BOTTOM KNOWLEDGE CENTRE INTRODUCTION & MEDICAL DISCLAIMER -->
+    <section class="kc-bottom-intro-disclaimer">
+      <div class="kc-container">
+        <div class="kc-intro-block">
+          <h3 class="kc-intro-title">Nuhavi Health Knowledge Centre</h3>
+          <p class="kc-intro-tagline">
+            Doctor-led patient education. Every article is written in plain language and reviewed by a specialist before publication.
+          </p>
+          <p class="kc-intro-medical-notice">
+            The information on this site is for general education and does not replace a consultation with a qualified doctor. In an emergency, call 108 or 112 in India, or your local emergency number.
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+</BaseLayout>
+
+<style>
+  /* ==========================================================================
+     NUHAVI HEALTH KNOWLEDGE CENTRE — STYLESHEET (CLAUDE REFERENCE EXACT MATCH)
+     ========================================================================== */
+  
+  :root {
+    --kc-navy-dark: #0B192C;
+    --kc-navy-mid: #0F1E36;
+    --kc-navy-light: #1E293B;
+    --kc-gold: #D4AF37;
+    --kc-gold-hover: #C5A028;
+    --kc-gold-muted: #9A7B38;
+    --kc-bg-light: #F8F9FA;
+    --kc-card-bg: #FFFFFF;
+    --kc-text-dark: #111827;
+    --kc-text-body: #374151;
+    --kc-text-muted: #6B7280;
+    --kc-border: #E5E7EB;
+    --kc-border-subtle: #F3F4F6;
+  }
+
+  .kc-page-wrap {
+    background-color: var(--kc-bg-light);
+    color: var(--kc-text-body);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+  }
+
+  .kc-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+
+  .kc-section {
+    padding: 4.5rem 0;
+  }
+
+  .kc-section-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .kc-section-heading {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--kc-navy-mid);
+    margin: 0;
+    line-height: 1.2;
+  }
+
+  .kc-header-link {
+    color: var(--kc-gold-muted);
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.15s;
+    user-select: none;
+  }
+
+  a.kc-header-link:hover {
+    color: var(--kc-navy-mid);
+    text-decoration: underline;
+  }
+
+  /* --------------------------------------------------------------------------
+     SECTION A: HERO SECTION
+     -------------------------------------------------------------------------- */
+  .kc-hero-section {
+    background-color: var(--kc-navy-dark);
+    color: #FFFFFF;
+    padding: 5rem 0 4.5rem;
+    position: relative;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .kc-hero-kicker {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--kc-gold);
+    text-transform: uppercase;
+    margin-bottom: 1.25rem;
+  }
+
+  .kc-hero-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 2.75rem;
+    font-weight: 700;
+    line-height: 1.15;
+    color: #FFFFFF;
+    max-width: 820px;
+    margin: 0 0 1.25rem;
+  }
+
+  .kc-hero-deck {
+    font-size: 1.125rem;
+    line-height: 1.5;
+    color: #CBD5E1;
+    max-width: 680px;
+    margin: 0 0 2.25rem;
+  }
+
+  .kc-hero-search-box {
+    background: #FFFFFF;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    padding: 0.85rem 1.25rem;
+    max-width: 680px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .kc-search-svg {
+    flex-shrink: 0;
+    stroke: #6B7280;
+  }
+
+  .kc-hero-search-input {
+    border: none;
+    outline: none;
+    width: 100%;
+    font-size: 1rem;
+    color: var(--kc-text-dark);
+    background: transparent;
+    padding: 0 0.85rem;
+  }
+
+  .kc-hero-search-input::placeholder {
+    color: #9CA3AF;
+  }
+
+  .kc-search-clear-btn {
+    background: #E5E7EB;
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    font-size: 16px;
+    line-height: 1;
+    color: #4B5563;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .kc-hero-bullets {
+    display: flex;
+    gap: 1.75rem;
+    flex-wrap: wrap;
+    margin-top: 1.75rem;
+    font-size: 0.875rem;
+    color: #94A3B8;
+  }
+
+  .kc-bullet-dot {
+    color: var(--kc-gold);
+    margin-right: 0.25rem;
+  }
+
+  /* --------------------------------------------------------------------------
+     SECTION B: BROWSE BY SPECIALTY
+     -------------------------------------------------------------------------- */
+  .kc-browse-section {
+    background-color: #FFFFFF;
+    border-bottom: 1px solid var(--kc-border);
+  }
+
+  .kc-specialties-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1.15rem;
+  }
+
+  .kc-spec-card {
+    background: #FFFFFF;
+    border: 1px solid var(--kc-border);
+    border-top: 3.5px solid var(--spec-accent, var(--kc-gold));
+    border-radius: 8px;
+    padding: 1.25rem 1rem;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  }
+
+  .kc-spec-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+    border-color: #CBD5E1;
+    border-top-color: var(--spec-accent, var(--kc-gold));
+  }
+
+  .kc-spec-icon-wrap {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.85rem;
+    background-color: #F8FAFC;
+    flex-shrink: 0;
+  }
+
+  .kc-spec-thumb-img {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    object-fit: cover;
+    display: block;
+  }
+
+  .kc-spec-name {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--kc-text-dark);
+    margin: 0 0 0.35rem;
+    line-height: 1.3;
+  }
+
+  .kc-spec-count {
+    font-size: 0.825rem;
+    color: var(--kc-text-muted);
+  }
+
+  /* --------------------------------------------------------------------------
+     SECTION C: FEATURED GUIDES
+     -------------------------------------------------------------------------- */
+  .kc-featured-section {
+    background-color: var(--kc-bg-light);
+  }
+
+  .kc-featured-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.75rem;
+  }
+
+  .kc-feat-card {
+    background: #FFFFFF;
+    border: 1px solid var(--kc-border);
+    border-radius: 12px;
+    overflow: hidden;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .kc-feat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.09);
+  }
+
+  .kc-feat-visual {
+    height: 160px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+  }
+
+  .kc-feat-illustration-wrap {
+    width: 90px;
+    height: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .kc-feat-art-svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .kc-feat-spec-img {
+    width: 56px;
+    height: 56px;
+    border-radius: 10px;
+    object-fit: cover;
+    display: block;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    border: 2px solid rgba(255, 255, 255, 0.85);
+  }
+
+  .kc-feat-inline-img {
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    object-fit: cover;
+    display: inline-block;
+    vertical-align: middle;
+    flex-shrink: 0;
+  }
+
+  .row-spec-photo {
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    object-fit: cover;
+    display: inline-block;
+    vertical-align: middle;
+    flex-shrink: 0;
+  }
+
+  .kc-feat-tag {
+    position: absolute;
+    bottom: 12px;
+    left: 16px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: #FFFFFF;
+    background: rgba(0, 0, 0, 0.35);
+    padding: 3px 8px;
+    border-radius: 4px;
+    backdrop-filter: blur(4px);
+    text-transform: uppercase;
+  }
+
+  .kc-feat-content {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+
+  .kc-feat-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.85rem;
+    color: var(--kc-text-muted);
+    margin-bottom: 0.75rem;
+  }
+
+  .kc-feat-spec-name {
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .kc-meta-dot {
+    color: #9CA3AF;
+  }
+
+  .kc-feat-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--kc-navy-mid);
+    line-height: 1.35;
+    margin: 0 0 0.75rem;
+  }
+
+  .kc-feat-overview {
+    font-size: 0.9rem;
+    color: var(--kc-text-body);
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  /* --------------------------------------------------------------------------
+     SECTION D: MOST READ & LATEST ARTICLES (TWO-COLUMN SPLIT)
+     -------------------------------------------------------------------------- */
+  .kc-split-section {
+    background-color: var(--kc-bg-light);
+    border-top: 1px solid var(--kc-border);
+    border-bottom: 1px solid var(--kc-border);
+    padding: 3.5rem 0 4.5rem;
+  }
+
+  .kc-split-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2.5rem;
+  }
+
+  .kc-split-col {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .kc-split-col .kc-section-heading {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 1.65rem;
+    font-weight: 600;
+    color: var(--kc-navy-mid);
+    margin: 0 0 1.25rem;
+  }
+
+  .kc-articles-card-box {
+    background: #FFFFFF;
+    border: 1px solid var(--kc-border);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+  }
+
+  .kc-num-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.25rem;
+    padding: 1.15rem 1.35rem;
+    border-bottom: 1px solid var(--kc-border);
+    text-decoration: none;
+    transition: background-color 0.15s ease;
+  }
+
+  .kc-num-row:last-child {
+    border-bottom: none;
+  }
+
+  .kc-num-row:hover {
+    background-color: #F9FAFB;
+  }
+
+  .kc-num-row:hover .kc-row-title {
+    color: var(--kc-navy-mid);
+  }
+
+  .kc-row-num {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #9CA3AF;
+    min-width: 28px;
+    line-height: 1.35;
+    padding-top: 0.05rem;
+  }
+
+  .kc-row-body {
+    flex-grow: 1;
+    padding-right: 1.25rem;
+  }
+
+  .kc-row-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--kc-text-dark);
+    margin: 0 0 0.25rem;
+    line-height: 1.35;
+  }
+
+  .kc-row-spec {
+    font-size: 0.8rem;
+    color: var(--kc-text-muted);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    line-height: 1.3;
+  }
+
+  .row-spec-icon {
+    flex-shrink: 0;
+  }
+
+  .kc-row-time {
+    font-size: 0.8rem;
+    color: #9CA3AF;
+    white-space: nowrap;
+    line-height: 1.35;
+    padding-top: 0.05rem;
+  }
+
+  /* --------------------------------------------------------------------------
+     SECTION E: EXPLAINER VIDEOS & SPECIALIST CALLOUT BANNER
+     -------------------------------------------------------------------------- */
+  .kc-videos-section {
+    background-color: var(--kc-bg-light);
+  }
+
+  .kc-video-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.25rem;
+    margin-bottom: 3rem;
+  }
+
+  .kc-video-card {
+    background: #FFFFFF;
+    border: 1px solid var(--kc-border);
+    border-radius: 10px;
+    padding: 1.5rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  }
+
+  .kc-video-play-circle {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background-color: #FEF3C7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+  }
+
+  .kc-video-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--kc-text-dark);
+    margin: 0 0 0.5rem;
+    line-height: 1.35;
+    flex-grow: 1;
+  }
+
+  .kc-video-meta {
+    font-size: 0.8rem;
+    color: var(--kc-text-muted);
+    margin-bottom: 1rem;
+  }
+
+  .kc-video-status-badge {
+    background: #FEF3C7;
+    color: #92400E;
+    border: 1px solid #FDE68A;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.3rem 0.65rem;
+    border-radius: 9999px;
+    display: inline-block;
+  }
+
+  /* Doctor Consultation Callout Banner */
+  .kc-doctor-cta-banner {
+    background-color: #FAF8F5;
+    border: 1px solid #EADBCC;
+    border-radius: 12px;
+    padding: 2.25rem 2.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .kc-cta-banner-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--kc-navy-dark);
+    margin: 0 0 0.4rem;
+  }
+
+  .kc-cta-banner-deck {
+    font-size: 1rem;
+    color: #4B5563;
+    margin: 0;
+    max-width: 680px;
+  }
+
+  .kc-cta-banner-btn {
+    background-color: var(--kc-gold);
+    color: var(--kc-navy-dark);
+    font-weight: 700;
+    font-size: 1rem;
+    padding: 0.85rem 1.75rem;
+    border-radius: 6px;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background-color 0.15s, transform 0.15s;
+    box-shadow: 0 2px 6px rgba(212, 175, 55, 0.25);
+  }
+
+  .kc-cta-banner-btn:hover {
+    background-color: var(--kc-gold-hover);
+    transform: translateY(-1px);
+  }
+
+  /* --------------------------------------------------------------------------
+     SECTION F: BOTTOM KNOWLEDGE CENTRE INTRODUCTION & MEDICAL DISCLAIMER
+     -------------------------------------------------------------------------- */
+  .kc-bottom-intro-disclaimer {
+    background-color: var(--kc-bg-light);
+    border-top: 1px solid var(--kc-border);
+    padding: 3rem 0 4rem;
+  }
+
+  .kc-intro-block {
+    max-width: 860px;
+  }
+
+  .kc-intro-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--kc-navy-dark);
+    margin: 0 0 0.5rem;
+    line-height: 1.3;
+  }
+
+  .kc-intro-tagline {
+    font-size: 0.95rem;
+    color: var(--kc-text-body);
+    line-height: 1.5;
+    margin: 0 0 1rem;
+  }
+
+  .kc-intro-medical-notice {
+    font-size: 0.8rem;
+    color: var(--kc-text-muted);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  /* --------------------------------------------------------------------------
+     RESPONSIVE BREAKPOINTS (DESKTOP, TABLET, MOBILE)
+     -------------------------------------------------------------------------- */
+  @media (max-width: 1024px) {
+    .kc-specialties-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    .kc-featured-grid {
+      grid-template-columns: 1fr;
+    }
+    .kc-split-grid {
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+    }
+    .kc-video-cards-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .kc-hero-title {
+      font-size: 2rem;
+    }
+    .kc-section-heading {
+      font-size: 1.6rem;
+    }
+    .kc-specialties-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .kc-video-cards-grid {
+      grid-template-columns: 1fr;
+    }
+    .kc-doctor-cta-banner {
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 1.5rem;
+    }
+  }
+</style>
+
+<script>
+  // Client-Side Search for Specialties
+  document.addEventListener('DOMContentLoaded', () => {
+    const searchInput = document.getElementById('kc-search-input') as HTMLInputElement | null;
+    const clearBtn = document.getElementById('kc-search-clear');
+    const specCards = document.querySelectorAll<HTMLAnchorElement>('.kc-spec-card');
+
+    function runFilter() {
+      const query = (searchInput?.value || '').trim().toLowerCase();
+      if (clearBtn) {
+        clearBtn.style.display = query.length > 0 ? 'flex' : 'none';
+      }
+
+      specCards.forEach((card) => {
+        const text = card.textContent?.toLowerCase() || '';
+        if (!query || text.includes(query)) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    searchInput?.addEventListener('input', runFilter);
+
+    searchInput?.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        const target = document.getElementById('specialties');
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth' });
+        }
+      }
+    });
+
+    clearBtn?.addEventListener('click', () => {
+      if (searchInput) {
+        searchInput.value = '';
+        runFilter();
+        searchInput.focus();
+      }
+    });
+  });
+</script>

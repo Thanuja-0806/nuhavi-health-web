@@ -1,11 +1,15 @@
 ---
 /**
  * src/components/home/PrepareWithConfidence.astro
- * Homepage: "Prepare with confidence"
- * Reference: Page 10 of Nuhavi Health Look and Feel PDF.
- * Localized for English (/en/), Russian (/ru/), and Arabic (/ar/ RTL).
+ * Homepage: "Prepare with confidence" — 12-Page PDF (Page 6)
+ *
+ * Heading: Prepare with confidence
+ * Link: All guides →
+ * Exactly 3 guides:
+ * 1. Medical visa for India: a step-by-step guide (Reviewed by a Nuhavi doctor · 7 min read)
+ * 2. How to read a hospital estimate (Reviewed by a Nuhavi doctor · 6 min read)
+ * 3. Preparing your medical records (Reviewed by a Nuhavi doctor · 5 min read)
  */
-import { homeTranslations } from '../../i18n/homeTranslations';
 import type { SupportedLang } from '../../i18n/translations';
 
 interface Props {
@@ -17,38 +21,82 @@ const detectedLang: SupportedLang = currentPath.startsWith('/ar')
   ? 'ar'
   : currentPath.startsWith('/ru')
   ? 'ru'
+  : currentPath.startsWith('/fr')
+  ? 'fr'
   : 'en';
 
 const lang: SupportedLang = Astro.props.lang || detectedLang;
-const content = homeTranslations[lang].prepareWithConfidence;
-const guides = content.guides;
+const isArabic = lang === 'ar';
+const isRussian = lang === 'ru';
+const isFrench = lang === 'fr';
+
+const prefix = `/${lang}`;
+const allGuidesHref = `${prefix}/resources/`;
+
+const t = {
+  heading: isArabic ? 'استعد للرحلة بثقة واطمئنان' : isRussian ? 'Готовьтесь к поездке с уверенностью' : 'Prepare with confidence',
+  allGuidesLink: isArabic ? 'جميع الأدلة ←' : isRussian ? 'Все руководства →' : 'All guides →',
+  guides: [
+    {
+      title: isArabic
+        ? 'التأشيرة الطبية للهند: دليل خطوة بخطوة'
+        : isRussian
+        ? 'Медицинская виза в Индию: пошаговое руководство'
+        : 'Medical visa for India: a step-by-step guide',
+      meta: isArabic
+        ? 'مراجعة طبية بواسطة أطباء نوهـافي · قراءة في 7 دقائق'
+        : isRussian
+        ? 'Проверено врачом Nuhavi · время чтения: 7 мин'
+        : 'Reviewed by a Nuhavi doctor · 7 min read',
+      href: `${prefix}/resources/understanding-treatment-estimate/`,
+    },
+    {
+      title: isArabic
+        ? 'كيف تقرأ تقدير تكلفة المستشفى'
+        : isRussian
+        ? 'Как читать смету расходов из клиники'
+        : 'How to read a hospital estimate',
+      meta: isArabic
+        ? 'مراجعة طبية بواسطة أطباء نوهـافي · قراءة في 6 دقائق'
+        : isRussian
+        ? 'Проверено врачом Nuhavi · время чтения: 6 мин'
+        : 'Reviewed by a Nuhavi doctor · 6 min read',
+      href: `${prefix}/how-it-works/costs-and-fees/`,
+    },
+    {
+      title: isArabic
+        ? 'تجهيز ملفك وتقاريرك الطبية'
+        : isRussian
+        ? 'Как правильно подготовить медицинские выписки'
+        : 'Preparing your medical records',
+      meta: isArabic
+        ? 'مراجعة طبية بواسطة أطباء نوهـافي · قراءة في 5 دقائق'
+        : isRussian
+        ? 'Проверено врачом Nuhavi · время чтения: 5 мин'
+        : 'Reviewed by a Nuhavi doctor · 5 min read',
+      href: `${prefix}/resources/preparing-medical-records/`,
+    },
+  ],
+};
 ---
 
-<section class="prepare-section" aria-labelledby="prepare-heading">
+<section class="prepare-section" aria-labelledby="prepare-heading" dir={isArabic ? 'rtl' : 'ltr'}>
   <div class="container prepare-container">
-    <div class="prepare-header">
-      <div class="header-left">
-        <h2 id="prepare-heading" class="prepare-title">
-          {content.title}
-        </h2>
-      </div>
-      <div class="header-right">
-        <p class="prepare-deck">
-          {content.deck}
-        </p>
-      </div>
+    <div class="prepare-header-row">
+      <h2 id="prepare-heading" class="prepare-title">
+        {t.heading}
+      </h2>
+      <a href={allGuidesHref} class="all-guides-link">
+        <span>{t.allGuidesLink}</span>
+      </a>
     </div>
 
-    <!-- 6 Guide Cards Grid (3 cols x 2 rows on desktop) -->
+    <!-- 3 Guide Cards (PDF Page 6) -->
     <div class="guides-grid">
-      {guides.map((guide) => (
+      {t.guides.map((guide) => (
         <a href={guide.href} class="guide-card">
-          <div class="guide-card-top">
-            <span class="guide-tag">{lang === 'ru' ? 'Руководство' : lang === 'ar' ? 'دليل إرشادي' : 'Guide'}</span>
-            <span class="guide-arrow" aria-hidden="true">&rarr;</span>
-          </div>
           <h3 class="guide-title">{guide.title}</h3>
-          <p class="guide-desc">{guide.desc}</p>
+          <span class="guide-meta">{guide.meta}</span>
         </a>
       ))}
     </div>
@@ -58,138 +106,91 @@ const guides = content.guides;
 <style>
   .prepare-section {
     width: 100%;
-    background-color: var(--color-mist);
-    padding: var(--space-12) 0;
-    border-bottom: 1px solid rgba(20, 41, 75, 0.08);
+    background-color: #FFFFFF;
+    padding: clamp(56px, 7vw, 80px) 0;
+    border-bottom: 1px solid rgba(15, 35, 64, 0.08);
   }
 
   .prepare-container {
-    width: 100%;
-    max-width: 1200px;
+    max-width: 1280px;
     margin: 0 auto;
-    padding: 0 var(--space-4);
+    padding: 0 clamp(20px, 4vw, 40px);
     box-sizing: border-box;
   }
 
-  .prepare-header {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--space-4);
-    margin-bottom: var(--space-10);
-  }
-
-  @media (min-width: 900px) {
-    .prepare-header {
-      grid-template-columns: 5fr 7fr;
-      align-items: end;
-      gap: var(--space-8);
-    }
+  .prepare-header-row {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 36px;
+    flex-wrap: wrap;
   }
 
   .prepare-title {
-    font-size: clamp(1.875rem, 3.5vw, 2.5rem);
-    font-weight: 800;
-    color: var(--color-navy);
+    font-family: var(--font-family-heading);
+    font-size: clamp(2rem, 3vw, 2.7rem);
+    color: #0F2340;
+    font-weight: 600;
+    margin: 0;
     line-height: 1.2;
-    margin: 0;
   }
 
-  .prepare-deck {
-    font-size: 1rem;
-    line-height: 1.6;
-    color: var(--color-slate);
-    margin: 0;
+  .all-guides-link {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: #0F2340;
+    text-decoration: underline;
+    transition: color 0.15s ease;
   }
 
-  /* 6 Guides Grid */
+  .all-guides-link:hover {
+    color: #A88B5A;
+  }
+
+  /* 3 Guides in a row */
   .guides-grid {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--space-5);
-  }
-
-  @media (min-width: 640px) {
-    .guides-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .guides-grid {
-      grid-template-columns: repeat(3, 1fr);
-    }
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
   }
 
   .guide-card {
-    background-color: #FFFFFF;
-    border: 1px solid rgba(20, 41, 75, 0.08);
-    border-radius: var(--radius-card);
-    padding: var(--space-6);
+    background-color: #FAF8F5;
+    border: 1px solid rgba(15, 35, 64, 0.1);
+    border-radius: 8px;
+    padding: 24px;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
+    gap: 16px;
     text-decoration: none;
-    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    transition: border-color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
   }
 
   .guide-card:hover {
+    border-color: #A88B5A;
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(20, 41, 75, 0.06);
-    border-color: rgba(196, 154, 60, 0.4);
-  }
-
-  .guide-card-top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: var(--space-3);
-  }
-
-  .guide-tag {
-    font-size: 0.6875rem;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--color-gold-text);
-    background-color: var(--color-confirmation);
-    padding: 2px 8px;
-    border-radius: 4px;
-    border: 1px solid rgba(196, 154, 60, 0.25);
-  }
-
-  .guide-arrow {
-    color: var(--color-gold);
-    font-size: 1.125rem;
-    transition: transform 0.2s ease;
-  }
-
-  .guide-card:hover .guide-arrow {
-    transform: translateX(4px);
-  }
-
-  :global([dir="rtl"]) .guide-card:hover .guide-arrow {
-    transform: translateX(-4px);
+    box-shadow: 0 6px 18px rgba(15, 35, 64, 0.06);
   }
 
   .guide-title {
-    font-size: 1.125rem;
-    font-weight: 800;
-    color: var(--color-navy);
-    line-height: 1.35;
-    margin: 0 0 var(--space-2);
-  }
-
-  .guide-desc {
-    font-size: 0.8125rem;
-    line-height: 1.55;
-    color: var(--color-slate);
+    font-family: var(--font-family-heading);
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #0F2340;
     margin: 0;
+    line-height: 1.35;
   }
 
-  /* RTL Support */
-  :global([dir="rtl"]) .prepare-title,
-  :global([dir="rtl"]) .prepare-deck,
-  :global([dir="rtl"]) .guide-title,
-  :global([dir="rtl"]) .guide-desc {
-    text-align: right;
+  .guide-meta {
+    font-size: 0.785rem;
+    color: #64748B;
+  }
+
+  @media (max-width: 860px) {
+    .guides-grid {
+      grid-template-columns: 1fr;
+    }
   }
 </style>

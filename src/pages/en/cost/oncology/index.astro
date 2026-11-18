@@ -1,0 +1,599 @@
+---
+/**
+ * src/pages/en/cost/oncology/index.astro
+ * Cancer treatment cost in Hyderabad — Approved 12-Page PDF (Page 10)
+ */
+import BaseLayout from '../../../../layouts/BaseLayout.astro';
+
+const treatments = [
+  {
+    name: 'Breast cancer surgery',
+    stay: '3–5 days',
+    timeInIndia: '2–3 weeks',
+    range: '[from partner estimates]',
+  },
+  {
+    name: 'Colorectal cancer surgery',
+    stay: '6–8 days',
+    timeInIndia: '3–4 weeks',
+    range: '[from partner estimates]',
+  },
+  {
+    name: 'Chemotherapy (per cycle)',
+    stay: 'Day care',
+    timeInIndia: 'Per plan',
+    range: '[from partner estimates]',
+  },
+  {
+    name: 'Radiotherapy (IMRT course)',
+    stay: 'Outpatient',
+    timeInIndia: '5–7 weeks',
+    range: '[from partner estimates]',
+  },
+  {
+    name: 'PET-CT scan',
+    stay: '—',
+    timeInIndia: '1 day',
+    range: '[from partner estimates]',
+  },
+];
+
+const costFactors = [
+  'Stage of disease',
+  'Surgical technique',
+  'Room category',
+  'Medicines',
+  'Length of stay',
+  'Complications',
+];
+
+const partnerHospitals = [
+  {
+    name: 'Partner hospital A',
+    details: 'Gachibowli · NABH · JCI',
+  },
+  {
+    name: 'Partner hospital B',
+    details: 'Banjara Hills · NABH',
+  },
+  {
+    name: 'Partner hospital C',
+    details: 'Secunderabad · NABH · JCI',
+  },
+];
+---
+
+<BaseLayout
+  title="Cancer Treatment Cost in Hyderabad | Nuhavi Health"
+  description="Itemised cancer treatment cost ranges in Hyderabad. Written estimates from accredited partner hospitals with zero referral markups."
+  lang="en"
+>
+  <div class="cost-page-container">
+    <div class="container cost-content-wrap">
+      <!-- Breadcrumb (PDF Page 10) -->
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <ol>
+          <li><a href="/en/">Home</a></li>
+          <li aria-hidden="true"><span class="sep">›</span></li>
+          <li><a href="/en/cost/">Cost</a></li>
+          <li aria-hidden="true"><span class="sep">›</span></li>
+          <li><a href="/en/cost/oncology/">Oncology</a></li>
+          <li aria-hidden="true"><span class="sep">›</span></li>
+          <li aria-current="page">Hyderabad</li>
+        </ol>
+      </nav>
+
+      <!-- Main Header -->
+      <header class="cost-page-header">
+        <h1 class="page-title">Cancer treatment cost in Hyderabad</h1>
+        <p class="byline-deck">
+          Medically reviewed by <strong>Maj. Dr. Smaran Kalyan (Retd.), MBBS</strong> · Ranges from partner hospitals' written estimates · Updated [month year]
+        </p>
+      </header>
+
+      <!-- Main Two-Column Layout (PDF Page 10) -->
+      <div class="cost-main-grid">
+        <!-- Left Column: Tables, Included/Excluded, Cost Factors, Partner Hospitals -->
+        <main class="cost-main-col">
+          <!-- Treatment Cost Table -->
+          <div class="table-card">
+            <div class="table-scroll-wrap">
+              <table class="cost-table">
+                <thead>
+                  <tr>
+                    <th scope="col" class="th-treatment">TREATMENT</th>
+                    <th scope="col" class="th-stay">HOSPITAL STAY</th>
+                    <th scope="col" class="th-time">TIME IN INDIA</th>
+                    <th scope="col" class="th-range">RANGE (USD)</th>
+                    <th scope="col" class="th-action"><span class="sr-only">Action</span></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {treatments.map((t) => (
+                    <tr>
+                      <th scope="row" class="td-treatment">{t.name}</th>
+                      <td class="td-stay">{t.stay}</td>
+                      <td class="td-time">{t.timeInIndia}</td>
+                      <td class="td-range">{t.range}</td>
+                      <td class="td-action">
+                        <a href="/en/request-opinion/" class="estimate-link">Get exact estimate</a>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Included vs Not Included Boxes (PDF Page 10) -->
+          <div class="included-excluded-row">
+            <div class="inc-box">
+              <h3 class="box-title title-inc">Usually included</h3>
+              <p class="box-copy">
+                Surgeon and anaesthesia · room and nursing · routine medicines and consumables · standard tests during the stay
+              </p>
+            </div>
+            <div class="not-inc-box">
+              <h3 class="box-title title-not-inc">Usually not included</h3>
+              <p class="box-copy">
+                Tests before travel · special drugs or implants · ICU beyond the plan · flights · stay outside hospital
+              </p>
+            </div>
+          </div>
+
+          <!-- What Changes the Cost Section -->
+          <div class="factors-section">
+            <h2 class="section-heading">What changes the cost</h2>
+            <div class="factors-pills-row">
+              {costFactors.map((factor) => (
+                <span class="factor-pill">{factor}</span>
+              ))}
+            </div>
+          </div>
+
+          <!-- Hospitals Offering Cancer Treatment -->
+          <div class="partner-hospitals-section">
+            <h2 class="section-heading">Hospitals offering cancer treatment</h2>
+            <div class="hosp-mini-grid">
+              {partnerHospitals.map((hosp) => (
+                <div class="hosp-mini-card">
+                  <h3 class="hosp-mini-name">{hosp.name}</h3>
+                  <p class="hosp-mini-details">{hosp.details}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </main>
+
+        <!-- Right Column: Cost at a Glance Card & Get Your Exact Estimate Form (PDF Page 10) -->
+        <aside class="cost-sidebar-col" aria-label="Cost inquiry and estimates">
+          <!-- Top Card: Cost at a Glance (Navy) -->
+          <div class="glance-card">
+            <span class="glance-tag">COST AT A GLANCE</span>
+            <div class="glance-range">USD [range]</div>
+            <p class="glance-sub">Typical surgical range at Hyderabad partners</p>
+            <p class="glance-deck">
+              Get an itemised written estimate from 2–3 hospitals for your case.
+            </p>
+          </div>
+
+          <!-- Bottom Card: Get Your Exact Estimate Form -->
+          <div class="exact-estimate-card">
+            <h3 class="estimate-card-title">Get your exact estimate</h3>
+            <form class="sidebar-estimate-form" action="/en/request-opinion/" method="get">
+              <div class="form-group">
+                <label for="cost-patient-name" class="form-label">Patient name</label>
+                <input type="text" id="cost-patient-name" name="patientName" class="form-input" required />
+              </div>
+
+              <div class="form-group">
+                <label for="cost-whatsapp" class="form-label">WhatsApp number</label>
+                <input type="tel" id="cost-whatsapp" name="patientPhone" class="form-input" required />
+              </div>
+
+              <button type="submit" class="btn-get-estimate">
+                <span>Get my estimate</span>
+              </button>
+
+              <a href="https://wa.me/919999999999" class="btn-wa-sidebar" target="_blank" rel="noopener noreferrer">
+                <span>WhatsApp us</span>
+              </a>
+            </form>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .cost-page-container {
+    background-color: #FAF8F5;
+    min-height: 85vh;
+    padding: 32px 0 80px;
+  }
+
+  .cost-content-wrap {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 clamp(20px, 3.5vw, 40px);
+    box-sizing: border-box;
+  }
+
+  /* Breadcrumb */
+  .breadcrumb {
+    margin-bottom: 24px;
+  }
+
+  .breadcrumb ol {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 0.8125rem;
+    color: #64748B;
+  }
+
+  .breadcrumb a {
+    color: #0F2340;
+    text-decoration: none;
+  }
+
+  .breadcrumb a:hover {
+    text-decoration: underline;
+  }
+
+  .sep {
+    color: #CBD5E1;
+  }
+
+  /* Header */
+  .cost-page-header {
+    margin-bottom: 32px;
+  }
+
+  .page-title {
+    font-family: var(--font-family-heading);
+    font-size: clamp(2.2rem, 4vw, 3.2rem);
+    color: #0F2340;
+    font-weight: 600;
+    margin: 0 0 8px 0;
+    line-height: 1.15;
+  }
+
+  .byline-deck {
+    font-size: 0.875rem;
+    color: #4B5563;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  /* Grid Layout (PDF Page 10) */
+  .cost-main-grid {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 36px;
+    align-items: flex-start;
+  }
+
+  .cost-main-col {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+
+  /* Table Card */
+  .table-card {
+    background-color: #FFFFFF;
+    border: 1px solid rgba(15, 35, 64, 0.12);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .table-scroll-wrap {
+    overflow-x: auto;
+  }
+
+  .cost-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+  }
+
+  .cost-table th,
+  .cost-table td {
+    padding: 14px 16px;
+    text-align: left;
+    border-bottom: 1px solid #E2E8F0;
+  }
+
+  .cost-table thead tr {
+    background-color: #FAF8F5;
+  }
+
+  .cost-table thead th {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #0F2340;
+    letter-spacing: 0.05em;
+  }
+
+  .td-treatment {
+    font-weight: 600;
+    color: #0F2340;
+  }
+
+  .td-stay,
+  .td-time,
+  .td-range {
+    color: #4B5563;
+  }
+
+  .estimate-link {
+    color: #0F2340;
+    text-decoration: underline;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .estimate-link:hover {
+    color: #A88B5A;
+  }
+
+  /* Included / Not Included Boxes */
+  .included-excluded-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .inc-box {
+    background-color: #E3EBE3;
+    border-radius: 8px;
+    padding: 20px;
+  }
+
+  .not-inc-box {
+    background-color: #DCE3EC;
+    border-radius: 8px;
+    padding: 20px;
+  }
+
+  .box-title {
+    font-size: 0.875rem;
+    font-weight: 700;
+    margin: 0 0 8px 0;
+  }
+
+  .title-inc {
+    color: #26734D;
+  }
+
+  .title-not-inc {
+    color: #1A365D;
+  }
+
+  .box-copy {
+    font-size: 0.8125rem;
+    color: #374151;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  /* Cost Factors */
+  .section-heading {
+    font-family: var(--font-family-heading);
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #0F2340;
+    margin: 0 0 16px 0;
+  }
+
+  .factors-pills-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .factor-pill {
+    background-color: #FFFFFF;
+    border: 1px solid rgba(15, 35, 64, 0.15);
+    border-radius: 9999px;
+    padding: 6px 14px;
+    font-size: 0.8125rem;
+    color: #0F2340;
+    font-weight: 500;
+  }
+
+  /* Hospitals Mini Grid */
+  .hosp-mini-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  .hosp-mini-card {
+    background-color: #FFFFFF;
+    border: 1px solid rgba(15, 35, 64, 0.12);
+    border-radius: 8px;
+    padding: 16px;
+  }
+
+  .hosp-mini-name {
+    font-family: var(--font-family-heading);
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #0F2340;
+    margin: 0 0 4px 0;
+  }
+
+  .hosp-mini-details {
+    font-size: 0.785rem;
+    color: #64748B;
+    margin: 0;
+  }
+
+  /* Right Sidebar */
+  .cost-sidebar-col {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    position: sticky;
+    top: 96px;
+  }
+
+  .glance-card {
+    background-color: #0F2340;
+    color: #FFFFFF;
+    border-radius: 8px;
+    padding: 24px;
+  }
+
+  .glance-tag {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: #A88B5A;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  .glance-range {
+    font-family: var(--font-family-heading);
+    font-size: 1.85rem;
+    font-weight: 700;
+    color: #FFFFFF;
+    margin-bottom: 4px;
+  }
+
+  .glance-sub {
+    font-size: 0.8125rem;
+    color: #CBD5E1;
+    margin: 0 0 12px 0;
+    line-height: 1.4;
+  }
+
+  .glance-deck {
+    font-size: 0.8125rem;
+    color: #94A3B8;
+    margin: 0;
+    line-height: 1.45;
+  }
+
+  .exact-estimate-card {
+    background-color: #FFFFFF;
+    border: 1px solid rgba(15, 35, 64, 0.12);
+    border-radius: 8px;
+    padding: 24px;
+  }
+
+  .estimate-card-title {
+    font-family: var(--font-family-heading);
+    font-size: 1.35rem;
+    font-weight: 600;
+    color: #0F2340;
+    margin: 0 0 16px 0;
+  }
+
+  .sidebar-estimate-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .form-label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #0F2340;
+  }
+
+  .form-input {
+    font-family: var(--font-family-base);
+    font-size: 0.875rem;
+    color: #0F2340;
+    background-color: #FFFFFF;
+    border: 1px solid #CBD5E1;
+    border-radius: 6px;
+    padding: 8px 12px;
+    outline: none;
+    box-sizing: border-box;
+    width: 100%;
+  }
+
+  .form-input:focus {
+    border-color: #0F2340;
+  }
+
+  .btn-get-estimate {
+    background-color: #0F2340;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 6px;
+    padding: 12px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+    margin-top: 4px;
+  }
+
+  .btn-get-estimate:hover {
+    background-color: #1A365D;
+  }
+
+  .btn-wa-sidebar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #25D366;
+    color: #FFFFFF;
+    border-radius: 6px;
+    padding: 11px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.15s ease;
+  }
+
+  .btn-wa-sidebar:hover {
+    background-color: #20BA5A;
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  @media (max-width: 960px) {
+    .cost-main-grid {
+      grid-template-columns: 1fr;
+    }
+    .cost-sidebar-col {
+      position: static;
+    }
+    .hosp-mini-grid {
+      grid-template-columns: 1fr;
+    }
+    .included-excluded-row {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+

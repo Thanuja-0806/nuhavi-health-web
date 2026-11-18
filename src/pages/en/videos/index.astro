@@ -1,0 +1,642 @@
+---
+/**
+ * src/pages/en/videos/index.astro
+ * Nuhavi Health — Clinical Explainer Videos Library
+ *
+ * Matching User Screenshot (Claude Artifact Reference):
+ * - Clean light page background (#FAF8F5)
+ * - Breadcrumbs: Knowledge Centre / Videos
+ * - Hero: "Explainer videos"
+ * - Subtitle: "Short animated explainers of 60 to 120 seconds, with subtitles and no graphic surgical footage. Each script below is ready for an animation studio; the narration is written to be read at a calm pace."
+ * - 4-column desktop card grid:
+ *   - Clean white card, rounded corners (12px), subtle border
+ *   - Circular beige play button at top-left (#F5EEDB with #92400E icon)
+ *   - Title: e.g. "How Heart Bypass Surgery (CABG) Works"
+ *   - Subtitle: "90 seconds · animated explainer"
+ *   - Amber badge: "Script ready, to be produced"
+ * - Click to open full production script modal view matching screenshot:
+ *   - Badge, title, technical meta, "Embedded in: ..." links
+ *   - Clean 3-column table: Time | On screen | Narration
+ * - Specialty filter support and URL hash deep linking.
+ */
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { explainerScriptsList } from '../../../data/explainerScripts';
+import { knowledgeArticles } from '../../../data/knowledgeData';
+
+// Map thumbnails and related articles for each script
+const videoCardsData = explainerScriptsList.map((script) => {
+  // Related knowledge centre articles
+  const related = knowledgeArticles
+    .filter((a) => a.specialtySlug === script.specialtySlug)
+    .slice(0, 3)
+    .map((a) => ({
+      title: a.title,
+      href: `/en/knowledge-centre/${script.specialtySlug}/${a.slug}/`,
+    }));
+
+  return {
+    ...script,
+    badgeText: 'Script ready, to be produced',
+    subtitlesFeature: 'Subtitles planned (EN, AR, RU)',
+    relatedArticles: related,
+  };
+});
+---
+
+<BaseLayout
+  title="Explainer videos | Nuhavi Health Knowledge Centre"
+  description="Short animated explainers of 60 to 120 seconds, with subtitles and no graphic surgical footage. Doctor-reviewed production scripts ready for 2D animation."
+  lang="en"
+>
+  <main class="videos-page" id="main-content">
+    <div class="videos-container">
+      <!-- BREADCRUMBS -->
+      <nav class="videos-breadcrumbs" aria-label="Breadcrumb">
+        <a href="/en/knowledge-centre/" class="bc-link">Knowledge Centre</a>
+        <span class="bc-sep" aria-hidden="true">/</span>
+        <span class="bc-current" aria-current="page">Videos</span>
+      </nav>
+
+      <!-- HERO HEADER -->
+      <header class="videos-page-header">
+        <h1 class="videos-main-title">Explainer videos</h1>
+        <p class="videos-main-desc">
+          Short animated explainers of 60 to 120 seconds, with subtitles and no graphic surgical footage.
+          Each script below is ready for an animation studio; the narration is written to be read at a calm pace.
+        </p>
+      </header>
+
+      <!-- 4-COLUMN CARDS GRID (EXACTLY MATCHING SCREENSHOT) -->
+      <section class="videos-library-section" aria-label="Clinical explainer video cards">
+        <div class="videos-grid-4col">
+          {videoCardsData.map((item) => (
+            <article
+              class="video-library-card"
+              data-script-id={item.id}
+              role="button"
+              tabindex="0"
+              aria-label={`Open script for ${item.title}`}
+            >
+              <!-- Circular Play Icon (Beige Circle with Brown Triangle) -->
+              <div class="video-card-play-icon" aria-hidden="true">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="#92400E">
+                  <polygon points="6 4 20 12 6 20 6 4"></polygon>
+                </svg>
+              </div>
+
+              <!-- Video Card Info -->
+              <h2 class="video-card-title">{item.title}</h2>
+              <p class="video-card-meta">{item.duration} · animated explainer</p>
+
+              <!-- Amber Status Tag -->
+              <div class="video-card-badge-wrap">
+                <span class="video-status-amber-pill">Script ready, to be produced</span>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <!-- MODAL DIALOG FOR PRODUCTION SCRIPT VIEW (MATCHES SCREENSHOT 2) -->
+      <div id="script-modal-backdrop" class="modal-backdrop" aria-hidden="true">
+        <div class="modal-dialog-panel" role="dialog" aria-modal="true" aria-labelledby="modal-script-title">
+          <div class="modal-top-bar">
+            <span class="modal-status-badge">Script ready, to be produced</span>
+            <button type="button" class="modal-close-btn" id="modal-close-btn" aria-label="Close script view">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+          </div>
+
+          <h2 class="modal-script-title" id="modal-script-title"></h2>
+          <p class="modal-script-meta" id="modal-script-meta"></p>
+
+          <div class="modal-embedded-row" id="modal-embedded-row">
+            <span class="embedded-label">Embedded in:</span>
+            <span class="embedded-links" id="modal-embedded-links"></span>
+          </div>
+
+          <!-- Clean 3-Column Scene Table -->
+          <div class="modal-table-wrap">
+            <table class="modal-scene-table">
+              <thead>
+                <tr>
+                  <th scope="col" class="th-time">Time</th>
+                  <th scope="col" class="th-screen">On screen</th>
+                  <th scope="col" class="th-narration">Narration</th>
+                </tr>
+              </thead>
+              <tbody id="modal-scene-tbody"></tbody>
+            </table>
+          </div>
+
+          <div class="modal-footer-row">
+            <div class="modal-footer-note">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C5A880" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="16" x2="12" y2="12"></line>
+                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+              </svg>
+              <span>Planned release feature: Subtitles in English, Arabic, and Russian. 2D medical animation with zero graphic footage.</span>
+            </div>
+            <a href="/en/request-opinion/" class="modal-opinion-btn">Talk to a doctor</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- EMBEDDED DATA FOR CLIENT-SIDE MODAL RENDERING -->
+      <script is:inline id="video-scripts-payload" type="application/json" set:html={JSON.stringify(videoCardsData)}></script>
+    </div>
+  </main>
+</BaseLayout>
+
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', () => {
+    const rawData = document.getElementById('video-scripts-payload');
+    if (!rawData) return;
+    const scripts = JSON.parse(rawData.textContent || '[]');
+    const scriptMap = new Map();
+    scripts.forEach((s) => scriptMap.set(s.id, s));
+
+    const backdrop = document.getElementById('script-modal-backdrop');
+    const closeBtn = document.getElementById('modal-close-btn');
+    const titleEl = document.getElementById('modal-script-title');
+    const metaEl = document.getElementById('modal-script-meta');
+    const embeddedRow = document.getElementById('modal-embedded-row');
+    const embeddedLinksEl = document.getElementById('modal-embedded-links');
+    const tbodyEl = document.getElementById('modal-scene-tbody');
+
+    function openModal(scriptId) {
+      const script = scriptMap.get(scriptId);
+      if (!script) return;
+
+      titleEl.textContent = script.title;
+      metaEl.textContent = `${script.duration} · ${script.wordCount} · ${script.style}`;
+
+      if (script.relatedArticles && script.relatedArticles.length > 0) {
+        embeddedRow.style.display = 'flex';
+        embeddedLinksEl.innerHTML = script.relatedArticles
+          .map((a) => `<a href="${a.href}" class="embedded-link">${a.title}</a>`)
+          .join(' <span class="embedded-sep">·</span> ');
+      } else {
+        embeddedRow.style.display = 'none';
+      }
+
+      tbodyEl.innerHTML = script.scenes
+        .map(
+          (scene) => `
+          <tr>
+            <td class="td-time"><code>${scene.time || scene.timestamp}</code></td>
+            <td class="td-screen">${scene.visual || scene.visualDirection}</td>
+            <td class="td-narration">${scene.narration || scene.audioVoiceover}</td>
+          </tr>
+        `
+        )
+        .join('');
+
+      backdrop.classList.add('is-open');
+      backdrop.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+
+      if (history.pushState) {
+        history.pushState(null, null, '#' + script.id);
+      }
+    }
+
+    function closeModal() {
+      backdrop.classList.remove('is-open');
+      backdrop.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+      if (history.pushState) {
+        history.pushState(null, null, window.location.pathname);
+      }
+    }
+
+    // Card click events
+    document.querySelectorAll('.video-library-card').forEach((card) => {
+      const scriptId = card.getAttribute('data-script-id');
+      card.addEventListener('click', () => openModal(scriptId));
+      card.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          openModal(scriptId);
+        }
+      });
+    });
+
+    if (closeBtn) closeBtn.addEventListener('click', closeModal);
+
+    backdrop.addEventListener('click', (e) => {
+      if (e.target === backdrop) closeModal();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && backdrop.classList.contains('is-open')) {
+        closeModal();
+      }
+    });
+
+    // Check URL hash on initial load (e.g. #how-heart-bypass-surgery-cabg-works)
+    if (window.location.hash) {
+      const hashId = window.location.hash.substring(1);
+      if (scriptMap.has(hashId)) {
+        setTimeout(() => openModal(hashId), 150);
+      }
+    }
+  });
+</script>
+
+<style>
+  /* --------------------------------------------------------------------------
+     PAGE LAYOUT & TYPOGRAPHY
+     -------------------------------------------------------------------------- */
+  .videos-page {
+    background-color: #FAF8F5;
+    color: #1E293B;
+    font-family: var(--font-family-base, 'Inter', sans-serif);
+    min-height: 100vh;
+    padding: 2.25rem 0 5rem;
+  }
+
+  .videos-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+
+  /* Breadcrumbs */
+  .videos-breadcrumbs {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    color: #64748B;
+    margin-bottom: 2rem;
+  }
+
+  .bc-link {
+    color: #64748B;
+    text-decoration: none;
+    transition: color 0.15s ease;
+  }
+
+  .bc-link:hover {
+    color: #0F2340;
+  }
+
+  .bc-sep {
+    color: #CBD5E1;
+  }
+
+  .bc-current {
+    color: #0F2340;
+    font-weight: 500;
+  }
+
+  /* Header */
+  .videos-page-header {
+    margin-bottom: 2.75rem;
+    max-width: 820px;
+  }
+
+  .videos-main-title {
+    font-family: var(--font-family-heading, 'Playfair Display', Georgia, serif);
+    font-size: clamp(2.25rem, 3.8vw, 3rem);
+    font-weight: 700;
+    color: #0F2340;
+    line-height: 1.15;
+    margin: 0 0 1rem;
+  }
+
+  .videos-main-desc {
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: #475569;
+    margin: 0;
+  }
+
+  /* --------------------------------------------------------------------------
+     4-COLUMN GRID OF VIDEO CARDS (EXACT MATCH FOR SCREENSHOT 1)
+     -------------------------------------------------------------------------- */
+  .videos-grid-4col {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.25rem;
+  }
+
+  @media (max-width: 1080px) {
+    .videos-grid-4col {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .videos-grid-4col {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 520px) {
+    .videos-grid-4col {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .video-library-card {
+    background-color: #FFFFFF;
+    border: 1px solid #EFEAE3;
+    border-radius: 12px;
+    padding: 1.35rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+    cursor: pointer;
+    transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
+    outline: none;
+  }
+
+  .video-library-card:hover,
+  .video-library-card:focus-visible {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(15, 35, 64, 0.06);
+    border-color: #CBD5E1;
+  }
+
+  /* Round Play Button (Beige Circle with Brown Triangle) */
+  .video-card-play-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background-color: #F6EFE5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.15rem;
+    transition: transform 0.15s ease, background-color 0.15s ease;
+  }
+
+  .video-library-card:hover .video-card-play-icon {
+    transform: scale(1.08);
+    background-color: #EFE4D3;
+  }
+
+  .video-card-title {
+    font-size: 0.98rem;
+    font-weight: 600;
+    color: #0F2340;
+    line-height: 1.35;
+    margin: 0 0 0.5rem;
+    flex-grow: 1;
+  }
+
+  .video-card-meta {
+    font-size: 0.8rem;
+    color: #64748B;
+    margin: 0 0 1.15rem;
+  }
+
+  .video-card-badge-wrap {
+    margin-top: auto;
+  }
+
+  .video-status-amber-pill {
+    display: inline-block;
+    background-color: #FEF3C7;
+    color: #92400E;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 0.35rem 0.7rem;
+    border-radius: 9999px;
+    letter-spacing: 0.01em;
+  }
+
+  /* --------------------------------------------------------------------------
+     MODAL DIALOG (EXACT MATCH FOR SCREENSHOT 2)
+     -------------------------------------------------------------------------- */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(15, 35, 64, 0.55);
+    backdrop-filter: blur(4px);
+    z-index: 1000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+  }
+
+  .modal-backdrop.is-open {
+    display: flex;
+  }
+
+  .modal-dialog-panel {
+    background-color: #FFFFFF;
+    border-radius: 14px;
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 900px;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 2.25rem;
+    position: relative;
+    animation: modalFadeIn 0.2s ease-out;
+  }
+
+  @keyframes modalFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .modal-top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.15rem;
+  }
+
+  .modal-status-badge {
+    background-color: #FEF3C7;
+    color: #92400E;
+    font-size: 0.74rem;
+    font-weight: 600;
+    padding: 0.35rem 0.75rem;
+    border-radius: 9999px;
+  }
+
+  .modal-close-btn {
+    background: none;
+    border: none;
+    color: #64748B;
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.15s ease, background-color 0.15s ease;
+  }
+
+  .modal-close-btn:hover {
+    color: #0F2340;
+    background-color: #F1F5F9;
+  }
+
+  .modal-script-title {
+    font-family: var(--font-family-heading, 'Playfair Display', Georgia, serif);
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #0F2340;
+    margin: 0 0 0.6rem;
+    line-height: 1.25;
+  }
+
+  .modal-script-meta {
+    font-size: 0.88rem;
+    color: #64748B;
+    margin: 0 0 1rem;
+    line-height: 1.5;
+  }
+
+  .modal-embedded-row {
+    font-size: 0.85rem;
+    color: #64748B;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.4rem;
+    margin-bottom: 1.75rem;
+    padding-bottom: 1.15rem;
+    border-bottom: 1px solid #E2E8F0;
+  }
+
+  .embedded-label {
+    font-weight: 600;
+    color: #475569;
+  }
+
+  :global(.embedded-link) {
+    color: #0F2340;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-color: #CBD5E1;
+    transition: color 0.15s ease, text-decoration-color 0.15s ease;
+  }
+
+  :global(.embedded-link:hover) {
+    color: #0284C7;
+    text-decoration-color: #0284C7;
+  }
+
+  :global(.embedded-sep) {
+    color: #94A3B8;
+  }
+
+  /* Scene Table */
+  .modal-table-wrap {
+    overflow-x: auto;
+    margin-bottom: 2rem;
+    border: 1px solid #E2E8F0;
+    border-radius: 10px;
+  }
+
+  .modal-scene-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+    line-height: 1.55;
+    text-align: left;
+  }
+
+  .modal-scene-table thead {
+    background-color: #F8FAFC;
+    border-bottom: 1px solid #E2E8F0;
+  }
+
+  .modal-scene-table th {
+    padding: 0.85rem 1rem;
+    font-weight: 600;
+    color: #475569;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+
+  .th-time {
+    width: 120px;
+  }
+
+  .th-screen {
+    width: 40%;
+  }
+
+  .th-narration {
+    width: 48%;
+  }
+
+  :global(.modal-scene-table td) {
+    padding: 1rem;
+    border-bottom: 1px solid #F1F5F9;
+    vertical-align: top;
+    color: #334155;
+  }
+
+  :global(.modal-scene-table tr:last-child td) {
+    border-bottom: none;
+  }
+
+  :global(.modal-scene-table tr:hover td) {
+    background-color: #F8FAFC;
+  }
+
+  :global(.td-time code) {
+    font-family: 'SF Mono', Monaco, Menlo, Consolas, monospace;
+    font-size: 0.82rem;
+    background-color: #F1F5F9;
+    color: #0F2340;
+    padding: 0.2rem 0.45rem;
+    border-radius: 4px;
+    display: inline-block;
+  }
+
+  .modal-footer-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid #E2E8F0;
+    flex-wrap: wrap;
+  }
+
+  .modal-footer-note {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.82rem;
+    color: #64748B;
+    max-width: 600px;
+  }
+
+  .modal-opinion-btn {
+    background-color: #C5A880;
+    color: #0F2340;
+    font-weight: 600;
+    font-size: 0.88rem;
+    padding: 0.65rem 1.35rem;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background-color 0.15s ease;
+  }
+
+  .modal-opinion-btn:hover {
+    background-color: #B5956A;
+  }
+</style>

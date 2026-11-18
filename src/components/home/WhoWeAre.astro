@@ -1,10 +1,17 @@
 ---
 /**
  * src/components/home/WhoWeAre.astro
- * Homepage section: "Who we are, and who we are not" & 4 Trust Cards
- * Localized for English (/en/), Russian (/ru/), and Arabic (/ar/ RTL).
+ * Approved "Why Nuhavi" Section — 12-Page PDF (Page 3)
+ *
+ * Heading: Not a marketplace. A doctor-led team in one city we know deeply.
+ * Banner: Deep Navy (#0F2340)
+ *
+ * Four Pillars:
+ * 01 Doctor-led — Physicians review every case before any hospital sees it — and every page on this site.
+ * 02 Clarity on cost — Written, itemised estimates — and a plain explanation of how Nuhavi is paid.
+ * 03 One named person — A coordinator who speaks your language, from first message to follow-up at home.
+ * 04 Hyderabad depth — A few partner hospitals we know personally — not a directory of strangers.
  */
-import { homeTranslations } from '../../i18n/homeTranslations';
 import type { SupportedLang } from '../../i18n/translations';
 
 interface Props {
@@ -16,62 +23,104 @@ const detectedLang: SupportedLang = currentPath.startsWith('/ar')
   ? 'ar'
   : currentPath.startsWith('/ru')
   ? 'ru'
+  : currentPath.startsWith('/fr')
+  ? 'fr'
   : 'en';
 
 const lang: SupportedLang = Astro.props.lang || detectedLang;
-const who = homeTranslations[lang].whoWeAre;
+const isArabic = lang === 'ar';
+const isRussian = lang === 'ru';
+const isFrench = lang === 'fr';
+
+const t = {
+  eyebrow: isArabic ? 'لماذا نوهـافي' : isRussian ? 'ПОЧЕМУ NUHAVI' : isFrench ? 'POURQUOI NUHAVI' : 'WHY NUHAVI',
+  heading: isArabic
+    ? 'لسنا منصة تسويق. بل فريق بقيادة أطباء في مدينة نعرفها بعمق.'
+    : isRussian
+    ? 'Не маркетплейс. Команда врачей в одном городе, который мы знаем глубоко.'
+    : isFrench
+    ? 'Pas une place de marché. Une équipe dirigée par des médecins dans une ville que nous connaissons profondément.'
+    : 'Not a marketplace. A doctor-led team in one city we know deeply.',
+  deck: isArabic
+    ? 'المنصات العالمية تدرج مئات المستشفيات في دول متعددة. نحن نعمل مع عدد محدود من المستشفيات المعتمدة في حيدر آباد التي زارها أطباؤنا وتحققوا منها.'
+    : isRussian
+    ? 'Глобальные платформы предлагают сотни клиник во многих странах. Мы работаем с несколькими аккредитованными больницами в Хайдарабаде, которые лично посетили и проверили наши врачи.'
+    : isFrench
+    ? 'Les plateformes mondiales listent des centaines d\'hôpitaux dans de nombreux pays. Nous travaillons avec quelques hôpitaux accrédités à Hyderabad que nos médecins ont visités et vérifiés.'
+    : 'Global platforms list hundreds of hospitals in many countries. We work with a few accredited hospitals in Hyderabad that our doctors have visited and verified.',
+  pillars: [
+    {
+      num: '01',
+      title: isArabic ? 'بإشراف أطباء' : isRussian ? 'Под руководством врачей' : isFrench ? 'Dirigé par des médecins' : 'Doctor-led',
+      copy: isArabic
+        ? 'أطباؤنا يراجعون كل حالة قبل أن تراها أي مستشفى — وكل صفحة في هذا الموقع.'
+        : isRussian
+        ? 'Врачи изучают каждый случай до того, как его увидит клиника, — и каждую страницу на этом сайте.'
+        : isFrench
+        ? 'Des médecins examinent chaque dossier avant qu\'un hôpital ne le voie — et chaque page de ce site.'
+        : 'Physicians review every case before any hospital sees it — and every page on this site.',
+    },
+    {
+      num: '02',
+      title: isArabic ? 'وضوح التكلفة' : isRussian ? 'Ясность стоимости' : isFrench ? 'Clarté des coûts' : 'Clarity on cost',
+      copy: isArabic
+        ? 'تقديرات مكتوبة ومفصلة — وشرح واضح لكيفية دفع أتعاب نوهـافي.'
+        : isRussian
+        ? 'Письменные, постатейные сметы — и понятное объяснение того, как оплачивается работа Nuhavi.'
+        : isFrench
+        ? 'Devis écrits et détaillés — et explication claire de la rémunération de Nuhavi.'
+        : 'Written, itemised estimates — and a plain explanation of how Nuhavi is paid.',
+    },
+    {
+      num: '03',
+      title: isArabic ? 'منسق شخصي مسمى' : isRussian ? 'Один координатор по имени' : isFrench ? 'Un coordinateur désigné' : 'One named person',
+      copy: isArabic
+        ? 'منسق يتحدث لغتك، من أول رسالة وحتى المتابعة بعد عودتك إلى الوطن.'
+        : isRussian
+        ? 'Координатор, который говорит на вашем языке, от первого сообщения до наблюдения дома.'
+        : isFrench
+        ? 'Un coordinateur qui parle votre langue, du premier message jusqu\'au suivi chez vous.'
+        : 'A coordinator who speaks your language, from first message to follow-up at home.',
+    },
+    {
+      num: '04',
+      title: isArabic ? 'عمق الخبرة في حيدر آباد' : isRussian ? 'Глубина знания Хайдарабада' : isFrench ? 'Expertise locale à Hyderabad' : 'Hyderabad depth',
+      copy: isArabic
+        ? 'عدد قليل من المستشفيات الشريكة التي نعرفها شخصياً — وليس دليلاً من الغرباء.'
+        : isRussian
+        ? 'Несколько больниц-партнеров, которых мы знаем лично, — а не справочник незнакомцев.'
+        : isFrench
+        ? 'Quelques hôpitaux partenaires que nous connaissons personnellement — pas un annuaire d\'inconnus.'
+        : 'A few partner hospitals we know personally — not a directory of strangers.',
+    },
+  ],
+};
 ---
 
-<section class="who-we-are-section" aria-labelledby="who-we-are-heading">
-  <div class="container who-container">
-    <!-- Top 3-Column Layout: Who we are | We do | We do not -->
-    <div class="who-grid">
-      <!-- Col 1: Main statement -->
-      <div class="who-col-intro">
-        <h2 id="who-we-are-heading" class="who-title">
-          {who.title}
+<section class="why-nuhavi-section" aria-labelledby="why-nuhavi-heading" dir={isArabic ? 'rtl' : 'ltr'}>
+  <div class="container why-container">
+    <!-- Header Row (PDF Page 3) -->
+    <div class="why-header-row">
+      <div class="why-header-left">
+        <span class="why-eyebrow-text">{t.eyebrow}</span>
+        <h2 id="why-nuhavi-heading" class="why-title">
+          {t.heading}
         </h2>
-        <p class="who-deck">
-          {who.deck}
+      </div>
+      <div class="why-header-right">
+        <p class="why-deck">
+          {t.deck}
         </p>
-      </div>
-
-      <!-- Col 2: We do -->
-      <div class="who-col-list">
-        <h3 class="list-heading">{who.weDoTitle}</h3>
-        <ul class="we-do-list">
-          {who.weDoItems.map((item) => (
-            <li>
-              <span class="check-mark" aria-hidden="true">&#10003;</span>
-              <span>{item}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      <!-- Col 3: We do not -->
-      <div class="who-col-list">
-        <h3 class="list-heading">{who.weDoNotTitle}</h3>
-        <ul class="we-do-not-list">
-          {who.weDoNotItems.map((item) => (
-            <li>
-              <span class="cross-mark" aria-hidden="true">&#10005;</span>
-              <span>{item}</span>
-            </li>
-          ))}
-        </ul>
       </div>
     </div>
 
-    <!-- Bottom 4 Trust Cards (Page 5) -->
-    <div class="trust-cards-grid">
-      {who.trustCards.map((card) => (
-        <div class="trust-card">
-          <h3 class="trust-card-title">{card.title}</h3>
-          <p class="trust-card-text">
-            {card.text}
-            {card.marker && <span class="amber-marker">{card.marker}</span>}
-          </p>
+    <!-- Four Pillars Grid (PDF Page 3) -->
+    <div class="pillars-grid">
+      {t.pillars.map((pillar) => (
+        <div class="pillar-card">
+          <span class="pillar-num">{pillar.num}</span>
+          <h3 class="pillar-title">{pillar.title}</h3>
+          <p class="pillar-copy">{pillar.copy}</p>
         </div>
       ))}
     </div>
@@ -79,156 +128,107 @@ const who = homeTranslations[lang].whoWeAre;
 </section>
 
 <style>
-  .who-we-are-section {
+  .why-nuhavi-section {
     width: 100%;
-    background-color: var(--color-paper);
-    padding: var(--space-12) 0 var(--space-10);
-    border-bottom: 1px solid rgba(20, 41, 75, 0.08);
+    background-color: #0F2340;
+    color: #FFFFFF;
+    padding: clamp(64px, 8vw, 92px) 0;
   }
 
-  .who-container {
-    width: 100%;
-    max-width: 1200px;
+  .why-container {
+    max-width: 1280px;
     margin: 0 auto;
-    padding: 0 var(--space-4);
+    padding: 0 clamp(20px, 4vw, 40px);
     box-sizing: border-box;
   }
 
-  .who-grid {
+  .why-header-row {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--space-8);
-    margin-bottom: var(--space-12);
+    grid-template-columns: 1.25fr 1fr;
+    gap: 48px;
+    align-items: flex-end;
+    margin-bottom: 56px;
   }
 
-  @media (min-width: 900px) {
-    .who-grid {
-      grid-template-columns: 4fr 4fr 4fr;
-      gap: var(--space-8);
-      align-items: start;
-    }
+  .why-eyebrow-text {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    color: #A88B5A;
+    text-transform: uppercase;
+    margin-bottom: 12px;
   }
 
-  .who-title {
-    font-size: clamp(1.75rem, 3vw, 2.25rem);
-    font-weight: 800;
-    color: var(--color-navy);
-    line-height: 1.2;
-    margin: 0 0 var(--space-3);
+  .why-title {
+    font-family: var(--font-family-heading);
+    font-size: clamp(2.1rem, 3.4vw, 3rem);
+    color: #FFFFFF;
+    font-weight: 600;
+    line-height: 1.15;
+    margin: 0;
   }
 
-  .who-deck {
-    font-size: 0.9375rem;
+  .why-deck {
+    font-size: 1.05rem;
+    color: #CBD5E1;
     line-height: 1.6;
-    color: var(--color-slate);
     margin: 0;
   }
 
-  .list-heading {
-    font-size: 1.125rem;
-    font-weight: 800;
-    color: var(--color-navy);
-    margin: 0 0 var(--space-4);
+  /* 4 Pillars in a row */
+  .pillars-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 36px;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    padding-top: 40px;
   }
 
-  .we-do-list,
-  .we-do-not-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+  .pillar-card {
     display: flex;
     flex-direction: column;
     gap: 12px;
   }
 
-  .we-do-list li,
-  .we-do-not-list li {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
+  .pillar-num {
     font-size: 0.875rem;
-    line-height: 1.5;
-    color: var(--color-ink);
-  }
-
-  .check-mark {
-    color: var(--color-success);
-    font-weight: 800;
-    font-size: 1rem;
-    line-height: 1.3;
-    flex-shrink: 0;
-  }
-
-  .cross-mark {
-    color: var(--color-slate);
     font-weight: 700;
-    font-size: 0.9375rem;
-    line-height: 1.3;
-    flex-shrink: 0;
+    color: #A88B5A;
+    letter-spacing: 0.05em;
   }
 
-  /* 4 Trust Cards Grid */
-  .trust-cards-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--space-4);
-    padding-top: var(--space-8);
-    border-top: 1px solid rgba(20, 41, 75, 0.08);
+  .pillar-title {
+    font-family: var(--font-family-heading);
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #FFFFFF;
+    margin: 0;
+    line-height: 1.2;
   }
 
-  @media (min-width: 600px) {
-    .trust-cards-grid {
-      grid-template-columns: 1fr 1fr;
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .trust-cards-grid {
-      grid-template-columns: repeat(4, 1fr);
-      gap: var(--space-5);
-    }
-  }
-
-  .trust-card {
-    background-color: var(--color-mist);
-    border: 1px solid rgba(20, 41, 75, 0.08);
-    border-radius: var(--radius-card);
-    padding: var(--space-5);
-  }
-
-  .trust-card-title {
-    font-size: 1rem;
-    font-weight: 800;
-    color: var(--color-navy);
-    margin: 0 0 var(--space-2);
-    line-height: 1.3;
-  }
-
-  .trust-card-text {
-    font-size: 0.8125rem;
+  .pillar-copy {
+    font-size: 0.875rem;
+    color: #CBD5E1;
     line-height: 1.55;
-    color: var(--color-slate);
     margin: 0;
   }
 
-  .amber-marker {
-    display: inline;
-    background-color: var(--color-confirmation);
-    border: 1px solid var(--color-gold);
-    color: var(--color-gold-text);
-    padding: 1px 4px;
-    border-radius: 4px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    margin-left: 2px;
+  @media (max-width: 960px) {
+    .why-header-row {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+    .pillars-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 28px;
+    }
   }
 
-  /* RTL Support */
-  :global([dir="rtl"]) .who-title,
-  :global([dir="rtl"]) .who-deck,
-  :global([dir="rtl"]) .list-heading,
-  :global([dir="rtl"]) .trust-card-title,
-  :global([dir="rtl"]) .trust-card-text {
-    text-align: right;
+  @media (max-width: 580px) {
+    .pillars-grid {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
   }
 </style>
